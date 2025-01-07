@@ -1787,14 +1787,8 @@ public class EmsMessageController {
 		param.put("stream", false);
 		log.info("llm get : {}", param.toString());
 
-		Document doc = Jsoup.connect(conf.getLlmUrl())
-				.timeout(conf.getLlmTimeout())
-				.header("Content-Type", "application/json;charset=UTF-8")
-				.method(Connection.Method.POST)
-				.requestBody(param.toString())
-				.ignoreContentType(true)
-				.post();
-		log.info("llm response : {}", doc.body().text());
+		Document doc = Jsoup.connect(conf.getLlmUrl()).timeout(conf.getLlmTimeout()).header("Content-Type", "application/json;charset=UTF-8").method(Connection.Method.POST).requestBody(param.toString()).ignoreContentType(true).post();
+		log.debug("llm response : {}", doc.body().text());
 		return new XcnResponseVO(XcnRspCode.OK, Common.toJSONObject(doc.body().text()));
 	}
 

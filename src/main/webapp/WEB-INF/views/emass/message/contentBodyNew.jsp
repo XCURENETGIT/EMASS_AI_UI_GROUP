@@ -39,6 +39,7 @@
 	boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
 	boolean isLlmEnabled = conf.isLlmEnabled();
 	boolean isLlmSingle = Config.getBoolean("llm.single");
+	boolean isVietnam = Config.getBoolean("llm.Vietnam");
 	String op_attach_save = Operation.ATTACH_SAVE.getOperation();
 	String op_body_save = Operation.BODY_SAVE.getOperation();
 	String op_body_print = Operation.BODY_PRINT.getOperation();
@@ -275,6 +276,7 @@
 		var infoFeedbackConf = '<%=infoFeedbackConf%>';
 		var infoHynixConf = '<%=infoHynixConf%>';
 		var isLlmSingle = '<%=isLlmSingle%>';
+		var isVietnam = '<%=isVietnam%>';
 		var mode='';
 		var kHighlight = '<%=keywordHighlight%>';
 		var hostQueryUse = '<%=hostQuery%>';
@@ -332,7 +334,7 @@
 				var subjectIsEmpty = false;
 				var isUnknownDocument = false;
 				if($('#subjectIsEmpty').length > 0) subjectIsEmpty = true;
-                
+
                 var svcValue = $("#unKnownDocument").val();
                 if(svcValue.startsWith("u") > -1) isUnknownDocument = true;
 				fnOpenWindow('<c:url value="/ems/recommend.do" />?msgId='+msgId+'&targetDate='+targetDate+'&subjectIsEmpty='+subjectIsEmpty+'&isUnknownDocument='+isUnknownDocument, 'recommend', 1300, 800, 'fix');
@@ -409,9 +411,11 @@
 			$(document).on('click', '#helpHost', function(){
 				$("#helpView").css("display", "");
 				$("#helpHost").css("display", "none");
+				var chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?";
+				if (isVietnam) chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어? 베트남어로 답변해줘"
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
-					chat : '"' + $('#helpHost').attr('title') + '" 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?',
+					chat : '"' + $('#helpHost').attr('title') + chatString,
 					success : function ( data, total ) {
 						$('#helpHostDesc').html(data.response.fReplaceWord('\n', '.</br>'));
 						$('#hostDiv a').attr("title", data.response.fReplaceWord('\n', '.</br>'));
@@ -431,14 +435,16 @@
 			});
 
 			$(document).on('click', '#koreaBody', function(){
-				$('#summaryModal h2').html('본문내용 한국어 번역');
+				$('#summaryModal h2').html('<s:message code="bodyview.body.content"/> <s:message code="llm.info.korea"/> ');
 				$("#helpView2").css("display", "");
 				$("#llmImg1").css("display", "none");
+				var chatString = "위에 내용을 한글로 번역해줘?";
+				if (isVietnam) chatString = "위에 내용을 베트남어로 번역해줘?";
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 한글로 번역해줘?',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
 					success : function ( data, total ) {
-						$('#summaryContent').html('아래 내용은 한국어로 번역한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>').fReplaceWord('. ', '.</br>'));
+						$('#summaryContent').html('<s:message code="llm.info.koreaString"/> .<br><br>' + data.response.fReplaceWord('\n', '.</br>').fReplaceWord('. ', '.</br>'));
 						$("#summaryModal").modal('show');
 					},
 					error : function (status, message) {
@@ -452,14 +458,16 @@
 			});
 
 			$(document).on('click', '#summaryBody', function(){
-				$('#summaryModal h2').html('주제 키워드 분석');
+				$('#summaryModal h2').html('<s:message code="llm.info.keyword"/> <s:message code="DATA_ANALYSIS.ANALYSIS"/>');
 				$("#helpView3").css("display", "");
 				$("#llmImg2").css("display", "none");
+				var chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠?";
+				if (isVietnam) chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠? 베트남어로 답변해주라";
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용에서 주제키워드 단어로 10개정도 추출해죠?',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
 					success : function ( data, total ) {
-						$('#summaryContent').html('아래 내용은 주제키워드를 분석한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+						$('#summaryContent').html('<s:message code="llm.info.keywordString"/> <br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
 					},
 					error : function (status, message) {
@@ -474,14 +482,16 @@
 			});
 
 			$(document).on('click', '#serviceBody', function(){
-				$('#summaryModal h2').html('내용분석');
+				$('#summaryModal h2').html('<s:message code="llm.info.body"/>');
 				$("#helpView5").css("display", "");
 				$("#llmImg4").css("display", "none");
+				var chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘?";
+				if (isVietnam) chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘? 베트남어로 답변해주라";
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 분석해서 어떤 서비스인지 알려줘?',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
 					success : function ( data, total ) {
-						$('#summaryContent').html('아래 내용은 내용을 분석한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+						$('#summaryContent').html('<s:message code="llm.info.bodyString"/><br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
 					},
 					error : function (status, message) {
@@ -495,14 +505,18 @@
 			});
 
 			$(document).on('click', '#contentBody', function(){
-				$('#summaryModal h2').html('내용요약');
+				$('#summaryModal h2').html('<s:message code="llm.info.summary"/>');
 				$("#helpView4").css("display", "");
 				$("#llmImg3").css("display", "none");
+
+				var chatString = "위에 내용을 요약해줘?";
+				if (isVietnam) chatString = "위에 내용을 요약해줘? 베트남어로 답변해주라";
+
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 요약해줘?',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
 					success : function ( data, total ) {
-						$('#summaryContent').html('아래 내용은 내용을 분석한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+						$('#summaryContent').html('<s:message code="llm.info.summaryString"/><br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
 					},
 					error : function (status, message) {
