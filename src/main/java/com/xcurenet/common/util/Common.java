@@ -85,7 +85,7 @@ public class Common {
 
 	public static final String[] WEEK_NAME_EN = new String[] {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
-	public static final String TMP_PATH = "/users/apache/temp/";
+	public static final String TMP_PATH = "/users/emassai/apache/temp/";
 
 	public static final int MAX_POST_SIZE = Integer.MAX_VALUE; // 1.9GB
 
@@ -2374,7 +2374,7 @@ public class Common {
 				try {
 					ftp.init(Config.DB_IP, Config.DB_USER, Config.DB_PASSWORD, 22);
 					ins = ftp.download(path.substring(0, path.lastIndexOf('/')), new File(path).getName());
-					f = new File("/users/apache/temp/" + new File(path).getName());
+					f = new File(Common.TMP_PATH + new File(path).getName());
 					fout = new FileOutputStream(f);
 					IOUtils.copy(ins, fout);
 

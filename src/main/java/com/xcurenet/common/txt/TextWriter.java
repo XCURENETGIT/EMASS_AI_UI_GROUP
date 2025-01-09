@@ -12,7 +12,7 @@ import com.xcurenet.common.rename.FileRenamePolicy;
 
 public class TextWriter {
 
-	private static final String TMP = "/users/apache/temp/";
+	private static final String TMP = "/users/emassai/apache/temp/";
 
 	private File _file = null;
 
