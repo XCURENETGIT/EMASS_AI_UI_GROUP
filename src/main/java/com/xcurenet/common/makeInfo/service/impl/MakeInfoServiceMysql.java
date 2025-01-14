@@ -430,14 +430,10 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 					infoIprangeVO.setVERSION(obj.getInt("VERSION"));
 					infoIprangeVO.setBUSICD(obj.getString("BUSICD"));
 					infoIprangeVO.setBUSINM(obj.getString("BUSINM"));
-					infoIprangeVO.setCITY(obj.getString("CITY"));
 					infoIprangeVO.setCOCD(obj.getString("COCD"));
 					infoIprangeVO.setCONM(obj.getString("CONM"));
-					infoIprangeVO.setCOUNTRY(obj.getString("COUNTRY"));
 					infoIprangeVO.setEIP(obj.getString("EIP"));
 					infoIprangeVO.setINSIDE(obj.getString("INSIDE"));
-					infoIprangeVO.setLATITUDE(obj.getString("LATITUDE"));
-					infoIprangeVO.setLONGITUDE(obj.getString("LONGITUDE"));
 					infoIprangeVO.setSIP(obj.getString("SIP"));
 					mongoUtil.insert(infoIprangeVO);
 				} else if (Common.isEquals(collectionName, "INFO_IPRANGE_DEPT")) {

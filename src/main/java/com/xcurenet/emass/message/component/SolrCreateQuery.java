@@ -1214,7 +1214,7 @@ public class SolrCreateQuery {
 	 */
 	public SolrCreateQuery setAllofus(String allofus) {
 		if (Common.isEmpty(allofus)) return this;
-		return addQuery(String.format("%s%s:(%s)", AND_QUERY, ALLOFUS, allofus.replaceAll("\\|", " ")));
+		return addQuery(String.format("%s%s:%s", AND_QUERY, ALLOFUS, createOrQuery(allofus.replaceAll("\\|", " "), " ")));
 	}
 
 	/**

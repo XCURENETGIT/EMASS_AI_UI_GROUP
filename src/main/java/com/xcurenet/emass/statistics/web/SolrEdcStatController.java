@@ -1072,6 +1072,8 @@ public class SolrEdcStatController {
 			query.append("))");
 		}
 
+		if (searchPiType.equals("sum")) query.append("+pi_total : [" + piCount + " TO *]");
+
 //		query.append(String.format("+pi_total:>=%s", piCount));
 //		query.append(" +( ");
 //		for (String field : Config.PRIVATE_SVC) {

@@ -322,7 +322,7 @@ public class SolrEdcVO {
     @JsonIgnore
     public List<Map<String, Object>> pi_amount;
 
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public Map<String, Object> piMap;
 
     @JsonIgnore

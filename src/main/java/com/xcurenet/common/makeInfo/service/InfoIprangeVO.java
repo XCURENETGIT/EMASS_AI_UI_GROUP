@@ -20,8 +20,6 @@ public class InfoIprangeVO {
 	@Field("BUSINM")
 	private String BUSINM;
 
-	@Field("CITY")
-	private String CITY;
 
 	@Field("COCD")
 	private String COCD;
@@ -29,20 +27,11 @@ public class InfoIprangeVO {
 	@Field("CONM")
 	private String CONM;
 
-	@Field("COUNTRY")
-	private String COUNTRY;
-
 	@Field("EIP")
 	private String EIP;
 
 	@Field("INSIDE")
 	private String INSIDE;
-
-	@Field("LATITUDE")
-	private String LATITUDE;
-
-	@Field("LONGITUDE")
-	private String LONGITUDE;
 
 	@Field("SIP")
 	private String SIP;

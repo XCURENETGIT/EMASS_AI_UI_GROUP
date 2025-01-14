@@ -89,29 +89,23 @@ public class SolrEdcMessageVO {
 
 
 	private void dataProc(final SearchHits<SolrEdcVO> resp, final String adminId){
+		float maxScore = resp.getMaxScore();
 		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
 			SolrEdcVO edcVO = solrEdcVO.getContent();
 			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
-			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
-			if(!Common.isEmpty(edcVO.getPi_amount())) {
+			edcVO.setConfidence((maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore) * 100) : "0"); //유사도 계산
+
+			//동적 필드 (패턴 pi..) 맵핑
+			if (!Common.isEmpty(edcVO.getPi_amount())) {
 				List<Map<String, Object>> piList = edcVO.getPi_amount();
 				Map<String, Object> tempMap = new HashMap<>();
 				for (Map<String, Object> pimap : piList) {
-					for(Map.Entry<String,Object> item : pimap.entrySet()) {
-						tempMap.put(item.getKey(),item.getValue());
+					for (Map.Entry<String, Object> item : pimap.entrySet()) {
+						tempMap.put(item.getKey(), item.getValue());
 					}
 				}
 				edcVO.setPiMap(tempMap);
 			}
-//			//실시간 정규식 검색 전용 엘라스틱서치 highlight
-//			Map<String,String> highLight = new HashMap<>();
-//			Map<String, List<String>> highlightFields = solrEdcVO.getHighlightFields();
-//			for(Map.Entry hlsItem :  highlightFields.entrySet()) {
-//				List<String> itemList = (List<String>) hlsItem.getValue();
-//				highLight.put((String) hlsItem.getKey(),itemList.stream().collect(Collectors.joining(",")));
-//			}
-//			edcVO.setRegexpHighlight(highLight);
-
 			this.emass.add(edcVO);
 		}
 	}
