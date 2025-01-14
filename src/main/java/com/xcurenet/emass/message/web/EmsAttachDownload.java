@@ -123,7 +123,7 @@ public class EmsAttachDownload {
 					try {
 						log.debug("path:{}", path);
 						in = ftp.download(path.substring(0, path.lastIndexOf('/') + 1), new File(path).getName());
-						f = new File("/users/apache/temp/" + new File(path).getName());
+						f = new File( Common.TMP_PATH + new File(path).getName());
 						fout = new FileOutputStream(f);
 						IOUtils.copy(in, fout);
 

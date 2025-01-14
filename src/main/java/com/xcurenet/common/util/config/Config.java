@@ -353,6 +353,8 @@ public class Config {
 
 			log.info("[CONFIG] LOAD START..");
 
+			if (Common.mkdirs(Common.TMP_PATH)) log.info("[UI] 임시 폴더 경로 {}",Common.TMP_PATH);
+
 
 			configs = configService.getConfList();
 
