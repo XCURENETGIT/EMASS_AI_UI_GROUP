@@ -383,18 +383,18 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 					infoUserVO.setVERSION(obj.getInt("VERSION"));
 					infoUserVO.setUSERID(obj.getString("USERID"));
 					infoUserVO.setNAME(obj.getString("NAME"));
-					infoUserVO.setCOCD(obj.getString("COCD"));
-					infoUserVO.setCONM(obj.getString("CONM"));
-					infoUserVO.setSUBORGCD(obj.getString("SUBORGCD"));
-					infoUserVO.setSUBORGNM(obj.getString("SUBORGNM"));
-					infoUserVO.setBUSICD(obj.getString("BUSICD"));
-					infoUserVO.setBUSINM(obj.getString("BUSINM"));
-					infoUserVO.setDEPTCD(obj.getString("DEPTCD"));
-					infoUserVO.setDEPTNM(obj.getString("DEPTNM"));
-					infoUserVO.setJIKGUBCD(obj.getString("JIKGUBCD"));
-					infoUserVO.setJIKGUBNM(obj.getString("JIKGUBNM"));
-					infoUserVO.setCEO(obj.getString("CEO").equals("Y") ? "Y" : "N");
-					infoUserVO.setSABUN(obj.getString("SABUN"));
+					infoUserVO.setCOCD(obj.optString("COCD"));
+					infoUserVO.setCONM(obj.optString("CONM"));
+					infoUserVO.setSUBORGCD(obj.optString("SUBORGCD"));
+					infoUserVO.setSUBORGNM(obj.optString("SUBORGNM"));
+					infoUserVO.setBUSICD(obj.optString("BUSICD"));
+					infoUserVO.setBUSINM(obj.optString("BUSINM"));
+					infoUserVO.setDEPTCD(obj.optString("DEPTCD"));
+					infoUserVO.setDEPTNM(obj.optString("DEPTNM"));
+					infoUserVO.setJIKGUBCD(obj.optString("JIKGUBCD"));
+					infoUserVO.setJIKGUBNM(obj.optString("JIKGUBNM"));
+					infoUserVO.setCEO(obj.optString("CEO").equals("Y") ? "Y" : "N");
+					infoUserVO.setSABUN(obj.optString("SABUN"));
 					mongoUtil.insert(infoUserVO);
 				} else if (Common.isEquals(collectionName, "INFO_IP")) {
 					InfoIpVO infoIpVO = new InfoIpVO();
@@ -487,7 +487,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 					InfoPrivateVO infoPrivateVO = new InfoPrivateVO();
 					infoPrivateVO.setVERSION(obj.getInt("VERSION"));
 					infoPrivateVO.setCODE(obj.getString("CODE"));
-					infoPrivateVO.setREGEX(obj.getString("REGEX"));
+					infoPrivateVO.setREGEX(obj.optString("REGEX"));
 					mongoUtil.insert(infoPrivateVO);
 				} else if (Common.isEquals(collectionName, "INFO_ACCOUNT")) {
 					InfoAccountVO infoAccountVO = new InfoAccountVO();

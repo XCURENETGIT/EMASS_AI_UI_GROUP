@@ -66,7 +66,10 @@
 
 	<!-- 개인정보? -->
 	<select id="getInfoRegExp" resultType="hashmap" parameterType="hashmap">
-		SELECT CODE, NAME, REGEX FROM UI_REGEXP
+		SELECT CODE AS CODE, NAME AS NAME, REGEX AS REGEX
+		FROM UI_REGEXP
+		ORDER BY CODE
+		LIMIT	${offset}, ${pageSize}
 	</select>
 	
 	<!-- 장비 정보 -->
