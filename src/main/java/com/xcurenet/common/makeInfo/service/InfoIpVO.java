@@ -13,7 +13,7 @@ import java.util.List;
 @Document(collection = "INFO_IP")
 public class InfoIpVO {
 
-	@Indexed
+	@Indexed(name = "VERSION_1")
 	@Field("VERSION")
 	private int VERSION;
 

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "INFO_IPRANGE_DEPT")
 public class InfoIpRangeDeptVO {
 
-	@Indexed
+	@Indexed(name = "VERSION_1")
 	@Field("VERSION")
 	private int VERSION;
 

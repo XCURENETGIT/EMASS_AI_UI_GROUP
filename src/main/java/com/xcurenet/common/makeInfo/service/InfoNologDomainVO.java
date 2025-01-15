@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "INFO_NOLOG_DOMAIN")
 public class InfoNologDomainVO {
 
-	@Indexed
+	@Indexed(name = "VERSION_1")
 	@Field("VERSION")
 	private int VERSION;
 
