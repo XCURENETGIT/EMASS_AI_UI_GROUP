@@ -1306,7 +1306,7 @@
             });
         }
         function userInfoPopStat(flag){
-            $('#userId, #userNm, #coCd_inUser, #busiCd_inUser, #generalCd_inUser, #deptByCoVal, #deptByCoStr').prop("disabled", flag);
+            $('#userNm, #coCd_inUser, #busiCd_inUser, #generalCd_inUser, #deptByCoVal, #deptByCoStr').prop("disabled", flag);
             $('#dept, #jikgubCd_inUser, #jikinCd_inUser, #userIp, #userEmail, #ceo_inUser').prop("disabled", flag);
             $('.userAccountSvc, .userAccountText .userBtnData').prop("diabled", flag);
 
