@@ -955,25 +955,27 @@
         });
 
         grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-            var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
-            if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
+	        var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
+	        if (body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024) + '...';
 
-            if(value.length > 1024) value = value.substring(0, 1024)+'...';
-            value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
+	        if (value.length > 1024) value = value.substring(0, 1024) + '...';
+	        value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 
-            value = highlightSearchStr(value, "subject");
-            //예약어 Highlight 처리
-            if(searchKeyword().length == 0 || parent.keywordHighlight.toString() == 'true') {
-                var kwds = nvl(grid.getValue(row, 'kwds_subject')).split(',');
-                if (kwds.length > 0 && kwds[0] != '') {
-	                value = highlightKeyword(value, kwds);
-                }
-            }
-            var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_newOpen('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
-            if( (isConsent( ) && grid.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
-            return rtnVal;
+	        value = highlightSearchStr(value, "subject");
+	        //예약어 Highlight 처리
+	        if (searchKeyword().length == 0 || parent.keywordHighlight.toString() == 'true') {
+		        var kwds = nvl(grid.getValue(row, 'kwds_subject')).split(',');
+		        if (kwds.length > 0 && kwds[0] != '') {
+			        value = highlightKeyword(value, kwds);
+		        }
+	        }
+
+	        if (value == undefined) value = '<s:message code="common.msg.nosubject"/>';
+	        var rtnVal = '<span title="' + body_snippet + '" onclick="" class="subject_read' + grid.getValue(row, 'readYn') + '">' + value + '</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_newOpen(' + row + ')" class="glyphicon glyphicon-new-window new-window"></a>';
+	        if ((isConsent() && grid.getValue(row, 'consentNo') == '') || !isDetailView()) rtnVal = '<span>' + value + '</span>';
+	        return rtnVal;
         });
-        grid.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
+	    grid.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
         grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 	        return highlightSearchStr(value, "user");
         });
