@@ -1178,6 +1178,13 @@ function getFileDetailMessage(msgid){
 
 }
 
+
+function getPattern() {
+    console.log("gg: "+patnName);
+    return patnName;
+}
+
+
 function getPiName(pattern) {
     var piName="";
 
