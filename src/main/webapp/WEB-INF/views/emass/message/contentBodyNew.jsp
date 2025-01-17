@@ -412,7 +412,7 @@
 				$("#helpView").css("display", "");
 				$("#helpHost").css("display", "none");
 				var chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?";
-				if (isVietnam) chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어? 베트남어로 답변해줘"
+				if (isVietnam == "true") chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어? 베트남어로 답변해줘"
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : '"' + $('#helpHost').attr('title') + chatString,
@@ -439,7 +439,7 @@
 				$("#helpView2").css("display", "");
 				$("#llmImg1").css("display", "none");
 				var chatString = "위에 내용을 한글로 번역해줘?";
-				if (isVietnam) chatString = "위에 내용을 베트남어로 번역해줘?";
+				if (isVietnam == "true") chatString = "위에 내용을 베트남어로 번역해줘?";
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
@@ -462,7 +462,7 @@
 				$("#helpView3").css("display", "");
 				$("#llmImg2").css("display", "none");
 				var chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠?";
-				if (isVietnam) chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠? 베트남어로 답변해주라";
+				if (isVietnam == "true") chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠? 베트남어로 답변해주라";
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
@@ -486,7 +486,7 @@
 				$("#helpView5").css("display", "");
 				$("#llmImg4").css("display", "none");
 				var chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘?";
-				if (isVietnam) chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘? 베트남어로 답변해주라";
+				if (isVietnam == "true") chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘? 베트남어로 답변해주라";
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
@@ -510,7 +510,7 @@
 				$("#llmImg3").css("display", "none");
 
 				var chatString = "위에 내용을 요약해줘?";
-				if (isVietnam) chatString = "위에 내용을 요약해줘? 베트남어로 답변해주라";
+				if (isVietnam == "true") chatString = "위에 내용을 요약해줘? 베트남어로 답변해주라";
 
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
