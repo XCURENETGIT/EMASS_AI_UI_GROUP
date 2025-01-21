@@ -18,6 +18,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class EmsReDefined {
 
@@ -75,11 +76,11 @@ public class EmsReDefined {
 			edc.setAttachSizeSort(Common.sum(edc.getAttachsize()));
 			edc.setSizeStr(Common.convertFileSize(edc.getSize()));
 			edc.setBodySizeStr(Common.convertFileSize(edc.getBody_size()));
-			
-			edc.setRecvsInOutInfo(checkInOut(edc.getRecvs()));
-			edc.setToInOutInfo(checkInOut(edc.getTo()));
-			edc.setCcInOutInfo(checkInOut(edc.getCc()));
-			edc.setBccInOutInfo(checkInOut(edc.getBcc()));
+
+			edc.setRecvsInOutInfo(checkInoutInfo2(edc.getRecvs_info(), "recvs"));
+			edc.setToInOutInfo(checkInoutInfo2(edc.getRecvs_info(), "to"));
+			edc.setCcInOutInfo(checkInoutInfo2(edc.getRecvs_info(), "cc"));
+			edc.setBccInOutInfo(checkInoutInfo2(edc.getRecvs_info(), "bcc"));
 			
 			if(Common.isNotEmpty(edc.getRecvs())) {
 //				if(summaryVal.equals("Y") && edc.getRecvs().size() > 5) {
@@ -181,6 +182,40 @@ public class EmsReDefined {
 		return checkTargetInOut(ipRange, inOuts, targets);
 	}
 
+	public String checkInoutInfo2(Map<String, List<Map<String, Object>>> recvsInfo, String type) {
+		if(Common.isEmpty(recvsInfo)) return null;
+		int countN = 0;
+		int countY = 0;
+
+		String inOutDelimiter = Config.getString("ui.inout.delimiter");
+		String[] inOuts = inOutDelimiter.split(",");
+
+		List<Map<String, Object>> recipients = "recvs".equals(type) ? recvsInfo.values().stream().flatMap(List::stream).collect(Collectors.toList()) : recvsInfo.get(type);
+
+		if (recipients != null) {
+			for (Map<String, Object> recipient : recipients) {
+				String insideValue = (String) recipient.get("inside");
+				String id = (String) recipient.get("id");
+				boolean inflag = matchesInOuts(id, inOuts);
+
+				if (inflag) countY++;
+				else if ("N".equals(insideValue)) countN++;
+				else if ("Y".equals(insideValue)) countY++;
+
+			}
+		}
+
+		return (countN == 0 && countY == 0) ? null : String.format("[%d/%d]", countN, countY);
+	}
+
+	private boolean matchesInOuts(String id, String[] inOuts) {
+		for (String inOut : inOuts) {
+			if (Common.isNotEmpty(inOut) && id.matches(".*" + inOut + ".*")) {
+				return true;
+			}
+		}
+		return false;
+	}
 	private String checkTargetInOut(List<IpRangeVO> ipRange, String[] inOuts, List<String> targets) {
 		if(targets ==null || targets.size() == 0 ) return "";
 		
@@ -189,7 +224,6 @@ public class EmsReDefined {
 		for( String target : targets) {
 			boolean inflag = false;
 			for(String inOut : inOuts) {
-				
 				if(Common.isNotEmpty(inOut) && target.matches(".*" + inOut + ".*")) {
 					inflag = true;
 					break;

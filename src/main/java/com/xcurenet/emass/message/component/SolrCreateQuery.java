@@ -144,7 +144,7 @@ public class SolrCreateQuery {
 			"body_snippet",
 			"sender", "sender_str", "sname", "recvs", "recvs_name", "to", "cc", "bcc", "usr_id", // 보낸사람, 받는사람
 			"xrootmtr",
-			"user", "user_str", "userid", "name", "sabun" //사용자
+			"user", "user_str", "userid", "name", "sabun","recvs_info" //사용자
 	};
 
 		public String[] BIGRAM_FIELD = {
