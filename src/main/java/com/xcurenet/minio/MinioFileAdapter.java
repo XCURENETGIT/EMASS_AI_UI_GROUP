@@ -1,6 +1,7 @@
 package com.xcurenet.minio;
 
 import com.xcurenet.common.crypto.CryptoCommon;
+import com.xcurenet.common.crypto.CryptoUIKey;
 import com.xcurenet.common.util.Common;
 import io.minio.*;
 import io.minio.errors.*;
@@ -15,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -137,7 +139,7 @@ public class MinioFileAdapter {
 
         try {
             //파일 찾기
-            inputStream = getInputStream(objectName, randomStr, fileName);
+            inputStream = (CryptoUIKey.isEncrypt) ? getInputStream(objectName, randomStr, fileName) : findFile(objectName);
             outputStream = response.getOutputStream();
 
             if (inputStream == null) { // 파일이 존재하지 않을때
@@ -208,14 +210,15 @@ public class MinioFileAdapter {
      * @param fileName
      * @return
      */
-    public InputStream getInputStream(String objectName, String randomStr, String fileName) {
+    public InputStream getInputStream(String objectName, String randomStr, String fileName) throws IOException {
         InputStream in = null;
         FileOutputStream fout = null;
+        File f = null;
         try {
             boolean found = findBucket(bucket);
             if (found) {
                 in = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
-                File f = new File(Common.TMP_PATH + randomStr + "-" + fileName);
+                f = new File(Common.TMP_PATH + randomStr + "_tmp" + getFileExtension(fileName));
                 fout = new FileOutputStream(f);
                 IOUtils.copy(in, fout);
                 CryptoCommon crypto = new CryptoCommon();
@@ -228,8 +231,24 @@ public class MinioFileAdapter {
         } finally {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(fout);
+            if (f != null) Files.delete(f.toPath());
         }
         return null;
+    }
+
+
+    /**
+     * getFileExtension
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return null;
+        }
+        return fileName.substring(dotIndex + 1);
     }
 
 
