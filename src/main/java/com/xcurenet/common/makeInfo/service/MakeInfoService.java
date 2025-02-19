@@ -23,5 +23,6 @@ public interface MakeInfoService {
 	public int addInfoIdNoLog();
 	public int addInfoSizeNoLog();
 	public int addInfoSubjectNoLog();
+	public int addInfoPatternExcept();
 
 }

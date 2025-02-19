@@ -533,5 +533,54 @@
 		</if>
 	</select>
 
+	<!-- 패턴 예외 목록 조회 -->
+	<select id="getPatternExceptList" resultType="patternExceptVO" parameterType="hashMap">
+		SELECT 	A.PATTERN_LOG_SEQ AS patternLogSeq,
+		A.PRIVATETYPE AS privateType,
+		A.PATTERN AS pattern,
+		A.USE_YN AS useYn,
+		DATE_FORMAT(A.CREATE_DT,'%Y-%m-%d %T') AS createDt,
+		A.CREATE_USER AS createUser
+		FROM	UI_PATTERN_EXCEPT A
+		WHERE	1 = 1
+		<if test='searchStr!=null and searchStr!=""'>
+			AND		A.PATTERN LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		<if test='privateType!=null and privateType!=""'>
+			AND		A.PRIVATETYPE LIKE CONCAT(#{privateType})
+		</if>
+		ORDER	BY A.PATTERN_LOG_SEQ ASC
+	</select>
+
+	<!--패턴 예외 이미 등록 되어있는지 조회 -->
+	<select id="isPatternExist" resultType="int" parameterType="patternExceptVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_PATTERN_EXCEPT
+		WHERE	PATTERN	= #{pattern} AND PRIVATETYPE= #{privateType}
+		<if test='patternLogSeq!=null and patternLogSeq!=""'>
+			AND		PATTERN_LOG_SEQ	= #{patternLogSeq}
+		</if>
+	</select>
+
+	<!-- 패턴 예외 등록 -->
+	<insert id="insertPatternExcept" parameterType="patternExceptVO">
+		INSERT	INTO UI_PATTERN_EXCEPT ( PATTERN_LOG_SEQ, PRIVATETYPE,PATTERN, CREATE_DT, CREATE_USER,USE_YN )
+		SELECT	IFNULL(MAX(CAST(PATTERN_LOG_SEQ AS UNSIGNED)),0)+1, #{privateType},#{pattern}, NOW(),#{createUser}, 'Y'
+		FROM	UI_PATTERN_EXCEPT
+	</insert>
+
+	<!-- 패턴 예외 수정 -->
+	<update id="updatePatternExcept" parameterType="patternExceptVO">
+		UPDATE	UI_PATTERN_EXCEPT
+		SET		PATTERN			= #{pattern}
+		WHERE	PATTERN_LOG_SEQ	= #{patternLogSeq}
+	</update>
+
+	<!-- 패턴 예외삭제 -->
+	<delete id="deletePatternExcept" parameterType="patternExceptVO">
+		DELETE	FROM UI_PATTERN_EXCEPT	WHERE	PATTERN_LOG_SEQ	= #{patternLogSeq}
+	</delete>
+
+
 </mapper>
 

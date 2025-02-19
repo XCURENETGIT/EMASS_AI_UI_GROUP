@@ -13,4 +13,6 @@ public interface PatternService {
 	public int deletePattern(List<PatternVO> patternVO);
 
 	void updatePattern(PatternVO patternVO, String adminId);
+
+	public String allPatternCodeStr();
 }

@@ -11,7 +11,12 @@
 		WHERE	USE_YN = 'Y'
 	</select>
 
-	
+	<!-- 예외 패턴  정보 -->
+	<select id="getInfoExceptPattern"  resultType="hashmap" parameterType="hashmap">
+		SELECT  PRIVATETYPE, PATTERN
+		FROM	UI_PATTERN_EXCEPT
+	</select>
+
 	<!-- 사용자 정보 -->
 	<select id="getInfoUser" resultType="hashmap" parameterType="hashmap">
 		SELECT	A.USER_ID AS USERID, A.USER_NM AS NAME, A.COCD, B.CONM, A.GENERALCD AS SUBORGCD, C.GENERALNM AS SUBORGNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKGUBCD, G.JIKGUBNM, A.CEO, A.SABUN

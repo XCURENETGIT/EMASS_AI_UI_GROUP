@@ -110,6 +110,8 @@
 		<typeAlias alias="chronyVO" type="com.xcurenet.common.ntp.service.ChronyVO" />
 
 		<typeAlias alias="hostDescriptionVO" type="com.xcurenet.emass.message.service.HostDescriptionVO" />
+		<typeAlias alias="patternExceptVO" type="com.xcurenet.emass.filter.service.PatternExceptVO"/>
+		<typeAlias alias="commonCodeVO" type="com.xcurenet.emass.message.service.CommonCodeVO"/>
 
 
 	</typeAliases>

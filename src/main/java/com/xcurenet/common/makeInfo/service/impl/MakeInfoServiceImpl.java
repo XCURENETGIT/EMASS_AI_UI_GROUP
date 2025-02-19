@@ -98,6 +98,11 @@ public class MakeInfoServiceImpl extends XcnAbstractDAO implements MakeInfoServi
 		return makeInfoServiceMysql.addInfoRegExp();
 	}
 
+	@Override
+	public int addInfoPatternExcept() {
+		return makeInfoServiceMysql.addInfoPatternExcept();
+	}
+
 
 
 }

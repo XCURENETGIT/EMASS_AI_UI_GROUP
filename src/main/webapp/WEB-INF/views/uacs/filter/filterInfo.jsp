@@ -938,8 +938,9 @@
 					<div class="contentSub" style="padding: 0px;">
 						<div id="deviceGrid" class="slickGrid gridArea" style="height:300px;"></div>
 					</div>
+					<%} %>
 				</div>
-				<%} %>
+
 				<input type="hidden" name="tabId"/>
 				<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
 				<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">

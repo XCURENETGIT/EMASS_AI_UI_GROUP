@@ -37,4 +37,12 @@
 		WHERE CODE = #{code}
 	</update>
 
+	<select id ="allPatternCode" resultType="commonCodeVO">
+		SELECT
+		CODE AS code,
+		NAME AS name,
+		CODE_TYPE AS type
+		FROM UI_REGEXP
+	</select>
+
 </mapper>

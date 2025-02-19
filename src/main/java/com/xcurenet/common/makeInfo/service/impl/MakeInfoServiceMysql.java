@@ -315,6 +315,21 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		return result;
 	}
 
+	public int addInfoPatternExcept() {
+		int result = 0;
+		log.info("[MAKE INFO] PatternExcept information apply start");
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		long version = getTableCurrentVersion("INFO_PATTERN_EXCEPT") + 1;
+		appendData("getInfoExceptPattern", "INFO_PATTERN_EXCEPT", version);
+		addVersion("INFO_PATTERN_EXCEPT", version);
+		mongoUtil.updateDate("INFO_PATTERN_EXCEPT", localDateTime);
+
+		log.info("[MAKE INFO] PatternExcept information apply end");
+		return result;
+
+	}
+
 
 	public void save(JSONArray data) {
 		String urlContent = data.toString();
@@ -417,6 +432,12 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 					infoHolidayVO.setDATE(obj.getString("DATE"));
 					infoHolidayVO.setCOMMENTS(obj.getString("COMMENTS"));
 					mongoUtil.insert(infoHolidayVO);
+				} else if (Common.isEquals(collectionName, "INFO_PATTERN_EXCEPT")) {
+					InfoPatternExpectVO infoPatternExpectVO = new InfoPatternExpectVO();
+					infoPatternExpectVO.setVERSION(obj.getInt("VERSION"));
+					infoPatternExpectVO.setPATTERN(obj.getString("PATTERN"));
+					infoPatternExpectVO.setPRIVATETYPE(obj.getString("PRIVATETYPE"));
+					mongoUtil.insert(infoPatternExpectVO);
 				} else if (Common.isEquals(collectionName, "INFO_WORKDAY")) {
 					InfoWorkdayVO infoWorkdayVO = new InfoWorkdayVO();
 					infoWorkdayVO.setVERSION(obj.getInt("VERSION"));
@@ -566,5 +587,4 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		}
 		return result;
 	}
-
 }

@@ -1,10 +1,13 @@
 package com.xcurenet.pattern.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.makeInfo.service.InfoVersionVO;
 import com.xcurenet.common.makeInfo.service.impl.MakeInfoServiceMysql;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.emass.message.service.CommonCodeVO;
 import com.xcurenet.pattern.service.PatternService;
 import com.xcurenet.pattern.service.PatternVO;;
 import org.apache.cxf.wsdl11.SOAPBindingUtil;
@@ -69,5 +72,17 @@ public class PatternServiceImpl extends XcnAbstractDAO implements PatternService
 		patternVO.setCode(patternVO.getCode().toUpperCase());
 		update("com.xcurenet.sqlmap.mappers.mysql.regexPattern.updatePattern", patternVO);
 		infoServiceMysql.addInfoRegExp();
+	}
+
+	public String allPatternCodeStr() {
+		String jsonStr = "";
+		try {
+			List<CommonCodeVO>  commonCodes =  selectList("com.xcurenet.sqlmap.mappers.mysql.regexPattern.allPatternCode", null);
+			ObjectMapper objectMapper = new ObjectMapper();
+			jsonStr = objectMapper.writeValueAsString(commonCodes);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return jsonStr;
 	}
 }

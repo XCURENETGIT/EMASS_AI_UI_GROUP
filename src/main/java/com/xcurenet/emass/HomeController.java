@@ -875,6 +875,15 @@ public class HomeController {
 		}
 	}
 
+	@RequestMapping(value = "/uacs/patternExcept.do", method = RequestMethod.GET)
+	public String patternExcept(Locale locale, Model model) {
+		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
+			return "/uacs/filter/patternExcept";
+		} else {
+			return "/emass/dashboard";
+		}
+	}
+
 	@RequestMapping(value = "/uacs/selectDevStatus.do")
 	public String selectDevStatus(Locale locale, Model model) {
 		model.addAttribute("headerYn","N");
