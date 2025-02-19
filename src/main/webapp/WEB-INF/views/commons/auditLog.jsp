@@ -137,6 +137,7 @@
         menuArr.push({id: 'STAT_INFOTYPE', name: '<s:message code="DATA_STAT.STAT_INFOTYPE"/>', p_id: 'DATA_STAT'});
     } //정보처리 통계
 	menuArr.push({id: 'POLICY_NOLOG', name: '<s:message code="POLICY_SETUP.POLICY_NOLOG"/>', p_id: 'POLICY_SETUP'}); //데이터 미로깅 정책
+	menuArr.push({id:'POLICY_PATTERN', 	name:'<s:message code="POLICY_SETUP.POLICY_PATTERN"/>', p_id:'POLICY_SETUP'}); //패턴 예외 정책
 	menuArr.push({id: 'DEV_INFO', name: '<s:message code="OPERATION_MGMT.DEV_INFO"/>', p_id: 'OPERATION_MGMT'}); //장비 정보
 	menuArr.push({
 	    id: 'DEV_EVENTLOG',
@@ -167,6 +168,22 @@
 	    name: '<s:message code="OPERATION_MGMT.HOLIDAY_LABEL"/>',
 	    p_id: 'POLICY_SETUP'
 	}); //업무/휴일 설정
+	menuArr.push({
+		id: 'ANALYSIS_SIMILARITY',
+		name: '<s:message code="DATA_ANALYSIS.ANALYSIS_SIMILARITY"/>',
+		p_id: 'DATA_ANALYSIS'
+	}); //AI 유사도 분석
+	menuArr.push({
+		id: 'STAT_KEYWORDHOST',
+		name: '<s:message code="DATA_STAT.STAT_KEYWORDHOST"/>',
+		p_id: 'DATA_STAT'
+	}); //핵심 기술 키워드 탐지 HOST TOP
+	menuArr.push({
+		id: 'STAT_KEYWORDNEW',
+		name: '<s:message code="DATA_STAT.STAT_KEYWORDNEW"/>',
+		p_id: 'DATA_STAT'
+	}); //핵심 기술 키워드 탐지 NEW HOST
+	menuArr.push({id: 'STAT_GW_ATTACHTYPE', name: '<s:message code="DATA_STAT.STAT_GW_ATTACHTYPE"/>', p_id: 'DATA_STAT'}); //그룹웨어 첨부파일 통계
 	menuArr.push({id: 'SEARCH_LOG', name: '<s:message code="OPERATION_MGMT.SEARCH_LOG"/>', p_id: 'OPERATION_MGMT'}); //조회 이력
 	menuArr.push({id: 'AUDIT_LOG', name: '<s:message code="OPERATION_MGMT.AUDIT_LOG"/>', p_id: 'OPERATION_MGMT'}); //운용자 감사 로그
 

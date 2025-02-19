@@ -1,6 +1,10 @@
 package com.xcurenet.emass.keyword.web;
 
+import com.xcurenet.annotations.AuditMenu;
+import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
+import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.TimeUtil;
@@ -28,7 +32,8 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
-@AuditParentMenu(ParentMenu.DATA_ANALYSIS)
+@AuditParentMenu(ParentMenu.DATA_STAT)
+@AuditMenu(Menu.STAT_KEYWORDHOST)
 public class KeywordHostController{
 
 	@Resource(name = "solrEdcService")
@@ -46,6 +51,7 @@ public class KeywordHostController{
 	@RequestMapping(value = "/getKeywordHost.xcn")
 	@Description("핵심 기술 키워드 탐지 HOST TOP 10")
 	@ResponseBody
+	@AuditOperation(Operation.SEARCH)
 	public XcnResponseVO getKeywordHost(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String startDate = Common.nvl(request.getParameter("startDate"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
@@ -225,6 +231,7 @@ public class KeywordHostController{
 
 	@RequestMapping(value = "/getKeywordUrl.xcn")
 	@Description("핵심 기술 키워드 탐지 HOST TOP 10 의 URL 별 집계")
+	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getKeywordUrl(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String startDate = Common.nvl(request.getParameter("startDate"));
@@ -261,6 +268,7 @@ public class KeywordHostController{
 
 	@RequestMapping(value = "/getKeywordDetail.xcn")
 	@Description("핵심 기술 키워드 탐지 HOST TOP 10 의 키워드별 집계")
+	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getKeywordDetail(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String startDate = Common.nvl(request.getParameter("startDate"));
@@ -298,6 +306,7 @@ public class KeywordHostController{
 	@RequestMapping(value = "/getKeywordDetailData.xcn")
 	@Description("핵심 기술 키워드 탐지 HOST TOP 10 의 키워드별 집계")
 	@ResponseBody
+	@AuditOperation(Operation.SEARCH)
 	public XcnResponseVO getKeywordDetailData(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String startDate = Common.nvl(request.getParameter("startDate"));
 		String endDate = Common.nvl(request.getParameter("endDate"));

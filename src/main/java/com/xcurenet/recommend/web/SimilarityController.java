@@ -1,7 +1,11 @@
 package com.xcurenet.recommend.web;
 
+import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
+import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
+import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -19,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@AuditParentMenu(ParentMenu.DATA_ANALYSIS)
+@AuditMenu(Menu.ANALYSIS_SIMILARITY)
 public class SimilarityController {
 
 	@Resource(name = "similarityService")

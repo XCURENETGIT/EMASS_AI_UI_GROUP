@@ -1,7 +1,11 @@
 package com.xcurenet.emass.filter.web;
 
+import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
+import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
+import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.makeInfo.service.MakeInfoService;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
@@ -23,7 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-
+@AuditParentMenu(ParentMenu.POLICY_SETUP)
+@AuditMenu(Menu.POLICY_PATTERN)
 public class PatternExceptController {
 
 	@Resource(name = "makeInfoService")

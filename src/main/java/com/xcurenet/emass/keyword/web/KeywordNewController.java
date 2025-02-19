@@ -1,7 +1,11 @@
 package com.xcurenet.emass.keyword.web;
 
+import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
+import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
+import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.keyword.service.KeywordNewService;
@@ -15,6 +19,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
+@AuditParentMenu(ParentMenu.DATA_STAT)
+@AuditMenu(Menu.STAT_KEYWORDNEW)
 public class KeywordNewController {
 
 	@Resource(name = "keywordNewService")
