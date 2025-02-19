@@ -526,6 +526,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private List<AbstractAggregationBuilder<?>> getAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 		if (Common.isEquals(sq.get("piAnalysisYn"), "Y")) return getPiAnalysisAggregations(sq);
+		if (Common.isEquals(sq.get("gwAttached"), "Y")) return getGwAttachedAggregations(sq);
 		if (null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
 		if ((null != sq.get("group") && Common.isEquals("true", sq.get("group")))) {
@@ -630,6 +631,24 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.minDocCount(mainFacetMinCount);
 		}
 
+	}
+
+	private List<AbstractAggregationBuilder<?>> getGwAttachedAggregations(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> pivotAggregations = new ArrayList<>();
+
+		String attachType = Common.nvl(sq.get("group.field"));
+		String subField =  Common.nvl(sq.get("facet.field"));
+		String limit =  Common.nvl(sq.get("aggregation.limit"));
+		AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(Common.ANALYSIS_GW_ATTACH_AGGS_SUFFIX)
+				.field(attachType)
+				.order(BucketOrder.count(false))
+				.minDocCount(1)
+				.size(maxCount(Common.nvz(limit)));
+		termsAggregation.subAggregation(AggregationBuilders.count(subField+"_count").field(subField));
+		termsAggregation.subAggregation(AggregationBuilders.histogram(subField+"_histogram").field(subField).interval(1048576).minDocCount(1)); // 10MB
+		pivotAggregations.add(termsAggregation);
+
+		return pivotAggregations;
 	}
 
 	private List<AbstractAggregationBuilder<?>> getPiAnalysisAggregations(SolrQuery sq) {

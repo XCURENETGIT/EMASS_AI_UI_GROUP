@@ -1445,6 +1445,249 @@ public class SolrEdcStatController {
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
 	}
 
+	@RequestMapping(value = "/getGwAttachedStatList.xcn")
+	@Description("그룹웨어 첨부 파일 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getGwAttachedStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		int limit = Common.nvz(request.getParameter("limit"));
+
+
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
+		String query = "";
+
+		SolrQuery sq = new SolrQuery();
+
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
+		query += String.format(" +attached:Y");
+		query += String.format(" +svc:( (EAAF) (EAAG) (EAAP) (EAAR) (EAAS) (EAU-) (EBBF) (EBBR) (EBBS) (EBD-) (EBDR) (ECIS) (EMB-) (EMBR) (EMDR) (EMDS) (EMER) (EMES) (EMF-) (EMM1) (EMM2) (EMM3) (EMM4) (EMMA) (EMMB) (EMMC) (EMMD) (EMMG) (EMMK) (EMML) (EMMO) (EMMP) (EMMR) (EMMS) (EMMT) (EMMU) (EMU-) (EPU-) (EPUR) (ESC-) (ESCR) (EWS-) (EWSR) )");
+
+
+		sq.setStart(0);
+		sq.setRows(0);
+		sq.setFacetSort("count");
+		sq.setFacetLimit(limit);
+		sq.setFacetMinCount(1);
+		sq.setQuery(query);
+
+
+		sq.addFacetField("attachtype");
+		sq.setParam("group.field", "attachtype");
+		sq.setParam("facet.field", "attachSizeSum");
+		sq.setParam("gwAttached", "Y");
+		sq.set("aggregation.limit", 5000);
+
+
+		SolrEdcMessageVO solrStatVo = new SolrEdcMessageVO();
+		solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
+
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
+	}
+
+	@RequestMapping(value = "/getGwAttachedStatDetailList.xcn")
+	@Description("그룹웨어 첨부 파일 상세 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getGwAttachedStatDetailList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String yAxis = Common.nvl(request.getParameter("yAxis"));
+		String rowKey = Common.nvl(request.getParameter("rowKey")).replaceAll("-", "");
+		String colKey = Common.nvl(request.getParameter("colKey")).replaceAll("-", "");
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		int offset = Common.nvz(request.getParameter("offset"));
+		int limit = Common.nvz(request.getParameter("limit"));
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
+		String adminId = Common.nvl(request.getParameter("adminId"));
+		String interGroup = Common.nvl(request.getParameter("interGroup"));
+		String serviceTypes = Common.nvl(request.getParameter("serviceType"));
+		String attachTypes = Common.nvl(request.getParameter("attachType"));
+		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
+		String colRowKey = Common.nvl(request.getParameter("colRowKey"));
+		String nameStat = Common.nvl(request.getParameter("nameStat"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		String query = "";
+		SolrQuery sq = new SolrQuery();
+		int cnt = rowKey.length();
+
+		if (!interGroup.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setInterestUserGroup(interGroup, "N");
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!interGroup.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setInterestUserGroup(interGroup, "N");
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!serviceTypes.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setService12(serviceTypes.replaceAll("\\|", ","));
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!attachTypes.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setAttach("Y", attachTypes);
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!(startDate.isEmpty() && endDate.isEmpty())) {
+			query += " +ctime:[" + startDate + " TO " + endDate + "] ";
+		}
+
+		if (cnt == 4 && yAxis.equals("svc12")) {
+			yAxis = "svc";
+		}
+
+		if (yAxis.equals("ml_confd_class")) {
+			if (!Config.getString("info.feedback.mode").equals("E") && colRowKey.equals("2")) {
+				query += " +" + yAxis + ": (" + "\"" + colRowKey + "\" " + "\"" + 3 + "\" " + ")";
+			} else query += " +" + yAxis + ":" + "\"" + colRowKey + "\" ";
+			yAxis = "svc";
+		}
+
+		if (Common.isNotEmpty(detailQuery)) {
+			query += detailQuery + " ";
+		}
+		if (colRowKey.length() == 3 && yAxis.equals("svc12")) {
+			yAxis = "svc";
+		}
+		String Yflag = "Y";
+		if (!rowKey.isEmpty()) {
+			String[] t = rowKey.split(",");
+			if (t.length > 0) {
+				String values = "";
+				for (String value : t) {
+					if (value.length() == 3 && nameStat.isEmpty()) {
+						Yflag = "N";
+					}
+					values += "\"" + value + "\" ";
+				}
+				if (Yflag.equals("N")) {
+					yAxis = "svc12";
+				}
+				query += "+" + yAxis + ":" + "(" + values + ") ";
+			} else {
+				if (rowKey.contains(",")) {
+					rowKey = rowKey.replaceAll(",", "");
+					query += "+" + yAxis + ":" + "\"" + rowKey.replaceAll(",", "") + "\" ";
+				} else {
+					query += "+" + yAxis + ":" + rowKey + " ";
+				}
+
+			}
+		}
+
+
+		if (Common.isEquals(yAxis, "sender_str")) {
+			List<String> codes = new ArrayList<>();
+			for (ServiceTypeVO service : Config.sendMailTypes) {
+				codes.add(service.getServiceCd());
+			}
+
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setService(Common.join(codes, ","));
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+		if (Common.isNotEquals(colKey, "rowkey") && Common.isNotEquals(colKey, "total") && Common.isNotEmpty(colKey)) query += String.format(" +attachSizeSum:%s", parseRange(colKey));
+		query += String.format(" +attached:Y");
+		query += String.format(" +svc:( (EAAF) (EAAG) (EAAP) (EAAR) (EAAS) (EAU-) (EBBF) (EBBR) (EBBS) (EBD-) (EBDR) (ECIS) (EMB-) (EMBR) (EMDR) (EMDS) (EMER) (EMES) (EMF-) (EMM1) (EMM2) (EMM3) (EMM4) (EMMA) (EMMB) (EMMC) (EMMD) (EMMG) (EMMK) (EMML) (EMMO) (EMMP) (EMMR) (EMMS) (EMMT) (EMMU) (EMU-) (EPU-) (EPUR) (ESC-) (ESCR) (EWS-) (EWSR) )");
+
+		sq.setQuery(query);
+		sq.setParam("searchAfter", searchAfter);
+
+		sq.setStart(offset);
+		sq.setRows(limit);
+
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, adminId);
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
+	}
+
+	public static String parseRange(String range) {
+		if (range.contains("_")) {
+			// 범위 문자열을 "_" 기준으로 나눔
+			String[] parts = range.split("_");
+			if (parts.length != 2) {
+				throw new IllegalArgumentException("IllegalArgumentException");
+			}
+			long startMB = Long.parseLong(parts[0].replace("MB", ""));
+			long endMB = Long.parseLong(parts[1].replace("MB", ""));
+			endMB = endMB + 2;
+			long startBytes = mbToBytes(startMB);
+			long endBytes = mbToBytes(endMB);
+			return String.format("[%d TO %d]", startBytes, endBytes);
+		} else if (range.contains("~")) {
+			long startMB = Long.parseLong(range.replace("MB~", ""));
+			long startBytes = mbToBytes(startMB);
+			long endBytes = tbToBytes();  // 끝 값을 1TB로 설정
+			return String.format("[%d TO %d]", startBytes, endBytes);
+		} else {
+			throw new IllegalArgumentException("IllegalArgumentException");
+		}
+	}
+
+
+	private static long tbToBytes() {
+		return 1024L * 1024L * 1024L * 1024L;
+	}
+
+	public static long mbToBytes(long mb) {
+		return mb * 1048576;
+	}
 
 
 }

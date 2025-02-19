@@ -13,19 +13,20 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
+import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedSum;
+import org.elasticsearch.search.aggregations.metrics.ValueCount;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Log4j2
 @ToString
@@ -115,6 +116,8 @@ public class SolrEdcMessageVO {
 		this.setPivot(elasticsearchAggregations.aggregations());
 		tempDataClear();
 		this.setFacets(elasticsearchAggregations);
+
+		if (Common.nvl(elasticsearchAggregations.aggregations().asMap().keySet().iterator().next()).indexOf(Common.ANALYSIS_GW_ATTACH_AGGS_SUFFIX) > -1) gwAttachedPivotParse(elasticsearchAggregations);
 	}
 
 
@@ -153,7 +156,54 @@ public class SolrEdcMessageVO {
 	}
 
 
+	/**
+	 * GroupWare pivot 첨부파일 전용 Parse
+	 *
+	 * @param elasticsearchAggregations
+	 */
+	private void gwAttachedPivotParse(ElasticsearchAggregations elasticsearchAggregations) {
+		pivotResult = new ArrayList<Map<String, Object>>();
+		headerList = new ArrayList();
+		pivotKeys = new HashMap();
 
+		Aggregations aggregations = elasticsearchAggregations.aggregations();
+		for (Map.Entry<String, Aggregation> pivotAggs : aggregations.getAsMap().entrySet()) {
+			Aggregation agg = pivotAggs.getValue();  // 집계 객체 (terms aggregation)
+			if (agg instanceof Terms) {
+				Terms termsAgg = (Terms) agg;
+				Iterator<Terms.Bucket> iterator = (Iterator<Terms.Bucket>) termsAgg.getBuckets().iterator();
+				while (iterator.hasNext()) {
+					Terms.Bucket bucket = iterator.next();
+					pivotItem = new HashMap();
+					// 하위 집계 (Range Aggregation) 자동 처리
+					Aggregations bucketAggregations = bucket.getAggregations();
+					ValueCount countAgg = bucketAggregations.get("attachsize_count");
+					Histogram histogramAgg = bucketAggregations.get("attachSizeSum_histogram");
+					// Histogram.Bucket 순회
+					Iterator<Histogram.Bucket> histIterator = (Iterator<Histogram.Bucket>) histogramAgg.getBuckets().iterator();
+					while (histIterator.hasNext()) {
+						Histogram.Bucket histBucket = histIterator.next();
+						// 히스토그램의 구간 키값을 처리
+						double doubleValue = Double.parseDouble(Common.nvl(histBucket.getKey()));
+						String keyString = String.valueOf((int) doubleValue);
+						pivotItem.put(Common.nvl(keyString), Common.nvz(histBucket.getDocCount(), 0));
+						pivotItem = mergeMap(pivotItem, getRangeString(Common.nvl(keyString)), Common.nvz(histBucket.getDocCount(), 0));
+						pivotKeys.put(getRangeString(Common.nvl(keyString)), 0);
+						pivotItem.putAll(attachPivotParse(bucket.getKeyAsString(), Common.nvz(countAgg, 0)));
+
+					}
+					if (pivotItem.containsKey("rowKey")) {
+						pivotResult.add(pivotItem);
+					}
+				}
+			}
+		}
+		headerList = new ArrayList<String>(pivotKeys.keySet());
+		Collections.sort(headerList);
+		this.pivotHeader = headerList;
+		headerList = new ArrayList<>();
+		this.pivotData = pivotResult;
+	}
 
 	public void facetAggregationsParser(final String key,final Aggregations aggregations,final long docsCount){
 		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
@@ -402,8 +452,66 @@ public class SolrEdcMessageVO {
 		}
 	}
 
+	public Map<String, Object> attachPivotParse(String bucketKey, long docCount) {
+		Map<String, Object> item = new HashMap<String, Object>();
+		item.put("rowKey", bucketKey);
+		item.put("total", docCount);
+		return item;
+	}
+
+	public String getRangeString(String bytes) {
+		// 바이트 값을 받아서 int로 변환
+		int byteValue = (int) Double.parseDouble(bytes);
+
+		// 범위 정의 (바이트 단위)
+		long[][] ranges = {
+				{0, 10 * 1024 * 1024},             // 0MB ~ 10MB
+				{11 * 1024 * 1024, 50 * 1024 * 1024},  // 11MB ~ 50MB
+				{51 * 1024 * 1024, 100 * 1024 * 1024}, // 51MB ~ 100MB
+				{101 * 1024 * 1024, 150 * 1024 * 1024}, // 101MB ~ 150MB
+				{151 * 1024 * 1024, 200 * 1024 * 1024}, // 151MB ~ 200MB
+				{201 * 1024 * 1024, Long.MAX_VALUE}  // 201MB 이상
+		};
+
+		// 범위 확인
+		for (long[] range : ranges) {
+			long minRange = range[0];
+			long maxRange = range[1];
+
+			if (byteValue >= minRange && byteValue <= maxRange) {
+				// 범위 내에 있으면 MB로 변환 후 반환
+				long minMB = minRange / (1024 * 1024);
+				long maxMB = (maxRange == Long.MAX_VALUE) ? Long.MAX_VALUE : maxRange / (1024 * 1024);
+
+				// 범위 키 생성
+				if (maxMB == Long.MAX_VALUE) {
+					return minMB + "MB~";
+				} else {
+					return minMB + "MB_" + maxMB + "MB";
+				}
+			}
+		}
+		// 범위에 맞는 값이 없으면 기본 값 반환
+		return "Unknown range";
+	}
+
+	public static <K, V> Map<K, V> mergeMap(Map<K, V> map, K key, V value) {
+		if (map == null) {
+			map = new HashMap<>();
+		}
 
 
+		map.merge(key, value, (oldValue, newValue) -> {
+			// 기존 값이 Integer 타입이면 덧셈을 수행
+			if (oldValue instanceof Integer && newValue instanceof Integer) {
+				return (V) Integer.valueOf((Integer) oldValue + (Integer) newValue);
+			}
+
+			return newValue;
+		});
+
+		return map;
+	}
 
 
 	public Map<String, Object> pivotParse(String bucketKey,long docCount){

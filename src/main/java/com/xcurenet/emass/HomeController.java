@@ -1116,6 +1116,11 @@ public class HomeController {
 		return "/emass/aihr/attachInCntDeptNonworkStat";
 	}
 
+	@RequestMapping(value = "/ems/gwAttachTypeStat.do", method = RequestMethod.GET)
+	@Description("그룹웨어 첨부 파일 통계")
+	public String gwAttachTypeStat(Locale locale, Model model) {
+		return "/emass/statistics/gwAttachTypeStat";
+	}
 
 
 	/**

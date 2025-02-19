@@ -102,6 +102,8 @@ public class Common {
 	public static final int MAX_VALUE = 10000; //엘라스틱 서치 최대 검색
 	public static String number;
 
+	public final static String ANALYSIS_GW_ATTACH_AGGS_SUFFIX = "_@gwat@";
+
 	
 	// 미분류,모니터링 제외 추가기능 관련 필드
 	public static final int DETECT_CONTEXT_RANGE = 10;
