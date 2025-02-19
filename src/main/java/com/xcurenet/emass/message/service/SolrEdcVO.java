@@ -234,6 +234,7 @@ public class SolrEdcVO {
 
     public String user_str;
 
+    public String confidence;
 
     //JsonIgnore JSON 리턴 X
 
@@ -309,8 +310,6 @@ public class SolrEdcVO {
     @JsonIgnore
     public String content;
 
-    @JsonIgnore
-    public String confidence;
 
     @JsonIgnore
     public List<Map<String, Object>> checked;

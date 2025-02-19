@@ -1136,6 +1136,17 @@ public class HomeController {
 		return "/emass/statistics/keywordNew";
 	}
 
+	/**
+	 * similarity JSP.
+	 */
+	@RequestMapping(value = "/analysis/similarity.do", method = RequestMethod.GET)
+	@Description("유사도 분석")
+	public String similarity(Locale locale, Model model) {
+		model.addAttribute("headerYn", "Y");
+		return "/analysis/similarity";
+	}
+
+
 
 	/**
 	 * 현재 엘라스틱 커넥터 연결된 인덱스 확인용
