@@ -23,6 +23,14 @@
 		</if>
 	</select>
 
+	<select id="getCoreKeywordAll" resultType="string">
+		SELECT B.KEYWORD_NAME AS keyword
+		FROM    UI_KEYWORD_GROUP A
+		INNER JOIN   UI_KEYWORD B
+		ON A.GROUP_SEQ = B.GROUP_SEQ
+		WHERE   A.CORE_YN = 'Y'
+	</select>
+
 	<!-- 예약어 그룹 중복체크 -->
 	<select id="isKeywordGroupNameExist" resultType="int" parameterType="keywordGroupVO">
 		SELECT  COUNT(*) AS CNT

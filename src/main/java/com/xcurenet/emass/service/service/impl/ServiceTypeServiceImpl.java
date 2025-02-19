@@ -84,5 +84,12 @@ public class ServiceTypeServiceImpl extends XcnAbstractDAO implements ServiceTyp
 		return update("com.xcurenet.sqlmap.mappers.mysql.service.updateServiceUseYn", service);
 	}
 
+	@Override
+	public List<ServiceTypeVO> getServiceListForHostPage(final String adminId) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("adminId", adminId);
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.service.getServiceListAuth",param);
+	}
+
 
 }

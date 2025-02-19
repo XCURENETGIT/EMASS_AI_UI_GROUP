@@ -80,6 +80,11 @@ public class KeywordServiceImpl extends XcnAbstractDAO implements KeywordService
 	}
 
 	@Override
+	public List<String> getCoreKeywordAll() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.keyword.getCoreKeywordAll",null);
+	}
+
+	@Override
 	public JSONObject importKeyword(JSONArray keywordList) {
 
 		JSONObject result = new JSONObject();

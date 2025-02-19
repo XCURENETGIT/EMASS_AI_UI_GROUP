@@ -31,4 +31,5 @@ public interface ServiceTypeService {
 	public int updateServiceUseYn(ServiceTypeVO service);
 
 
+	public List<ServiceTypeVO> getServiceListForHostPage(String adminId);
 }

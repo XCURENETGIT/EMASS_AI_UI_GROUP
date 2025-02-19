@@ -20,4 +20,6 @@ public interface KeywordService {
 	public int deleteKeyword(final List<KeywordVO> keywords);
 
 	public JSONObject importKeyword(JSONArray keywordList);
+
+	public List<String> getCoreKeywordAll();
 }

@@ -122,4 +122,12 @@ public class ServiceTypeController {
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
+	@RequestMapping(value = "/getServiceListForHostPage.xcn")
+	@Description("서비스 타입 리스트 조회(핵심 키워드 페이지에서 사용)")
+	@ResponseBody
+	public XcnResponseVO getServiceListForHostPage(final HttpSession session){
+		List<ServiceTypeVO> service = serviceTypeService.getServiceListForHostPage(Common.getAdminId(session));
+		return new XcnResponseVO(XcnRspCode.OK, service, service.size());
+	}
+
 }

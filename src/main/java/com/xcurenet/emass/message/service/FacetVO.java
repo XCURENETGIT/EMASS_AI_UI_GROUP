@@ -13,5 +13,6 @@ public class FacetVO {
 	private String sabun;
 	private String email;
 	private long count;
+	private String count2;
 }
 
