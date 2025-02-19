@@ -104,4 +104,6 @@ public interface UserService {
 	public String getUserAccountList(String sender,String svc12);
 
 	List<UserVO> getUserIds2();
+
+	public List<AdminVO> getBusiAdmin(String admin);
 }

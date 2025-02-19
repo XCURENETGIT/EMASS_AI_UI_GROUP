@@ -302,6 +302,11 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getUserIds2");
 	}
 
+	@Override
+	public List<AdminVO> getBusiAdmin(String admin) {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getBusiAdmin", admin);
+	}
+
 
 	@Override
 	public boolean isUserIdExist(final UserVO user) {

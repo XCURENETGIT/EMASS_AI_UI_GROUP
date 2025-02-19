@@ -87,6 +87,10 @@ public class MongoUtil {
 		return mongoTemplate.count(query, vo);
 	}
 
+	public Long count(Query query,String collectionName) {
+		return mongoTemplate.count(query, collectionName);
+	}
+
 	//다건조회
 	public <T> List<T> selectList(Query query, Class<T> vo) {
 		return mongoTemplate.find(query, vo);
@@ -95,6 +99,12 @@ public class MongoUtil {
 	//다건조회
 	public <T> List<T> selectList(Query query, Class<T> vo, String collectionName) {
 		return mongoTemplate.find(query, vo, collectionName);
+	}
+
+	//다건 조회 Aggregation 조회
+	public <T> List<T> selectList(Aggregation aggregation, Class<T> resultClass, String collectionName) {
+		AggregationResults<T> results = mongoTemplate.aggregate(aggregation, collectionName, resultClass);
+		return results.getMappedResults();
 	}
 
 	public <T> T insert(T object, String collectionName) {

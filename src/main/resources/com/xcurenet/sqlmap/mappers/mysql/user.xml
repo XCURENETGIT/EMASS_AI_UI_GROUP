@@ -731,6 +731,13 @@
 		FROM  UI_USER_ACCOUNT
 	</select>
 
+	<select id="getBusiAdmin" resultType="adminVO" parameterType="string">
+		SELECT  A.BUSICD AS busiCd, A.BUSINM AS busiNm
+		FROM	UI_BUSI A, UI_ADMIN_BUSI B
+		WHERE	A.BUSICD = B.BUSICD
+		AND		B.ADMIN_ID = #{adminId}
+	</select>
+
 
 
 </mapper>
