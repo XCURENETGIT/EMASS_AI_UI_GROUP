@@ -510,7 +510,7 @@
         grid2.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
         grid2.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 160, 'left', false, 'nomal');
        /* grid2.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');*/
-    } else if (codeType == 'keyword') {
+    } else if (codeType == 'keyword' || codeType == 'coreKeyword') {
         grid2.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 260, 'left', false, 'link');
     } else {
         grid2.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
