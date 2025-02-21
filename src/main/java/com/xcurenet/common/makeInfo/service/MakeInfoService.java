@@ -25,4 +25,5 @@ public interface MakeInfoService {
 	public int addInfoSubjectNoLog();
 	public int addInfoPatternExcept();
 
+	public int addInfoKeywordCore();
 }

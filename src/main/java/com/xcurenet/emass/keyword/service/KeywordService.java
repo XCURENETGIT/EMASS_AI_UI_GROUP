@@ -21,5 +21,14 @@ public interface KeywordService {
 
 	public JSONObject importKeyword(JSONArray keywordList);
 
+	public int CoreKeywordCount();
+
 	public List<String> getCoreKeywordAll();
+
+
+	public int GroupKeywordCount(KeywordGroupVO group);
+
+	public String isCoreGroup(String groupSeq);
+
+	public String isCoreGroupName(String groupSeq);
 }

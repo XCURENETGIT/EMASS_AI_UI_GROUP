@@ -83,9 +83,15 @@ public class KeywordController {
 	public XcnResponseVO insertKeyword(final HttpServletRequest request, KeywordVO keyword) throws Exception {
 		if (keywordService.isKeywordNameExist(keyword)) {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.keyword", request, keyword.getKeywordName()));
+		}else if (keywordService.CoreKeywordCount() >=20 && Common.isEquals(keywordService.isCoreGroup(keyword.getGroupSeq()),"Y")){
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("keyword.coreKeyword.fulladd", request));
 		} else {
 			int rs = keywordService.insertKeyword(keyword);
+			if (Common.isEquals(keywordService.isCoreGroup(keyword.getGroupSeq()), "Y")){ //핵심 키워드 그룹에서 추가
+				makeInfoService.addInfoKeywordCore();
+			}
 			makeInfoService.addInfoKeyword();
+
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -99,6 +105,9 @@ public class KeywordController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.keyword", request, keyword.getKeywordName()));
 		} else {
 			int rs = keywordService.updateKeyword(keyword);
+			if (Common.isEquals(keywordService.isCoreGroup(keyword.getGroupSeq()), "Y")){
+				makeInfoService.addInfoKeywordCore();
+			}
 			makeInfoService.addInfoKeyword();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
@@ -116,7 +125,11 @@ public class KeywordController {
 			KeywordVO keyword = (KeywordVO) JSONObject.toBean(data.getJSONObject(i), KeywordVO.class);
 			keywords.add(keyword);
 		}
+		String coreCheck = keywordService.isCoreGroup(keywords.get(0).getGroupSeq());
 		int rs = keywordService.deleteKeyword(keywords);
+		if (Common.isEquals(coreCheck, "Y")){
+			makeInfoService.addInfoKeywordCore();
+		}
 		makeInfoService.addInfoKeyword();
 		return new XcnResponseVO(XcnRspCode.OK, rs);
 	}

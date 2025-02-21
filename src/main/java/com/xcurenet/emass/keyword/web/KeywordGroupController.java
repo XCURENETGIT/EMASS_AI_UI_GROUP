@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.xcurenet.emass.keyword.service.KeywordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,9 @@ public class KeywordGroupController {
 	@Resource(name = "makeInfoService")
 	private MakeInfoService makeInfoService;
 
+	@Resource(name = "keywordService")
+	public KeywordService keywordService;
+
 	@RequestMapping(value = "/getKeywordGroupList.xcn")
 	@Description("예약어 그룹 리스트 조회")
 	@AuditOperation(Operation.SEARCH)
@@ -65,8 +69,14 @@ public class KeywordGroupController {
 	@ResponseBody
 	public XcnResponseVO updateKeywordGroup(final HttpServletRequest request, KeywordGroupVO group) throws Exception {
 		if (keywordGroupService.isGroupNameExist(group)) return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.keywordGroup", request, group.getGroupName()));
+		else if (Common.isEquals(group.getCoreYn(),"Y") && ((keywordService.CoreKeywordCount() + keywordService.GroupKeywordCount(group)) > 20)){
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("keyword.coreKeyword.fulladd", request));
+		}
 		else {
 			int rs = keywordGroupService.updateKeywordGroup(group);
+			if (Common.isEquals(keywordService.isCoreGroup(group.getGroupSeq()), "Y")){
+				makeInfoService.addInfoKeywordCore();
+			}
 			makeInfoService.addInfoKeyword();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
@@ -84,7 +94,12 @@ public class KeywordGroupController {
 			KeywordGroupVO group = (KeywordGroupVO) JSONObject.toBean(data.getJSONObject(i), KeywordGroupVO.class);
 			groups.add(group);
 		}
+
+		String coreCheck = keywordService.isCoreGroup(groups.get(0).getGroupSeq());
 		if (keywordGroupService.deleteKeywordGroup(groups) == 1) {
+			if (Common.isEquals(coreCheck, "Y")){
+				makeInfoService.addInfoKeywordCore();
+			}
 			makeInfoService.addInfoKeyword();
 			return new XcnResponseVO(XcnRspCode.OK);
 		}

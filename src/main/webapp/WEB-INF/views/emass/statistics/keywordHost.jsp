@@ -671,6 +671,8 @@
 		grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDHOST"/> - HOST TOP 10');
 		grid1.onClick = function () {
 			host = grid1.getValue(grid1.Row, 'name');
+			var count = grid1.getValue(grid1.Row, 'count');
+			if (count == 0) return;
 			getUrlData(host);
 			grid3.initData();
 			$('#keywordSearchText').text('');

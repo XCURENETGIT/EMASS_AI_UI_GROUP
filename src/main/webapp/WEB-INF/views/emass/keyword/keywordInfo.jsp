@@ -59,6 +59,7 @@
 		$('#groupInsertBtn').click(function(){
 			$('#keywordGroupPop input[type=text]').val('');
 			$('[name=useYn][value=Y]').prop('checked',true);
+			$('[name=coreYn][value=N]').prop('checked',true);
 			$('#keywordGroupPop').modal('show');
 			$('#keywordGroupPop').attr('mode','insert');
 			setTimeout(function(){
@@ -291,7 +292,7 @@
 		}
 
 		var fileExt = attach.substring( attach.lastIndexOf( "." )+1, attach.length ).toLowerCase( );
-		$('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
+		// $('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
 
 		ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function(rs){
 			if(rs){
@@ -362,8 +363,7 @@
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
-				<div class="modalTop">
-					<h3><s:message code="keyword.msg.part_mgnt"/>-<s:message code="common.msg.addmodify"/></h3>
+				<div class="modalTop" style="height: 16px;">
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						<s:message code="common.required.msg"/>
@@ -394,6 +394,20 @@
 							<s:message code="common.msg.unuse"/>
 						</label>
 					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="coreYn" class=""><s:message code="common.msg.coreYn"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<label class="radio-inline c-radio">
+							<input type="radio" name="coreYn" value="Y" checked>
+							<s:message code="common.msg.use"/>
+						</label>
+						<label class="radio-inline c-radio">
+							<input type="radio" name="coreYn" value="N">
+							<s:message code="common.msg.unuse"/>
+						</label>
+					</div>
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
@@ -412,8 +426,7 @@
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
-				<div class="modalTop">
-					<h3><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h3>
+				<div class="modalTop" style="height: 16px;">
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						<s:message code="common.required.msg"/>
@@ -516,10 +529,10 @@
 
 <div>
 	<div class="searchArea">
-		<div style="width:470px; float: left">
-			<div class="searchSub" style="width: 470px;">
-				<div>
-					<input type="text" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 220px;">
+		<div style="width: 560px; float: left">
+			<div class="searchSub">
+				<div style="display: flex; align-items: center;">
+					<input type="text" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 220px; margin-right: 8px;">
 					<button class="form_btn01" type="button" accesskey="G" id="searchStrGroupBtn"><s:message code="common.search"/></button>
 				</div>
 				<div class="btnform">
@@ -534,10 +547,10 @@
 			</div>-->
 		</div>
 
-		<div style="width:calc(100% - 470px); padding-left: 16px; float: left">
-			<div class="searchSub" style="width:calc(100% - 470px) ">
-				<div>
-					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrKeyword" style="width: 280px;">
+		<div style="width:calc(100% - 600px); padding-left: 16px; float: left">
+			<div class="searchSub" style="width:100%;">
+				<div style="display: flex; align-items: center;">
+					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrKeyword" style="width: 280px; margin-right: 8px;">
 					<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn"><s:message code="common.search"/></button>
 				</div>
 				<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
@@ -556,11 +569,11 @@
 		</div>
 	</div>
 	<div class="content" style="overflow:hidden;">
-		<div class="contentSub" style="width:500px; float: left">
+		<div class="contentSub" style="width:600px; float: left">
 			<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
 		</div>
 		<div>
-			<div class="contentSub " style="width:calc(100% - 500px); float: left; padding-left:0px !important;">
+			<div class="contentSub " style="width:calc(100% - 600px); float: left; padding-left:0px !important;">
 				<div id="keywordListGrid" class="slickGrid gridArea"></div>
 			</div>
 		</div>
@@ -573,6 +586,11 @@
 	gridGroup.autoNumber();
 	gridGroup.colAdd('groupName', '<s:message code="keyword.msg.partnm"/>', 183, 'left', false, 'nomal');
 	gridGroup.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+		if(value=='Y') return '<s:message code="common.msg.use"/>';
+		else if(value=='N') return '<s:message code="common.msg.unuse"/>';
+		return '-';
+	});
+	gridGroup.colAdd('coreYn', '<s:message code="common.msg.coreYn"/>', 120, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
 		if(value=='Y') return '<s:message code="common.msg.use"/>';
 		else if(value=='N') return '<s:message code="common.msg.unuse"/>';
 		return '-';
@@ -593,6 +611,7 @@
 			$('#groupSeq').val(data.groupSeq);
 			$('#groupName').val(data.groupName);
 			$('[name=useYn][value='+data.useYn+']').prop('checked',true);
+			$('[name=coreYn][value='+data.coreYn+']').prop('checked',true);
 
 			$('#keywordGroupPop').attr('mode','modify');
 			$("#groupName").focus();

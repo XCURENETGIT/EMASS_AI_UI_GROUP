@@ -330,6 +330,22 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 	}
 
+	public int addInfoKeywordCore() {
+		int result = 0;
+		log.info("[MAKE INFO] KeywordCore information apply start");
+
+		long version = getTableCurrentVersion("INFO_KEYWORD_CORE") + 1;
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		appendData("getInfoKeywordCore", "INFO_KEYWORD_CORE", version);
+		addVersion("INFO_KEYWORD_CORE", version);
+		mongoUtil.updateDate("INFO_KEYWORD_CORE", localDateTime);
+
+		log.info("[MAKE INFO] KeywordCore information apply end");
+
+		return result;
+	}
+
 
 	public void save(JSONArray data) {
 		String urlContent = data.toString();
@@ -468,6 +484,12 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 					infoIpRangeDeptVO.setCONM(obj.getString("CONM"));
 					infoIpRangeDeptVO.setINSIDE(obj.getString("INSIDE"));
 					mongoUtil.insert(infoIpRangeDeptVO);
+				} else if (Common.isEquals(collectionName, "INFO_KEYWORD_CORE")) {
+					InfoKeywordCoreVO infoKeywordCoreVO = new InfoKeywordCoreVO();
+					infoKeywordCoreVO.setVERSION(obj.getInt("VERSION"));
+					infoKeywordCoreVO.setKEYWORD(obj.getString("KEYWORD"));
+					infoKeywordCoreVO.setCATEGORY(obj.getString("CATEGORY"));
+					mongoUtil.insert(infoKeywordCoreVO);
 				} else if (Common.isEquals(collectionName, "INFO_KEYWORD")) {
 					InfoKeywordVO infoKeywordVO = new InfoKeywordVO();
 					infoKeywordVO.setVERSION(obj.getInt("VERSION"));
@@ -587,4 +609,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		}
 		return result;
 	}
+
+
+
 }

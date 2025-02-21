@@ -242,6 +242,7 @@ public class KeywordHostController{
 		String serviceCd = Common.nvl(request.getParameter("serviceCd"));
 
 		if (Common.isEmpty(coreKeyword)) coreKeyword = String.join(",", keywordService.getCoreKeywordAll());
+
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
 
@@ -415,6 +416,7 @@ public class KeywordHostController{
 			if(Common.isNotEmpty(texts) && texts.size() > 0){
 				types.add(Prop.propFormat("condition.attach"));
 				for(String text : texts){
+					if (text == null) continue;
 					result.addAll(extractContext(text.replaceAll("\\n+", ""), keywords, Common.DETECT_CONTEXT_RANGE));
 				}
 			}

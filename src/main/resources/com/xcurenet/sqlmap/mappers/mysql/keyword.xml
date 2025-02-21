@@ -8,7 +8,8 @@
 	<select id="getKeywordGroupList" resultType="keywordGroupVO" parameterType="hashMap">
 		SELECT  GROUP_SEQ AS groupSeq,
 		GROUP_NAME AS groupName,
-		USE_YN AS useYn
+		USE_YN AS useYn,
+		CORE_YN AS coreYN
 		FROM	UI_KEYWORD_GROUP
 		WHERE	1=1
 		<if test='searchStr!=null and searchStr!=""'>
@@ -31,6 +32,7 @@
 		WHERE   A.CORE_YN = 'Y'
 	</select>
 
+
 	<!-- 예약어 그룹 중복체크 -->
 	<select id="isKeywordGroupNameExist" resultType="int" parameterType="keywordGroupVO">
 		SELECT  COUNT(*) AS CNT
@@ -49,8 +51,8 @@
 
 	<!-- 예약어 그룹 등록 -->
 	<insert id="insertKeywordGroup" parameterType="keywordGroupVO">
-		INSERT INTO UI_KEYWORD_GROUP (GROUP_SEQ, GROUP_NAME, USE_YN)
-		VALUES ((SELECT IFNULL(MAX(A.GROUP_SEQ)+1, 1001) FROM UI_KEYWORD_GROUP A), #{groupName}, #{useYn})
+		INSERT INTO UI_KEYWORD_GROUP (GROUP_SEQ, GROUP_NAME, USE_YN, CORE_YN)
+		VALUES ((SELECT IFNULL(MAX(A.GROUP_SEQ)+1, 1001) FROM UI_KEYWORD_GROUP A), #{groupName}, #{useYn}, #{coreYn})
 	</insert>
 
 	<!-- 예약어 그룹 등록 Import -->
@@ -63,7 +65,8 @@
 	<update id="updateKeywordGroup" parameterType="keywordGroupVO">
 		UPDATE	UI_KEYWORD_GROUP
 		SET		GROUP_NAME 	= #{groupName},
-		USE_YN 		= #{useYn}
+		USE_YN 		= #{useYn},
+		CORE_YN 	= #{coreYn}
 		WHERE	GROUP_SEQ 	= #{groupSeq}
 	</update>
 
@@ -112,6 +115,9 @@
 		<if test='keywordSeq!=null and keywordSeq!=""'>
 			AND		KEYWORD_SEQ != #{keywordSeq}
 		</if>
+		<if test='groupSeq!=null and groupSeq!=""'>
+			AND		GROUP_SEQ = #{groupSeq}
+		</if>
 	</select>
 
 	<!-- 예약어 추가 -->
@@ -119,6 +125,12 @@
 		INSERT INTO	UI_KEYWORD (GROUP_SEQ, KEYWORD_SEQ, KEYWORD_NAME, KEYWORD_DESC)
 		VALUES (#{groupSeq}, (SELECT IFNULL(MAX(A.KEYWORD_SEQ)+1, 1001) FROM UI_KEYWORD A), #{keywordName},  #{keywordDesc})
 	</insert>
+
+	<select id="isCoreGroupName" resultType="string" parameterType="string">
+		SELECT CORE_YN AS coreYn
+		FROM UI_KEYWORD_GROUP
+		WHERE GROUP_NAME=#{groupName}
+	</select>
 
 	<!-- 예약어 수정 -->
 	<update id="updateKeyword" parameterType="keywordVO">
@@ -128,10 +140,32 @@
 		WHERE	KEYWORD_SEQ 	= #{keywordSeq}
 	</update>
 
+
+
+	<select id="isCoreGroup" resultType="string" parameterType="string">
+		SELECT CORE_YN AS coreYn
+		FROM UI_KEYWORD_GROUP
+		WHERE GROUP_SEQ=#{groupSeq}
+	</select>
+
 	<!-- 예약어 삭제 -->
 	<update id="deleteKeyword" parameterType="keywordVO">
 		DELETE	FROM UI_KEYWORD WHERE	KEYWORD_SEQ	= #{keywordSeq}
 	</update>
+
+	<select id="CoreKeywordCount" resultType="int" >
+		SELECT COUNT(B.KEYWORD_SEQ) AS count
+		FROM    UI_KEYWORD_GROUP A
+		JOIN    UI_KEYWORD B ON A.GROUP_SEQ = B.GROUP_SEQ
+		WHERE   A.CORE_YN = 'Y'
+	</select>
+
+	<select id="GroupKeywordCount" resultType="int" parameterType="keywordGroupVO">
+		SELECT  COUNT(*) AS cnt
+		FROM    UI_KEYWORD_GROUP A
+		JOIN    UI_KEYWORD B ON A.GROUP_SEQ = B.GROUP_SEQ
+		WHERE   B.GROUP_SEQ=#{groupSeq}
+	</select>
 
 
 </mapper>

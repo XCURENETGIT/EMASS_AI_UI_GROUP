@@ -17,6 +17,16 @@
 		FROM	UI_PATTERN_EXCEPT
 	</select>
 
+	<!-- 핵심 키워드 Mysql  -->
+	<select id="getInfoKeywordCore" resultType="hashmap" parameterType="hashmap">
+		SELECT	KEYWORD_NAME AS KEYWORD, UI_KEYWORD_GROUP.GROUP_NAME AS CATEGORY
+		FROM	UI_KEYWORD JOIN UI_KEYWORD_GROUP ON UI_KEYWORD.GROUP_SEQ = UI_KEYWORD_GROUP.GROUP_SEQ
+		WHERE	UI_KEYWORD_GROUP.USE_YN = 'Y'
+		AND     UI_KEYWORD_GROUP.CORE_YN = 'Y'
+		ORDER	BY KEYWORD_NAME
+		LIMIT	${offset}, ${pageSize}
+	</select>
+
 	<!-- 사용자 정보 -->
 	<select id="getInfoUser" resultType="hashmap" parameterType="hashmap">
 		SELECT	A.USER_ID AS USERID, A.USER_NM AS NAME, A.COCD, B.CONM, A.GENERALCD AS SUBORGCD, C.GENERALNM AS SUBORGNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKGUBCD, G.JIKGUBNM, A.CEO, A.SABUN
