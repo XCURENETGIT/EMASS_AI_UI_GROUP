@@ -88,8 +88,7 @@ public class KeywordHostController{
 		query = new StringBuilder();
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" +host_str:(" +getStrArrs(facetHeader.split(",")) +")");
-		query.append(" +kwd:Y");
-		query.append(" +svc:(X* U*)");
+		query.append(schSvcType(unclsfiedOnly,serviceCd));
 
 		sq.setQuery(query.toString());
 		sq.setFacet(true);
