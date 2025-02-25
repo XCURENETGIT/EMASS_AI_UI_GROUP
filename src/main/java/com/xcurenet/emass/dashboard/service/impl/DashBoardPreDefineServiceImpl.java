@@ -94,7 +94,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public TodayNotWorkVO getTodayNotWork(TodayNotWorkVO vo) throws SolrServerException, IOException {
 		TodayNotWorkVO result = new TodayNotWorkVO();
 
-		String query = String.format("+ctime:[%s TO %s] +work:R", vo.getStartDt(), vo.getEndDt());
+		String query = String.format("+ctime:[%s TO %s] +work:((R) (H))", vo.getStartDt(), vo.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);

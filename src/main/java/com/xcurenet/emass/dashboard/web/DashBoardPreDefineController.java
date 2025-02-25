@@ -1,6 +1,7 @@
 package com.xcurenet.emass.dashboard.web;
 
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -22,6 +23,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.http.HttpRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +47,14 @@ public class DashBoardPreDefineController {
 		TodayDataStatusVO vo = new TodayDataStatusVO();
 		vo.setRange(range);
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 
@@ -64,8 +73,14 @@ public class DashBoardPreDefineController {
 		JSONObject param = Common.getParam(request);
 		TodayPatternVO vo = new TodayPatternVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setPatternType(Common.nvl(param.get("patternType")));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
@@ -82,8 +97,14 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		PatternPrivacyVO vo = new PatternPrivacyVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		PatternPrivacyVO patternPrivacyVO = dashBoardPreDefineService.getTodayPatternPrivacy(vo);
@@ -159,8 +180,13 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		RiskBehaviorVO vo = new RiskBehaviorVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		RiskBehaviorVO riskBehaviorVO = dashBoardPreDefineService.getTodayRiskBehavior(vo);
@@ -179,8 +205,14 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		TodayNotWorkVO vo = new TodayNotWorkVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		TodayNotWorkVO todayNotWorkVO = dashBoardPreDefineService.getTodayNotWork(vo);
@@ -197,8 +229,14 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		KeywordDetectionVO vo = new KeywordDetectionVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 		KeywordDetectionVO keywordDetectionVO = dashBoardPreDefineService.getTodayKeywordDetection(vo);
 
@@ -217,8 +255,14 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		ServiceDataLoggingVO vo = new ServiceDataLoggingVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		ServiceDataLoggingVO serviceDataLoggingVO = dashBoardPreDefineService.getServiceDataLogging(vo);
@@ -235,8 +279,14 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		FileTopVO vo = new FileTopVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		FileTopVO todayFileVO = dashBoardPreDefineService.getTodayFileTop(vo);
@@ -251,8 +301,14 @@ public class DashBoardPreDefineController {
 		long now = System.currentTimeMillis();
 		FileTopVO vo = new FileTopVO();
 		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		FileTopVO todayFileVO = dashBoardPreDefineService.getTodayFilePerson(vo);

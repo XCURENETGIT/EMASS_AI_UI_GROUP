@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
+<%
+	String dashboardPeriod = Config.getString("dashboard.period");
+%>
 <style>
 
 
@@ -130,6 +133,7 @@
         "sizeOption": "L",
         "sizeType": ""
     };
+    var dashboardPeriod = '<%=dashboardPeriod%>';
     $(document).ready(function() {
         function makePeriod(dashCondition) {
             dashCondition = JSON.parse(dashCondition);
@@ -805,7 +809,7 @@
                 success: function (data, total) {
                     var todayGroupWareSum = 0;
                     for (var i = 0; i < data.facet.length; i++) {
-                        if (data.facet[i][0] == "그룹웨어") {
+	                    if (data.facet[i][0] == "Groupware" || data.facet[i][0] == "그룹웨어") {
                             todayGroupWareSum = data.facet[i][1];
                             break;
                         }
@@ -1074,21 +1078,30 @@
 
             if (startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
 
-            var startMinusDay = 0;
-            var endMinusDay = 0;
-            if (startDtSelect == 'Y') startMinusDay = 1;
-            else if (startDtSelect == 'W') startMinusDay = 7;
+	        var startMinusDay = 0;
+	        var startMinusMouth = 0;
+	        var endMinusDay = 0;
 
-            if (endDtSelect == 'Y') endMinusDay = 1;
-            else if (endDtSelect == 'W') endMinusDay = 7;
+	        if (dashboardPeriod == 'W') startMinusDay = 7; // 1주전
+	        else if (dashboardPeriod == '1M') startMinusMouth = 1;
+	        else if (dashboardPeriod == '2M') startMinusMouth = 2;
 
-            var dateObj = new Date();
-            var startDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - startMinusDay, startTimeSelect, 00, 00);
-            var endDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - endMinusDay, endTimeSelect, 59, 59);
 
-            dashCondition.startDt = startDate.format('yyyymmddHHnnss');
-            dashCondition.endDt = endDate.format('yyyymmddHHnnss');
-            return JSON.stringify(dashCondition);
+	        if (endDtSelect == 'Y') endMinusDay = 1;
+	        else if (endDtSelect == 'W') endMinusDay = 7;
+
+	        var dateObj = new Date();
+
+	        var startDate = new Date(dateObj);  // 날짜 객체를 복사하여 사용
+	        startDate.setMonth(dateObj.getMonth() - startMinusMouth);
+	        startDate.setDate(dateObj.getDate() - startMinusDay);
+
+
+	        var endDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - endMinusDay, endTimeSelect, 59, 59);
+
+	        dashCondition.startDt = startDate.format('yyyymmdd')+"000000";
+	        dashCondition.endDt = endDate.format('yyyymmdd')+"235959";
+	        return JSON.stringify(dashCondition);
         }
 
         $(document).on('click', '.clicks', function () {
@@ -1145,8 +1158,8 @@
             if (dat == 'reserved') {
                 dashCondition.keywordYn = "Y";
             } else if (dat == 'groupWare') {
-                dashCondition.serviceType = "EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU";
-                dashCondition.serviceTypeNm = "게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타";
+	            dashCondition.serviceType = "EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU,EAU,EMD,ECI,EME,EZQ";
+	            dashCondition.serviceTypeNm = "게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타, 일반(자동전달),메신저,Samsung cic,Zohocliq";
             } else if (dat == 'work') {
                 dashCondition.ctimeWork = "R";
             } else if (dat == 'danger') {

@@ -1,5 +1,7 @@
  package com.xcurenet.emass.dashboard.web;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,8 +97,13 @@ public class DashBoardController {
 
 		FileSendVO vo = new FileSendVO();
 		vo.setAdminId(adminId);
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMdd")+"235959");
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 		vo.setFileSize(1);
 		FileSendVO rs = dashBoardService.getFileSend(vo);
