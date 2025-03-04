@@ -1123,110 +1123,6 @@ public class SolrEdcStatController {
 	}
 
 
-	@RequestMapping(value = "/getInfoNetwork.xcn")
-	@Description("개인정보 유출 관계 분석 관계도 조회")
-	@ResponseBody
-	public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
-		String userkey = request.getParameter("userkey");
-		String startDate = Common.nvl(request.getParameter("startDate"));
-		String endDate = Common.nvl(request.getParameter("endDate"));
-		String type = Common.nvl(request.getParameter("type"));
-		String piCount = Common.nvl(request.getParameter("piCount"));
-		String busi = Common.nvl(request.getParameter("busiStr"));
-		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
-		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
-
-
-		StringBuilder query = new StringBuilder();
-		query.append(String.format("+(userkey:" + userkey)+")");
-		if (!(startDate.isEmpty() && endDate.isEmpty())) {
-			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
-		}
-
-		String fieldConditional  = "";
-		if (Common.isEquals(type, "pi_total")) {
-
-			fieldConditional += " +( ";
-			for (String field : Config.PRIVATE_SVC) {
-				fieldConditional += ("(").concat(String.format("%s:>=%s", field,piCount).concat(")"));
-			}
-			fieldConditional += " ) ";
-			query.append(fieldConditional);
-
-		} else {
-			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s:>=%s", type,piCount)).concat(") "));
-		}
-
-
-		if (!name.isEmpty()) {
-			String[] nameArray = name.split(",");
-			query.append(" +userid:((");
-
-			for (int i = 0; i < nameArray.length; i++) {
-				if (i > 0) {
-					query.append(") (");
-				}
-				query.append(nameArray[i]);
-			}
-
-			query.append("))");
-		}
-
-		if (!busi.isEmpty()) {
-			String[] busiArray = busi.split(",");
-			query.append(" +busicd:((");
-
-			for (int i = 0; i < busiArray.length; i++) {
-				if (i > 0) {
-					query.append(") (");
-				}
-				query.append(busiArray[i]);
-			}
-
-			query.append("))");
-		}
-
-		if (!dept.isEmpty()) {
-			String[] deptArray = dept.split(",");
-			query.append(" +deptcd:((");
-
-			for (int i = 0; i < deptArray.length; i++) {
-				if (i > 0) {
-					query.append(") (");
-				}
-				query.append(deptArray[i]);
-			}
-
-			query.append("))");
-		}
-
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query.toString());
-		sq.setStart(0);
-		sq.setRows(Common.MAX_VALUE);
-		sq.setParam("piAnalysisNetWork", "Y");
-		sq.setParam("piType", type);
-		sq.setParam("piCount", piCount);
-
-		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
-
-		int piCnt = Integer.parseInt(piCount);
-		for (SolrEdcVO solrEdcVO :  solrVo.getEmass()) {
-			Map<String,Object> piMap = new HashMap<>();
-
-			Map<String,Object> voPiMap = solrEdcVO.getPiMap();
-			for(Map.Entry<String,Object> item : voPiMap.entrySet()){
-				if(Integer.parseInt(String.valueOf(item.getValue())) >= piCnt) piMap.put(item.getKey(),item.getValue());
-			}
-			solrEdcVO.setPiMap(piMap);
-		}
-
-		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
-
-
-	}
-
 	@RequestMapping(value = "/getInfoDetailList.xcn")
 	@Description("개인정보 유출 관계 분석 내역 조회")
 	@ResponseBody
@@ -1240,25 +1136,41 @@ public class SolrEdcStatController {
 		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
 		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
 		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
+		String piType = Common.nvl(request.getParameter("piType"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
 
 
-
 		StringBuilder query = new StringBuilder();
-		query.append(String.format("+(userkey:" + userkey)+")");
+		query.append(String.format("+(userkey:" + userkey) + ")");
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		if (Common.isEquals(type, "pi_total")) {
-			query.append(" +( ");
-			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+
+		if (Common.isEquals(piType, "pattern")) { //메세지 내 검출 패턴 수
+			if (Common.isEquals(type, "pi_total")) {
+				query.append(" +( ");
+				for (String field : Config.PRIVATE_SVC) {
+					query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+				}
+				query.append(" ) ");
+			} else {
+				type = "pi_amount.".concat(type);
+				query.append((" +(").concat(String.format("%s: [%s TO *]", type, piCount).concat(") ")));
 			}
-			query.append(" ) ");
-		} else {
-			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s: [%s TO *]", type, piCount).concat(") ")));
+		} else { // 총 패턴 검출 수
+			if (!Common.isEquals(type, "pi_total")) {
+				type = "pi_amount.".concat(type);
+				query.append((" +")).append(type).append(":[ 1 TO * ]");
+			} else {
+				query.append(" +( ");
+				for (String field : Config.PRIVATE_SVC) {
+					query.append(("(").concat(String.format("%s: [%s TO *]", field, "1").concat(") ")));
+				}
+				query.append(" ) ");
+			}
+
+			query.append(" +pi_total:[").append(piCount).append(" TO ").append("* ] ");
 		}
 
 
@@ -1308,7 +1220,7 @@ public class SolrEdcStatController {
 		sq.setParam("piType",type);
 		sq.setParam("piCount",piCount);
 		sq.setParam("piAnalysisDetail", "Y");
-		if (searchAfter != null) sq.setParam("searchAfter",searchAfter);
+		if (searchAfter != null) sq.setParam("searchAfter", searchAfter);
 		sq.setQuery(query.toString());
 		sq.setStart(offset);
 		sq.setRows(limit);

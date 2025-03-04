@@ -664,16 +664,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String[] fields = sq.getParams("aggregation.sub.fields");
 		int piCount = Common.nvz(sq.get("aggregation.piCount"));
 
-		if (Common.isEquals(sq.get("aggregation.piType"), "sum")) {
-			for (String field : fields) {
-				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0 && doc['%s'].value >= %s ? doc['%s'].value : 0", field, field, field, piCount, field));
-				termsAggregation.subAggregation(AggregationBuilders.sum(field).script(script));
+		if (Common.isEquals(sq.get("aggregation.piType"), "sum")) {   // aggregation.piType
+			for (String piSubField : fields) {
+				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0", piSubField, piSubField));
+				termsAggregation.subAggregation(AggregationBuilders.sum(piSubField).script(script));
 			}
-		} else {
-			for (String field : fields) {
-				Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1)  >= %s", field, piCount));
-				termsAggregation.subAggregation(AggregationBuilders.filter(field, new BoolQueryBuilder()
-						.must(QueryBuilders.existsQuery(field))
+		} else { //메세지 내 검출 수
+			for (String piSubField : fields) {
+				Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1)  >= %s", piSubField, piCount));
+				termsAggregation.subAggregation(AggregationBuilders.filter(piSubField, new BoolQueryBuilder()
+						.must(QueryBuilders.existsQuery(piSubField))
 						.must(new ScriptQueryBuilder(script))));
 			}
 		}
