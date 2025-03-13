@@ -808,7 +808,7 @@
 		<div class="row bordd p12 clear mat8">
 			<ul>
 				<li>
-					<span class="bullet02"></span><label for="fname" class="fb600">사업장 조회 조건 방식 설정</label>
+					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="common.conf.search"/></label>
 					<p class="indenttxt mat4">
 						<span class="mab12 dis_block"><s:message code="setup.message.search.comment"/><br/>
 								&nbsp;&nbsp;※1) <s:message code="setup.message.search.search1"/><br/>
@@ -836,7 +836,7 @@
 
 				<li>
 
-					<span class="bullet02"></span><label for="fname" class="fb600">부서 조회 조건 방식 설정</label>
+					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="common.conf.search2"/></label>
 					<p class="indenttxt mat4">
 						<span class="mab12 dis_block"><s:message code="setup.message.searchdept.comment"/><br/>
 								&nbsp;&nbsp;※1) <s:message code="setup.message.searchdept.search1"/><br/>

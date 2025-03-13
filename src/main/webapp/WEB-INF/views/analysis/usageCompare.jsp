@@ -15,9 +15,10 @@
 }
 
 #chartPopover .popover {
-	min-width:610px;
-	width:610px;
-	height:200px;
+	min-width: 610px;
+	width: 610px;
+	overflow-wrap: break-word;
+	min-height: 200px;
 }
 
 /*
