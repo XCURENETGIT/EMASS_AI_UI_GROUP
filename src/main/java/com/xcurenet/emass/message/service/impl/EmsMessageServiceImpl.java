@@ -16,17 +16,13 @@ import com.xcurenet.emass.consent.service.ConsentVO;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
-import com.xcurenet.emass.message.web.EmsAttachDownload;
 import com.xcurenet.gridfs.GridFs;
 import com.xcurenet.minio.MinioFileAdapter;
 import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
-import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.formula.functions.T;
-import org.bouncycastle.util.encoders.UTF8;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +41,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -803,11 +797,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("adminId", adminId);
 		param.put("searchKeyword", searchKeyword);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getSearchKeywordList", param);
-	}
-
-	@Override
-	public HostDescriptionVO getHostDescription(String host) {
-		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getHostDescription", host);
 	}
 
 	@Override

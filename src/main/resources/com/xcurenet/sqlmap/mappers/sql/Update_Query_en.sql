@@ -591,6 +591,11 @@ UPDATE UI_REGEXP SET NAME = 'Business registration number'    WHERE CODE =   'BR
 UPDATE UI_REGEXP SET NAME = 'Address (road name, lot number)'    WHERE CODE =   'AN';
 UPDATE UI_REGEXP SET NAME = 'Card number'    WHERE CODE =   'CN';
 
+UPDATE UI_REGEXP SET NAME = 'Large Same Attached File 3 OCCURRENCES  OutSide Send'    WHERE CODE =   'LAOP';
+UPDATE UI_REGEXP SET NAME = 'Access from abroad'    WHERE CODE =   'FCA';
+UPDATE UI_REGEXP SET NAME = 'Access Outside of Average Access Time'    WHERE CODE =   'AOH';
+
+
 
 
 UPDATE UI_ADMIN

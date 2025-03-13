@@ -410,39 +410,42 @@
 
 			$(document).on('click', '#helpHost', function(){
 				$("#helpView").css("display", "");
-				$("#helpHost").css("display", "none");
-				var chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?";
-				if (isVietnam == "true") chatString = " 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어? 베트남어로 답변해줘"
-				ui.get({
-					url : 'getLLMAnalysis.xcn',
-					chat : '"' + $('#helpHost').attr('title') + chatString,
-					success : function ( data, total ) {
+				$("#hostcategoryImg").css("display", "none");
+
+				var requestData = {
+					type: 'url.analysis',
+					chat: $('#helpHost').attr('title')+ '\n\n\n'
+				}
+
+				ui.post({
+					url: 'getLLMAnalysis.xcn',
+					data: requestData,
+					success: function (data, total) {
 						$('#helpHostDesc').html(data.response.fReplaceWord('\n', '.</br>'));
 						$('#hostDiv a').attr("title", data.response.fReplaceWord('\n', '.</br>'));
 
-						insertLlmHost($('#helpHost').attr('title'), data.response.fReplaceWord('\n', '.</br>'));
 					},
-					error : function (status, message) {
+					error: function (status, message) {
 						ui.alertMsg(message);
 					},
-					complete : function (){
+					complete: function () {
 						$("#helpView").css("display", "none");
-						$("#helpHost").css("display", "");
-						$("#hostDescriptionDiv").css("display", "none");
-
+						$("#hostcategoryImg").css("display", "");
 					}
 				});
 			});
 
 			$(document).on('click', '#koreaBody', function(){
-				$('#summaryModal h2').html('<s:message code="bodyview.body.content"/> <s:message code="llm.info.korea"/> ');
+				$('#summaryModal h2').html('<s:message code="llm.info.korea"/> ');
 				$("#helpView2").css("display", "");
 				$("#llmImg1").css("display", "none");
-				var chatString = "위에 내용을 한글로 번역해줘?";
-				if (isVietnam == "true") chatString = "위에 내용을 베트남어로 번역해줘?";
-				ui.get({
+				var requestData = {
+					type: 'content.transfer',
+					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n'
+				}
+				ui.post({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
+					data: requestData,
 					success : function ( data, total ) {
 						$('#summaryContent').html('<s:message code="llm.info.koreaString"/> .<br><br>' + data.response.fReplaceWord('\n', '.</br>').fReplaceWord('. ', '.</br>'));
 						$("#summaryModal").modal('show');
@@ -458,14 +461,18 @@
 			});
 
 			$(document).on('click', '#summaryBody', function(){
-				$('#summaryModal h2').html('<s:message code="llm.info.keyword"/> <s:message code="DATA_ANALYSIS.ANALYSIS"/>');
+				$('#summaryModal h2').html('<s:message code="DATA_ANALYSIS.ANALYSIS"/>');
 				$("#helpView3").css("display", "");
 				$("#llmImg2").css("display", "none");
-				var chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠?";
-				if (isVietnam == "true") chatString = "위에 내용에서 주제키워드 단어로 10개정도 추출해죠? 베트남어로 답변해주라";
-				ui.get({
+
+				var requestData = {
+					type: 'content.keyword',
+					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n'
+				}
+
+				ui.post({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
+					data: requestData,
 					success : function ( data, total ) {
 						$('#summaryContent').html('<s:message code="llm.info.keywordString"/> <br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
@@ -485,11 +492,15 @@
 				$('#summaryModal h2').html('<s:message code="llm.info.body"/>');
 				$("#helpView5").css("display", "");
 				$("#llmImg4").css("display", "none");
-				var chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘?";
-				if (isVietnam == "true") chatString = "위에 내용을 분석해서 어떤 서비스인지 알려줘? 베트남어로 답변해주라";
-				ui.get({
+
+				var requestData = {
+					type: 'content.analysis',
+					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n'
+				}
+
+				ui.post({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
+					data: requestData,
 					success : function ( data, total ) {
 						$('#summaryContent').html('<s:message code="llm.info.bodyString"/><br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
@@ -509,12 +520,14 @@
 				$("#helpView4").css("display", "");
 				$("#llmImg3").css("display", "none");
 
-				var chatString = "위에 내용을 요약해줘?";
-				if (isVietnam == "true") chatString = "위에 내용을 요약해줘? 베트남어로 답변해주라";
+				var requestData = {
+					type: 'content.analysis',
+					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n'
+				}
 
-				ui.get({
+				ui.post({
 					url : 'getLLMAnalysis.xcn',
-					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n'+chatString,
+					data: requestData,
 					success : function ( data, total ) {
 						$('#summaryContent').html('<s:message code="llm.info.summaryString"/><br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
@@ -582,29 +595,6 @@
 			});
 		}
 
-		function insertLlmHost(host, description){
-
-			if (host == '' || host == null) return;
-			if (description == '' || description == null) return;
-			if (description.startsWith("죄송합니다,")) return;
-			if (description.startsWith("죄송하지만")) return;
-			if (description.startsWith("Sorry,")) return;
-			if (description.startsWith("I'm sorry,")) return;
-
-			ui.get({
-				host : host,
-				description : description,
-				url : 'insertLlmHost.xcn',
-				success : function ( data, total ) {
-
-				},
-				error : function (status, message) {
-					ui.alertMsg(message);
-				},
-				complete : function (){
-				}
-			});
-		}
 
 		function getinfoTypeStr(val) {
 			if(val == '4') return '<s:message code="condition.info.class4"/>';
@@ -899,7 +889,7 @@
 												<%if(isLlmEnabled){%>
 												<div id="helpHostDesc" style="display: block;padding-top: 10px; padding-bottom: 10px;"></div>
 												<%}%>
-												<div id="hostDescriptionDiv" style="display:block">
+												<div id="hostDescriptionDiv" style="display:block"></div>
 											</td>
 										</tr>
 										<%if(infoHynixConf){%>

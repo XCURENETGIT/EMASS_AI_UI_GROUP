@@ -19,7 +19,7 @@ var count = 0;
 let patnName = '';
 let patternKyword = [];
 let piHighlightList = [
-    'SN', 'CN', 'DN', 'FN','PN','MN','AN','CRN','SSN','IMEI','BRN','CPN','MCN'
+    'SN', 'CN', 'DN', 'FN','PN','MN','AN','CRN','SSN','IMEI','BRN','CPN','MCN','MSN'
 ];
 const originalBodyFontSize = 13;
 

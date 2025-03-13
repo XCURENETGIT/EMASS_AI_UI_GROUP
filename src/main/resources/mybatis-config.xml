@@ -113,6 +113,8 @@
 		<typeAlias alias="patternExceptVO" type="com.xcurenet.emass.filter.service.PatternExceptVO"/>
 		<typeAlias alias="commonCodeVO" type="com.xcurenet.emass.message.service.CommonCodeVO"/>
 
+		<typeAlias alias="llmVO" type="com.xcurenet.emass.message.service.LlmVO"/>
+
 
 	</typeAliases>
 

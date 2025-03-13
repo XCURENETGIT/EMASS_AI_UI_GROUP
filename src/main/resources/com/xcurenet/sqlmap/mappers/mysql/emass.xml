@@ -493,22 +493,18 @@
 
 	<select id="getHostDescription" resultType="hostDescriptionVO" parameterType="string">
 		SELECT
-			B.CATEGORY_CD AS categoryCd,
-			B.CATEGORY_NM AS categoryNm,
-			A.HOST AS host,
-			A.DESCRIPTION AS description,
-			A.PROCESS_YN AS processYn,
-			A.TYPE AS type,
-			C.NATION_KOR AS nationKo,
-			C.NATION_ENG AS nationEn,
-			C.NATION_CD AS nationCd
-		FROM EMS_HOST A
-		LEFT JOIN EMS_HOST_CATEGORY B
-		ON
-		A.CATEGORY_CD = B.CATEGORY_CD
-		LEFT JOIN EMS_NATION C
-		ON
-		A.NATION_CD = C.NATION_CD
+		B.CATEGORY_CD AS categoryCd,
+		B.CATEGORY_NM AS categoryNm,
+		A.HOST AS host,
+		A.DESCRIPTION AS description,
+		A.PROCESS_YN AS processYn,
+		A.TYPE AS type,
+		C.NATION_KOR AS nationKo,
+		C.NATION_ENG AS nationEn,
+		C.NATION_CD AS nationCd
+		FROM    EMS_HOST A
+		LEFT JOIN EMS_HOST_CATEGORY B ON A.CATEGORY_CD = B.CATEGORY_CD
+		LEFT JOIN EMS_NATION C ON A.NATION_CD = C.NATION_CD
 		WHERE A.HOST = #{host}
 	</select>
 
@@ -639,6 +635,12 @@
 	<delete id="deleteChrony" >
 		DELETE	FROM UI_CHRONY	WHERE CORNY_DATATIME <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 1 MONTH)
 	</delete>
+
+	<select id="getLlm" resultType="llmVO" parameterType="string">
+		SELECT  LLM_CONF AS llmConf, LLM_PROMPT AS llmPromt, LLM_MODEL AS llmModel, LLM_CONTENT AS llmContent
+		FROM   UI_LLM
+		WHERE  LLM_CONF = #{type}
+	</select>
 
 </mapper>
 

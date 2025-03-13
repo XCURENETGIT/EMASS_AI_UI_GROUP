@@ -892,3 +892,15 @@ CREATE TABLE IF NOT EXISTS UI_DOWNLOAD_BATCH_MESSENGER(
     DOWNFILE_SIZE  BIGINT UNSIGNED  NULL    COMMENT '다운로드 파일 크기',
     PRIMARY KEY (DOWN_SEQ)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='다운로드 배치';
 
+CREATE TABLE IF NOT EXISTS UI_LLM(
+    LLM_CONF VARCHAR(100) NOT NULL COMMENT 'LLM 위치',
+    LLM_PROMPT VARCHAR(256) NOT NULL COMMENT 'LLM 프롬프트',
+    LLM_MODEL VARCHAR(256) NOT NULL COMMENT 'LLM MODEL',
+    LLM_CONTENT VARCHAR(256) NOT NULL COMMENT 'LLM CONTENT',
+    PRIMARY KEY (LLM_CONF)	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='LLM 질문 프롬포트, 모델 설정';
+
+INSERT IGNORE INTO UI_LLM(LLM_CONF,LLM_PROMPT,LLM_MODEL,LLM_CONTENT) VALUES ('content.transfer','위에 있는 내용을 한글로 번역해죠','gemma2:27b','상세보기 - 번역');
+INSERT IGNORE INTO UI_LLM(LLM_CONF,LLM_PROMPT,LLM_MODEL,LLM_CONTENT) VALUES ('content.keyword','위에 내용에서 주제키워드 단어로 10개 추출해죠','gemma2:27b','상세보기 - 키워드요약');
+INSERT IGNORE INTO UI_LLM(LLM_CONF,LLM_PROMPT,LLM_MODEL,LLM_CONTENT) VALUES ('content.summary','위에 있는 내용을 100자이내로 한글로 요약해죠','gemma2:27b','상세보기 - 내용요약');
+INSERT IGNORE INTO UI_LLM(LLM_CONF,LLM_PROMPT,LLM_MODEL,LLM_CONTENT) VALUES ('content.analysis','위에 있는 내용은 인터넷 패킷데이터를 텍스트로 표현한거야 이 부분을 분석해서 어떤 서비스 인지 한글로 알려죠','gemma2:27b','상세보기 - 내용분석');
+INSERT IGNORE INTO UI_LLM(LLM_CONF,LLM_PROMPT,LLM_MODEL,LLM_CONTENT) VALUES ('url.analysis','위에 있는 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?','gemma2:27b','상세보기 - URL 분석');

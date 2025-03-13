@@ -1688,13 +1688,6 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
-	@RequestMapping(value = "/getHostDescription.xcn")
-	@Description("HOST 설명")
-	@ResponseBody
-	public XcnResponseVO getHostDescription(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String host = Common.nvl(request.getParameter("host"));
-		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getHostDescription(host));
-	}
 
 
 	@RequestMapping(value = "/updateEmsFeedback.xcn")
@@ -1773,32 +1766,6 @@ public class EmsMessageController {
 		String inside = Common.nvl(request.getParameter("inside"));
 		String recvsType = Common.nvl(request.getParameter("recvsType"));
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getRecvDomainInfo(msgId, inside, recvsType));
-	}
-
-	@RequestMapping(value = "/getLLMAnalysis.xcn")
-	@Description("LLM 내용 분석")
-	@ResponseBody
-	public XcnResponseVO getLLMAnalysis(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-		String chat = Common.nvl(request.getParameter("chat"));
-
-		JSONObject param = new JSONObject();
-		param.put("model", conf.getLlmModel());
-		param.put("prompt", chat);
-		param.put("stream", false);
-		log.info("llm get : {}", param.toString());
-
-		Document doc = Jsoup.connect(conf.getLlmUrl()).timeout(conf.getLlmTimeout()).header("Content-Type", "application/json;charset=UTF-8").method(Connection.Method.POST).requestBody(param.toString()).ignoreContentType(true).post();
-		log.debug("llm response : {}", doc.body().text());
-		return new XcnResponseVO(XcnRspCode.OK, Common.toJSONObject(doc.body().text()));
-	}
-
-	@RequestMapping(value = "/insertLlmHost.xcn")
-	@Description("LLM 내용 분석")
-	@ResponseBody
-	public XcnResponseVO insertLlmHost(final HostDescriptionVO hostDescriptionVO, final HttpServletResponse response) throws Exception {
-		if (emsMessageService.isHostExist(hostDescriptionVO.getHost()))emsMessageService.updateHost(hostDescriptionVO);
-
-		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
 
