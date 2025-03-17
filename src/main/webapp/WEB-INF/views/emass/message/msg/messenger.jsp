@@ -14,6 +14,10 @@
 		height: 650px;
 	}
 
+	.month{
+		color: black;
+	}
+
 
 	pre{
 		background-color: transparent; !important;

@@ -275,7 +275,7 @@
             border: 1px solid #ccc;
             width: 500px;
             display:none;
-            height:250px;
+            height:300px;
         }
 
         /*연관 검색어 */
@@ -3427,7 +3427,7 @@
                 </div>
                 <div style="width:100%;padding:5px 5px 5px 10px; margin-bottom:8px;" class="searchHelpDivBody">
                     <div>
-                        <div style="height:25px;">
+                        <div style="height:55px;">
                             <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
                         </div>
                         <br/>

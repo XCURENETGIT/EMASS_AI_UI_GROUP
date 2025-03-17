@@ -13,6 +13,10 @@
 		height: 650px;
 	}
 
+	.month{
+		color: black;
+	}
+
 	.condition_top_sub{
 		position: fixed;
 		width: 300px;
