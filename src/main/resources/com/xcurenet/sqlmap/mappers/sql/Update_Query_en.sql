@@ -581,7 +581,7 @@ UPDATE UI_REGEXP SET NAME = 'IMEI'      WHERE CODE = 'IMEI';
 UPDATE UI_REGEXP SET NAME = 'MAC address'   WHERE CODE = 'MCN';
 UPDATE UI_REGEXP SET NAME = 'phone Number' WHERE CODE =  'MN';
 UPDATE UI_REGEXP SET NAME = 'Passport Number'      WHERE CODE = 'PN';
-UPDATE UI_REGEXP SET NAME = 'Social Security Number'      WHERE CODE = 'SN';
+UPDATE UI_REGEXP SET NAME = 'Personal Identification Number'      WHERE CODE = 'SN';
 UPDATE UI_REGEXP SET NAME = 'Social security Number'   WHERE CODE = 'SSN';
 UPDATE UI_REGEXP SET NAME = 'Recipient Specified Send'         WHERE CODE = 'RS' ;
 UPDATE UI_REGEXP SET NAME = 'Large Content OutSide Send'      WHERE CODE =   'LTO';
