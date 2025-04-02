@@ -97,6 +97,7 @@
 
 		$('#keywordSavePopBtn').click(function(){
 			var keywordStr = $('#keywordName').val().ltrim().rtrim();
+			$('#keywordName').val(keywordStr);
 			if( keywordStr == '' ) {
 				ui.alertMsg('<s:message code="keyword.message.insert"/>');
 				$('#keywordName').focus();
@@ -106,10 +107,7 @@
 				ui.alertMsg('<s:message code="keyword.message.aword"/>');
 				return false;
 			}
-			if( keywordStr.indexOf(' ') > -1 ) {
-				ui.alertMsg('<s:message code="keyword.message.wordspacing"/>');
-				return false;
-			}
+
 			var mode = $('#keywordPop').attr('mode');
 
 			var message = mode=='insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
@@ -625,7 +623,9 @@
 	var gridKeyword = new Xgrid('keywordListGrid', contextRoot);
 	gridKeyword.onCheckBox();
 	gridKeyword.autoNumber();
-	gridKeyword.colAdd('keywordName', '<s:message code="keyword.msg.keyword"/>', 200, 'center', false, 'link');
+	gridKeyword.colAdd('keywordName', '<s:message code="keyword.msg.keyword"/>', 200, 'center', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+		return value.replace(/ /g, '&nbsp;');
+	});
 	gridKeyword.colAdd('keywordDesc', '<s:message code="common.msg.comment"/>', 250, 'center', false, 'nomal');
 	gridKeyword.onClick = function() {
 		if (gridKeyword.Col == gridKeyword.ColIndex('keywordName')) {

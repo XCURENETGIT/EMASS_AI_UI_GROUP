@@ -2304,7 +2304,7 @@ function isImageOk(img) {
 function setSubjectHighLight(defaultText, type) {
     var subject_obj = $("#subject");
     for (var i = 0; i < defaultText.length; i++) {
-        var  splitText =  defaultText[i].split(' ');
+        var  splitText =  defaultText[i].split(', ');
         for (var j = 0; j < splitText.length; j++) {
             if (splitText[j] == '' ) continue;
             $(subject_obj).highlight(splitText[j], type);
@@ -2315,7 +2315,7 @@ function setSubjectHighLight(defaultText, type) {
 function setBodyHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
     for (var i = 0; i < defaultText.length; i++) {
-        var  splitText =  defaultText[i].split(' ');
+        var  splitText =  defaultText[i].split(', ');
         for (var j = 0; j < splitText.length; j++) {
             if (splitText[j] == '' ) continue;
             $(body_obj).highlight(splitText[j], type);
@@ -2336,7 +2336,7 @@ function setPatternHighLight(defaultText, type) {
 function setFileNameHighLight(defaultText, type) {
     var attachDiv_obj = $(".attachName");
     for (var i = 0; i < defaultText.length; i++) {
-        var  splitText =  defaultText[i].split(' ');
+        var  splitText =  defaultText[i].split(', ');
         for (var j = 0; j < splitText.length; j++) {
             if (splitText[j] == '' ) continue;
             $(attachDiv_obj).highlight(splitText[j], type);
