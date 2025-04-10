@@ -13,7 +13,7 @@
 
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emassai</artifactId>
-	<version>1.0.150</version>
+	<version>1.0.151</version>
 	<name>emassai</name>
 	<description>EMASS AI</description>
 
@@ -30,7 +30,7 @@
 		<buildHost>10.200.10.64</buildHost>
 		<buildPort>22</buildPort>
 		<buildUser>root</buildUser>
-		<buildPassword>root99</buildPassword>
+		<buildPassword>Xcurenet1!</buildPassword>
 
 		<copy-dir>/users/${project.artifactId}</copy-dir>
 		<binary-dir>/users/xcurenet/ui_build</binary-dir>
