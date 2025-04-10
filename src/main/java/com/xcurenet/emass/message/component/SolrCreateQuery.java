@@ -21,12 +21,13 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -707,18 +708,19 @@ public class SolrCreateQuery {
 
 		sender = specialChars(sender); // 특수문자 escape
 		senders_not = specialChars(senders_not); // 특수문자 escape
-
 		StringBuffer queryStr = new StringBuffer();
 		if (Common.isEquals(senders_upperCase, "Y")) {
 			queryStr.append(String.format("%s%s:(%s)", AND_QUERY, SENDER_UPPER, createOrQuery(sender))).append(SPACE);
 		} else if (Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 			for (int i = 0; i < SENDER_NOTUPPER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:(%s)", SENDER_NOTUPPER[i], sender)).append(SPACE);
+				else if (Config.getBoolean("sender.receiver.asta")) queryStr.append(String.format("%s:(%s)", SENDER_NOTUPPER[i], createOrQueryAsteriskAll(sender))).append(SPACE);
 				else queryStr.append(String.format("%s:(%s)", SENDER_NOTUPPER[i], sender.concat(astaOption))).append(SPACE);
 			}
 		} else {
 			for (int i = 0; i < SENDER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:(%s)", SENDER[i], sender)).append(SPACE);
+				else if (Config.getBoolean("sender.receiver.asta")) queryStr.append(String.format("%s:(%s)", SENDER[i], createOrQueryAsteriskAll(sender))).append(SPACE);
 				else queryStr.append(String.format("%s:(%s)", SENDER[i], sender.concat(astaOption))).append(SPACE);
 			}
 		}
@@ -768,6 +770,8 @@ public class SolrCreateQuery {
 					toStr = createAndQurey(m_to.toLowerCase(), toField);
 				} else if (m_to.startsWith("\"") && m_to.endsWith("\"")) {
 					toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
+				} else if (Config.getBoolean("sender.receiver.asta")) {
+					toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryAsteriskAll(m_to), TNAME, createOrQueryAsteriskAll(m_to))).append(SPACE);
 				} else {
 					toStr.append(String.format("%s:%s %s:%s", TO, m_to.concat(astaOption), TNAME, m_to.concat(astaOption))).append(SPACE);
 				}
@@ -782,6 +786,8 @@ public class SolrCreateQuery {
 					ccStr = createAndQurey(m_cc.toLowerCase(), ccField);
 				} else if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) {
 					ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
+				} else if (Config.getBoolean("sender.receiver.asta")) {
+					ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryAsteriskAll(m_cc), CNAME, createOrQueryAsteriskAll(m_cc))).append(SPACE);
 				} else {
 					ccStr.append(String.format("%s:%s %s:%s", CC, m_cc.concat(astaOption), CNAME, m_cc.concat(astaOption))).append(SPACE);
 				}
@@ -796,6 +802,8 @@ public class SolrCreateQuery {
 					bccStr = createAndQurey(m_bcc.toLowerCase(), bccField);
 				} else if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) {
 					bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
+				} else if (Config.getBoolean("sender.receiver.asta")) {
+					bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryAsteriskAll(m_bcc), BNAME, createOrQueryAsteriskAll(m_bcc))).append(SPACE);
 				} else {
 					bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc.concat(astaOption), BNAME, m_bcc.concat(astaOption))).append(SPACE);
 				}
@@ -824,6 +832,9 @@ public class SolrCreateQuery {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) {
 						queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers));
 						if (RECEIVER_NOTUPPER.length - 1 > i) queryStr.append(SPACE);
+					} else if (Config.getBoolean("sender.receiver.asta")) {
+						queryStr.append(String.format("%s:(%s)", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers.toLowerCase())));
+						if (RECEIVER_NOTUPPER.length - 1 > i) queryStr.append(SPACE);
 					} else {
 						queryStr.append(String.format("%s:(%s)", RECEIVER_NOTUPPER[i], receivers.toLowerCase().concat(astaOption)));
 						if (RECEIVER_NOTUPPER.length - 1 > i) queryStr.append(SPACE);
@@ -834,6 +845,9 @@ public class SolrCreateQuery {
 			for (int i = 0; i < RECEIVER.length; i++) {     // 대소문자 구분 체크
 				if (receivers.startsWith("\"") && receivers.endsWith("\"")) {
 					queryStr.append(String.format("%s:%s", RECEIVER[i], receivers.toLowerCase()));
+					if (RECEIVER.length - 1 > i) queryStr.append(SPACE);
+				} else if (Config.getBoolean("sender.receiver.asta")) {
+					queryStr.append(String.format("%s:(%s)", RECEIVER[i], createOrQueryAsteriskAll(receivers.toLowerCase())));
 					if (RECEIVER.length - 1 > i) queryStr.append(SPACE);
 				} else {
 					queryStr.append(String.format("%s:(%s)", RECEIVER[i], receivers.toLowerCase().concat(astaOption)));

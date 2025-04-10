@@ -112,6 +112,9 @@ true END Pre-installation script
 true BEG Post-installation script
 if test "$1" = "1"; then # Install
 	#Place your script post-install script
+
+    yes | cp -rp /users/emassai/patch.log /users/emassai/logs/patch.log
+
 	if [ -f /users/emassai/conf/application.properties.rpmnew ];then
 		mv /users/emassai/conf/application.properties /users/emassai/conf/application.properties.org
 		java -jar /users/emassai/lib/updateProperty.jar /users/emassai/conf/application.properties.rpmnew /users/emassai/conf/application.properties.org /users/emassai/conf/application.properties
@@ -124,6 +127,9 @@ if test "$1" = "1"; then # Install
 	:
 else # Update ($1 = "2")
 	#Place your script post-update script
+
+	yes | cp -rp /users/emassai/patch.log /users/emassai/logs/patch.log
+
 	if [ -f /users/emassai/conf/application.properties.rpmnew ];then
 		mv /users/emassai/conf/application.properties /users/emassai/conf/application.properties.org
 		java -jar /users/emassai/lib/updateProperty.jar /users/emassai/conf/application.properties.rpmnew /users/emassai/conf/application.properties.org /users/emassai/conf/application.properties
