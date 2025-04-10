@@ -295,4 +295,50 @@ public class SolrEdcStatControllerLog {
 		auditService.insertAudit(request, auditVo);
 	}
 
+
+
+	public void  getAbnlDetectStatDetailList(final HttpServletRequest request, AuditRequestVO auditVo) {
+		JSONObject param = Common.getParam(request);
+		String xAxis_str = Common.nvl(param.get("xAxis_str"));
+		String colKey = Common.nvl(param.get("colKey"));
+		if (Common.isEquals(colKey, "")) colKey = "" + Prop.propFormat("common.msg.all") + "";
+		String startDate = Common.nvl(param.get("startDate"));
+		String endDate = Common.nvl(param.get("endDate"));
+		String information = "";
+
+		information += "[" + Prop.propFormat("common.msg.detail.search") + "]";
+		if (Common.isNotEmpty(startDate)) information += "┌" + Prop.propFormat("condition.period") + ": " + startDate + " ~ " + endDate;
+		if (Common.isNotEmpty(colKey)) information += "┌" + xAxis_str + ": " + colKey;
+
+		auditVo.setMenuId(Menu.STAT_ANOMALY_DETECTION.getMenuId());
+		auditVo.setInformation(information);
+		auditService.insertAudit(request, auditVo);
+	}
+
+
+	public void getAbnlDetectStatList(final HttpServletRequest request, AuditRequestVO auditVo) {
+		JSONObject param = Common.getParam(request);
+		String xAxis_str = Common.nvl(param.get("xAxis_str"));
+		String yAxis = Common.nvl(param.get("yAxis"));
+		String startDate = Common.nvl(param.get("startDate"));
+		String endDate = Common.nvl(param.get("endDate"));
+		String interGroup = Common.nvl(param.get("interGroup"));
+		String detailQuery = Common.nvl(param.get("detailQuery"));
+		String interGroupNm = Common.nvl(param.get("interGroupNm"));
+		String information = "";
+
+
+		auditVo.setMenuId(Menu.STAT_ANOMALY_DETECTION.getMenuId());
+
+
+		information += "[" + Prop.propFormat("common.msg.search") + "]";
+		if (Common.isNotEmpty(interGroup)) information += "┌" + Prop.propFormat("interest.user") + ": " + interGroupNm;
+		if (Common.isNotEmpty(startDate)) information += "┌" + Prop.propFormat("condition.period") + ": " + startDate + " ~ " + endDate;
+		if (Common.isNotEmpty(xAxis_str)) information += "┌" + Prop.propFormat("stat.area.stat") + ": " + xAxis_str;
+		if (Common.isNotEmpty(detailQuery)) information += "┌" + Prop.propFormat("condition.detail") + ": " + detailQuery;
+
+		auditVo.setInformation(information);
+		auditService.insertAudit(request, auditVo);
+	}
+
 }

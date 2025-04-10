@@ -574,6 +574,12 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		if ( this.grid.getColumns()[col] == undefined || this.grid.getColumns().length == 0 ) return -1;
 		else return this.grid.getColumns()[col].id;
 	};
+
+	this.ColNm = function ( col ) {
+		if ( this.grid.getColumns()[col] == undefined || this.grid.getColumns().length == 0 ) return -1;
+		else return this.grid.getColumns()[col].name;
+	};
+
 	this.ColIndex = function ( key ) {
 		return this.grid.getColumnIndex( key ) == undefined ? -1 : this.grid.getColumnIndex( key );
 	};

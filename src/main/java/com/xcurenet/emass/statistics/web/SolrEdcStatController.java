@@ -1569,6 +1569,234 @@ public class SolrEdcStatController {
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
 	}
 
+
+	@RequestMapping(value = "/getAbnlDetectStatList.xcn")
+	@Description("이상 행위 검출 통계 리스트 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getAbnlDetectStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		int limit = Common.nvz(request.getParameter("limit"));
+		String rowKey = Common.nvl(request.getParameter("rowKey"));
+		String adminId = Common.nvl(request.getParameter("adminId"));
+
+
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		String query = "";
+		int rowKeyCnt = rowKey.length();
+
+		SolrQuery sq = new SolrQuery();
+
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
+
+
+		sq.setStart(0);
+		sq.setRows(0);
+		sq.setFacetSort("count");
+
+		/**
+		 *  첫 집계 검색은 검색필드 지정 X
+		 **/
+		sq.setFields(""); // 집계검색 default
+
+
+		sq.addFacetField(Config.ABNL_AGGS_FIELDS);
+		sq.setParam("group.field", Config.ABNL_AGGS_FIELDS);
+		sq.setParam("facet.field", "srcip");
+		sq.setParam("abnlYn", "Y");
+//		sq.setParam(Common.ANALYSIS_FACET_PIVOT_FIELDS, Config.ABNL_AGGS_FIELDS);
+//		sq.setParam(Common.ANALYSIS_PIVOT_Y_AXIOS_FIELD, "srcip");
+		sq.setFacetLimit(limit);
+		sq.setFacetMinCount(1);
+		sq.setQuery(query);
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, adminId);
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
+	}
+
+
+	@RequestMapping(value = "/getAbnlDetectStatDetailList.xcn")
+	@Description("이상 행위 검출 통계 리스트 상세 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getAbnlDetectStatDetailList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String xAxis = Common.nvl(request.getParameter("xAxis"));
+		String yAxis = Common.nvl(request.getParameter("yAxis"));
+		String rowKey = Common.nvl(request.getParameter("rowKey")).replaceAll("-", "");
+		String colKey = Common.nvl(request.getParameter("colKey")).replaceAll("-", "");
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		String baseType = Common.nvl(request.getParameter("baseType"));
+		int offset = Common.nvz(request.getParameter("offset"));
+		int limit = Common.nvz(request.getParameter("limit"));
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
+		String adminId = Common.nvl(request.getParameter("adminId"));
+		String interGroup = Common.nvl(request.getParameter("interGroup"));
+		String serviceTypes = Common.nvl(request.getParameter("serviceType"));
+		String attachTypes = Common.nvl(request.getParameter("attachType"));
+		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
+		String colRowKey = Common.nvl(request.getParameter("colRowKey"));
+		String nameStat = Common.nvl(request.getParameter("nameStat"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		String query = "";
+		SolrQuery sq = new SolrQuery();
+		int cnt = rowKey.length();
+
+		if (!interGroup.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setInterestUserGroup(interGroup, "N");
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!interGroup.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setInterestUserGroup(interGroup, "N");
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!serviceTypes.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setService12(serviceTypes.replaceAll("\\|", ","));
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!attachTypes.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setAttach("Y", attachTypes);
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!(startDate.isEmpty() && endDate.isEmpty())) {
+			query += " +ctime:[" + startDate + " TO " + endDate + "] ";
+		}
+
+		if (cnt == 4 && yAxis.equals("svc12")) {
+			yAxis = "svc";
+		}
+
+		if (yAxis.equals("ml_confd_class")) {
+			if (!Config.getString("info.feedback.mode").equals("E") && colRowKey.equals("2")) {
+				query += " +" + yAxis + ": (" + "\"" + colRowKey + "\" " + "\"" + 3 + "\" " + ")";
+			} else query += " +" + yAxis + ":" + "\"" + colRowKey + "\" ";
+			yAxis = "svc";
+		}
+
+		if (Common.isNotEmpty(detailQuery)) {
+			query += detailQuery + " ";
+		}
+		if (colRowKey.length() == 3 && yAxis.equals("svc12")) {
+			yAxis = "svc";
+		}
+		String Yflag = "Y";
+		if (!rowKey.isEmpty()) {
+			String[] t = rowKey.split(",");
+			if (t.length > 0) {
+				String values = "";
+				for (String value : t) {
+					if (value.length() == 3 && nameStat.isEmpty()) {
+						Yflag = "N";
+					}
+					values += "\"" + value + "\" ";
+				}
+				if (Yflag.equals("N")) {
+					yAxis = "svc12";
+				}
+				query += "+" + yAxis + ":" + "(" + values + ") ";
+			} else {
+				if (rowKey.contains(",")) {
+					rowKey = rowKey.replaceAll(",", "");
+					query += "+" + yAxis + ":" + "\"" + rowKey.replaceAll(",", "") + "\" ";
+				} else {
+					query += "+" + yAxis + ":" + rowKey + " ";
+				}
+
+			}
+		}
+
+
+		if (Common.isEquals(yAxis, "sender_str")) {
+			List<String> codes = new ArrayList<>();
+			for (ServiceTypeVO service : Config.sendMailTypes) {
+				codes.add(service.getServiceCd());
+			}
+
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setService(Common.join(codes, ","));
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+
+		if (colKey.indexOf(".") > -1 && Common.isNotEmpty(colKey)) {
+			query += "+" + colKey + ":[1 TO *] ";
+		} else if (Common.isEmpty(colKey)) {
+			query += "+( ";
+			for (String abnlSvc : Config.ABNL_SVC) {
+				query += " " + abnlSvc + ":[1 TO *] ";
+			}
+			query += ") ";
+		}
+
+
+		sq.setQuery(query);
+		sq.setParam("searchAfter", searchAfter);
+
+		sq.setStart(offset);
+		sq.setRows(limit);
+
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, adminId);
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
+	}
+
+
 	public static String parseRange(String range) {
 		if (range.contains("_")) {
 			// 범위 문자열을 "_" 기준으로 나눔

@@ -527,6 +527,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 		if (Common.isEquals(sq.get("piAnalysisYn"), "Y")) return getPiAnalysisAggregations(sq);
 		if (Common.isEquals(sq.get("gwAttached"), "Y")) return getGwAttachedAggregations(sq);
+		if (Common.isEquals(sq.get("abnlYn"), "Y")) return getAbnlAggregations(sq);
 		if (null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
 		if ((null != sq.get("group") && Common.isEquals("true", sq.get("group")))) {
@@ -631,6 +632,25 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.minDocCount(mainFacetMinCount);
 		}
 
+	}
+	private List<AbstractAggregationBuilder<?>> getAbnlAggregations(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> pivotAggregations = new ArrayList<>();
+
+
+		String[] abnlList = Common.nvl(sq.get("group.field")).split(",");
+		String srcip =  Common.nvl(sq.get("facet.field"));
+		String limit =  Common.nvl(sq.get("aggregation.limit"));
+		AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(srcip.concat(Common.ANALYSIS_PIVOT_AGGS_SUFFIX))
+				.field(srcip)
+				.order(BucketOrder.count(false))
+				.minDocCount(1)
+				.size(maxCount(Common.nvz(limit)));
+		for (String piSubField : abnlList) {
+			termsAggregation.subAggregation(AggregationBuilders.filter(piSubField, new BoolQueryBuilder().must(QueryBuilders.existsQuery(piSubField)))).minDocCount(1);
+		}
+		pivotAggregations.add(termsAggregation);
+
+		return pivotAggregations;
 	}
 
 	private List<AbstractAggregationBuilder<?>> getGwAttachedAggregations(SolrQuery sq) {

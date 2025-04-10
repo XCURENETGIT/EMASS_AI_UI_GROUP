@@ -133,6 +133,7 @@
 	    p_id: 'DATA_STAT'
 	}); //장비 트래픽 통계
 	menuArr.push({id: 'STAT_OCR', name: '<s:message code="DATA_STAT.STAT_OCR"/>', p_id: 'DATA_STAT'}); //OCR 통계
+	menuArr.push({id: 'STAT_ANOMALY_DETECTION', name: '<s:message code="DATA_STAT.STAT_ANOMALY_DETECTION"/>', p_id: 'DATA_STAT'}); //이상행위 검출 통계
     if(infoFeedbackYn  == "true"){
         menuArr.push({id: 'STAT_INFOTYPE', name: '<s:message code="DATA_STAT.STAT_INFOTYPE"/>', p_id: 'DATA_STAT'});
     } //정보처리 통계
@@ -183,6 +184,11 @@
 		name: '<s:message code="DATA_STAT.STAT_KEYWORDNEW"/>',
 		p_id: 'DATA_STAT'
 	}); //핵심 기술 키워드 탐지 NEW HOST
+	menuArr.push({
+		id: 'STAT_KEYWORDSERVICE',
+		name: '<s:message code="DATA_STAT.STAT_KEYWORDSERVICE"/>',
+		p_id: 'DATA_STAT'
+	}); //핵심 기술 키워드 탐지 서비스 TOP
 	menuArr.push({id: 'STAT_GW_ATTACHTYPE', name: '<s:message code="DATA_STAT.STAT_GW_ATTACHTYPE"/>', p_id: 'DATA_STAT'}); //그룹웨어 첨부파일 통계
 	menuArr.push({id: 'SEARCH_LOG', name: '<s:message code="OPERATION_MGMT.SEARCH_LOG"/>', p_id: 'OPERATION_MGMT'}); //조회 이력
 	menuArr.push({id: 'AUDIT_LOG', name: '<s:message code="OPERATION_MGMT.AUDIT_LOG"/>', p_id: 'OPERATION_MGMT'}); //운용자 감사 로그

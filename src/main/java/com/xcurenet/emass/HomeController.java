@@ -496,6 +496,21 @@ public class HomeController {
 		return "/emass/message/participantInfoPop.popup";
 	}
 
+
+	@RequestMapping(value = "/ems/abnlDetect.do", method = RequestMethod.GET)
+	@Description("이상 행위 검출 통계")
+	public String abnlDetect(Locale locale, Model model) {
+		return "/emass/statistics/abnlDetect";
+	}
+
+	/**
+	 * keywordService JSP.
+	 */
+	@RequestMapping(value = "/ems/keywordService.do", method = RequestMethod.GET)
+	@Description("핵심 기술 키워드 탐지 서비스 TOP")
+	public String keywordService(Locale locale, Model model) {
+		return "/emass/statistics/keywordService";
+	}
 	/**
 	 * usersStat JSP.
 	 */
