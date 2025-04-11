@@ -1,3 +1,8 @@
+############# 1.0.152 ###########
+서비스 패턴 추가
+ =>Adobe Express, Sketchmon, 잔디, Tongyi, Yuanbao, Yiyan, Kimi, Baichuan, Tiangong, Stable Diffusion, Grok, ChatGLM, Napkin AI
+   Microsoft Copilot(Chat), AI Goormee, Google Cloud Translation Api,Flitto, O-Translator, Goorm, Pinterest, Threads, 블로거, Tiktok, 브런치 스토리
+
 ############# 1.0.151 ###########
 삼성 카드 POC - 수/발신자 도메인 검색 기능 요구 사항 관련 옵션 추가
  => 해당 기능은 다른 고객사에서는 성능 문제로 삼성 카드 POC 에서만 사용 하도록 옵션 추가
