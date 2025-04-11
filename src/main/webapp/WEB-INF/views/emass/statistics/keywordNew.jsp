@@ -274,10 +274,6 @@
 				ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 				return;
 			}
-			if (coreKeyword == '') {
-				openCodeWindow('coreKeyword', $('#' + 'coreKeyword' + 'Val').val(), $('#' + 'coreKeyword' + 'Str').val());
-				return;
-			}
 			let searchAfter = null;
 
 			searchFlag = true;

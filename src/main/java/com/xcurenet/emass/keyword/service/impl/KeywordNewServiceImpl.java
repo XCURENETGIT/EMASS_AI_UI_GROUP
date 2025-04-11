@@ -35,6 +35,9 @@ public class KeywordNewServiceImpl extends XcnAbstractDAO implements KeywordNewS
 	@Resource(name = "userService")
 	private UserService userService;
 
+	@Autowired
+	private KeywordServiceImpl keywordService;
+
 	@Override
 	public keywordsNew getKeywordNew(HttpServletRequest request) {
 		String startDate = Common.nvl(request.getParameter("startDate"));
@@ -43,6 +46,8 @@ public class KeywordNewServiceImpl extends XcnAbstractDAO implements KeywordNewS
 		long offset = Common.nvz(request.getParameter("offset"),0);
 		long limit = Common.nvz(request.getParameter("limit"),100);
 		List<String> keywordList = Arrays.asList(coreKeyword.split(","));
+
+		if (Common.isEmpty(coreKeyword)) keywordList = keywordService.getCoreKeywordAll();
 
 		String admin =  Common.getAdminId(request);
 		List<AdminVO> admins = userService.getBusiAdmin(admin);

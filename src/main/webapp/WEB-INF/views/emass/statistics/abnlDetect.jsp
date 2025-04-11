@@ -450,7 +450,7 @@
 	var abnlDetectGrid = new Xgrid('basicStatListGrid', contextRoot);
 	abnlDetectGrid.autoNumber();
 	abnlDetectGrid.colAdd("rowKey", '<s:message code="common.org.user"/>', 160, "center", false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if(row  == abnlDetectGrid.Rows -1) return '';
+
 		var userInfo = '';
 		var rowKey = value;
 		var rowNm = abnlDetectGrid.getRowData(row).rowName;
@@ -514,7 +514,6 @@
 		var valChk = abnlDetectGrid.getValue(abnlDetectGrid.Row, abnlDetectGrid.Col);
 		if (valChk == "" || valChk == "-") return;
 
-		console.log("000");
 		if (abnlDetectGrid.getValue(abnlDetectGrid.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
 			var key = "";
 			for (var i = 0; i < abnlDetectGrid.Rows; i++) {
