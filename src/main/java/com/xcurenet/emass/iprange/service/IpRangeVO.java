@@ -23,6 +23,7 @@ public class IpRangeVO {
 	private String createId;
 	private String updateDt;
 	private String updateId;
+	private String country;
 	
 	private MultipartFile attach;
 	private String encoding;

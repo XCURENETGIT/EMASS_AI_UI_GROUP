@@ -10,6 +10,7 @@
 		A.START_IP AS startIp,
 		A.END_IP AS endIp,
 		A.COMMENT AS comment,
+		A.COUNTRY AS country,
 		DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
 		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.CREATE_ID LIMIT 1) AS createId,
 		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt,
@@ -96,8 +97,8 @@
 	</select>
 
 	<insert id="insertIpRange" parameterType="ipRangeVO">
-		INSERT INTO UI_BUSI_IPRANGE (BUSICD, START_IP, END_IP, COMMENT, CREATE_DT, CREATE_ID, UPDATE_DT)
-		VALUES (#{busiCd}, #{startIp}, #{endIp}, #{comment}, now(), #{createId}, now())
+		INSERT INTO UI_BUSI_IPRANGE (BUSICD, START_IP, END_IP, COMMENT, CREATE_DT, CREATE_ID, UPDATE_DT, COUNTRY)
+		VALUES (#{busiCd}, #{startIp}, #{endIp}, #{comment}, now(), #{createId}, null, #{country})
 	</insert>
 
 	<update id="updateIpRange" parameterType="ipRangeVO">
@@ -178,6 +179,7 @@
 	<update id="updateIpRangeDept" parameterType="ipRangeVO">
 		UPDATE	UI_DEPT_IPRANGE
 		SET		COMMENT	= #{comment},
+				COUNTRY = #{country},
 		<if test='startIp != orgStartIp'>
 			START_IP	= #{startIp},
 		</if>

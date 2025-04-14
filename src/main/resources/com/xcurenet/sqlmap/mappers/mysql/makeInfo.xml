@@ -116,7 +116,7 @@
 	
 	<!-- 사업장 내부 IP 정보 -->
 	<select id="getInfoIpRange" resultType="hashmap" parameterType="hashmap">
-		SELECT  A.START_IP AS SIP, A.END_IP AS EIP, A.BUSICD, B.BUSINM, C.COCD, C.CONM, 'I' AS INSIDE
+		SELECT  A.START_IP AS SIP, A.END_IP AS EIP, A.BUSICD,A.COUNTRY, B.BUSINM, C.COCD, C.CONM, 'I' AS INSIDE
 		FROM	UI_BUSI_IPRANGE A, UI_BUSI B, UI_CO C
 		WHERE	A.BUSICD = B.BUSICD
 		AND		B.COCD = C.COCD

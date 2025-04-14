@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.xcurenet.common.util.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -129,7 +130,8 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 				String busiNm  = removeUTF8BOM(Common.nvl(ipRangeItem.get("COL1")));
 				String startIp = Common.nvl(ipRangeItem.get("COL2"));
 				String endIp   = Common.nvl(ipRangeItem.get("COL3"));
-				String ipDesc  = Common.nvl(ipRangeItem.get("COL4"));
+				String country   = Common.nvl(ipRangeItem.get("COL4"));
+				String ipDesc  = Common.nvl(ipRangeItem.get("COL5"));
 
 				IP startIpchk = new IP(startIp);
 				IP endIpchk   = new IP(endIp);
@@ -138,9 +140,9 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 					continue;
 				}
 
-				log.info("coNm : {} busiNm:{}  startIp:{}  endIp:{} ipDesc: {}", coNm, busiNm, startIp, endIp,ipDesc);
+				log.info("coNm : {} busiNm:{}  startIp:{}  endIp:{} country:{} ipDesc: {}", coNm, busiNm, startIp, endIp, country, ipDesc);
 
-				if(Common.isEmpty(coNm) || Common.isEmpty(busiNm) || Common.isEmpty(startIp) || Common.isEmpty(endIp)) {
+				if(Common.isEmpty(coNm) || Common.isEmpty(busiNm) || Common.isEmpty(startIp) || Common.isEmpty(endIp) || Common.isEmpty(country)) {
 					throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("ipRange.upload.must") + " " + Prop.propFormat("keyword.upload.errline") + " : " + errorIdx);
 				}else if(coNm.length() > 20) {
 					throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("ipRange.upload.coNm.limit") + " " + Prop.propFormat("keyword.upload.errline") + " : " + errorIdx);
@@ -180,6 +182,9 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 				}else {
 					ipVo.setCoCd(coCode.get(0).getCode());
 				}
+
+				if (Config.getNationCd(country) != null ) ipVo.setCountry(Config.getNationCd(country));
+				else ipVo.setCountry("KR");
 
 				param.clear();
 				param.put("codeName",  ipVo.getBusiNm());

@@ -12,10 +12,7 @@ import com.xcurenet.config.service.ConfigVO;
 import com.xcurenet.config.service.impl.ConfigServiceImpl;
 import com.xcurenet.emass.iprange.service.IpRangeService;
 import com.xcurenet.emass.iprange.service.IpRangeVO;
-import com.xcurenet.emass.service.service.ServiceGroupService;
-import com.xcurenet.emass.service.service.ServiceGroupVO;
-import com.xcurenet.emass.service.service.ServiceTypeService;
-import com.xcurenet.emass.service.service.ServiceTypeVO;
+import com.xcurenet.emass.service.service.*;
 import com.xcurenet.searchWord.service.SearchWordService;
 import com.xcurenet.searchWord.service.SearchWordVO;
 import com.xcurenet.user.service.PersCodeInfo;
@@ -72,6 +69,9 @@ public class Config {
 	@Autowired
 	public UserService userService;
 
+	@Resource(name = "bodyNationService")
+	public BodyNationService bodyNationService;
+
 	@Autowired
 	private DataSource dataSource;
 
@@ -90,6 +90,8 @@ public class Config {
 	public static List<ServiceTypeVO> sendMailTypes;
 
 	public static List<ServiceGroupVO> serviceGroups;
+
+	public static List<BodyNationVO> bodyNationList;
 
 	public static List<AuditRequestVO> auditRequest;
 
@@ -248,6 +250,13 @@ public class Config {
 		return null;
 	}
 
+	public static String getNationCd(final String nation) {
+		for (BodyNationVO nations : bodyNationList) {
+			if (Common.isEquals(nations.getNation(), nation)) return nations.getNationCd();
+		}
+		return null;
+	}
+
 
 	public static String getServiceLv1Nm(final String svc) {
 		for (ServiceTypeVO service : serviceTypes) {
@@ -388,6 +397,8 @@ public class Config {
 			serviceGroups = serviceGroupService.getServiceGroupList();
 
 			sendMailTypes = serviceTypeService.getSendMailServiceList();
+
+		    bodyNationList = bodyNationService.getBodyNationList();
 
 			adminList = adminService.getAdminList();
 

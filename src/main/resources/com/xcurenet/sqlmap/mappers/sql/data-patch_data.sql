@@ -91,7 +91,7 @@ CALL ALTER_TB( 'UI_SUBJECT_NOLOG' , 'UPDATE_ID' , 'ALTER TABLE EMASSAI.UI_SUBJEC
 CALL ALTER_TB( 'UI_SIZE_LOG' , 'UPDATE_DT' , 'ALTER TABLE EMASSAI.UI_SIZE_LOG ADD UPDATE_DT DATETIME NULL COMMENT \'수정일\'');
 CALL ALTER_TB( 'UI_SIZE_LOG' , 'UPDATE_ID' , 'ALTER TABLE EMASSAI.UI_SIZE_LOG ADD UPDATE_ID VARCHAR(50) NULL COMMENT \'수정 운용자 아이디\'');
 CALL ALTER_TB( 'UI_DOWNLOAD_BATCH' , 'SKIP_TEXT' , 'ALTER TABLE EMASSAI.UI_DOWNLOAD_BATCH ADD SKIP_TEXT LONGTEXT NULL COMMENT \'skip 사유\'');
-
+CALL ALTER_TB( 'UI_BUSI_IPRANGE' , 'COUNTRY' , 'ALTER TABLE EMASSAI.UI_BUSI_IPRANGE ADD COUNTRY varchar(30) DEFAULT \'KR\'  COMMENT \'국가코드\'');
 CALL ALTER_TB( 'UI_KEYWORD_GROUP' , 'CORE_YN' , 'ALTER TABLE EMASSAI.UI_KEYWORD_GROUP ADD CORE_YN char(1) DEFAULT \'N\' COMMENT \'핵심 예약어 그룹 유무\'');
 
 /*DROP FUNCTION IF EXISTS xcnenc;
@@ -99,6 +99,38 @@ DROP FUNCTION IF EXISTS xcndec;
 CREATE FUNCTION xcnenc returns string soname "xcnenc.so";
 CREATE FUNCTION xcndec returns string soname "xcnenc.so";*/
 
+CREATE TABLE IF NOT EXISTS UI_BODY_NATION (
+    NATION_CD VARCHAR(2) NOT NULL COMMENT '국가 코드',
+    NATION_NAME VARCHAR(120) NOT NULL COMMENT '국가 언어',
+    NATION VARCHAR(120) NOT NULL COMMENT '국가 이름',
+PRIMARY KEY (NATION_CD)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='본문 언어 탐지';
+
+INSERT IGNORE INTO UI_BODY_NATION(NATION_CD, NATION_NAME, NATION) VALUES
+('ES','스페인어','스페인'),
+('CN','중국어' , '중국'),
+('DK','덴마크어', '덴마크'),
+('NL','네덜란드어', '네덜란드'),
+('FR','프랑스어', '프랑스'),
+('DE','독일어', '독일'),
+('GR','그리스어', '그리스'),
+('IN','인도어', '인도'),
+('ID','인도네시아어', '인도네시아'),
+('IE','아일랜드어', '아일랜드'),
+('IT','이탈리아어', '이탈리아'),
+('JP','일본어', '일본'),
+('KR','한국어', '한국'),
+('MY','말레이시아어', '말레이시아'),
+('NZ','뉴질랜드어', '뉴질랜드'),
+('PT','포르투갈어', '포르투갈'),
+('RU','러시아어', '러시아'),
+('SE','스웨덴어', '스웨덴'),
+('PH','필리핀어', '필리핀'),
+('TH','태국어', '태국어'),
+('TR','터키어', '터키'),
+('VN','베트남어', '베트남'),
+('GB','영어(UK)', '영국'),
+('US','영어(US)', '미국'),
+('UN','알수없음', '기타');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)
 SELECT 'query.type', 'A', 'A', NOW() FROM DUAL

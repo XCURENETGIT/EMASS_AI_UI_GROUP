@@ -642,6 +642,11 @@
 		WHERE  LLM_CONF = #{type}
 	</select>
 
+	<select id="getBodyNationList" resultType="bodyNationVO">
+		SELECT  NATION_CD AS nationCd, NATION_NAME AS nationName, NATION as nation
+		FROM    UI_BODY_NATION
+	</select>
+
 </mapper>
 
 

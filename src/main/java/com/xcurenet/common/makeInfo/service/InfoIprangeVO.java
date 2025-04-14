@@ -36,4 +36,7 @@ public class InfoIprangeVO {
 	@Field("SIP")
 	private String SIP;
 
+	@Field("COUNTRY")
+	private String COUNTRY;
+
 }

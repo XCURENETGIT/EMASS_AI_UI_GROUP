@@ -115,6 +115,8 @@
 
 		<typeAlias alias="llmVO" type="com.xcurenet.emass.message.service.LlmVO"/>
 
+		<typeAlias alias="bodyNationVO" type="com.xcurenet.emass.service.service.BodyNationVO"/>
+
 
 	</typeAliases>
 
