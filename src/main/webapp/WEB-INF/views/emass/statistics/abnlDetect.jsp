@@ -453,7 +453,7 @@
 
 		var userInfo = '';
 		var rowKey = value;
-		var rowNm = abnlDetectGrid.getRowData(row).rowName;
+		var rowNm = abnlDetectGrid.getRowData(row).name2;
 
 		if(rowNm != null && rowNm != undefined && rowNm != '') userInfo = rowKey +'('+rowNm+')';
 		else userInfo = rowKey +'('+ '<s:message code="bodyview.unknown"/>'+')';
