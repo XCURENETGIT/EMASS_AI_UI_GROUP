@@ -521,7 +521,7 @@
 				$("#llmImg3").css("display", "none");
 
 				var requestData = {
-					type: 'content.analysis',
+					type: 'content.summary',
 					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n'
 				}
 
