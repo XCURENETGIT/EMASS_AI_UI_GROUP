@@ -39,9 +39,8 @@
 
 	<select id ="allPatternCode" resultType="commonCodeVO">
 		SELECT
-		CODE AS code,
-		NAME AS name,
-		CODE_TYPE AS type
+			CODE AS code,
+			NAME AS name
 		FROM UI_REGEXP
 	</select>
 
