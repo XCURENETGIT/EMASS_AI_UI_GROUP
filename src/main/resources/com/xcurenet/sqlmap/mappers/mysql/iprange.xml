@@ -104,6 +104,7 @@
 	<update id="updateIpRange" parameterType="ipRangeVO">
 		UPDATE	UI_BUSI_IPRANGE
 		SET		COMMENT	= #{comment},
+				COUNTRY = #{country},
 		<if test='startIp != orgStartIp'>
 			START_IP	= #{startIp},
 		</if>
@@ -179,7 +180,6 @@
 	<update id="updateIpRangeDept" parameterType="ipRangeVO">
 		UPDATE	UI_DEPT_IPRANGE
 		SET		COMMENT	= #{comment},
-				COUNTRY = #{country},
 		<if test='startIp != orgStartIp'>
 			START_IP	= #{startIp},
 		</if>
