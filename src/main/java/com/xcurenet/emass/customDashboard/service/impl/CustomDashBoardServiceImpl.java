@@ -420,34 +420,46 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getHdfsData");
 	}
 
-	private CustomDashboardResultVO getChartData(SolrEdcMessageVO edc, CustomDashboardResultVO result, String dashChart) {
+	private CustomDashboardResultVO getChartData(SolrEdcMessageVO edc, CustomDashboardResultVO result, String dashChart, String dashChartX) {
 		if(edc == null) return null;
 		List<FacetVO> facet = edc.getFacet();
 		List<Map<String,Object>> items = new ArrayList<>();
 
-		List<ServiceGroupVO> groups = Config.serviceGroups;
-		int index = 0;
-		for (ServiceGroupVO group : groups) {
-			Map<String,Object> item = new HashMap<>();
-			boolean isAdd = false;
-			for (FacetVO vo : facet) {
-				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
-					item.put("name", Config.getServiceGroupNm(vo.getName()));
-					item.put("y", vo.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : vo.getCount());
-					item.put("color", Config.colors[index++]);
-					isAdd = true;
-					break;
+		if (Common.isEquals(dashChartX,"svc1")) { //서비스 타입일때
+			List<ServiceGroupVO> groups = Config.serviceGroups;
+			int index = 0;
+			for (ServiceGroupVO group : groups) {
+				Map<String, Object> item = new HashMap<>();
+				boolean isAdd = false;
+				for (FacetVO vo : facet) {
+					if (Common.isEquals(group.getGroupCd(), vo.getName())) {
+						item.put("name", Config.getServiceGroupNm(vo.getName()));
+						item.put("y", vo.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : vo.getCount());
+						item.put("color", Config.colors[index++]);
+						isAdd = true;
+						break;
+					}
 				}
+				if (!isAdd) {
+					item.put("name", group.getGroupNm());
+					item.put("color", Config.colors[index++]);
+					item.put("y", Common.isEquals(dashChart, "P") ? 0 : null);
+				}
+				items.add(item);
+				result.setChartData(items);
 			}
-			if (!isAdd) {
-				item.put("name", group.getGroupNm());
+		}else{ // 서비스 타입이 아닐때
+			int index = 0;
+			for (FacetVO facetVO : facet){
+				Map<String, Object> item = new HashMap<>();
+				item.put("name", facetVO.getName());
+				item.put("y", facetVO.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : facetVO.getCount());
 				item.put("color", Config.colors[index++]);
-				item.put("y", Common.isEquals(dashChart, "P") ? 0 : null);
+				items.add(item);
 			}
-			items.add(item);
-		}
-		result.setChartData(items);
+			result.setChartData(items);
 
+		}
 		return result;
 	}
 
@@ -676,7 +688,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(totalCnt) : Common.numberFormatter(totalCnt));
 				}
 			}else if( Common.isEquals(customDashboardVo.getDashType(), "C") ) {
-				result = getChartData(edc, result, customDashboardVo.getDashChart());
+				result = getChartData(edc, result, customDashboardVo.getDashChart() , customDashboardVo.getDashChartX());
 			}
 			else if( Common.isEquals(customDashboardVo.getDashType(), "L") ) result.setEdc(edc);
 
