@@ -585,7 +585,7 @@
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.long.term.unused"/> (default : <span id="long.term.unused.defaultVal"></span>)</label>
 					<div class="spinner mat8 number-spinner">
 						<button type="button" class="spinner_down" data-dir="dwn">-</button>
-						<input type="text"  id="long.term.unused" class="spinner_input w40" value="20">
+						<input type="text"  id="long.term.unused" class="spinner_input w40" value="20" min="5" max="9999" maxlength="4">
 						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.longterm.unused"/></p>
@@ -594,7 +594,7 @@
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.password.change.day"/> (default : <span id="password.change.day.defaultVal"></span>)</label>
 					<div class="spinner mat8 number-spinner" >
 						<button type="button" class="spinner_down" data-dir="dwn">-</button>
-						<input type="text" class="spinner_input w40" id="password.change.day" value="20">
+						<input type="text" class="spinner_input w40" id="password.change.day" value="20" min="5" max="9999" maxlength="4">
 						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.passwordchange.day"/></p>
@@ -603,7 +603,7 @@
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.password.fail.count"/> (default : <span id="password.fail.count.defaultVal"></span>)</label>
 					<div class="spinner mat8 number-spinner">
 						<button type="button" class="spinner_down" data-dir="dwn">-</button>
-						<input type="text" id="password.fail.count" class="spinner_input w40" value="20">
+						<input type="text" id="password.fail.count" class="spinner_input w40" value="20" value="20" min="3" max="99" maxlength="2">
 						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.passwordfail.count"/></p>
@@ -612,7 +612,7 @@
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.password.restore.minute"/> (default : <span id="password.restore.minute.defaultVal"></span>)</label>
 					<div class="spinner mat8 number-spinner">
 						<button type="button" class="spinner_down" data-dir="dwn">-</button>
-						<input type="text" id="password.restore.minute"  class="spinner_input w40" value="20">
+						<input type="text" id="password.restore.minute"  class="spinner_input w40" value="20" min="1" max="99" maxlength="2">
 						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.passwordrestore.minute"/></p>
@@ -621,7 +621,7 @@
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.session.timeoutSecond"/> (default : <span id="session.timeoutSecond.defaultVal"></span>)</label>
 					<div class="spinner mat8 number-spinner">
 						<button type="button" class="spinner_down" data-dir="dwn">-</button>
-						<input type="text" id="session.timeoutSecond" class="spinner_input w40" value="20">
+						<input type="text" id="session.timeoutSecond" class="spinner_input w40" value="20" value="3600" min="600" max="360000" maxlength="6">
 						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.sessiontimeout.second"/></p>
