@@ -992,7 +992,7 @@ function getDeptSchedule(){
 				}
 			}
 		};
-		grid.loadExportMenu('<s:message code="ipRange.set.iprange"/>');
+		grid.loadExportMenu('<s:message code="deptIpRange.set.iprange"/>');
 		grid.loadPageSize();
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');
