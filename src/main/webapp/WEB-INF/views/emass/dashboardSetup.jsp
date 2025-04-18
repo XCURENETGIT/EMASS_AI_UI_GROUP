@@ -939,10 +939,6 @@
                 $('#dashDoubleArea').hide();
             }
 
-            if (data.dashChart == 'P') $('#dashChartX').prop('disabled', true);
-            else $('#dashChartX').prop('disabled', false);
-
-
             setDashContentData();
             if (data.adminIds != null || data.adminIds != undefined) {
                 $('#dashShareSaveBtn').css('display', '');
