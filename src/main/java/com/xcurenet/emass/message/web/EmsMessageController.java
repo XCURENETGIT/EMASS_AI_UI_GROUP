@@ -1475,7 +1475,7 @@ public class EmsMessageController {
 		String attachId = Common.nvl(request.getParameter("attachId"));
 		String prediction = Common.nvl(request.getParameter("prediction"));
 		EmsAttachVO attach = emsMessageService.getEmassAttachInfo(msgId, attachId);
-		emsAttachDownload.download(attach, request, response, prediction);
+		emsAttachDownload.oneFileDownload(attach, request, response, prediction);
 	}
 
 	@RequestMapping(value = "/downEmassAttach.xcn")
@@ -1488,6 +1488,7 @@ public class EmsMessageController {
 		List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(msgId, attachId);
 		emsAttachDownload.download(attachs, request, response, prediction);
 	}
+
 
 	@RequestMapping(value = "/getEmassAttachInfo4DownHash.xcn")
 	@Description("EMASS 파일 다운로드")

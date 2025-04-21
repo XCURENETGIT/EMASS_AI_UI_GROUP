@@ -1,10 +1,8 @@
 package com.xcurenet.minio;
 
 import com.xcurenet.common.crypto.CryptoCommon;
-import com.xcurenet.common.crypto.CryptoUIKey;
 import com.xcurenet.common.util.Common;
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.Item;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -12,15 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
-import java.util.zip.GZIPInputStream;
 
 
 @Log4j2
@@ -59,18 +50,19 @@ public class MinioFileAdapter {
     }
 
 
-
+    /***
+     *  파일 열기 (10MB 이하의 파일 읽을시 사용 권장 ex:사진 미리보기)
+     * @param objectName
+     * @return
+     */
     public byte[] open(String objectName) {
         InputStream in = null;
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        try {
             boolean found = findBucket(bucket);
             if (found) {
                 in = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
                 CryptoCommon crypto = new CryptoCommon();
-                if (in != null) {
-                    IOUtils.copy(crypto.decrypt(in), out);
-                    return out.toByteArray();
-                }
+                return crypto.decrypt(in.readAllBytes());
             } else {
                 log.warn("bucket not found. {}", objectName);
             }
@@ -83,7 +75,12 @@ public class MinioFileAdapter {
     }
 
 
-
+    /**
+     * decoderFileUpload
+     * @param inputStream
+     * @param fileName
+     * @return
+     */
     public InputStream decoderFileUpload(InputStream inputStream, String fileName) {
         try {
             boolean found = findBucket(bucket);
@@ -103,6 +100,11 @@ public class MinioFileAdapter {
     }
 
 
+    /**
+     * findFile
+     * @param objectName
+     * @return
+     */
     public InputStream findFile(String objectName) {
         try {
             boolean found = findBucket(bucket);
@@ -116,63 +118,6 @@ public class MinioFileAdapter {
             log.warn("file found error : {} {}", e.getMessage(), objectName);
         }
         return null;
-    }
-
-
-
-    //파일 다운로드 - 단건
-    public void fileDownload(String objectName, String fileName, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        response.setCharacterEncoding(Common.UTF8);
-
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Transfer-Encoding", "binary");
-        response.setHeader("Connection", "close");
-        Cookie f = new Cookie("fileDownload", "true");
-        f.setMaxAge(1 * 24 * 60 * 60);
-        f.setPath("/");
-        response.addCookie(f);
-
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-
-        String randomStr = Common.nvl(UUID.randomUUID());
-
-        try {
-            //파일 찾기
-            inputStream = (CryptoUIKey.isEncrypt) ? getInputStream(objectName, randomStr, fileName) : findFile(objectName);
-            outputStream = response.getOutputStream();
-
-            if (inputStream == null) { // 파일이 존재하지 않을때
-                log.warn("file not found..attach {} {} ", fileName, randomStr, objectName);
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.addCookie(new Cookie("fileDownload", "false"));
-                return;
-            }
-
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-Transfer-Encoding", "binary");
-            response.setHeader("Connection", "close");
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getEncodingFileName(request, fileName) + "\"");
-
-
-            IOUtils.copyLarge(inputStream, outputStream);
-            response.flushBuffer();
-            response.setStatus(HttpServletResponse.SC_OK);
-
-            inputStream.close();
-
-        } catch (Exception e) {
-            log.error("", e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.addCookie(new Cookie("fileDownload", "false"));
-            IOUtils.closeQuietly(inputStream);
-            IOUtils.closeQuietly(outputStream);
-
-        } finally {
-            IOUtils.closeQuietly(inputStream);
-            IOUtils.closeQuietly(outputStream);
-            response.flushBuffer();
-        }
     }
 
 
@@ -204,36 +149,32 @@ public class MinioFileAdapter {
 
 
     /**
-     * 파일 다운로드
-     *
+     * 파일 복호화
      * @param objectName
      * @param fileName
      * @return
      */
-    public InputStream getInputStream(String objectName, String randomStr, String fileName) throws IOException {
-        InputStream in = null;
-        FileOutputStream fout = null;
-        File f = null;
-        try {
-            boolean found = findBucket(bucket);
-            if (found) {
-                in = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
-                f = new File(Common.TMP_PATH + randomStr + "_tmp" + getFileExtension(fileName));
-                fout = new FileOutputStream(f);
-                IOUtils.copy(in, fout);
-                CryptoCommon crypto = new CryptoCommon();
-                return crypto.decrypt(new FileInputStream(f));
-            } else {
-                log.warn("bucket not found : {}", objectName);
-            }
+    /**
+     * 파일 복호화 및 삭제 예약 InputStream 반환
+     */
+    public InputStream decryptedInputStream(String objectName, String randomStr, String fileName) throws IOException {
+        File file = getTempFile(randomStr, fileName);
+        try (InputStream in = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
+             FileOutputStream fout = new FileOutputStream(file)
+        ) {
+            IOUtils.copy(in, fout);
         } catch (Exception e) {
-            log.warn("file found error : {} {}", e.getMessage(), objectName);
-        } finally {
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(fout);
-            if (f != null) Files.delete(f.toPath());
+            throw new IOException(e);
         }
-        return null;
+        InputStream decrypted = new CryptoCommon().decrypt(new FileInputStream(file));
+        return new ObservableInputStream(decrypted, () -> {
+         //   log.info("InputStream for {} has been closed!", objectName);
+            try {
+                Files.deleteIfExists(file.toPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 
@@ -246,36 +187,14 @@ public class MinioFileAdapter {
     public static String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex == -1) {
-            return null;
+            return "";
         }
-        return fileName.substring(dotIndex + 1);
+        return "."+fileName.substring(dotIndex + 1);
     }
 
 
-    /***
-     * 첨부 문서파일 미리보기
-     * @param objectName
-     * @return
-     */
-    public byte[] previewOpen(String objectName) {
-        InputStream in = null;
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            boolean found = findBucket(bucket);
-            if (found) {
-                in = (minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build()));
-                CryptoCommon crypto = new CryptoCommon();
-                IOUtils.copy(crypto.decrypt(in), out);
-                return out.toByteArray();
-            } else {
-                log.warn("bucket not found. {}", objectName);
-            }
-        } catch (Exception e) {
-            log.warn("file found error : {} {}", e.getMessage(), objectName);
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-        return new byte[0];
+    public static File getTempFile(String randomStr,String fileName){
+       return new File(Common.TMP_PATH + randomStr + getFileExtension(fileName));
     }
-
 
 }

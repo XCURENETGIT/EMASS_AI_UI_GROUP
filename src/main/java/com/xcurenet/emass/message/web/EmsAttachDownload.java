@@ -1,6 +1,7 @@
 package com.xcurenet.emass.message.web;
 
 import com.xcurenet.common.crypto.CryptoCommon;
+import com.xcurenet.common.crypto.CryptoKey;
 import com.xcurenet.common.ftp.SFTPUtil;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
@@ -18,10 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -31,8 +34,8 @@ public class EmsAttachDownload {
 	public MinioFileAdapter minioFileAdapter;
 
 
-	@Description("파일 다운로드") /* 단건 */
-	public void download(final EmsAttachVO attach, final HttpServletRequest request, final HttpServletResponse response, final String prediction) throws Exception {
+	@Description("단건 파일 다운로드")
+	public void oneFileDownload(final EmsAttachVO attach, final HttpServletRequest request, final HttpServletResponse response, final String prediction) throws Exception {
 		response.setCharacterEncoding(Common.UTF8);
 		if (attach.getAttachSize() <= Integer.MAX_VALUE) response.setContentLength((int) attach.getAttachSize());
 		if (attach == null) {
@@ -41,14 +44,13 @@ public class EmsAttachDownload {
 			return;
 		}
 		String objectName = attach.getAttachPath();
-		log.info("path:{}", objectName);
-		/* prediction */
+		log.info("file object path:{}", objectName);
 		String fileName = (Common.isEquals(prediction, "Y")) ? attach.getAttachName() + "." + (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : attach.getAttachExt()) : attach.getAttachName();
-		minioFileAdapter.fileDownload(objectName, fileName, request, response);
+		oneFileDownloadResponse(objectName, fileName, request, response,CryptoKey.isEncrypt);
 	}
 
 
-	@Description("파일 다운로드") /* 다건 (압축) */
+	@Description("단건,다건 파일 다운로드")
 	public void download(final List<EmsAttachVO> attachs, final HttpServletRequest request, final HttpServletResponse response, final String prediction) throws Exception {
 		response.setCharacterEncoding(Common.UTF8);
 		if (attachs == null || attachs.size() == 0) {
@@ -56,10 +58,9 @@ public class EmsAttachDownload {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return;
 		}
-
 		OutputStream out = null;
 		ArchiveOutputStream os = null;
-		if (attachs.size() == 1) download(attachs.get(0), request, response, prediction);
+		if (attachs.size() == 1) oneFileDownload(attachs.get(0), request, response, prediction);
 		else if(attachs.size() > 1) {
 			try {
 				out = response.getOutputStream();
@@ -69,11 +70,18 @@ public class EmsAttachDownload {
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_attachs.zip\"");
 
 				os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
+				InputStream in = null;
 				for (EmsAttachVO attach : attachs) {
-					InputStream in = minioFileAdapter.findFile(attach.getAttachPath());
+					String objectName = attach.getAttachPath();
+					if (CryptoKey.isEncrypt) {
+						String randomStr = Common.nvl(UUID.randomUUID());
+						String fileName = (Common.isEquals(prediction, "Y")) ? attach.getAttachName() + "." + (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : attach.getAttachExt()) : attach.getAttachName();
+						in = minioFileAdapter.decryptedInputStream(objectName, randomStr, fileName);
+					}else{
+						in = minioFileAdapter.findFile(objectName);
+					}
 					try {
 						String path = attach.getAttachPath();
-//						String harPath = attach.getAttachHarPath();
 						log.info("path:{}", path);
 						if (in == null) continue;
 						if (Common.isEquals(prediction, "Y")) attach.setAttachName(attach.getAttachName() + "." + attach.getAttachExt());
@@ -156,6 +164,46 @@ public class EmsAttachDownload {
 		msg.setHost(edc.getHost());
 		msg.setPath(edc.getPath());
 		return msg;
+	}
+
+
+
+	// 단건 파일 다운로드
+	public void oneFileDownloadResponse(String objectName, String fileName, final HttpServletRequest request, final HttpServletResponse response, boolean isEncrypt) throws IOException {
+		response.setCharacterEncoding(Common.UTF8);
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Connection", "close");
+		Cookie f = new Cookie("fileDownload", "true");
+		f.setMaxAge(1 * 24 * 60 * 60);
+		f.setPath("/");
+		response.addCookie(f);
+
+		String randomStr = Common.nvl(UUID.randomUUID());
+		try (
+				InputStream inputStream = (isEncrypt) ? minioFileAdapter.decryptedInputStream(objectName, randomStr, fileName) : minioFileAdapter.findFile(objectName);
+				OutputStream outputStream = response.getOutputStream()
+		) {
+			if (inputStream == null) { // 파일이 존재하지 않을때
+				log.warn("file not found..attach {} {} ", fileName, randomStr, objectName);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.addCookie(new Cookie("fileDownload", "false"));
+				return;
+			}
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			response.setHeader("Connection", "close");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getEncodingFileName(request, fileName) + "\"");
+			IOUtils.copyLarge(inputStream, outputStream);
+			response.flushBuffer();
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			log.error("", e);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.addCookie(new Cookie("fileDownload", "false"));
+		}
+
+
 	}
 
 
