@@ -257,23 +257,17 @@ public class EmsMessageDownloadBatchController {
 	}
 
 	//private void downloadAttach(File exportDir, EmsAttachDownload attachDown, SolrEdcVO edc, SFTPUtil ftp) {
-	private void downloadAttach(File exportDir, EmsAttachDownload attachDown, SolrEdcVO edc) throws Exception{
+	private void downloadAttach(File exportDir, EmsAttachDownload attachDown, SolrEdcVO edc) throws Exception {
 		File dir = new File(Common.makeFilepath(exportDir.getPath(), "messages", edc.getMsgid(), "attachs"));
 		Common.mkdirs(dir.getPath());
 		List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(edc.getMsgid(), null);
 		for (EmsAttachVO attach : attachs) {
-			InputStream in = null;
-			FileOutputStream out = null;
-			try {
-				//in = attachDown.getAttach(attach.getAttachPath(), ftp);
-				in = minioFileAdapter.findFile(attach.getAttachPath());
+			try (InputStream in = minioFileAdapter.findFile(attach.getAttachPath())) {
+				if (in == null) continue;
 				File file = new File(Common.makeFilepath(dir.getPath(), Common.removeInvalidName(attach.getAttachName())));
-				out = new FileOutputStream(file);
-				if ( in != null) IOUtils.copyLarge(in, out);
-				else throw new Exception("Har Undefined");
-			} finally {
-				IOUtils.closeQuietly(in);
-				IOUtils.closeQuietly(out);
+				try (FileOutputStream out = new FileOutputStream(file)) {
+					IOUtils.copyLarge(in, out);
+				}
 			}
 		}
 	}

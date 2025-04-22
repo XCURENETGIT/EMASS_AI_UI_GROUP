@@ -1191,8 +1191,9 @@ public class MessengerController {
 				String path = attach.getAttachPath();
 				Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid()));
 				try (InputStream in = minioFileAdapter.findFile(path);
-				     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attach.getAttachName())));) {
-					if (in != null) IOUtils.copy(in, out);
+					 FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attach.getAttachName())));) {
+					if (in == null) continue;
+					IOUtils.copy(in, out);
 				} catch (Exception e) {
 					log.error("", e);
 				}
@@ -1293,17 +1294,12 @@ public class MessengerController {
 	private void inputAttach(ArchiveOutputStream os, MessengerEdcGroupVO groups) throws Exception {
 		List<MessengerGroupVO> list = groups.getGroups();
 		if (list != null) {
-			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (MessengerGroupVO item : list) {
-
 				List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
 				for (EmsAttachVO attach : attachs) {
-					InputStream in = null;
-					try {
+					try(InputStream  in = minioFileAdapter.findFile(attach.getAttachPath())){
 						String path = attach.getAttachPath();
-						String harPath = attach.getAttachHarPath();
-						log.info("path:{}, harPath:{}", path, harPath);
-						in = minioFileAdapter.findFile(attach.getAttachPath());
+						log.info("path:{} ", path);
 						if (in == null) continue;
 						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attach.getAttachName())));
 						IOUtils.copy(in, os);
@@ -1312,8 +1308,6 @@ public class MessengerController {
 						throw new Exception(e);
 					} catch (Exception e) {
 						e.printStackTrace();
-					} finally {
-						IOUtils.closeQuietly(in);
 					}
 				}
 			}

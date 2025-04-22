@@ -1,6 +1,7 @@
 package com.xcurenet.minio;
 
 import com.xcurenet.common.crypto.CryptoCommon;
+import com.xcurenet.common.crypto.CryptoKey;
 import com.xcurenet.common.util.Common;
 import io.minio.*;
 import io.minio.messages.Item;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.UUID;
 
 
 @Log4j2
@@ -28,7 +30,6 @@ public class MinioFileAdapter {
     public String decoderBucket;
 
 
-
     @Autowired
     public MinioFileAdapter(MinioClient minioClient) {
         this.minioClient = minioClient;
@@ -37,7 +38,6 @@ public class MinioFileAdapter {
 
     /**
      * Bucket Exists
-     *
      * @param bucket name
      * @return Exists
      */
@@ -47,31 +47,6 @@ public class MinioFileAdapter {
         } catch (Exception ignored) {
         }
         return false;
-    }
-
-
-    /***
-     *  파일 열기 (10MB 이하의 파일 읽을시 사용 권장 ex:사진 미리보기)
-     * @param objectName
-     * @return
-     */
-    public byte[] open(String objectName) {
-        InputStream in = null;
-        try {
-            boolean found = findBucket(bucket);
-            if (found) {
-                in = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
-                CryptoCommon crypto = new CryptoCommon();
-                return crypto.decrypt(in.readAllBytes());
-            } else {
-                log.warn("bucket not found. {}", objectName);
-            }
-        } catch (Exception e) {
-            log.warn("file found error : {} {}", e.getMessage(), objectName);
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-        return new byte[0];
     }
 
 
@@ -99,26 +74,6 @@ public class MinioFileAdapter {
         return null;
     }
 
-
-    /**
-     * findFile
-     * @param objectName
-     * @return
-     */
-    public InputStream findFile(String objectName) {
-        try {
-            boolean found = findBucket(bucket);
-            if (found) {
-                CryptoCommon crypto = new CryptoCommon();
-                return crypto.decrypt(minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build()));
-            } else {
-                log.warn("bucket not found : {}", objectName);
-            }
-        } catch (Exception e) {
-            log.warn("file found error : {} {}", e.getMessage(), objectName);
-        }
-        return null;
-    }
 
 
     public boolean exists(String path) throws IOException {
@@ -148,53 +103,74 @@ public class MinioFileAdapter {
     }
 
 
-    /**
-     * 파일 복호화
-     * @param objectName
-     * @param fileName
+    /***
+     *  minIO에서 파일 찾기 (10MB 이하의 파일 읽을시 사용 권장 ex:사진 미리보기) (암호화 사용 모드일 경우 복호화)
+     * @param filePath
      * @return
      */
-    /**
-     * 파일 복호화 및 삭제 예약 InputStream 반환
-     */
-    public InputStream decryptedInputStream(String objectName, String randomStr, String fileName) throws IOException {
-        File file = getTempFile(randomStr, fileName);
-        try (InputStream in = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
-             FileOutputStream fout = new FileOutputStream(file)
-        ) {
-            IOUtils.copy(in, fout);
+    public byte[] open(String filePath) {
+        try {
+            InputStream in = getFile(filePath);
+            if (in == null) return new byte[0];
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            InputStream effectiveIn = (CryptoKey.isEncrypt) ? new CryptoCommon().decrypt(in) : in;
+            IOUtils.copy(effectiveIn, bout);
+            return bout.toByteArray();
         } catch (Exception e) {
-            throw new IOException(e);
+            log.error("{}",e);
+            return new byte[0];
         }
-        InputStream decrypted = new CryptoCommon().decrypt(new FileInputStream(file));
-        return new ObservableInputStream(decrypted, () -> {
-         //   log.info("InputStream for {} has been closed!", objectName);
-            try {
-                Files.deleteIfExists(file.toPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 
 
     /**
-     * getFileExtension
-     *
-     * @param fileName
-     * @return
+     * minIO에서 파일 찾기 (암호화 사용 모드일 경우 복호화)
+     * @param filePath
      */
-    public static String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) {
-            return "";
+    public InputStream findFile(String filePath) throws IOException {
+        try (InputStream in = getFile(filePath)) {
+            if (in == null) return null;
+            if (CryptoKey.isEncrypt) {
+                File file = getTempFile();
+                try (FileOutputStream out = new FileOutputStream(file)) {
+                    IOUtils.copy(in, out);
+                    InputStream decrypted = new CryptoCommon().decrypt(new FileInputStream(file));
+                    return new ObservableInputStream(decrypted, () -> {
+                        try {
+                            Files.deleteIfExists(file.toPath());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            } else {
+                return in;
+            }
         }
-        return "."+fileName.substring(dotIndex + 1);
     }
 
 
-    public static File getTempFile(String randomStr,String fileName){
-       return new File(Common.TMP_PATH + randomStr + getFileExtension(fileName));
+    /**
+     * @param filePath
+     * @return
+     */
+    private InputStream getFile(String filePath) {
+        try {
+            boolean found = findBucket(bucket);
+            if (found) {
+                return minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(filePath).build());
+            } else {
+                log.warn("bucket not found : {}", filePath);
+            }
+        } catch (Exception e) {
+            log.warn("file found error : {} {}", e.getMessage(), filePath);
+        }
+        return null;
+    }
+
+
+    public static File getTempFile(){
+       return new File(Common.TMP_PATH + Common.nvl(UUID.randomUUID()));
     }
 
 }

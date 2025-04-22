@@ -8,6 +8,7 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +29,8 @@ public class EmsCreateMessage {
 	public EmsMessageService emsMessageService;
 
 	public ConfigAdminService configAdminService;
+
+	public MinioFileAdapter minioFileAdapter;
 
 	private final Locale locale;
 
@@ -438,8 +441,7 @@ public class EmsCreateMessage {
 
 	private String getOcrHtml(List<EmsAttachVO> files, boolean hasOcr) throws Exception {
 		String resultStr = "";
-		EmsAttachDownload attachDown = new EmsAttachDownload();
-		if(hasOcr) {
+		if (hasOcr) {
 			resultStr += "<table class=\"subTable02 table-bordered\"> ";
 			resultStr += "	<colgroup> ";
 			resultStr += "		<col width=\"200px\"> ";
@@ -448,17 +450,18 @@ public class EmsCreateMessage {
 			for (int i = 0; i < files.size(); i++) {
 				EmsAttachVO file = files.get(i);
 				String base64Image = "";
-				try {
-					base64Image = ImageUtils.imageResize(attachDown.getAttach(file.getAttachPath(), file.getAttachHarPath()), 200);
+				try (InputStream in = minioFileAdapter.findFile(file.getAttachPath())) {
+					if (in == null) continue;
+					base64Image = ImageUtils.imageResize(in, 200);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if(Common.isEquals(file.getOcrYn(), "Y")) {
+				if (Common.isEquals(file.getOcrYn(), "Y")) {
 					resultStr += "	<tr> ";
 					resultStr += "	<th colspan=\"2\">" + file.getAttachName() + "</td> ";
 					resultStr += "	</tr> ";
 					resultStr += "	<tr> ";
-					resultStr += "		<td><img style=\"max-width: 200px\" src=\"data:image/" + file.getAttachExt() + ";base64, "+ base64Image + "\"/></td> ";
+					resultStr += "		<td><img style=\"max-width: 200px\" src=\"data:image/" + file.getAttachExt() + ";base64, " + base64Image + "\"/></td> ";
 					resultStr += "		<td>" + file.getOcrText().replaceAll("\n", "<br>") + "</td> ";
 					resultStr += "	</tr> ";
 				}

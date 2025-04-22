@@ -795,10 +795,7 @@ public class EmsMessageController {
 	private void inputAttach(ArchiveOutputStream os, EmsAttachDownload attachDown, SolrEdcVO edc) throws Exception {
 		List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(edc.getMsgid(), null);
 		for (EmsAttachVO attach : attachs) {
-			InputStream in = null;
-			try {
-				in = minioFileAdapter.findFile(attach.getAttachPath());
-				//파일이 실제로 없는 경우를 대비해서 attach 폴더를 우선 생성
+			try (InputStream in = minioFileAdapter.findFile(attach.getAttachPath())) {
 				String filePath = Common.makeFilepath("messages", edc.getMsgid(), "attachs", Common.removeInvalidName(attach.getAttachName()));
 				if (in == null) continue;
 				os.putArchiveEntry(new ZipArchiveEntry(filePath));
@@ -808,8 +805,6 @@ public class EmsMessageController {
 				throw new Exception(e);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				IOUtils.closeQuietly(in);
 			}
 		}
 	}

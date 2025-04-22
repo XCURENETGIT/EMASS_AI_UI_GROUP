@@ -384,13 +384,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
 		List<EmsAttachVO> emsAttachVOList = getEmsAttachVOS(emsMessageVO);
 		for (EmsAttachVO attachVO : emsAttachVOList) {
-			if (Config.isOCR && Common.isNotEmpty(attachVO.getAttachHash()) && Common.isEquals(attachVO.getOcrYn(),"Y")) {
+			if (Config.isOCR && Common.isNotEmpty(attachVO.getAttachHash()) && Common.isEquals(attachVO.getOcrYn(), "Y")) {
 				EmsAttachTextVO ocrVo = getAttachTextByHash(attachVO.getAttachHash());
 				if (Common.isNotEmpty(ocrVo)) {
 					attachVO.setOcrYn("Y");
 					attachVO.setOcrText(ocrVo.getAttachText());
-					try {
-						InputStream is  = minioFileAdapter.findFile(attachVO.getAttachPath());
+					try (InputStream is = minioFileAdapter.findFile(attachVO.getAttachPath())) {
+						if (is == null) continue;
 						attachVO.setOcrImageStr(ImageUtils.imageResize(is, 200));
 					} catch (Exception e) {
 						log.error("", e);
