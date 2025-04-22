@@ -96,7 +96,7 @@ function getData(lastRow) {
         grid.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
         grid.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
 
-        grid.loadExportMenu('<s:message code="POLICY_SETUP.DEPT_IPRANGE"/>');
+        grid.loadExportMenu('<s:message code="DATA_MONITOR.DEPT_IPRANGE_VIEW"/>');
 		grid.loadPageSize();
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');

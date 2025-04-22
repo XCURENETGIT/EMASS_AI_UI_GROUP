@@ -86,7 +86,7 @@ function getData(lastRow) {
 			if (grid.Col == grid.ColIndex('busiNm')) {
 			}
 		};
-		grid.loadExportMenu('<s:message code="ipRange.set.iprange"/>');
+		grid.loadExportMenu('<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>');
 		grid.loadPageSize();
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');
