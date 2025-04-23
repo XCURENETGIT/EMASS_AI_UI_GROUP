@@ -25,10 +25,15 @@ public class IpRangeDeptControllerLog {
 	public void getIpRangeList(final HttpServletRequest request, AuditRequestVO auditVo){
 		JSONObject param = Common.getParam(request);
 		String searchStr = Common.nvl(param.get("searchStr"));
-		
+		String adminId = Common.nvl(param.get("adminId"));
+
 		String information = "["+Prop.propFormat("common.msg.search")+"]";
 		if(Common.isNotEmpty(searchStr)) information += "┌"+Prop.propFormat("condition.search_str")+": " + searchStr;
 		auditVo.setInformation(information);
+		if(Common.isNotEmpty(adminId)){
+			auditVo.setPMenuId(ParentMenu.DATA_MONITOR.getParentMenuId());
+			auditVo.setMenuId(Menu.DEPT_IPRANGE_VIEW.getMenuId());
+		}
 		auditService.insertAudit(request, auditVo);
 	}
 	public void insertIpRange(final HttpServletRequest request, AuditRequestVO auditVo) {

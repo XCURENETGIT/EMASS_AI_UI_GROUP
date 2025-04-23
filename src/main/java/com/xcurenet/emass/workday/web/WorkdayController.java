@@ -23,7 +23,7 @@ import com.xcurenet.emass.workday.service.WorkdayService;
 import com.xcurenet.emass.workday.service.WorkdayVO;
 
 @Controller
-@AuditParentMenu(ParentMenu.OPERATION_MGMT)
+@AuditParentMenu(ParentMenu.POLICY_SETUP)
 @AuditMenu(Menu.HOLIDAY_BUSI)
 public class WorkdayController {
 

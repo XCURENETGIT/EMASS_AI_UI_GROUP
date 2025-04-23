@@ -31,7 +31,7 @@ public class SolrEdcStatControllerLog {
 		String information = "";
 		
 		if( Common.isEquals(yAxis, "userid") ) auditVo.setMenuId(Menu.STAT_USER.getMenuId());
-		else if( Common.isEquals(yAxis, "user_str") ) auditVo.setMenuId(Menu.STAT_INTEREST.getMenuId());
+		if( Common.isNotEmpty(interGroup) ) auditVo.setMenuId(Menu.STAT_INTEREST.getMenuId());
 		else if( Common.isEquals(yAxis, "sender_str") ) auditVo.setMenuId(Menu.STAT_SENDER.getMenuId());
 		else if( Common.isEquals(yAxis, "svc12") ) auditVo.setMenuId(Menu.STAT_SVC.getMenuId());
 		else if( Common.isEquals(yAxis, "kwds") ) auditVo.setMenuId(Menu.STAT_KWD.getMenuId());
