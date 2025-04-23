@@ -2,6 +2,8 @@ package com.xcurenet.emass.iprange.log;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.xcurenet.audit.service.Menu;
+import com.xcurenet.audit.service.ParentMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,19 @@ public class IpRangeControllerLog {
 		auditVo.setInformation(information);
 		auditService.insertAudit(request, auditVo);
 	}
+
+	public void getIpRangeListByBusicd(final HttpServletRequest request, AuditRequestVO auditVo){
+		JSONObject param = Common.getParam(request);
+		String searchStr = Common.nvl(param.get("searchStr"));
+
+		String information = "["+Prop.propFormat("common.msg.search")+"]";
+		if(Common.isNotEmpty(searchStr)) information += "┌"+Prop.propFormat("condition.search_str")+": " + searchStr;
+		auditVo.setInformation(information);
+		auditVo.setPMenuId(ParentMenu.DATA_MONITOR.getParentMenuId());
+		auditVo.setMenuId(Menu.BUSI_IPRANGE_VIEW.getMenuId());
+		auditService.insertAudit(request, auditVo);
+	}
+
 	public void insertIpRange(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
 		String busiNm = Common.nvl(param.get("busiNm"));
