@@ -109,15 +109,15 @@ public class MinioFileAdapter {
      * @return
      */
     public byte[] open(String filePath) {
-        try {
-            InputStream in = getFile(filePath);
+        try (InputStream in = getFile(filePath)) {
             if (in == null) return new byte[0];
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            InputStream effectiveIn = (CryptoKey.isEncrypt) ? new CryptoCommon().decrypt(in) : in;
-            IOUtils.copy(effectiveIn, bout);
-            return bout.toByteArray();
+            try (InputStream effectiveIn = CryptoKey.isEncrypt ? new CryptoCommon().decrypt(in) : in;
+                 ByteArrayOutputStream bout = new ByteArrayOutputStream()) {
+                IOUtils.copy(effectiveIn, bout);
+                return bout.toByteArray();
+            }
         } catch (Exception e) {
-            log.error("{}",e);
+            log.error("File open error: {}", e.getMessage(), e);
             return new byte[0];
         }
     }
@@ -128,24 +128,25 @@ public class MinioFileAdapter {
      * @param filePath
      */
     public InputStream findFile(String filePath) throws IOException {
-        try (InputStream in = getFile(filePath)) {
-            if (in == null) return null;
-            if (CryptoKey.isEncrypt) {
-                File file = getTempFile();
-                try (FileOutputStream out = new FileOutputStream(file)) {
-                    IOUtils.copy(in, out);
-                    InputStream decrypted = new CryptoCommon().decrypt(new FileInputStream(file));
-                    return new ObservableInputStream(decrypted, () -> {
-                        try {
-                            Files.deleteIfExists(file.toPath());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-            } else {
-                return in;
+        InputStream in = getFile(filePath);
+        if (in == null) return null;
+        if (CryptoKey.isEncrypt) {
+            File file = getTempFile();
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                IOUtils.copy(in, out);
+            } finally {
+                in.close();
             }
+            InputStream decrypted = new CryptoCommon().decrypt(new FileInputStream(file));
+            return new ObservableInputStream(decrypted, () -> {
+                try {
+                    Files.deleteIfExists(file.toPath());
+                } catch (IOException e) {
+                    log.error("{}",e);
+                }
+            });
+        } else {
+            return in;
         }
     }
 
