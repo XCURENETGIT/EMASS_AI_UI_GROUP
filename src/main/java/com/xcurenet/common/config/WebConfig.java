@@ -24,10 +24,12 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/statusUpdate","/updateStatus.xcn","/login.do", "/loginSSO.do", "/loginAuth.do", "/error.do", "/blank.do", "/loginSSOProcess.do"
+		registry.addInterceptor(authorityInterceptor).excludePathPatterns("/api/**","/endExport.xcn","/endReprocessTry.xcn","/statusUpdate","/updateStatus.xcn","/login.do", "/loginSSO.do", "/loginAuth.do", "/error.do", "/blank.do", "/loginSSOProcess.do"
 			,"/deleteSession.xcn","/logoutSSOProcess.do", "/getUacsRule.xcn", "/loginProcess.xcn", "/getRSAKey.xcn","/confirmNumber",
-				"/updateAdminPassword.xcn", "/secretKeySave.xcn","/reloadGoogleOTP.xcn","/mailSend.xcn","/sendmail","/makeInfo", "/loginProcess.xcn", "/admin/updateAdminPassword.vns", "/passwordChange", "/process/**", "/css/**", "/img/**", "/js/**", "/lib/**","/fonts/**", "/favicon.ico");
-		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**", "/img/**", "/js/**","/fonts/**", "/lib/**", "/favicon.ico", "/error");
+				"/updateAdminPassword.xcn", "/secretKeySave.xcn","/reloadGoogleOTP.xcn","/mailSend.xcn","/sendmail","/makeInfo", "/loginProcess.xcn", "/admin/updateAdminPassword.vns", "/passwordChange", "/process/**", "/css/**",
+				"/img/**", "/js/**", "/lib/**","/fonts/**", "/favicon.ico", "/loginMfaProcess.xcn", "/loginMfaResult.xcn", "/getFeedbackList.xcn", "/agent/**")
+				.addPathPatterns("/**");
+		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**", "/img/**", "/js/**","/fonts/**", "/lib/**", "/favicon.ico", "/error", "/getAgentStatus.xcn");
 		registry.addInterceptor(localeChangeInterceptor());
 	}
 

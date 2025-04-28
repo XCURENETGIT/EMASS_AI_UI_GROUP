@@ -141,7 +141,9 @@
         <put-attribute name="body" value="/WEB-INF/views/emass/message/contentBodyNew.jsp" />
     </definition>
 
-
+    <definition name="/agent/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/agent/{1}.jsp" />
+    </definition>
     <!--###########################-->
 
 </tiles-definitions>

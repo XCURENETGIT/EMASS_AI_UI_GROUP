@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.agent.AgentMapper">
+
+	<!-- Agent 최초 인증 시 이메일 정보로 사용자 탐색 -->
+	<select id="getUserIdByEmail" parameterType="AuthInfo" resultType="string">
+		SELECT  USER_ID AS userId
+		FROM	UI_USER_EMAIL
+		WHERE	USER_EMAIL = #{authEmail}
+		LIMIT	1
+	</select>
+
+	<!-- Agent ID 값으로 사용자 탐색 -->
+	<select id="getUserIdByAgentId" parameterType="AuthInfo" resultType="string">
+		SELECT  USER_ID AS userId
+		FROM	AGENT_MGMT
+		WHERE	AGENT_ID = #{agentId}
+		LIMIT	1
+	</select>
+
+	<update id="updateAgentStatus" parameterType="StatusInfo">
+		INSERT INTO AGENT_MGMT (AGENT_ID, CLIENT_IP, LAST_STATUS_DT, USER_ID, STATUS)
+		VALUES
+			(#{agentId}, #{clientIp}, NOW(), #{userId}, 'Y')
+		ON DUPLICATE KEY UPDATE
+			CLIENT_IP       = #{clientIp},
+			LAST_STATUS_DT  = NOW(),
+			USER_ID         = #{userId},
+			STATUS          = 'Y'
+	</update>
+
+	<!-- Agent 상태 요약 정보 -->
+	<select id="getAgentStatusSummary" resultType="hashmap">
+		SELECT  (
+				SELECT  COUNT(*) AS UNREGISTERED
+				FROM 	UI_USERS A LEFT JOIN AGENT_MGMT B ON (A.USER_ID = B.USER_ID)
+				WHERE	B.AGENT_ID IS NULL
+				) AS UNREGISTERED,
+				(
+				SELECT 	COUNT(*) AS ACTIVE
+				FROM 	AGENT_MGMT
+				WHERE STATUS = 'Y'
+				) AS ACTIVE,
+				(
+				SELECT 	COUNT(*) AS INACTIVE
+				FROM 	AGENT_MGMT
+				WHERE STATUS = 'N'
+				) AS INACTIVE
+	</select>
+
+	<!-- Agent 상태 조회 목록 -->
+	<select id="getAgentStatus" resultType="StatusInfo" parameterType="StatusInfo">
+		SELECT  B.AGENT_ID AS agentId,
+				B.CLIENT_IP AS clientIp,
+				B.LAST_STATUS_DT AS lastLoginDt,
+				A.USER_ID AS userId,
+				B.STATUS AS status,
+				A.USER_NM AS userNm,
+				(SELECT USER_EMAIL FROM UI_USER_EMAIL AS B WHERE A.USER_ID = B.USER_ID) AS userEmail,
+				(SELECT CONM FROM UI_CO C WHERE A.COCD = C.COCD) AS coNm,
+				(SELECT DEPTNM FROM UI_DEPT D WHERE A.DEPTCD = D.DEPTCD) AS deptNm,
+				(SELECT JIKGUBNM FROM UI_JIKGUB J WHERE A.JIKGUBCD = J.JIKGUBCD) AS jikgubNm
+		FROM 	UI_USERS A LEFT JOIN AGENT_MGMT B ON (A.USER_ID = B.USER_ID)
+		WHERE   1=1
+		<if test='agentId!=null and agentId!=""'>
+			AND		( B.AGENT_ID LIKE CONCAT('%', #{agentId}, '%') OR A.USER_NM LIKE CONCAT('%', #{agentId}, '%') )
+		</if>
+		<if test='status!=null and status!=""'>
+			<choose>
+				<when test='status =="X"'>
+					AND B.AGENT_ID IS NULL
+				</when>
+				<otherwise>
+					AND		B.STATUS = #{status}
+				</otherwise>
+			</choose>
+		</if>
+		ORDER	BY A.USER_NM, B.STATUS DESC, B.AGENT_ID
+	</select>
+
+	<!-- Agent OffLine 상태 목록 -->
+	<select id="getOffLineAgent" resultType="StatusInfo">
+		SELECT 	AGENT_ID AS agentId, CLIENT_IP AS clientIp, LAST_STATUS_DT AS lastLoginDt, USER_ID AS userId,
+				(SELECT USER_NM FROM UI_USERS AS B WHERE A.USER_ID = B.USER_ID) AS userNm,
+				(SELECT DEPTNM FROM UI_USERS B, UI_DEPT C WHERE B.DEPTCD = C.DEPTCD AND B.USER_ID = A.USER_ID) AS deptNm
+		FROM 	AGENT_MGMT AS A
+		WHERE	TIMESTAMPDIFF(SECOND, LAST_STATUS_DT, NOW()) > 60
+		AND		STATUS = 'Y'
+	</select>
+
+	<update id="statusChange">
+		UPDATE  AGENT_MGMT
+		SET     STATUS = CASE
+							WHEN TIMESTAMPDIFF(SECOND, LAST_STATUS_DT, NOW()) > 60 THEN 'N'
+		                    ELSE 'Y'
+						END
+		WHERE LAST_STATUS_DT IS NOT NULL
+	</update>
+
+	<!-- 기본 AGENT 정책 -->
+	<select id="getDefaultPolicy" resultType="PolicyInfo" parameterType="string">
+		SELECT  AGENT_ID AS agentId, CONF_ID AS confId, CONF_NAME AS confName, CONF_VAL AS confVal, CATEGORY AS category
+		FROM	AGENT_POLICY
+		WHERE	AGENT_ID = 'DEFAULT'
+		<if test='searchStr!=null and searchStr!=""'>
+			AND		CATEGORY    LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		ORDER	BY CATEGORY, CONF_ID
+	</select>
+
+	<!-- CLIENT AGENT 정책 -->
+	<select id="getClientPolicy" resultType="PolicyInfo" parameterType="string">
+		SELECT  AGENT_ID AS agentId, CONF_ID AS confId, CONF_NAME AS confName, CONF_VAL AS confVal
+		FROM	AGENT_POLICY
+		WHERE	AGENT_ID = #{clientId}
+	</select>
+
+	<!-- AGENT 정책 목록 -->
+	<select id="getPolicyList" resultType="PolicyInfo" parameterType="string">
+		SELECT  #{agentId} AS agentId, A.CONF_ID AS confId, A.CONF_NAME AS confName, IF(B.AGENT_ID IS NULL, A.CONF_VAL, B.CONF_VAL) AS confVal
+		FROM	AGENT_POLICY A LEFT JOIN (
+					SELECT	AGENT_ID, CONF_ID, CONF_NAME, CONF_VAL
+					FROM	AGENT_POLICY
+					WHERE	AGENT_ID = #{agentId}
+					) B ON (A.CONF_ID = B.CONF_ID)
+		WHERE	A.AGENT_ID = 'DEFAULT'
+		AND		A.CONF_ID != 'proxy.pacUrl'
+		UNION
+		SELECT  #{agentId} AS agentId, 'proxy.pacUrl' AS confId, NULL AS confName, CONCAT(CONF_VAL, '/agent/${agentId}/xcurenet.pac') AS confVal
+		FROM	AGENT_POLICY
+		WHERE	CONF_ID = 'policy.serverUrl'
+	</select>
+
+	<!-- AGENT 정책 수정 -->
+	<update id="updatePolicy" parameterType="PolicyInfo">
+		INSERT INTO AGENT_POLICY (AGENT_ID, CONF_ID, CONF_VAL)
+		VALUES
+			(#{agentId}, #{confId}, #{confVal} )
+		ON DUPLICATE KEY UPDATE
+			CONF_VAL = #{confVal}
+	</update>
+
+	<select id="getAgentService" parameterType="hashMap" resultType="AgentServiceInfo">
+		SELECT  LEFT(A.SERVICECD, 1) AS groupCd, A.SERVICENM_LV1 AS groupNm,
+				LEFT(A.SERVICECD, 3) AS serviceCd, A.SERVICENM_LV2 AS serviceNm,
+				IFNULL(B.LOGGING_YN, 'N') AS loggingYn
+		FROM	UI_SERVICE A LEFT JOIN AGENT_SERVICE_POLICY B ON (LEFT(A.SERVICECD, 1) = B.SERVICECD )
+		WHERE	A.USE_YN = 'Y'
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( LEFT(A.SERVICECD, 3) LIKE CONCAT('%', #{searchStr}, '%') OR A.SERVICENM_LV2 LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		GROUP	BY LEFT(A.SERVICECD, 1), A.SERVICENM_LV1, LEFT(A.SERVICECD, 3), A.SERVICENM_LV2
+		ORDER	BY MAX(A.SORT)
+	</select>
+
+	<update id="applyAgentService" parameterType="hashmap">
+		INSERT INTO AGENT_SERVICE_POLICY (SERVICECD, LOGGING_YN)
+		VALUES
+			(#{serviceCd}, #{loggingYn} )
+		ON DUPLICATE KEY UPDATE
+			LOGGING_YN = #{loggingYn}
+	</update>
+
+	<update id="initAgentDefaultPolicy">
+		UPDATE	AGENT_POLICY
+		SET		CONF_VAL = DEF_CONF_VAL
+	</update>
+
+	<select id="getProxyURL" resultType="hashmap">
+		SELECT	(SELECT  CONF_VAL FROM	EMASSAI.AGENT_POLICY WHERE AGENT_ID = 'DEFAULT' AND CONF_ID = 'mitm.options.listen_host') AS host,
+				(SELECT  CONF_VAL FROM	EMASSAI.AGENT_POLICY WHERE AGENT_ID = 'DEFAULT' AND CONF_ID = 'mitm.port') AS port
+	</select>
+
+	<select id="getProxyHosts" resultType="java.lang.String">
+		SELECT  HOST
+		FROM	AGENT_SERVICE_POLICY A, AGENT_SERVICE B
+		WHERE	A.LOGGING_YN = 'Y'
+		AND		A.SERVICECD  = B.SERVICECD
+	</select>
+
+</mapper>

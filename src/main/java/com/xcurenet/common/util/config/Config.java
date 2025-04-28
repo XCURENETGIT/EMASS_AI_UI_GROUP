@@ -382,6 +382,9 @@ public class Config {
 
 			configs = configService.getConfList();
 
+			configService.updateMenuByAgentMode1();
+			configService.updateMenuByAgentMode2();
+
 			reloadIpRange();
 
 			isIPv6 = Config.getBoolean("ui.ipv6");

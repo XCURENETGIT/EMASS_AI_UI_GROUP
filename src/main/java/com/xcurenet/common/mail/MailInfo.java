@@ -2,10 +2,12 @@ package com.xcurenet.common.mail;
 
 import com.xcurenet.common.txt.TextReader;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 
 @Data
+@NoArgsConstructor
 public class MailInfo {
 
 	public final static String MAIL_INFO_PREFIX = ":";
@@ -30,6 +32,8 @@ public class MailInfo {
 	private String subject;
 
 	private String from;
+
+	private String fromName;
 
 	private String[] to = {};
 

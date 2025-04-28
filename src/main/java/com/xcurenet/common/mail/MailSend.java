@@ -45,7 +45,8 @@ public class MailSend implements Runnable {
 			email.setSocketConnectionTimeout(120000);
 			email.setDebug(Config.getBoolean("mail.debug"));
 
-			email.setFrom(mailInfo.getFrom());
+			if (mailInfo.getFromName() != null) email.setFrom(mailInfo.getFrom(), mailInfo.getFromName());
+			else email.setFrom(mailInfo.getFrom());
 			if (Common.isNotEmpty(mailInfo.getTo()) && mailInfo.getTo().length > 0) {
 				email.addTo(mailInfo.getTo());
 			}
@@ -106,6 +107,8 @@ public class MailSend implements Runnable {
 	}
 
 	private void moveFailFile() throws IOException {
+		if(mailInfo.getInfoPath() == null) return;
+
 		if (Common.isNotEquals(mailInfo.getOrgInfoPath(), mailInfo.getInfoPath())) {
 			File org = new File(mailInfo.getOrgInfoPath());
 			File info = new File(mailInfo.getInfoPath());
@@ -133,6 +136,7 @@ public class MailSend implements Runnable {
 	}
 
 	private void moveFile() throws IOException {
+		if(mailInfo.getInfoPath() == null) return;
 		if (Common.isNotEquals(mailInfo.getOrgInfoPath(), mailInfo.getInfoPath())) {
 			File org = new File(mailInfo.getOrgInfoPath());
 			File info = new File(mailInfo.getInfoPath());

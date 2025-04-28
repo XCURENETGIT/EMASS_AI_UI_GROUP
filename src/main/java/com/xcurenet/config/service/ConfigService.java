@@ -15,4 +15,7 @@ public interface ConfigService {
 	public boolean execute(final ConfigVO conf);
 	
 	public void mailConfTest(String mail, HttpServletRequest request) throws Exception;
+
+	void updateMenuByAgentMode1();
+	void updateMenuByAgentMode2();
 }

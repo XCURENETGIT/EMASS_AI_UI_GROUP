@@ -92,4 +92,16 @@
 		REPLACE INTO UI_CONF_ADMIN (CONF_ID, ADMIN_ID, VAL, UPDATE_DT ) VALUES ( #{confId}, #{adminId}, #{val}, NOW() )
 	</insert>
 
+	<update id="updateMenuByAgentMode1">
+		UPDATE	UI_MENU
+		SET		MENU_USEYN = (SELECT IF(VAL = 'true', 'Y', 'N') FROM UI_CONF WHERE CONF_ID = 'agent.mode')
+		WHERE   MENU_ID = 'AGENT_LABEL'
+	</update>
+
+	<update id="updateMenuByAgentMode2">
+		UPDATE	UI_MENU
+		SET		MENU_USEYN = (SELECT IF(VAL = 'true', 'Y', 'N') FROM UI_CONF WHERE CONF_ID = 'agent.mode')
+		WHERE   P_MENU_ID = 'AGENT_LABEL'
+	</update>
+
 </mapper>

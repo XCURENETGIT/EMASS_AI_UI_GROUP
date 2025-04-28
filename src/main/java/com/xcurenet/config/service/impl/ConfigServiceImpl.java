@@ -58,6 +58,16 @@ public class ConfigServiceImpl extends XcnAbstractDAO implements ConfigService {
 			return update("com.xcurenet.sqlmap.mappers.mysql.config.insertConfig", conf);
 		}
 	}
+
+	@Override
+	public void updateMenuByAgentMode1() {
+		update("com.xcurenet.sqlmap.mappers.mysql.config.updateMenuByAgentMode1", null);
+	}
+
+	@Override
+	public void updateMenuByAgentMode2() {
+		update("com.xcurenet.sqlmap.mappers.mysql.config.updateMenuByAgentMode2", null);
+	}
 	
 	public void rollback(Connection con){
 		if (con != null) {
