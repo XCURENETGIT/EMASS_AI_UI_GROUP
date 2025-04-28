@@ -212,7 +212,7 @@ function init(){
 			</div>
 		</div>
 	</div>
-	<div id="messageContents" class="row" style="position: relative; top: -28px; display: none">
+	<div id="messageContents" class="row" style="position: relative; top: -28px;">
 		<%=bodyStr%>
 		<%=styleStr%>
 	</div>
