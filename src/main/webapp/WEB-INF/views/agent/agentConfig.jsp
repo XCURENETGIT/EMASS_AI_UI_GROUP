@@ -194,7 +194,7 @@
 			url: 'getDefaultPolicy.xcn',
 			searchStr : $('#searchStr').val(),
 			success: function (data) {
-				grid.setData(data.filter(item => (item.category !== "Agent Auth" && item.confId !== "usb.allowedDevices" && item.confId !== "proxy.pacUrl")));
+				grid.setData(data.filter(item => (item.category !== "Agent Auth" && item.confId !== "usb.allowedDevices")));
 			},
 			error: function (status, message) {
 				ui.alertMsg(message);

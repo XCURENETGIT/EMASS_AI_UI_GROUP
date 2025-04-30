@@ -118,18 +118,17 @@
 
 	<!-- AGENT 정책 목록 -->
 	<select id="getPolicyList" resultType="PolicyInfo" parameterType="string">
-		SELECT  #{agentId} AS agentId, A.CONF_ID AS confId, A.CONF_NAME AS confName, IF(B.AGENT_ID IS NULL, A.CONF_VAL, B.CONF_VAL) AS confVal
+		SELECT	#{agentId} AS agentId, A.CONF_ID AS confId, A.CONF_NAME AS confName,
+				CASE WHEN A.CONF_ID = 'proxy.pacUrl'
+					 THEN CONCAT(A.CONF_VAL, '/agent/', #{agentId}, '/xcurenet.pac')
+					 ELSE IF(B.AGENT_ID IS NULL, A.CONF_VAL, B.CONF_VAL)
+				END confVal
 		FROM	AGENT_POLICY A LEFT JOIN (
 					SELECT	AGENT_ID, CONF_ID, CONF_NAME, CONF_VAL
 					FROM	AGENT_POLICY
 					WHERE	AGENT_ID = #{agentId}
 					) B ON (A.CONF_ID = B.CONF_ID)
 		WHERE	A.AGENT_ID = 'DEFAULT'
-		AND		A.CONF_ID != 'proxy.pacUrl'
-		UNION
-		SELECT  #{agentId} AS agentId, 'proxy.pacUrl' AS confId, NULL AS confName, CONCAT(CONF_VAL, '/agent/${agentId}/xcurenet.pac') AS confVal
-		FROM	AGENT_POLICY
-		WHERE	CONF_ID = 'policy.serverUrl'
 	</select>
 
 	<!-- AGENT 정책 수정 -->
