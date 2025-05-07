@@ -15,6 +15,20 @@
 		cursor: pointer;
 		color: #00c;
 	}
+	#screenshotappsList label {
+		border: 1px solid #CCC;
+		width: 300px;
+		font-size: 12px;
+		height: 26px;
+		line-height: 26px;
+		background: #FFF;
+		padding: 0 4px;
+		align-items: center;
+		margin-bottom: 3px;
+	}
+	#screenshotappsList label input {
+		vertical-align: middle;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -180,7 +194,6 @@
 	function modify(){
 		const data = grid.getRowData(grid.Row);
 		randerConfValType(data.confId);
-
 		$('#category').val(data.category);
 		$('#confId').val(data.confId);
 		$('#confName').val(getConfNameText(data.confId, data.confName));
@@ -194,7 +207,7 @@
 			url: 'getDefaultPolicy.xcn',
 			searchStr : $('#searchStr').val(),
 			success: function (data) {
-				grid.setData(data.filter(item => (item.category !== "Agent Auth" && item.confId !== "usb.allowedDevices")));
+				grid.setData(data.filter(item => (item.category !== "Agent Auth" && item.confId !== "usb.allowedDevices" && item.confId !== "clipboard.screenshotapps")));
 			},
 			error: function (status, message) {
 				ui.alertMsg(message);
@@ -210,12 +223,14 @@
 		if(confId === 'agent.logLevel') {
 			result = '<select id="confVal" class="w100"><option value="debug">🛠️ DEBUG</option><option value="info">ℹ️ INFO</option><option value="warn">⚠️ WARN</option><option value="error">❌ ERROR</option></select>';
 		} else if (confId === 'clipboard.mode') {
-			result = '<select id="confVal" class="w100"><option value="both">🛡️ <s:message code="agent.clipboard.mode.both"/></option><option value="detect">🔍 <s:message code="agent.clipboard.mode.detect"/></option></select>'
-		} else if (confId === 'clipboard.enabled' || confId === 'mitm.options.ssl_insecure' || confId === 'mitm.options.websocket' || confId === 'usb.enabled') {
+			result = '<select id="confVal" class="w100"><option value="off">🛑 <s:message code="agent.clipboard.mode.off"/></option><option value="detect">🔍 <s:message code="agent.clipboard.mode.detect"/></option><option value="clear">♻️ <s:message code="agent.clipboard.mode.clear"/></option><option value="both">🔄 <s:message code="agent.clipboard.mode.both"/></option></select>'
+		} else if (confId === 'mitm.options.ssl_insecure' || confId === 'mitm.options.websocket' || confId === 'usb.enabled') {
 			result = '<select id="confVal" class="w100"><option value="true">✔️ True</option><option value="false">✖️ False</option></select>'
+		} else if (confId === 'clipboard.enabled') {
+			result = '<select id="confVal" class="w100" disabled><option value="true">✔️ True</option><option value="false">✖️ False</option></select>'
 		} else if(confId === 'policy.serverUrl' || confId === 'policy.uploadUrl' || confId === 'proxy.pacUrl') {
 			result = '<input id="confVal" class="w100" type="url"/>';
-		} else if(confId === 'mitm.port' || confId === 'policy.updateInterval' || confId === 'storage.cleanupInterval' || confId === 'storage.maxFileCount' || confId === 'storage.maxSize' || confId === 'storage.retention' || confId === 'storage.scanInterval') {
+		} else if(confId === 'mitm.port' || confId === 'policy.updateInterval' || confId === 'storage.cleanupInterval' || confId === 'storage.maxFileCount' || confId === 'storage.maxSize' || confId === 'storage.retention' || confId === 'storage.scanInterval' || confId === 'clipboard.screenshotinterval') {
 			result = '<input id="confVal" class="w100" type="number"/>';
 		} else {
 			result = '<input id="confVal" class="w100" type="text"/>';
@@ -247,4 +262,5 @@
 		if(confId === 'storage.scanInterval') return '🔄 <s:message code="agent.default.storage.scanInterval"/>';
 		return confName;
 	}
+
 </script>

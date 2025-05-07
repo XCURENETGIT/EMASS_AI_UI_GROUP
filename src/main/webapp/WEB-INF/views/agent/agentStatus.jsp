@@ -180,7 +180,7 @@
 								<input type="radio" name="clipboardEnabled" value="true" checked> <s:message code="common.msg.use"/>
 							</label>
 							<label class="radio-inline c-radio">
-								<input type="radio" name="clipboardEnabled" value="false"> <s:message code="common.msg.unuse"/>
+								<input type="radio" name="clipboardEnabled" value="false" disabled> <s:message code="common.msg.unuse"/>
 							</label>
 						</div>
 					</div>
@@ -191,8 +191,10 @@
 						</div>
 						<div class="col-65">
 							<select id="clipboardMode" class="w100">
-								<option value="both">🛡️ <s:message code="agent.clipboard.mode.both"/></option>
+								<option value="off">🛑 <s:message code="agent.clipboard.mode.off"/></option>
 								<option value="detect">🔍 <s:message code="agent.clipboard.mode.detect"/></option>
+								<option value="clear">♻️ <s:message code="agent.clipboard.mode.clear"/></option>
+								<option value="both">🔄 <s:message code="agent.clipboard.mode.both"/></option>
 							</select>
 						</div>
 					</div>
