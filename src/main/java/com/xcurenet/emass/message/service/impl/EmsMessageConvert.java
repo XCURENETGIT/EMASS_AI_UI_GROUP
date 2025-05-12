@@ -82,15 +82,8 @@ public class EmsMessageConvert {
 		vo.setSiteCode(data.getSiteCode());
 
 		if(data.getUserInfo() != null) {
-			String email = "";
-			String ip = "";
-				UserVO userVO = userService.getUseridbyEmailIp(data.getUserInfo().getUserId());
-				if (userVO != null && userVO.getUserIp() != null) {
-					email = userVO.getUserEmail();
-					ip = userVO.getUserIp();
-				}
-			data.getUserInfo().setEmail(email);
-			data.getUserInfo().setIp(ip);
+			data.getUserInfo().setEmail(data.getUserInfo().getEmail());
+			data.getUserInfo().setIp(data.getUserInfo().getIp());
 			vo.setUser(data.getUserInfo().getId());
 			vo.setUserId(data.getUserInfo().getUserId());
 			vo.setName(data.getUserInfo().getName());
@@ -171,15 +164,9 @@ public class EmsMessageConvert {
 		if(null == data) {data = new EmassMessageData();} // null err방지
 		EmsMessageVO vo = new EmsMessageVO();
 		if(data.getUserInfo() != null) {
-			String email = "";
-			String ip = "";
-			UserVO userVO = userService.getUseridbyEmailIp(data.getUserInfo().getUserId());
-			if (userVO != null && userVO.getUserIp() != null) {
-				email = userVO.getUserEmail();
-				ip = userVO.getUserIp();
-			}
-			data.getUserInfo().setEmail(email);
-			data.getUserInfo().setIp(ip);
+
+			data.getUserInfo().setEmail(data.getUserInfo().getEmail());
+			data.getUserInfo().setIp(data.getUserInfo().getIp());
 			vo.setUser(data.getUserInfo().getId());
 			vo.setUserId(data.getUserInfo().getUserId());
 			vo.setName(data.getUserInfo().getName());
@@ -197,6 +184,7 @@ public class EmsMessageConvert {
 			vo.setInSide(data.getUserInfo().getInside());
 			vo.setCeo(data.getUserInfo().getCeo());
 			vo.setUserList(getUserInfo(data.getUserInfo(), data.getMsgId(), "U"));
+
 		}
 		return vo;
 	}

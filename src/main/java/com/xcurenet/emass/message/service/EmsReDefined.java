@@ -505,71 +505,39 @@ public class EmsReDefined {
 	}
 	
 	public static String reUser(EmsRecvVO u, String formatval) {
-		List<String> etcSeparator = Common.toList("[,<,(,{,],>,),},[[,<<,((,{{,}},>>,)),}},\",\"\",\'\',\"\',\'\"", ",");
 		List<String> checkSeparator = Common.toList("\\[\\],\\<\\>,\\(\\),\\{\\}, \"\", \'\', \", \"\', \'\"", ",");
-		
-		String [] test = formatval.split("#");
+
+		String [] keys = formatval.split("#");
 		StringBuffer sb = new StringBuffer();
-		int infoIdx = 0;
-		int sepaCnt = 0;
-		String tmpSeparator = "";
-		boolean isEtcSeparator = false;
-		for(int i=0; i<test.length; i++) {
-			
-			if (i > 0 && i % 2 == 1) {
-				String keyValue = EmsReDefined.reNameInfo(u, test[i]);
-				
-				if (Common.isNotEmpty(keyValue)) {
-					infoIdx++;
-					if(i==1 || (i-2 > 0 && Common.isNotEmpty(EmsReDefined.reNameInfo(u, test[i-2])))){
-						sepaCnt++;
-						sb.append(tmpSeparator);
-					}
-					else if(i-2 > 0 && !checkValue(u, test, i)){
-						sepaCnt++;
-						sb.append(tmpSeparator);
-					}
-					else {
-						//sb = new StringBuffer();
-					}
-				}else if(isEtcSeparator){
-					sepaCnt++;
-					sb.append(tmpSeparator);
+		int foundCnt = 0;
+		String foundVal = "";
+		for(int i=0; i<keys.length; i++) {
+			if(i % 2 == 1){
+				String keyValue = reNameInfo(u, keys[i]);
+				if(Common.isNotEmpty(keyValue) && !keyValue.equals("-")) {
+					sb.append(keyValue);
+					foundCnt++;
+					if(foundCnt == 1) foundVal = keyValue;
 				}
-				
-				sb.append(keyValue);
-				if(i == test.length-2 && (Common.isNotEmpty(keyValue) || etcSeparator.contains(Common.nvl(test[i+1])))) {
-					sb.append(test[i+1]);
-				}
-				isEtcSeparator = false;
+			} else {
+				sb.append(keys[i]);
 			}
-			if (i % 2 == 0) {
-				if( etcSeparator.contains(Common.nvl(test[i]).replaceAll(" ", ""))) {
-					isEtcSeparator = true;
-				}
-				tmpSeparator = test[i];
-			}
-			
 		}
-		
+
 		String rtnValue  = sb.toString();
-		
+
 		for(String check : checkSeparator) {
 			rtnValue = rtnValue.replaceAll(check, "");
 		}
-		if(sepaCnt == 1 && Common.isNotEmpty(rtnValue) && test != null){
-			rtnValue = rtnValue.substring(test[0].length(), rtnValue.length());
-		}
-		
-		if(infoIdx == 0) {
+
+		if(foundCnt == 1){
+			return foundVal;
+		} else if(foundCnt == 0){
 			if(Common.isEquals(u.getUType(), "U")) return "-";
 			else return Common.nvl(u.getRecvId());
-		}
-		else{
+		} else {
 			return rtnValue;
 		}
-		
-		
 	}
 	
 	public static boolean checkValue(EmsRecvVO u, String [] test, int i){
