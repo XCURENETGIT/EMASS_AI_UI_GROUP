@@ -94,13 +94,13 @@
 
 	<update id="updateMenuByAgentMode1">
 		UPDATE	UI_MENU
-		SET		MENU_USEYN = (SELECT IF(VAL = 'true', 'Y', 'N') FROM UI_CONF WHERE CONF_ID = 'agent.mode')
+		SET		MENU_USEYN = NVL( (SELECT IF(VAL = 'true', 'Y', 'N') FROM UI_CONF WHERE CONF_ID = 'agent.mode'), 'N')
 		WHERE   MENU_ID = 'AGENT_LABEL'
 	</update>
 
 	<update id="updateMenuByAgentMode2">
 		UPDATE	UI_MENU
-		SET		MENU_USEYN = (SELECT IF(VAL = 'true', 'Y', 'N') FROM UI_CONF WHERE CONF_ID = 'agent.mode')
+		SET		MENU_USEYN = NVL( (SELECT IF(VAL = 'true', 'Y', 'N') FROM UI_CONF WHERE CONF_ID = 'agent.mode'), 'N')
 		WHERE   P_MENU_ID = 'AGENT_LABEL'
 	</update>
 
