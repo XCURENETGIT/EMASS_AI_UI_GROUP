@@ -44,14 +44,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		TodayDataStatusVO result = new TodayDataStatusVO();
 		SolrQuery sq = new SolrQuery();
 
-		List<Integer> rangeValues = Arrays.stream(todayDataStatusVO.getRange().split(","))
-				.map(value -> Integer.parseInt(value))  // 수정된 부분
-				.collect(Collectors.toList());
-
-		// 결과값 계산
-		List<Integer> results = multiply1024ForList(rangeValues);
-
-
 
 		sq.addFacetField("attachtype");
 		sq.setParam("group", true);
@@ -61,7 +53,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "attachSizeSum");
-		sq.setParam("facet.ranges", todayDataStatusVO.getRange());
+		sq.setParam("facet.ranges", "0,10485760,52428800,104857600,157286400,209715200");
 
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "1");

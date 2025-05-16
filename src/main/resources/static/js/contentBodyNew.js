@@ -1618,7 +1618,7 @@ function setFileDiv(msg) {
             }
         }
 
-        if (ocrYn) {
+        if (isOCR == 'true' && ocrYn) {
             $('#bodyDiv').nextAll().remove();
             setOcrFileDiv(ocrFiles);
             ocrFiles = [];

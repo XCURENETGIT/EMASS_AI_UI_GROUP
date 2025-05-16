@@ -571,7 +571,6 @@
             limit: grid1.pageSize,
             xAxis_str: xAxis_str,
             success: function (data, total) {
-                console.log(data)
                 grid1.colInit();
                 grid1.autoNumber();
                 var str = '';
@@ -667,7 +666,7 @@
 
         searchFlag = true;
         currentgrid.on();
-        if(grid1.ColKey(grid1.Col) == "total")  isTotal = true;
+        if(grid1.ColKey(grid1.Col) == "total" || grid1.ColKey(grid1.Col) == "rowKey")  isTotal = true;
         if(grid1.Row == grid1.data.length -1) totalRow = true;
         
 

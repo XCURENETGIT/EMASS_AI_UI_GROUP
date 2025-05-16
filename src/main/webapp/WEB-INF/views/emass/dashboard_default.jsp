@@ -1210,7 +1210,7 @@
         var max = Number.MAX_SAFE_INTEGER;
         ui.get({
             url: 'getTodayDataStatus.xcn',
-            range: "0,11534336,52428800,1065025536,1585446912,2113929216,2147483647",
+            range: "0,10485760,52428800,104857600,157286400,209715200",
             searchStr: '',
             success: function (data, total) {
                 if (rowSearchkey == null) rowSearchkey = "xlsx";
