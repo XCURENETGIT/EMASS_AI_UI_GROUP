@@ -48,6 +48,7 @@ public class EmsCreateMessage {
 	public EmsCreateMessage(Locale locale) {
 		emsMessageService = SpringContextUtil.getBean(EmsMessageService.class);
 		configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
+		minioFileAdapter = SpringContextUtil.getBean(MinioFileAdapter.class);
 		this.locale = locale;
 	}
 
