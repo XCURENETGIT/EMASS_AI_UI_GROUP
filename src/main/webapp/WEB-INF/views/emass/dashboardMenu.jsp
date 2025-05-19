@@ -134,6 +134,12 @@
                 saveMenu();
             });
 
+	        $('#menuName').keypress(function(e) {
+		        if (e.keyCode === 13 || e.which === 13) {
+			        return false;
+		        }
+	        });
+
             $('.menuIcon').click(function () {
                 $('#menuIcon').val($(this).attr('data-value'));
 
