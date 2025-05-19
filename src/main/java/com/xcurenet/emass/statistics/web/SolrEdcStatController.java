@@ -792,11 +792,33 @@ public class SolrEdcStatController {
 		String colRowKey = Common.nvl(request.getParameter("colRowKey"));
 		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
 		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
 		String query = "";
 
 		SolrQuery sq = new SolrQuery();
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query += " +ctime:[" + startDate + " TO " + endDate + "] ";
+		}
+
+		if (!name.isEmpty()|| !name.equals(" ")) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
 		}
 
 		if (Common.isNotEmpty(detailQuery)) {

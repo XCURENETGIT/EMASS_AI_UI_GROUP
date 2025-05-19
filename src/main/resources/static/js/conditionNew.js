@@ -148,7 +148,7 @@ var con = {
 		$('#searchStrInput'+endId).val('');
 		$('#serviceType'+endId).selectpicker('val', []);
 
-		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
+		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			$('#infoType'+endId).selectpicker('val', []);
 			$('#feedbackType'+endId).selectpicker('val', []);
 			$('#probType'+endId).selectpicker('val', []);
@@ -424,7 +424,7 @@ var con = {
 			condition.m_bcc_not = $('input:checkbox[id="m_bcc_not"]').is(":checked") ? 'Y' : '';
 		}
 
-		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
+		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			condition.infoType = arrayToString($('#infoType').selectpicker('val'));
 			condition.feedbackType = arrayToString($('#feedbackType').selectpicker('val'));
 			condition.probType = arrayToString($('#probType').selectpicker('val'));

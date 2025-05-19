@@ -485,7 +485,7 @@
     grid1.autoNumber();
     grid1.colAdd( "rowKey", '<s:message code="condition.attach"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
-    grid1.loadExportMenu('<s:message code="DATA_MONITOR.STAT_ATTACHTYPE"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_ATTACHTYPE"/>');
     /*grid1.loadPageSize();
     document.addEventListener("DOMContentLoaded", function() {
         var linkElements = document.querySelectorAll('a[data="5000"]');

@@ -109,9 +109,9 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
 				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
 				.add("kwds", searchVO.getKeyword());
+		if (Common.isNotEmpty(searchVO.getFileSize())) query.addRange("attachsize", searchVO.getFileSize() * 1024 * 1024, "*");
 		switch (searchVO.getUnit()) {
 			case "file":
-				query.addRange("attachsize", (Common.isEmpty(searchVO.getFileSize()) ? 0 : searchVO.getFileSize() * 1024 * 1024), "*");
 				query.add("attachname_str","*"+searchVO.getListData()+"*");
 				break;
 			case "messenger":

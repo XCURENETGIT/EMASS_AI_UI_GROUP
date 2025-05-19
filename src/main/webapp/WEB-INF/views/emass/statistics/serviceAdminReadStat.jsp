@@ -397,7 +397,7 @@
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_ADMINREAD"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_SERVICEADMINREAD"/>');
     /*    grid1.loadPageSize();
 		document.addEventListener("DOMContentLoaded", function() {
 			var linkElements = document.querySelectorAll('a[data="5000"]');
@@ -490,7 +490,7 @@
         var dat = grid1.getRowData(grid1.Row);
         chartDat[tabID] = dat;
         printChart(dat);
-        gridObj.loadExportMenu('<s:message code="stat.detail.keyword.list"/>');
+        gridObj.loadExportMenu('<s:message code="DATA_STAT.STAT_SERVICEADMINREAD"/>');
         /* gridObj.loadPageSize();
 		 document.addEventListener("DOMContentLoaded", function() {
 			 var linkElements = document.querySelectorAll('a[data="5000"]');

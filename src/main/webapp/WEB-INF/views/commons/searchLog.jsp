@@ -29,19 +29,12 @@
 
         $(document).ready(function () {
 
-            $('#startDatePicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
+	        initDateTimePicker('startDt','endDt');
+	        $('#startDt').val(new Date().format('yyyy-mm-dd'));
+	        $('#endDt').val(new Date().format('yyyy-mm-dd'));
 
-            $('#endDatePicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
 
-            $('#searchBtn').click(function () {
+	        $('#searchBtn').click(function () {
                 getData();
             });
             $('#adminId').change(function () {
@@ -132,9 +125,9 @@
 <div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div id="startDatePicker"><input type="date" id="startDt" style="width: 110px;">
+			<div><input type="text" id="startDt" style="width: 110px;" class="txt_center" />
 				<span class="hyphen">~</span></div>
-			<div id="endDatePicker"><input type="date" id="endDt" style="width: 110px;"></div>
+			<div><input type="text" id="endDt" style="width: 110px;" class="txt_center" /></div>
 			<div>
 				<select id="searchType" style="max-width: 200px;">
 					<option value="">- <s:message code="searchLog.consent.type"/> -</option>

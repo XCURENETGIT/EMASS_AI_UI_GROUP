@@ -1802,15 +1802,7 @@
             if (objValue == "count") {
                 return value;
             } else {
-                if (this.value < 1001) {
-                    return value + "byte";
-                } else if (value > 1000 && value < 1000001) {
-                    return Math.round(value / 1000) + "Kb";
-                } else if (value > 1000000 && value < 1000000001) {
-                    return Math.round(value / 1000 / 1000) + "Mb";
-                } else {
-                    return Math.round(value / 1000 / 1000 / 1000) + "Gb";
-                }
+				return convertFileSize(value);
             }
             return value;
         }

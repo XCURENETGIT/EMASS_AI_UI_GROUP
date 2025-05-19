@@ -1140,15 +1140,17 @@
                 dashCondition.sizeEndVal = '';
             } else if (size == 201) {
                 dashCondition.sizeOption = "L";
-                dashCondition.sizeStartVal = '' + (201 * 1024 *1024);
+                dashCondition.sizeStartVal = '' + (200*1024*1024);
                 dashCondition.sizeEndVal = "";
             } else if (size == 11) {
-                dashCondition.sizeEndVal = '' + (50 * 1024 *1024);
-            } else {
-                dashCondition.sizeEndVal = '' + ((size+49) * 1024 * 1024);
+				dashCondition.sizeStartVal = '' + ((size-1)*1024*1024);
+                dashCondition.sizeEndVal = '' + ((size+39)*1024*1024);
+            }else{
+	            dashCondition.sizeStartVal = '' + ((size-1)*1024*1024);
+	            dashCondition.sizeEndVal = '' + ((size+49)*1024*1024);
             }
             $('#conditionParam').val(makePeriod2(dashCondition));
-            $('#getMessageInfo').submit();
+             $('#getMessageInfo').submit();
 
         });
 
