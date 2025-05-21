@@ -721,7 +721,7 @@ public class SolrCreateQuery {
 			for (int i = 0; i < SENDER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:(%s)", SENDER[i], sender)).append(SPACE);
 				else if (Config.getBoolean("sender.receiver.asta")) queryStr.append(String.format("%s:(%s)", SENDER[i], createOrQueryAsteriskAll(sender))).append(SPACE);
-				else queryStr.append(String.format("%s:(%s)", SENDER[i], sender.concat(astaOption))).append(SPACE);
+				else queryStr.append(String.format("%s:(%s)", SENDER[i], createOrQuery(sender.concat(astaOption)))).append(SPACE);
 			}
 		}
 		if (Common.isEquals(senders_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
