@@ -1516,6 +1516,8 @@ function getCollectionMessage(userkey, srcip, usr_id, msgid,type,searchFlag){
         complete : function() {
             ui.off('timeline_list');
             setMessengerRead();
+            $('#group_list').find('li[userkey="' + userkey + '"][svc12="' + type + '"] span.chatid').addClass('chatReadY');
+            $('#group_list').find('li[userkey="' + userkey + '"][svc12="' + type + '"] span.new').remove();
             HighSerarchlight2();
             searchFlag = false;
         }
@@ -1573,7 +1575,10 @@ function rtnFileGroupList2 (data) {
 
         var attachname = data[i].attachname ? data[i].attachname : "[noname]";
 
-        var leftContent = "<p><span class='chatid'>" + attachname + "</span></p><p>";
+
+        console.log(data[i].readYn);
+        var readClass = data[i].readYn == 'Y'? ' chatReadY' : '';
+        var leftContent = "<p><span class='preview" + readClass+ "'>" + attachname + "</span></p><p>";
 
         leftContent += data[i].businm ? "<span class='bar'></span><span class='name'>" + data[i].businm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
@@ -1643,7 +1648,9 @@ function rtnFileGroupList (data) {
 
         var attachname = data[i].attachname ? data[i].attachname : "[noname]";
 
-        var leftContent = "<p><span class='chatid'>" + attachname + "</span></p><p>";
+        console.log(data[i].readYn);
+        var readClass = data[i].readYn == 'Y'? ' chatReadY' : '';
+        var leftContent = "<p><span class='preview" + readClass+ "'>" + attachname + "</span></p><p>";
 
         leftContent += data[i].businm ? "<span class='bar'></span><span class='name'>" + data[i].businm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
@@ -1723,7 +1730,11 @@ function rtnGenerativeGroupList2(data, type){
         else{
             var bodySnippet="";
         }
-        var leftContent = "<p><span class='chatid'>";
+
+
+        var readClass = data[i].unread_cnt < 1 ? ' chatReadY' : '';
+
+        var leftContent = "<p><span class='chatid" + readClass+"'>";
         var deptNm = data[i].deptNm || "-";
         var jikgubNm = data[i].jikgubNm || "-";
         var name = data[i].name || "-";
@@ -1798,7 +1809,11 @@ function rtnGenerativeGroupList(data) {
         else{
             var bodySnippet="";
         }
-        var leftContent = "<p><span class='chatid'>";
+
+        var readClass = data[i].unread_cnt < 1 ? ' chatReadY' : '';
+
+
+        var leftContent = "<p><span class='chatid" + readClass+"'>";
         var deptNm = data[i].deptNm || "-";
         var jikgubNm = data[i].jikgubNm || "-";
         var name = data[i].name || "-";

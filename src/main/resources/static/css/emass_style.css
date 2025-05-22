@@ -831,7 +831,7 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 	-o-transform: translate(-50%, 0);
 	border-top:1px solid #ddd;
 }
-
+.messengerList .messengerBox .people .person .chatReadY {font-weight: 400 !important; color: #888888 !important;}
 .messengerList .messengerBox .people .person span {display: inline-block;}
 .messengerList .messengerBox .people .person p {margin:4px;}
 .messengerList .messengerBox .people .person .left{position: relative; float:left; width:70%; }

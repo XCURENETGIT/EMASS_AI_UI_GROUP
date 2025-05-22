@@ -345,6 +345,8 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
             HighSerarchlight();
             searchFlag = false;
             setMessengerRead();
+            $('#group_list').find('li[xrootmtr="' + xRootmtr + '"] span.chatid').addClass('chatReadY');
+            $('#group_list').find('li[xrootmtr="' + xRootmtr + '"] span.new').remove();
         }
     });
 }
@@ -557,7 +559,6 @@ function rtnGroupList2(data, type){
     for (var i = 0; i < data.length; i++) {
         // if (data[i].xrootmtr == "")continue;
         var li = document.createElement("li");
-        console.log("li: "+li);
         li.className = "person";
         li.setAttribute("userid", data[i].userid);
         li.setAttribute("xrootmtr", data[i].xrootmtr);
@@ -588,7 +589,12 @@ function rtnGroupList2(data, type){
         } else {
             var bodySnippet = "";
         }
-        var leftContent = "<p><span class='chatid'>" + data[i].xrootmtr + "</span>";
+
+        var readClass = '';
+        if (type == "G") readClass = data[i].unread_cnt < 1 ? ' chatReadY' : '';
+        else readClass = data[i].readYn == 'Y' ? ' chatReadY' : '';
+
+        var leftContent = "<p><span class='chatid" + readClass+"'>" + data[i].xrootmtr + "</span>";
         if (data[i].attached === 'Y') {
             leftContent += "<span class='file'></span>";
         }
@@ -669,7 +675,13 @@ function rtnGroupList(data, type) {
         } else {
             var bodySnippet = "";
         }
-        var leftContent = "<p><span class='chatid'>" + data[i].xrootmtr + "</span>";
+
+        var readClass = '';
+        if (type == "G") readClass = data[i].unread_cnt < 1 ? ' chatReadY' : '';
+        else readClass = data[i].readYn == 'Y' ? ' chatReadY' : '';
+
+
+        var leftContent = "<p><span class='chatid" + readClass+"'>" + data[i].xrootmtr + "</span>";
         if (data[i].attached === 'Y') {
             leftContent += "<span class='file'></span>";
         }

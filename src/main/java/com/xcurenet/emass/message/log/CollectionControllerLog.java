@@ -73,7 +73,7 @@ public class CollectionControllerLog {
 					info.append(Prop.propFormat("condition.search_str") + " : ").append(Common.nvl(condition.get("searchStr"))).append(ENTER);
 
 				String startDt = Common.formatDate3(Common.nvl(condition.get("startDt") + "000000"));
-				String endDt = Common.formatDate3(Common.nvl(condition.get("endDt") + "235959"));
+				String endDt = Common.formatDate3(Common.nvl(condition.get("endDt")));
 				info.append(Prop.propFormat("condition.period") + " : ").append(startDt).append(" ~ ").append(endDt).append(ENTER);
 
 				if (Common.isNotEmpty(condition.get("senders")))
@@ -135,7 +135,7 @@ public class CollectionControllerLog {
 					info.append(Prop.propFormat("condition.search_str") + " : ").append(Common.nvl(condition.get("searchStr"))).append(ENTER);
 
 				String startDt = Common.formatDate3(Common.nvl(condition.get("startDt") + "000000"));
-				String endDt = Common.formatDate3(Common.nvl(condition.get("endDt") + "235959"));
+				String endDt = Common.formatDate3(Common.nvl(condition.get("endDt")));
 				info.append(Prop.propFormat("condition.period") + " : ").append(startDt).append(" ~ ").append(endDt).append(ENTER);
 
 				if (Common.isNotEmpty(condition.get("senders")))
