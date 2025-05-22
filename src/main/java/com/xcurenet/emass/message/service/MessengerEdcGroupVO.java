@@ -104,6 +104,7 @@ public class MessengerEdcGroupVO {
 
 	}
 
+	ObjectMapper aggregationsParserMapper = new ObjectMapper();
 	public void aggregationsParser(Aggregations aggregations){
 
 		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
@@ -123,15 +124,27 @@ public class MessengerEdcGroupVO {
 				ObjectMapper mapper = new ObjectMapper();
 				ParsedTopHits topHits = (ParsedTopHits) aggregation;
 				SearchHit[] hits = topHits.getHits().getHits();
+
+				boolean exists = java.util.Arrays.stream(hits)
+						.anyMatch(hit -> {
+							String attachedValue = (String) hit.getSourceAsMap().get("attached");
+							return "Y".equals(attachedValue);
+						});
+
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
 					if (!map.isEmpty()) {
 						map.put("msgid", hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
-						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original));
-						else {
+						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original)); // 상세보기
+						else { // 그룹 리스트
+							map.put("attached", (exists) ? 'Y' : 'N');
+							solrEdcVO = aggregationsParserMapper.convertValue(map, SolrEdcVO.class);
+
 							this.groups.add(reDefined(solrEdcVO, adminId, 0L));
 							Collections.sort(this.groups);
+							break; //1건만 리턴
+
 						}
 					}
 				}

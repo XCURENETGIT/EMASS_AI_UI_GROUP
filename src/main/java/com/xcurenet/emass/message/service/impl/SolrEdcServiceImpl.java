@@ -590,7 +590,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.terms(sq.get("checked.readId")).field(sq.get("checked.readId"))));
 					aggregations.add(AggregationBuilders.cardinality("checked_bucket_total").field(mainField));
 				} else {
-					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.topHits(field.concat("_top")).size(1).from(0).sort("ctime", SortOrder.DESC)));
+					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.topHits(field.concat("_top")).size(100).from(0).sort("ctime", SortOrder.DESC)));
 					aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 				}
 				//	termsAggregation.subAggregation(paging);
