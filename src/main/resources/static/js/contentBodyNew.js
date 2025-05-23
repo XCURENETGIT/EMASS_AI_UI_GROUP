@@ -984,7 +984,11 @@ function printGroupList(detailDataSet, users) {
         //if( titleTmp != null ) title += '('+titleTmp+')';
 
         str += '<th>' + title + '</th>';
-        str += '<td><div id="' + obj.msgid + '">' + obj.body_snippet.replaceAll('\n', '<br/>') + '</div></td>';
+        if (obj.attached == 'Y') {
+            str += '<td><div id="' + obj.msgid + '">' + obj.attachname + '</div></td>';
+        } else {
+            str += '<td><div id="' + obj.msgid + '">' + obj.body_snippet.replaceAll('\n', '<br/>') + '</div></td>';
+        }
         str += '<td>' + obj_ctime.substring(10, obj_ctime.length) + '</td>';
         str += '</tr>';
     }
