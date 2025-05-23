@@ -440,18 +440,10 @@
         var valChk = grid1.getValue(grid1.Row, grid1.Col);
         if(valChk == "" || valChk == "-") return;
 
-        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>' || grid1.Row == grid1.data.length -1) {
-            var key = "";
-            if (grid1.ColKey(grid1.Col) == "total" || grid1.Row == grid1.data.length -1) {
-                for (var i = 0; i < grid1.Rows; i++) {
-                    if (grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
-                    else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
-                }
-                rowKey = key;
-            }else rowKey = grid1.ColKey(grid1.Col);
-        }else {
-            rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
-        }
+
+	    rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
+
+
         colKey = grid1.ColKey(grid1.Col);
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
@@ -574,7 +566,6 @@
                 for (var i = 0; i < data.pivotHeader.length; i++) {
                     var Header = data.pivotHeader[i];
                     var HeaderNm = "";
-                    console.log("serviceGroupList: "+serviceList);
                     if ( xAxis == "checked.readTime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
                     else if (xAxis == "svc1") HeaderNm =  serviceList.search(Header, 'groupCd', 'groupNm');
                     else HeaderNm = Header
@@ -608,7 +599,6 @@
 
                     var dat = grid1.getRowData(grid1.Row);
                     totalChartDat = dat;
-                    console.log("data: "+dat);
                     printChart(dat);
                 } else {
                     $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
@@ -649,7 +639,7 @@
         searchFlag = true;
         currentgrid.on();
         if(grid1.ColKey(grid1.Col) == "total")  isTotal = true;
-        if(grid1.Row == grid1.data.length -1) totalRow = true;
+        // if(grid1.Row == grid1.data.length -1) totalRow = true;
 
 
 
