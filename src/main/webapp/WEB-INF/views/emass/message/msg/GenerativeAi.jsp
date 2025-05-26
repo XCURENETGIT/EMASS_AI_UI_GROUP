@@ -1154,7 +1154,7 @@
 				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
 				<div class="myDropdown mal16" style="color: black">
 					<span><s:message code="analysis.relation.ui.export"/></span>
-					<div class="dropdown-content" style="bottom:20px; min-width: 203px !important;" >
+					<div class="dropdown-content" style="bottom:100%; min-width: 203px !important;" >
 						<a href="#" onclick="allDown('G')"><s:message code="analysis.relation.ui.export2"/></a>
 						<a href="#" onclick="allDownList()"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
 					</div>
