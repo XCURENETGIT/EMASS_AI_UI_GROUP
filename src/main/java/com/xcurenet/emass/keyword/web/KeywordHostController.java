@@ -60,14 +60,14 @@ public class KeywordHostController{
 		String serviceCd = Common.nvl(request.getParameter("serviceCd"));
 
 		String adminId = Common.getAdminId(request);
-
+		String space = "\"\")";
 		if (Common.isEmpty(coreKeyword)) return getKeywordHostEmpty(unclsfiedOnly,serviceCd,startDate, endDate, adminId,request);
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" +kwd:Y");
 		query.append(" +kwds:(" + getStrArrsNotQts(coreKeyword.split(",")) + ")");
-
+		query.append(" -host_str:(".concat(space)); // host_str 공백 제거
 		query.append(schSvcType(unclsfiedOnly,serviceCd));
 
 
@@ -123,11 +123,13 @@ public class KeywordHostController{
 	}
 	@Description("핵심 기술 키워드 탐지 HOST TOP 10 keyword 지정 안한 초기화면")
 	private XcnResponseVO getKeywordHostEmpty(String unclsfiedOnly,String serviceCd,String startDate, String endDate, String adminId, HttpServletRequest request) throws SolrServerException, IOException {
+		String space = "\"\")";
+
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(schSvcType(unclsfiedOnly,serviceCd));
-
+		query.append(" -host_str:(".concat(space)); // host_str 공백 제거
 		sq.setQuery(query.toString());
 		sq.setFacet(true);
 		sq.addFacetField("host_str");
@@ -288,7 +290,8 @@ public class KeywordHostController{
 		query.append(" +kwd:Y");
 		query.append(" +kwds:(" + getStrArrsNotQts(coreKeyword.split(",")) + ")");
 		query.append(schSvcType(unclsfiedOnly,serviceCd));
-		sq.setQuery(query + String.format(" +host_str:(%s)", getStrArrs(hosts.split(",")) + String.format(" +path_str:(%s)", getStrArrs(paths.split("@XCNJOIN@")))));
+		query.append(String.format(" +host_str:(%s)", getStrArrs(hosts.split(","))));
+		sq.setQuery(query + String.format(" +path_str:(%s)", getStrArrs(paths.split("@XCNJOIN@"))));
 
 		sq.setFacet(true);
 		sq.addFacetField("kwds");
@@ -332,7 +335,8 @@ public class KeywordHostController{
 
 		sq.setStart(0);
 		sq.setRows(20);
-		sq.setQuery(query + String.format(" +host_str:(%s)", getStrArrs(hosts.split(",")) + String.format(" +path_str:(%s)", getStrArrs(paths.split("@XCNJOIN@")))));
+		query.append(String.format(" +host_str:(%s)", getStrArrs(hosts.split(","))));
+		sq.setQuery(query + String.format(" +path_str:(%s)", getStrArrs(paths.split("@XCNJOIN@"))));
 
 		SolrEdcMessageVO solrEdcMessageVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		searchKeywordInfoForMessage(solrEdcMessageVO.getEmass(), Arrays.asList(coreKeyword.split(",")), session);
@@ -545,7 +549,7 @@ public class KeywordHostController{
 		int maxLength = 4;
 
 		// 입력 배열이 null일 경우 빈 문자열로 처리
-		if (Common.isEmpty(inputArray) || inputArray.length < 2) {
+		if (Common.isEmpty(inputArray) || inputArray.length < 1) {
 			return "*";
 		}
 
