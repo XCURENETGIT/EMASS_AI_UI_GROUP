@@ -258,6 +258,7 @@ function saveOriginalText( )
 							</xmp>
 						</div>
 						<%} %>
+						<iframe id="MessageDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 					</div>
 				</div>
 			</div>
