@@ -233,7 +233,7 @@ public class SolrCreateQuery {
 	/**
 	 * 검색 영역을 설정한다.(field 설정)
 	 */
-	private SolrCreateQuery setSearchField(String search_field) {
+	private SolrCreateQuery setSearchField() {
 		String dfString = StringUtils.join(this.SEARCH_FIELD, ",");
 		if (Config.isOCR) {
 			dfString += OCR_FIELD;
@@ -1426,14 +1426,13 @@ public class SolrCreateQuery {
 
 
 			//지정된 필드가 없을시 default 검색 필드
-			if(Common.isEmpty(searchField)) setSearchField(searchField);
-			else	setSelectSearchFields(searchField); //선택한 검색 영역
+			if(Common.isEmpty(searchField)) setSearchField();
+			else setSelectSearchFields(searchField); //선택한 검색 영역
 
 			searchField = searchfieldValue;
 			searchfieldValue = "";
 
 			setSearchStr(searchStr, searchField);
-			setSearchField(searchField); // default 검색 영역
 
 			setService(serviceType);
 
