@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Data
@@ -130,7 +132,7 @@ public class SolrCreateQuery {
 	private static final String OCR_FIELD = " ocr_attach";
 	private String finalReadYn;
 	private String consentNo;
-
+	public String[] operator = new String[]{"+", "-", "|"};
 	private String regexPattern;
 
 	public String[] SEARCH_FIELD = {"msgid",
@@ -139,22 +141,13 @@ public class SolrCreateQuery {
 			"body",
 			"attach",
 			"attachname", "attachname_str", "kwds_attachname", // 첨부파일명
-			"host", "host_str", // host
+			"host", // host
 			"path", "query", // url
 			"srcip", "dstip", // 출발지 IP, 목적지 IP
-			"body_snippet",
-			"sender", "sender_str", "sname", "recvs", "recvs_name", "to", "cc", "bcc", "usr_id", // 보낸사람, 받는사람
+			"sender", "sender_str", "sname", "recvs", "recvs_name", "to", "cc", "bcc", "usr_id","usrId", // 보낸사람, 받는사람
 			"xrootmtr",
-			"user", "user_str", "userid", "name", "sabun","recvs_info" //사용자
+			"user", "user_str", "userid", "name", "sabun" //사용자
 	};
-
-		public String[] BIGRAM_FIELD = {
-						"attach",
-						"body",
-						"subject",
-						"ocr_attach",
-						"attachname",
-		};
 
 
 	private String[] INEQUALITY_SIGN = {"+","-","|"};
@@ -229,15 +222,11 @@ public class SolrCreateQuery {
 	 * 검색 영역을 설정한다.(field 설정)
 	 */
 	@Deprecated
-	public SolrCreateQuery setSelectSearchFields(String... search_fields) {
-
-		if (search_fields.length <= 1 && Common.isEmpty(search_fields[0])) {
-			sq.setParam("sqf", StringUtils.join(this.SEARCH_FIELD, " "));
-		} else {
-				String fields =  StringUtils.join(search_fields, " ");
-				sq.setParam("sqf",fields, " ");
-				searchfieldValue = fields;
-		}
+	public SolrCreateQuery setSelectSearchFields(String search_fields) {
+		String[] fields = search_fields.split("[\\s,]+");
+		String sqfString = StringUtils.join(fields, ",");
+		sq.setParam("sqf", sqfString);
+		searchfieldValue = sqfString;
 		return this;
 	}
 
@@ -245,7 +234,7 @@ public class SolrCreateQuery {
 	 * 검색 영역을 설정한다.(field 설정)
 	 */
 	private SolrCreateQuery setSearchField(String search_field) {
-		String dfString = StringUtils.join(this.SEARCH_FIELD, " ");
+		String dfString = StringUtils.join(this.SEARCH_FIELD, ",");
 		if (Config.isOCR) {
 			dfString += OCR_FIELD;
 		}
@@ -292,124 +281,60 @@ public class SolrCreateQuery {
 	/**
 	 * 검색어 쿼리
 	 */
-	public SolrCreateQuery setSearchStr(String searchStr) {
-		if (Common.isEmpty(searchStr)) return this;
-
-		return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
-	}
-
-	/**
-	 * 검색어 쿼리
-	 */
 	public SolrCreateQuery setSearchStr(String searchStr, String searchField) {
 		if (Common.isEmpty(searchStr)) return this;
 
-		if(searchStr.indexOf("\\") > -1 && searchStr.length() == 1) {
-			if(searchStr.indexOf("\\") == searchStr.lastIndexOf("\\")) return this;
-		}
-
+		hostUrlSearchQueryBuild(searchField, searchStr); // host , path , query 쿼리 설정
 		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 		else {
-			searchField = searchField.replaceAll(",", " ");
-			String[] fields = searchField.split(" ");
-			StringBuilder query = new StringBuilder();
+			//지정한 필드가 있는 경우
+			String searchQuery = queryMake(searchStr, searchField);
+			return addQuery(searchQuery);
+		}
+	}
+	public String queryMake(String searchStr, String searchField) {
+		StringBuilder query = new StringBuilder();
+		searchStr = getSearchQuery(searchStr);
+		query.append(String.format("%s(%s)", AND_QUERY, searchStr));
+		return query.toString();
+	}
 
+	/***
+	 * host , path , query 검색 설정
+	 * @param searchField
+	 * @param searchStr
+	 */
+	public void hostUrlSearchQueryBuild(final String searchField, final String searchStr) {
 
-				if(searchField.indexOf("host") >- 1){
-						String hostStr = "";
-						if(searchStr.indexOf("/") > -1){
-								int slashIdx = searchStr.indexOf("/");
-								hostStr = searchStr.substring(0,slashIdx);
-								query.append(String.format("%s:(%s) ", "host",('"')+hostStr+('"')));
-						}else query.append(String.format("%s:(%s) ", "host",('"')+searchStr+('"')));
+		/* host 쿼리 설정 */
+		if (searchField.indexOf("host") > -1) {
+			String hostStr = searchStr;
+			if (hostStr.indexOf("/") > -1) {
+				int slashIdx = hostStr.indexOf("/");
+				hostStr = hostStr.substring(0, slashIdx);
+			}
+			sq.setParam("hostStr", doubleQuetoCondition(hostStr));
+		}
 
-						query.append(String.format("%s:(%s) ", "host_str",('"')+searchStr+('"')));
-				}
+		/* path , query 쿼리 설정 */
+		if (searchField.indexOf("path") > -1) {
+			String pathStr = searchStr;
+			if (pathStr.indexOf("/") > -1) {
+				int slashIdx = pathStr.indexOf("/");
+				pathStr = pathStr.substring(slashIdx, pathStr.length());
+			}
+			sq.setParam("pathStr", doubleQuetoCondition(pathStr));
 
-				if(searchField.indexOf("path") >- 1) {
-					String pathStr = "";
-					String queryStr = "";
-					if (searchStr.indexOf("/") > -1) {
-						int slashIdx = searchStr.indexOf("/");
-						pathStr = searchStr.substring(slashIdx, searchStr.length() - 1);
-						query.append(String.format("%s:(%s) ", "path", ('"') + pathStr + ('"')));
-					}
-					else if (pathStr.indexOf("?") > -1) {
-						int queryIdx = pathStr.indexOf("?");
-						queryStr = pathStr.substring(queryIdx, pathStr.length() - 1);
-						query.append(String.format("%s:(*%s*) ", "query", queryStr));
-					} else {
-						query.append(String.format("%s:(*%s*) ", "path", searchStr));
-						query.append(String.format("%s:(*%s*) ", "query", searchStr));
-					}
-				}
+			if (searchStr.indexOf("?") > -1) {
+				int queryIdx = searchStr.indexOf("?");
+				String queryStr = searchStr.substring(queryIdx, searchStr.length());
+				sq.setParam("queryStr", doubleQuetoCondition(queryStr));
+			}
 
-				for (String field : fields) {
-						if(("host,path").indexOf(field) > -1) continue;
-						String schStr =	(isBigramField(field)) ? getDoubleQuetoesSearchQuery(searchStr) : getSearchQuery(searchStr);
-						query.append(String.format("%s:(%s) ", field,schStr));
-				}
-				return addQuery(String.format("%s(%s)", AND_QUERY,query));
 		}
 	}
 
-
-		public boolean isBigramField(String field) {
-			boolean result = false;
-			for(String biField : BIGRAM_FIELD){
-					if(Common.isEquals(field,biField)) {
-							result = true;
-							break;
-					}
-			}
-			return result;
-		}
-
-		private String getDoubleQuetoesSearchQuery(String query) {
-				if( query.startsWith("|")) query = query.substring(1);
-				query = specialCharsValid(query);
-				query = getTempQuery(query);
-				// 특수문자 처리
-				query = bigramSpecialCharsCheck(query);
-
-
-				StringBuilder sb = new StringBuilder();
-				if (!query.contains("|") && !query.contains("+") && !query.contains("-") & !query.contains(" ")) {
-						StringBuilder queryStr = new StringBuilder();
-						String[] terms = query.split(" ");
-						for (String term : terms) {
-								term = ('"')+term+('"');
-								queryStr.append(appendSpecialchar(term)).append(" ");
-						}
-						sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
-				} else {
-						StringBuilder querySb = new StringBuilder();
-						String[] terms = query.split(" ");
-						if(terms.length < 2) querySb.append( ('"')+query.replaceAll("[\\+\\-=/&:><!^~\\/\"]", ""+('"')));
-						else {
-								for (int i = 0; i < terms.length; i++) {
-										if (terms[i].equals("|")) {
-												terms[i] = OR_PREFIX;
-										} else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
-												terms[i] = ('"') + terms[i] + ('"');
-										} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-												terms[i] = ('"') + terms[i] + ('"');
-										} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
-												terms[i] = ('"') + terms[i] + ('"');
-										}
-										querySb.append(appendSpecialchar(terms[i])).append(" ");
-								}
-						}
-						sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
-				}
-				String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
-				// 연산자 처리
-				return result;
-
-		}
-
-
-		public SolrCreateQuery setSearchHistoryUserStr(String userStr) {
+	public SolrCreateQuery setSearchHistoryUserStr(String userStr) {
 		if (Common.isEmpty(userStr)) return this;
 		return addQuery(String.format("%s%s:%s", AND_QUERY, SEARCH_HISTORY_USER_ID, createOrQuery(userStr)));
 	}
@@ -1578,52 +1503,98 @@ public class SolrCreateQuery {
 		return result;
 	}
 
+	String searchRegex = "[?(){}\\[\\]~!^:=/&:><]";
+	Pattern specialCharPattern = Pattern.compile(searchRegex);
 	private String getSearchQuery(String query) {
-		if( query.startsWith("|")) query = query.substring(1);
-
-		query = specialCharsValid(query);
+		if (query.startsWith("|")) query = query.substring(1);
 		query = getTempQuery(query);
-		// 특수문자 처리
-		query = specialCharsCheck(query);
-		StringBuilder sb = new StringBuilder();
-		if (!query.contains("|") && !query.contains("+") && !query.contains("-") & !query.contains(" ")) {
-			StringBuilder queryStr = new StringBuilder();
-			String[] terms = query.split(" ");
-			for (String term : terms) {
-			     // 검색어 입력  쌍따옴표 삭제
-				queryStr.append(appendSpecialchar(term)).append(" ");
-			}
-			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
-		} else {
-			StringBuilder querySb = new StringBuilder();
-			String[] terms = query.split(" ");
-		if(terms.length < 2) querySb.append(charsCheck(query));
-		else {
-				for (int i = 0; i < terms.length; i++) {
-						if (terms[i].equals("|")) {
-								terms[i] = OR_PREFIX;
-						} else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
-						} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-						} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
-						}
+		StringBuilder querySb = new StringBuilder();
+		List<String> queryList = preProcessQuery(query);
+		for (String qry : queryList) {
 
-						querySb.append(appendSpecialchar(terms[i])).append(" ");
+			if (Common.isOrEquals(qry, "+", "-","|")) {
+				if(queryList.size() == 1){
+					querySb.append(("\"").concat(qry).concat("\""));
+				} else {
+					if (qry.equals("+")) querySb.append("AND ");
+					else if (qry.equals("-")) querySb.append("NOT ");
+					else if (qry.equals("|")) querySb.append("OR ");
+					else querySb.append(qry).append(" ");
 				}
+				continue;
+			}
+			querySb.append("(");
+			querySb.append(doubleQuetoCondition(qry));
+			if (!qry.startsWith("\"") && !qry.endsWith("\"")) {
+				if (!specialCharPattern.matcher(qry).find()) {
+					querySb.append(" OR ");
+					querySb.append(qry + "*");
+				}
+			}
+			querySb.append(")").append(" ");
 		}
-			sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+		String result = querySb.toString().replace("__", " ").replace("  ", " ").trim();
+		return result;
+	}
+
+	public static List<String> preProcessQuery(String userInput) {
+		// 따옴표로 시작하고 끝나는 부분을 정규 표현식을 사용하여 분리
+
+		String regex = "\"([^\"]*)\"|[()]+|([\\+\\-!]|[*?]|[^\\s()\"+]+)";
+
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(userInput);
+
+		List<String> result = new ArrayList<>();
+		while (matcher.find()) {
+			if (matcher.group(1) != null) {
+				// 따옴표로 묶인 문자열은 그대로 추가
+				result.add("\"" + matcher.group(1) + "\"");
+			} else if (matcher.group(2) != null) {
+				// 특수 문자나 연산자 처리
+				result.add(matcher.group(2));
+			} else {
+				// 그 외의 경우는 그대로 추가
+				result.add(matcher.group(0));
+			}
 		}
 
-		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 
 		return result;
 	}
 
-		public  String doubleQuetosCharsCheck(String str){
-				str = bracketRemove(str);
-				str =  str.replaceAll("[\\+\\-]","$0"+ "("+'"');
-				str = SpecialStrRemove(str)+ '"'+")";
-				return  str;
+	/**
+	 * @param qry
+	 * @return
+	 */
+	public String doubleQuetoCondition(final String qry) {
+		String qryStr = qry;
+		if (!qryStr.startsWith("\"") && !qryStr.endsWith("\"") && !operatorCheck(qry) && !specialBooleanCharsCheck(qry)) {
+			qryStr = ("\"").concat(qryStr).concat("\"");
 		}
+		return qryStr;
+	}
+
+	/***
+	 * 따옴표로 묶지 않을 기호
+	 * @param input
+	 * @return
+	 */
+	public boolean specialBooleanCharsCheck(String input) {
+		if (Common.isEmpty(input)) return false;
+		String regex = "[()]";
+
+		// 패턴 컴파일
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(input);
+
+		return matcher.find();
+	}
+	public boolean operatorCheck(String input) {
+		return Arrays.stream(operator).anyMatch(m -> Common.isEquals(m, input));
+	}
+
+
 
 		public String bracketRemove(String str){
 				return  str.replaceAll("[(\\)\\{\\}]", "");
@@ -1673,29 +1644,7 @@ public class SolrCreateQuery {
 	}
 
 
-	public String inequalitySignProc(String str) {
-		String result = str;
-		StringBuilder tempSb = new StringBuilder();
-		tempSb.append(result);
 
-		int idx = 0;
-		char[] chars =  result.toCharArray();
-		for(char c : chars) {
-			if( Arrays.stream(INEQUALITY_SIGN).filter(s -> s.equals(String.valueOf(c))).count() > 0) {
-				if(idx+1 == chars.length) {
-					tempSb.setCharAt(idx,' ');
-				}else {
-					String cstr = String.valueOf(chars[idx+1]);
-					if(String.valueOf(chars[idx+1]).equals(" ") ||  Arrays.stream(INEQUALITY_SIGN).filter(s -> s.equals(String.valueOf(cstr))).count() > 0) {
-						tempSb.setCharAt(idx,' ');
-					}
-				}
-			}
-			idx++;
-		}
-
-		return tempSb.toString();
-	}
 
 	/**
 	 * 공백 구분 임시 쿼리 생성

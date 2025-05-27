@@ -202,11 +202,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
 
-		/* 일반 검색 쿼리 */
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery);
-		List<String> fields = (Common.isNotEmpty(sq.get("fl"))) ? getSearchField(sq.get("fl")) : getDefaultSearchField(sq.get("qf"));
-
+		/* 검색 대상 필드 설정 */
+		List<String> fields = (Common.isNotEmpty(sq.get("sqf"))) ? getSearchField(sq.get("sqf")) : getDefaultSearchField(sq.get("qf"));
 		log.info("f {}", fields);
+
+		/* queryStringQuery + 검색 필드 지정 */
+		QueryStringQueryBuilder queryBuilder = QueryBuilders
+				.queryStringQuery(sq.getQuery() + " " + filterQuery)
+				.fields(fields.stream().distinct().collect(Collectors.toMap(f -> f, f -> 1.0f)));
+
 		/* 유사 문서 쿼리 설정 moreLikeThis */
 		recommendQuery(queryBuilder, boolQuery, sq);
 
@@ -215,9 +219,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
 		/* 수,발신자 조회시 */
 		if (!Common.isEmpty(sq.get("q"))) complateQuery.should(buildRecvAndSend(sq.get("q"))).minimumShouldMatch(1);
-
+		String[] include_fields = (Common.isNotEmpty(sq.getFields())) ? sq.getFields().split(",") : new String[]{""};
 		NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-				.withSourceFilter(new FetchSourceFilter(Common.toArray(sq.getFields(), ","), new String[]{"body", "attach"}))
+				.withSourceFilter(new FetchSourceFilter(include_fields,null))
 				.withFields(fields)
 				.withQuery(complateQuery)
 				.withAggregations(getAggregations(sq))

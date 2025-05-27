@@ -275,7 +275,7 @@
             border: 1px solid #ccc;
             width: 500px;
             display:none;
-            height:300px;
+            height:355px;
         }
 
         /*연관 검색어 */
@@ -3445,6 +3445,11 @@
                             <span>■ <s:message code="help.msg.or"/></span><br/>
                             <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.or.ex"/></span><br/>
                             <span style="padding-left:10px;"><s:message code="help.msg.or.explain"/> </span><br/>
+                        </div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="help.msg.exact"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.exact.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.exact.explain"/> </span><br/>
                         </div>
 <%--                        <div style="padding-top:5px;">--%>
 <%--                            <span>■ <s:message code="help.msg.exact"/></span><br/>--%>
