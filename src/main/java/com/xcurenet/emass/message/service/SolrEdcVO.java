@@ -277,7 +277,6 @@ public class SolrEdcVO {
     @JsonIgnore
     public List<String> attachtype;
 
-    @JsonIgnore
     public String body_snippet;
 
     @JsonIgnore
