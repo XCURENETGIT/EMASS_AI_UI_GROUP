@@ -652,7 +652,7 @@
 		return value;
 	});
 	grid4.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDSERVICE"/> - <s:message code="DATA_ANALYSIS.STAT_KEYWORD_DETAIL_TOP"/> 20');
-	grid4.loadHeader(false);
+	grid4.loadHeader(true);
 	// grid4.loadPageSize();
 	initGrid(grid4, messageGridColumn);
 	grid4.initData('<s:message code="common.msg.search.click"/>');
