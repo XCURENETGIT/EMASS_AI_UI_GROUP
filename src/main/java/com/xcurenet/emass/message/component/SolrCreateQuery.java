@@ -129,7 +129,7 @@ public class SolrCreateQuery {
 	public static final String JOIN_READ = " +checked.readId:%s";
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
 
-	private static final String OCR_FIELD = " ocr_attach";
+	private static final String OCR_FIELD = "ocr_attach";
 	private String finalReadYn;
 	private String consentNo;
 	public String[] operator = new String[]{"+", "-", "|"};
@@ -234,10 +234,10 @@ public class SolrCreateQuery {
 	 * 검색 영역을 설정한다.(field 설정)
 	 */
 	private SolrCreateQuery setSearchField() {
-		String dfString = StringUtils.join(this.SEARCH_FIELD, ",");
-		if (Config.isOCR) {
-			dfString += OCR_FIELD;
-		}
+		List<String> fields = new ArrayList<>(Arrays.asList(this.SEARCH_FIELD));
+		if (Config.isOCR) fields.add(OCR_FIELD);
+
+		String dfString = String.join(",", fields);
 		sq.setParam("qf", dfString);
 		searchfieldValue = dfString;
 		return this;
