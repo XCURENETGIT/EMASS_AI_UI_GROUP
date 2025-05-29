@@ -1088,19 +1088,21 @@ public class MessengerController {
 		} catch (Exception e) {
 			log.error("", e);
 		} finally {
-			long totalFileSizeBeforeCompression = calculateDirectorySize(Common.makeFilepath(Common.TMP_PATH, uniqId));
+//			long totalFileSizeBeforeCompression = calculateDirectorySize(Common.makeFilepath(Common.TMP_PATH, uniqId));
+			long zipFileSize = new File(destFile).length();
 			if ("C".equals(getStatusDB(downloadBatchVO))) {
 				log.info("Export process stopped due to status 'C'");
 				return;
 			}else {
-				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+//				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+				log.info("Total file size After compression: {} bytes", zipFileSize);
 
 				Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
 				Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
 				FileUtils.deleteDirectory(directoryPath.toFile());
 				IOUtils.closeQuietly(in);
 				IOUtils.closeQuietly(sOut);
-				updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+				updateSucessDB(downloadBatchVO, zipFileSize);
 			}
 
 		}
