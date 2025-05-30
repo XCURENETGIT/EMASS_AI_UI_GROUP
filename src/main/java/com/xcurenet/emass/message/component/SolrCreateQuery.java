@@ -902,21 +902,50 @@ public class SolrCreateQuery {
 	 */
 	public SolrCreateQuery setPi(String piYn, String pis) {
 		if (Common.isEmpty(piYn)) return this;
-
 		StringBuilder queryStr = new StringBuilder();
-		if (Common.isEquals(piYn, "Y")) queryStr.append(String.format("%s%s:[1 TO *] ", AND_QUERY, PI_TOTAL));
-		else if (Common.isEquals(piYn, "N")) queryStr.append(String.format("%s%s:0 ", AND_QUERY, PI_TOTAL));
 
-		if (Common.isNotEmpty(pis)) {
-			if( pis.contains("@")) {
-				queryStr.append(String.format("%s", createOrQueryRegexpCount(pis, "|")));
-			} else {
-				queryStr.append(String.format("%s:%s", PI, createOrQuery(pis, "|")));
+		if (Common.isEquals(piYn, "Y")){
+//			queryStr.append(String.format("%s:[1 TO *] ", AND_QUERY, PI_TOTAL));
+
+			if(Common.isEmpty(pis)) {
+				queryStr.append(patternExists(Config.activePatterns, "+"));
+//				queryStr.append(patternExists(Config.activePatterns));
+			}else{
+				if (pis.contains("@")) {
+					queryStr.append(String.format("%s", createOrQueryRegexpCount(pis, "|")));
+				}
 			}
+		} else if (Common.isEquals(piYn, "N")){
+//			queryStr.append(String.format("%s:0 ", AND_QUERY, PI_TOTAL));
+			queryStr.append(patternExists(Config.activePatterns, "-"));
 		}
 
+
+//		if (Common.isEquals(piYn, "Y")){
+//		}else if (Common.isEquals(piYn, "N")) {
+//			sq.setParam("patternNotExists", Arrays.stream(Config.activePatterns)
+//					.filter(s -> s != null && !s.trim().isEmpty())
+//					.map(s -> "pi_amount.pi_" + s)
+//					.toArray(String[]::new));
+//		}
 		return addQuery(queryStr.toString());
 	}
+
+	public String patternExists(String[] patterns, String val){
+		StringBuilder queryStr = new StringBuilder();
+		queryStr.append(val + "(");
+		int patternSize = 0;
+		for (String pattern : patterns) {
+			queryStr.append(String.format("%s:[1 TO *] ", "pi_amount.pi_" + pattern, val));
+			patternSize++;
+			if (patterns.length > patternSize) {
+				queryStr.append("| ");
+			}
+		}
+		queryStr.append(")");
+		return Common.nvl(queryStr);
+	}
+
 
 	private String createOrQueryRegexpCount(String params, String separator) {
 		String[] param = Common.toArray(params, separator);

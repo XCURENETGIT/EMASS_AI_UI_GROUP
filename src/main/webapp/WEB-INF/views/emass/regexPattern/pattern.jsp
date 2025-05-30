@@ -18,8 +18,10 @@
         });
 
         $('#PatternInsertBtn').click(function () {
-            $('#code').prop('disabled', false);
+            $('#code,#name,#regex').prop('disabled', false);
             $('#PatternPop input[type=text]').val('');
+	        $('#regexDiv').show();
+	        $('#patternType').val("C");
             $('#PatternPop').attr('mode', 'insert');
             $('#PatternPop').modal('show');
             setTimeout(function () {
@@ -40,12 +42,6 @@
                 $('#PatternName').focus();
                 return false;
             }
-            var regex = $('#regex').val().ltrim().rtrim();
-            if (regex === '') {
-                ui.alertMsg('<s:message code="pattern.regex.input"/>');
-                $('#regex').focus();
-                return false;
-            }
 
             var name = $('#name').val().ltrim().rtrim();
             if (name === '') {
@@ -53,10 +49,19 @@
                 $('#name').focus();
                 return false;
             }
-            if (!isValidRegexPattern(regex)) {
-                ui.alertMsg('<s:message code="regexPattern.patter_valid"/>');
-                return false;
-            }
+
+	        if($('#patternType').val() != 'N'){
+		        var regex = $('#regex').val().ltrim().rtrim();
+		        if (regex === '') {
+			        ui.alertMsg('<s:message code="pattern.regex.input"/>');
+			        $('#regex').focus();
+			        return false;
+		        }
+		        if (!isValidRegexPattern(regex)) {
+			        ui.alertMsg('<s:message code="regexPattern.patter_valid"/>');
+			        return false;
+		        }
+	        }
 
             var mode = $('#PatternPop').attr('mode');
             var confirmMessage = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
@@ -175,6 +180,7 @@
 						<div class="col-65">
 							<input type="text" class="w100" name="code" id="code">
 							<input type="hidden" name="patternSeq" id="patternSeq">
+							<input type="hidden" name="patternType" id="patternType">
 						</div>
 					</div>
 					<div class="row">
@@ -186,13 +192,28 @@
 							<input type="text" class="w100" name="name" id="name">
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" id="regexDiv">
 						<div class="col-35">
 							<label for="regex" class="fname"><s:message code="pattern.regexPattern"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="regex" id="regex">
+						</div>
+					</div>
+					<div class="row" id="enable">
+						<div class="col-35">
+							<label for="enable" class="fname"><s:message code="pattern.enable"/></label>
+						</div>
+						<div class="col-65">
+							<label class="radio-inline c-radio">
+								<input type="radio" name="enable" value="Y">
+								<s:message code="common.msg.use"/>
+							</label>
+							<label class="radio-inline c-radio">
+								<input type="radio" name="enable" value="N">
+								<s:message code="common.msg.unuse"/>
+							</label>
 						</div>
 					</div>
 
@@ -271,6 +292,10 @@
     grid.colAdd('code', '<s:message code="pattern.code"/>', 100, 'center', false, 'link');
     grid.colAdd('name', '<s:message code="pattern.name"/>', 200, 'left', false, 'nomal');
     grid.colAdd('regex', '<s:message code="pattern.regexPattern"/>', 500, 'left', false, 'nomal');
+    grid.colAdd('enable', '<s:message code="pattern.enable"/>', 130, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+	    if (value == null || value == '' || value == undefined || value == 'N') return '<s:message code="common.msg.unuse"/>';
+	    else  return '<s:message code="common.msg.use"/>';
+    });
 
     grid.loadPageSize();
     grid.loadHeader(true);
@@ -281,17 +306,29 @@
 
     grid.onClick = function () {
         var data = grid.getRowData(grid.Row);
-        if (data.regex === undefined || data.regex ==='' || data.regex === null){
-            alert('<s:message code="pattern.basic.update"/>');
-        }else {
-            if (grid.Col == grid.ColIndex('code')) {
-                $('#PatternPop').attr('mode', 'modify');
-                $('#code').val(data.code);
-                $('#name').val(data.name);
-                $('#regex').val(data.regex);
-                $('#code').prop('disabled', true);
-                $('#PatternPop').modal('show');
-            }
+        if (grid.Col == grid.ColIndex('code')) {
+	        $('#PatternPop').attr('mode', 'modify');
+	        $('[name=enable][value=' + data.enable + ']').prop('checked', true);
+	        $('#enable').val(data.enable);
+			var type = (data.regex === undefined || data.regex === '' || data.regex === null) ?  'N' : 'C';
+	        $('#patternType').val(type);
+	        if (type == 'N') {
+		        // 개인정보 탐지
+		        $('#code').val(data.code);
+		        $('#name').val(data.name);
+		        $('#regex').val('');
+		        $('#regexDiv').hide();
+		        $('#code,#name,#regex').prop('disabled', true);
+	        } else {
+		        // 커스텀 패턴
+		        $('#code').val(data.code);
+		        $('#name').val(data.name);
+		        $('#regex').val(data.regex);
+		        $('#regexDiv').show();
+		        $('#name,#regex').prop('disabled', false);
+		        $('#code').prop('disabled', true);
+	        }
+	        $('#PatternPop').modal('show');
         }
     }
     grid.loadExportMenu('<s:message code="DATA_MONITOR.PATTERN_INFO"/>');

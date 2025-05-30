@@ -204,7 +204,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		/* 검색 대상 필드 설정 */
 		List<String> fields = (Common.isNotEmpty(sq.get("sqf"))) ? getSearchField(sq.get("sqf")) : getDefaultSearchField(sq.get("qf"));
-		log.info("f {}", fields);
 
 		/* queryStringQuery + 검색 필드 지정 */
 		QueryStringQueryBuilder queryBuilder = QueryBuilders

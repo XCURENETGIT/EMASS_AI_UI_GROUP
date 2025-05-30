@@ -24,6 +24,7 @@
     var oldJib = '<%=oldJib%>';
     var oldEmail = '<%=oldEmail%>';
     var addFlag = true;
+	var codeResultData;
 
     $(document).ready(function () {
         $(document).bind("contextmenu", function (e) {
@@ -136,13 +137,14 @@
             opener.resetCode(codeType);
         });
 
-        getCodeList();
+	    getCodeListAsync().then(() => {
+	        if (codeType != 'senders' && codeType != 'receivers' && codeType != 'user' && codeType != 'coreKeyword' && codeType != 'attach' && codeType != 'keyword' && codeType != 'regexp' && codeType != 'dept') {
+	            if (opener.$('#' + codeType + 'Hidden').val() != '') setCode();
+	        } else {
+	            if (oldCode != '') setCode();
+	        }
+	    });
 
-        if (codeType != 'senders' && codeType != 'receivers' && codeType != 'user' && codeType != 'coreKeyword' && codeType != 'attach' && codeType != 'keyword' && codeType != 'regexp' && codeType != 'dept') {
-            if (opener.$('#' + codeType + 'Hidden').val() != '') setCode();
-        } else {
-            if (oldCode != '') setCode();
-        }
     });
 
     function getKeywordGroupList() {
@@ -192,7 +194,7 @@
                 var code = d.code.split('%');
                 data.push({
                     'code': code[0],
-                    'codeName': d.conm.substring(0, d.conm.indexOf('(')),
+                    'codeName': codeResultData.find(d => d.code == code[0]).codeName,
                     'count':  code[1]
                 });
             });
@@ -255,27 +257,35 @@
         } else grid2.appendData(data);
     }
 
+    async function getCodeListAsync(){
+		await getCodeList();
+	}
+
     function getCodeList() {
         var tempCode1 = '';
         if (codeType == 'keyword') tempCode1 = $("#keywordGroup option:selected").val();
         var searchStr = $('#searchStr').val();
-        ui.get({
-            url: 'getCodeList.xcn',
-            searchStr: searchStr,
-            codeType: codeType,
-            coCd: coCd,
-            tempCode1: tempCode1,
-            success: function (data, total) {
-                grid.setData(data);
-            },
-            error: function (status, message) {
-                ui.alertMsg(message);
-            },
-            complete: function () {
-                searchFlag = false;
-                grid.off();
-            }
-        });
+	    return new Promise((resolve, reject) => {
+		    ui.get({
+			    url: 'getCodeList.xcn',
+			    searchStr: searchStr,
+			    codeType: codeType,
+			    coCd: coCd,
+			    tempCode1: tempCode1,
+			    success: function (data, total) {
+				    grid.setData(data);
+				    codeResultData = data;
+			    },
+			    error: function (status, message) {
+				    ui.alertMsg(message);
+			    },
+			    complete: function () {
+				    searchFlag = false;
+				    grid.off();
+					resolve();
+			    }
+		    });
+	    });
     }
 </script>
 

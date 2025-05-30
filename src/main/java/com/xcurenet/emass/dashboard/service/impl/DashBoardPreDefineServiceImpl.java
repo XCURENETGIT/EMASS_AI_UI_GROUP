@@ -100,17 +100,25 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
 		PatternPrivacyVO result = new PatternPrivacyVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_amount.pi_MN:[ 1 TO * ] pi_amount.pi_CN:[ 1 TO * ] pi_amount.pi_AN:[ 1 TO * ] pi_amount.pi_SN:[ 1 TO * ] pi_amount.pi_CRN:[ 1 TO * ] pi_amount.pi_DN:[ 1 TO * ] pi_amount.pi_FN:[ 1 TO * ] pi_amount.pi_PN:[ 1 TO * ] pi_amount.pi_SSN:[ 1 TO * ] pi_amount.pi_BRN:[ 1 TO * ] pi_amount.pi_CPN:[ 1 TO * ] pi_amount.pi_MCN:[ 1 TO * ])"
-				, patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
+//		String query = String.format("+ctime:[%s TO %s] +(pi_amount.pi_MN:[ 1 TO * ] pi_amount.pi_CN:[ 1 TO * ] pi_amount.pi_AN:[ 1 TO * ] pi_amount.pi_SN:[ 1 TO * ] pi_amount.pi_CRN:[ 1 TO * ] pi_amount.pi_DN:[ 1 TO * ] pi_amount.pi_FN:[ 1 TO * ] pi_amount.pi_PN:[ 1 TO * ] pi_amount.pi_SSN:[ 1 TO * ] pi_amount.pi_BRN:[ 1 TO * ] pi_amount.pi_CPN:[ 1 TO * ] pi_amount.pi_MCN:[ 1 TO * ])"
+//				, patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
+
+		StringBuffer sb = new StringBuffer();
+		sb.append(String.format("+ctime:[%s TO %s] ", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt()));
+		sb.append("+(");
+		for (int i = 0; i < Config.activePrivatePatterns.length; i++) {
+			if(i != 0) sb.append("| ");
+			sb.append(String.format("%s:[1 TO *]", "pi_amount.pi_" + Config.activePrivatePatterns[i])).append(" ");
+		}
+		sb.append(")");
+
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
+		sq.setQuery(sb.toString());
 		sq.setRows(0);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-		sq.setQuery(query);
-		sq.setRows(0);
-		edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
-		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		sq.setQuery(sb.toString());
 		return result;
 	}
 
@@ -137,17 +145,21 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public RiskBehaviorVO getTodayRiskBehavior(RiskBehaviorVO riskBehaviorVO) throws IOException, SolrServerException {
 		RiskBehaviorVO result = new RiskBehaviorVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_amount.pi_EC:[ 1 TO * ] pi_amount.pi_EF:[ 1 TO * ] pi_amount.pi_ID:[ 1 TO * ])", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt());
+//		String query = String.format("+ctime:[%s TO %s] +(pi_amount.pi_EC:[ 1 TO * ] pi_amount.pi_EF:[ 1 TO * ] pi_amount.pi_ID:[ 1 TO * ])", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt());
+		StringBuffer sb = new StringBuffer();
+		sb.append(String.format("+ctime:[%s TO %s] ", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt()));
+		sb.append("+(");
+		for (int i = 0; i < Config.activeAnomalyPatterns.length; i++) {
+			if(i != 0) sb.append("| ");
+			sb.append(String.format("%s:[1 TO *]", "pi_amount.pi_" + Config.activeAnomalyPatterns[i])).append(" ");
+		}
+		sb.append(")");
+
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
+		sq.setQuery(sb.toString());
 		sq.setRows(0);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-//	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, riskBehaviorVO.getAdminId()));
-		edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
-		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		return result;
 	}
 

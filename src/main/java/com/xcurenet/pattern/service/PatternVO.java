@@ -11,4 +11,8 @@ public class PatternVO {
 	private String code;
 	private String regex;
 	private String name;
+	private String enable;
+	private String unitId;
+	private String adminId;
+	private String searchStr;
 }

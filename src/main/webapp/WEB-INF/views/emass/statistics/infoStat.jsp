@@ -7,6 +7,12 @@
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
 <%@ include file="../../analysis/analysisBase.jsp" %>
+<%
+	String privatePatterns = "";
+	if(!Common.isEmptyArray(Config.activePrivatePatterns)){
+		privatePatterns = String.join(",", Config.activePrivatePatterns);
+	}
+%>
 <style>
 	#loadingBar {
 		position: absolute;
@@ -71,6 +77,21 @@
 
 </style>
 <script>
+	var patternNameMap = {
+		SN : '<s:message code="bodyview.sn"/>',
+		CN : '<s:message code="bodyview.cn"/>',
+		DN : '<s:message code="bodyview.dn"/>',
+		FN : '<s:message code="bodyview.fn"/>',
+		PN : '<s:message code="bodyview.pn"/>',
+		MN : '<s:message code="bodyview.mn"/>',
+		AN : '<s:message code="bodyview.an"/>',
+		CRN : '<s:message code="bodyview.crn"/>',
+		SSN : '<s:message code="bodyview.ssn"/>',
+		IMEI : '<s:message code="bodyview.imei"/>',
+		BRN : '<s:message code="bodyview.brn"/>',
+		CPN : '<s:message code="bodyview.cpn"/>',
+		MCN : '<s:message code="bodyview.mcn"/>',
+	}
 	var searchFlag = false;
 	var detailTotal = 0;
 	var rowKey = "";
@@ -334,6 +355,8 @@
 		return tabInfo['tab' + id];
 	}
 
+	var privatePatterns = '<%=privatePatterns%>';
+
 	var grid1 = new Xgrid('infoStatListGrid', contextRoot);
 	grid1.autoNumber();
 	grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 350, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
@@ -347,60 +370,17 @@
 	});
 
 
-	grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
+	if(privatePatterns != ''){
+		var patternArray = privatePatterns.split(',');
+		patternArray.forEach(pattern => {
+			if(pattern == 'DRM') return;
 
-	grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_DN', "<s:message code="bodyview.dn"/>", 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_PN', '<s:message code="bodyview.pn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_MN', '<s:message code="bodyview.mn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_AN', '<s:message code="bodyview.an"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_CRN', '<s:message code="bodyview.crn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_SSN', '<s:message code="bodyview.ssn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_IMEI', 'IMEI', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_BRN', '<s:message code="bodyview.brn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_CPN', '<s:message code="bodyview.cpn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	grid1.colAdd('pi_MCN', '<s:message code="bodyview.mcn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-
+			grid1.colAdd('pi_' + pattern, patternNameMap[pattern], 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+				if (value != undefined) return value.comma();
+				else return '';
+			});
+		});
+	}
 
 	grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
 	// grid1.loadPageSize();
