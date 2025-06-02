@@ -103,7 +103,7 @@
 		
 		<typeAlias alias="emsSearchKeywordVO" type="com.xcurenet.emass.message.service.EmsSearchKeywordVO" />
 		
-		<typeAlias alias="patternVO" type="com.xcurenet.emass.message.service.PatternVO" />
+		<typeAlias alias="patternVO" type="com.xcurenet.pattern.service.PatternVO" />
 		
 		<typeAlias alias="fileDataVO" type="com.xcurenet.emass.customDashboard.service.FileDataVO" />
 

@@ -3,6 +3,18 @@
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <%
 	String dashboardPeriod = Config.getString("dashboard.period");
+	String patternSvc = "";
+	if(!Common.isEmptyArray(Config.getOrderedPatterns())){
+		patternSvc = String.join(",", Config.getOrderedPatterns());
+	}
+	String privatePatterns = "";
+	if(!Common.isEmptyArray(Config.activePrivatePatterns)){
+		privatePatterns = String.join(",", Config.activePrivatePatterns);
+	}
+	String anomalyPatterns = "";
+	if(!Common.isEmptyArray(Config.activeAnomalyPatterns)){
+		anomalyPatterns = String.join(",", Config.activeAnomalyPatterns);
+	}
 %>
 <style>
 
@@ -133,8 +145,44 @@
         "sizeOption": "L",
         "sizeType": ""
     };
+    var patternNameMap = {
+	    SN : '<s:message code="bodyview.sn"/>',
+	    CN : '<s:message code="bodyview.cn"/>',
+	    DN : '<s:message code="bodyview.dn"/>',
+	    FN : '<s:message code="bodyview.fn"/>',
+	    PN : '<s:message code="bodyview.pn"/>',
+	    MN : '<s:message code="bodyview.mn"/>',
+	    AN : '<s:message code="bodyview.an"/>',
+	    CRN : '<s:message code="bodyview.crn"/>',
+	    SSN : '<s:message code="bodyview.ssn"/>',
+	    IMEI : '<s:message code="bodyview.imei"/>',
+	    BRN : '<s:message code="bodyview.brn"/>',
+	    CPN : '<s:message code="bodyview.cpn"/>',
+	    MCN : '<s:message code="bodyview.mcn"/>',
+	    LAOP : '<s:message code="bodyview.laop"/>',
+	    AOH : '<s:message code="bodyview.aoh"/>',
+	    FCA : '<s:message code="bodyview.fca"/>',
+	    ID : '<s:message code="bodyview.id"/>',
+	    RS : '<s:message code="bodyview.rs"/>',
+	    EC : '<s:message code="bodyview.ec"/>',
+	    EF : '<s:message code="bodyview.ef"/>',
+	    LTO : '<s:message code="bodyview.lto"/>',
+	    LAO : '<s:message code="bodyview.lao"/>',
+	    LF : '<s:message code="bodyview.lf"/>',
+    }
     var dashboardPeriod = '<%=dashboardPeriod%>';
+    var patternSvc = '<%=patternSvc%>';
+    var privatePatterns = '<%=privatePatterns%>';
+    var anomalyPatterns = '<%=anomalyPatterns%>';
+
     $(document).ready(function() {
+	    if(patternSvc != ''){
+		    var patternArray = patternSvc.split(',');
+		    patternArray.forEach(pattern => {
+			    drawTodayPatternArea(pattern);
+		    });
+	    }
+
         function makePeriod(dashCondition) {
             dashCondition = JSON.parse(dashCondition);
             var startDtSelect = dashCondition.startDateSelect;
@@ -175,110 +223,41 @@
         getBodySize();
         getTrafficData();
         getTodayTrafficData();
-        TodayPassportData();
-        getTodayDriveData();
-        TodayForeignerData();
-        TodaySecurityData();
-        TodayCardNumberData();
-        getExtensionModulation();
+		if(patternSvc != ''){
+			var patternArray = patternSvc.split(',');
+			patternArray.forEach(pattern => {
+				getTodayPattern(pattern);
+			});
+		}
+
+	    function drawTodayPatternArea(type){
+		    var div = $('<div>', {'class':'click', 'data-value':type});
+		    div.append($('<span>', {'class':'tit10', 'text':patternNameMap[type]}));
+		    var countP = $('<p>', {'class':'blue', 'id':type + '_cnt'});
+		    var countSpan = $('<span>', {'class':'tit13'});
+		    countP.append(countSpan);
+		    div.append(countP);
+		    $('#patternDiv').append(div);
+	    }
+
+	    function getTodayPattern(type) {
+		    ui.get({
+			    url: 'getTodayPattern.xcn',
+			    patternType:'pi_amount.pi_' + type,
+			    success: function (data, total) {
+					$('#' + type + '_cnt').text(data.total);
+			    },
+			    error: function (status, message) {
+			    },
+			    complete: function () {
+
+			    }
+		    });
+	    }
 
 
-        function TodayPassportData() {
-            ui.get({
-                url: 'getTodayPattern.xcn',
-                patternType:'pi_amount.pi_PN',
-                success: function (data, total) {
-                    $('#TodayPasswordTotalCnt').html(data.total + "<span class='tit13'></span>");
-                },
-                error: function (status, message) {
-                },
-                complete: function () {
-                }
-            });
-        }
-
-        function TodayForeignerData() {
-            ui.get({
-                url: 'getTodayPattern.xcn',
-                patternType:'pi_amount.pi_FN',
-                success: function (data, total) {
-                    $('#TodayForeignerTotalCnt').html(data.total + " <span class='tit13'></span>");
-                },
-                error: function (status, message) {
-                },
-                complete: function () {
-
-                }
-            });
-        }
-
-        function TodaySecurityData() {
-            ui.get({
-                url: 'getTodayPattern.xcn',
-                patternType:'pi_amount.pi_SN',
-                success: function (data, total) {
-                    $('#TodaySecurityTotalCnt').html(data.total + " <span class='tit13'></span>");
-                },
-                error: function (status, message) {
-                },
-                complete: function () {
-
-                }
-            });
-        }
-
-        function TodayCardNumberData() {
-            ui.get({
-                url: 'getTodayPattern.xcn',
-                patternType:'pi_amount.pi_CN',
-                success: function (data, total) {
-                    $('#TodayCardNumberTotalCnt').html(data.total + " <span class='tit13'></span>");
-                },
-                error: function (status, message) {
-                },
-                complete: function () {
-
-                }
-            });
-        }
-
-
-        function getTodayDriveData() {
-            ui.get({
-                url: 'getTodayPattern.xcn',
-                patternType:'pi_amount.pi_DN',
-                success: function (data, total) {
-                    $('#TodayDriveTotalCnt').html(data.total + "<span class='tit13'></span>");
-                },
-                error: function (status, message) {
-
-                },
-                complete: function () {
-
-                }
-            });
-        }
-
-        function getExtensionModulation() {
-
-            ui.get({
-                url: 'getTodayPattern.xcn',
-                patternType:'pi_amount.pi_EC',
-                success: function (data, total) {
-                    $('#TodayExtensionModulationTotalCnt').html(data.total + " <span class='tit13'></span>");
-                },
-                error: function (status, message) {
-
-                },
-                complete: function () {
-
-                }
-            });
-        }
-
-
-        function getTodayTrafficData() {
-            ui.get({
+	    function getTodayTrafficData() {
+		    ui.get({
                 url: 'getTodayTrafficData.xcn',
                 success: function (data, total) {
                     printChartTraffic2(data);
@@ -1164,42 +1143,19 @@
 	            dashCondition.serviceTypeNm = "게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타, 일반(자동전달),메신저,Samsung cic,Zohocliq";
             } else if (dat == 'work') {
                 dashCondition.ctimeWork = "R";
-            } else if (dat == 'danger') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "EC%L@1|EF%L@1|ID%L@1";
-                dashCondition.regexpStr = "확장자 변조 파일(1건 이상),암호화 파일(1건 이상),송수신자 동일아이디(1건 이상)";
             } else if (dat == 'file') {
                 dashCondition.sizeType="A";
                 dashCondition.sizeOption = "L";
                 dashCondition.sizeStartVal = ''+(1024*1024);
+            } else if (dat == 'danger') {
+	            dashCondition.regexpYn = "Y";
+                dashCondition.regexpVal = anomalyPatterns.replaceAll(",", "%L@1|") + '%L@1';
             } else if (dat == 'person') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "MN%L@1|CN%L@1|AN%L@1|SN%L@1|CRN%L@1|DN%L@1|FN%L@1|PN%L@1|SSN%L@1|BRN%L@1|CPN%L@1|MCN%L@1";
-                dashCondition.regexpStr = "휴대전화번호(1건 이상),카드번호(1건 이상),주소(1건 이상),주민번호(1건 이상),자동차 등록 번호(1건 이상),운전면허 번호(1건 이상),외국인 등록번호(1건 이상),여권번호(1건 이상),사회 보장번호(1건 이상),사업자 등록번호(1건 이상), 법인 등록번호(1건 이상),MAC 주소(1건 이상)";
-            } else if (dat == 'passport') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "PN%L@1"
-                dashCondition.regexpStr = "여권번호(1건 이상)"
-            } else if (dat == 'drive') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "DN%L@1"
-                dashCondition.regexpStr = "운전면허 번호(1건 이상)"
-            } else if (dat == 'foreigner') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "FN%L@1"
-                dashCondition.regexpStr = "외국인 등록번호(1건 이상)"
-            } else if (dat == 'social') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "SN%L@1"
-                dashCondition.regexpStr = "주민번호(1건 이상)"
-            } else if (dat == 'card') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "CN%L@1"
-                dashCondition.regexpStr = "카드번호(1건 이상)"
-            } else if (dat == 'extension') {
-                dashCondition.regexpYn = "Y";
-                dashCondition.regexpVal = "EC%L@1"
-                dashCondition.regexpStr = "확장자 변조 파일(1건 이상)"
+	            dashCondition.regexpYn = "Y";
+	            dashCondition.regexpVal = privatePatterns.replaceAll(",", "%L@1|") + '%L@1';
+            } else {
+	            dashCondition.regexpYn = "Y";
+	            dashCondition.regexpVal = dat + '%L@1';
             }
 
             $('#conditionParam').val(makePeriod2(dashCondition));
@@ -1336,31 +1292,7 @@
 		<div class="m_chartArea">
 			<div>
 				<h3><s:message code="dashboard.todaayPatternCount"/></h3>
-				<div class="mainlist">
-					<div class="click" data-value="passport">
-						<span class="tit07" ><s:message code="bodyview.pn"/></span>
-						<p class="blue" id="TodayPasswordTotalCnt">-</p>
-					</div>
-					<div class="click" data-value="drive">
-						<span class="tit08"><s:message code="bodyview.dn"/></span>
-						<p class="blue" id="TodayDriveTotalCnt">-</p>
-					</div>
-					<div class="click" data-value="foreigner">
-						<span class="tit09"><s:message code="bodyview.fn"/></span>
-						<p class="blue" id="TodayForeignerTotalCnt">-</p>
-					</div>
-					<div class="click" data-value="social">
-						<span class="tit10"><s:message code="bodyview.sn"/></span>
-						<p class="blue" id="TodaySecurityTotalCnt">-</p>
-					</div>
-					<div class="click" data-value="card">
-						<span class="tit11"><s:message code="bodyview.cn"/></span>
-						<p class="blue" id="TodayCardNumberTotalCnt">-</p>
-					</div>
-					<div class="click" data-value="extension">
-						<span class="tit12"><s:message code="bodyview.ec"/></span>
-						<p class="blue" id="TodayExtensionModulationTotalCnt">-</p>
-					</div>
+				<div class="mainlist" id="patternDiv">
 				</div>
 			</div>
 		</div>

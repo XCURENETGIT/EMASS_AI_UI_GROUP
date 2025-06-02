@@ -2817,5 +2817,8 @@ public static String getDateDay(String date, String dateType) throws Exception {
 		return false;
 	}
 
+	public static boolean isEmptyArray(Object[] list){
+		return (list == null || list.length < 1);
+	}
 
 }

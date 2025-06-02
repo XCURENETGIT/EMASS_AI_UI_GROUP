@@ -14,5 +14,5 @@ public interface PatternService {
 
 	void updatePattern(PatternVO patternVO, String adminId);
 
-	public String allPatternCodeStr();
+	List<PatternVO> allPatternCodes();
 }

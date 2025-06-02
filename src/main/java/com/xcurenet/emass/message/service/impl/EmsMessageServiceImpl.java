@@ -18,6 +18,7 @@ import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.gridfs.GridFs;
 import com.xcurenet.minio.MinioFileAdapter;
+import com.xcurenet.pattern.service.PatternVO;
 import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;

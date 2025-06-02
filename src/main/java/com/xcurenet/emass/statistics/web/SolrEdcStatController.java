@@ -1110,7 +1110,10 @@ public class SolrEdcStatController {
 
 		sq.setParam("group", true);
 		sq.setParam("aggregation.field", "userkey");
-		sq.set("aggregation.sub.fields", Config.PRIVATE_SVC);
+		sq.set("aggregation.sub.fields", Arrays.stream(Config.activePrivatePatterns)
+				.filter(s -> s != null && !s.trim().isEmpty())
+				.map(s -> "pi_amount.pi_" + s)
+				.toArray(String[]::new));
 		sq.set("aggregation.limit", 5000);
 		sq.set("aggregation.piCount", piCount);
 		sq.setParam("aggregation.piType", searchPiType);
@@ -1121,8 +1124,8 @@ public class SolrEdcStatController {
 		List<Map<String, Object>> list = solrVo.getPivotData();
 		for (Map<String, Object> item : list) {
 			double total = 0;
-			for (String field : Config.PRIVATE_SVC) {
-				total += Common.nvd(item.get(field));
+			for (String field : Config.activePrivatePatterns) {
+				total += Common.nvd(item.get("pi_amount.pi_" + field));
 			}
 			item.put("pi_total", total);
 		}
@@ -1172,8 +1175,11 @@ public class SolrEdcStatController {
 		if (Common.isEquals(piType, "pattern")) { //메세지 내 검출 패턴 수
 			if (Common.isEquals(type, "pi_total")) {
 				query.append(" +( ");
-				for (String field : Config.PRIVATE_SVC) {
-					query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+				boolean first = true;
+				for (String field : Config.activePrivatePatterns) {
+					if(!first) query.append(" | ");
+					query.append(String.format("%s: [%s TO *]", "pi_amount.pi_" + field, piCount));
+					first = false;
 				}
 				query.append(" ) ");
 			} else {
@@ -1186,13 +1192,14 @@ public class SolrEdcStatController {
 				query.append((" +")).append(type).append(":[ 1 TO * ]");
 			} else {
 				query.append(" +( ");
-				for (String field : Config.PRIVATE_SVC) {
-					query.append(("(").concat(String.format("%s: [%s TO *]", field, "1").concat(") ")));
+				boolean first = true;
+				for (String field : Config.activePrivatePatterns) {
+					if(!first) query.append(" | ");
+					query.append(String.format("%s: [%s TO *]", "pi_amount.pi_" + field, piCount));
+					first = false;
 				}
 				query.append(" ) ");
 			}
-
-			query.append(" +pi_total:[").append(piCount).append(" TO ").append("* ] ");
 		}
 
 
@@ -1639,14 +1646,22 @@ public class SolrEdcStatController {
 		sq.setRows(0);
 		sq.setFacetSort("count");
 
+		if(Config.activeAnomalyPatterns == null || Config.activeAnomalyPatterns.length < 1){
+			return new XcnResponseVO(XcnRspCode.OK, null, 0);
+		}
+
 		/**
 		 *  첫 집계 검색은 검색필드 지정 X
 		 **/
 		sq.setFields(""); // 집계검색 default
 
+		String[] aggsFields = Arrays.stream(Config.activeAnomalyPatterns)
+				.filter(s -> s != null && !s.trim().isEmpty())
+				.map(s -> "pi_amount.pi_" + s)
+				.toArray(String[]::new);
 
-		sq.addFacetField(Config.ABNL_AGGS_FIELDS);
-		sq.setParam("group.field", Config.ABNL_AGGS_FIELDS);
+		sq.addFacetField(aggsFields);
+		sq.setParam("group.field", aggsFields);
 		sq.setParam("facet.field", "srcip");
 		sq.setParam("abnlYn", "Y");
 //		sq.setParam(Common.ANALYSIS_FACET_PIVOT_FIELDS, Config.ABNL_AGGS_FIELDS);
@@ -1801,8 +1816,8 @@ public class SolrEdcStatController {
 			query += "+" + colKey + ":[1 TO *] ";
 		} else if (Common.isEmpty(colKey)) {
 			query += "+( ";
-			for (String abnlSvc : Config.ABNL_SVC) {
-				query += " " + abnlSvc + ":[1 TO *] ";
+			for (String abnlSvc : Config.activeAnomalyPatterns) {
+				query += " " + "pi_amount.pi_" + abnlSvc + ":[1 TO *] ";
 			}
 			query += ") ";
 		}

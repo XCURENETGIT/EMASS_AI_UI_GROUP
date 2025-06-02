@@ -9,6 +9,7 @@ import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.makeInfo.service.impl.MakeInfoServiceMysql;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -46,6 +47,8 @@ public class PatternController {
 	@Autowired
 	public MakeInfoServiceMysql infoServiceMysql;
 
+	@Autowired
+	public Config config;
 
 	@RequestMapping(value = "/getPattern.xcn")
 	@Description("패턴 조회")
@@ -68,6 +71,7 @@ public class PatternController {
 		}
 
 		patternService.insertPattern(patternVO, Common.getAdminId(session));
+		config.reloadPattern();
 		return new XcnResponseVO((XcnRspCode.OK));
 	}
 
@@ -77,6 +81,7 @@ public class PatternController {
 	@ResponseBody
 	public XcnResponseVO updatePattern(final HttpServletRequest request, PatternVO patternVO, final HttpSession session) throws Exception{
 		patternService.updatePattern(patternVO, Common.getAdminId(session));
+		config.reloadPattern();
 		return new XcnResponseVO((XcnRspCode.OK));
 	}
 
@@ -97,6 +102,7 @@ public class PatternController {
 			log.info("{}", patternVO);
 			patternVOS.add(patternVO);
 		}
+		config.reloadPattern();
 		return new XcnResponseVO(XcnRspCode.OK, patternService.deletePattern(patternVOS));
 
 	}

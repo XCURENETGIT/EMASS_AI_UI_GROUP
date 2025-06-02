@@ -13,6 +13,8 @@ import com.xcurenet.config.service.impl.ConfigServiceImpl;
 import com.xcurenet.emass.iprange.service.IpRangeService;
 import com.xcurenet.emass.iprange.service.IpRangeVO;
 import com.xcurenet.emass.service.service.*;
+import com.xcurenet.pattern.service.PatternService;
+import com.xcurenet.pattern.service.PatternVO;
 import com.xcurenet.searchWord.service.SearchWordService;
 import com.xcurenet.searchWord.service.SearchWordVO;
 import com.xcurenet.user.service.PersCodeInfo;
@@ -78,6 +80,9 @@ public class Config {
 	@Autowired
 	private SearchWordService searchWordService;
 
+	@Autowired
+	private PatternService patternService;
+
 	private static List<ConfigVO> configs;
 
 	@Getter
@@ -97,24 +102,32 @@ public class Config {
 
 	public static List<AdminVO> adminList;
 
-	public static final String[] PRIVATE_SVC = {"pi_amount.pi_SN", "pi_amount.pi_PN", "pi_amount.pi_DN", "pi_amount.pi_FN", "pi_amount.pi_CN", "pi_amount.pi_MN", "pi_amount.pi_AN", "pi_amount.pi_CRN", "pi_amount.pi_SSN", "pi_amount.pi_IMEI", "pi_amount.pi_BRN", "pi_amount.pi_CPN", "pi_amount.pi_MCN"};
+//	public static final String[] PRIVATE_SVC = {"pi_amount.pi_SN", "pi_amount.pi_PN", "pi_amount.pi_DN", "pi_amount.pi_FN", "pi_amount.pi_CN", "pi_amount.pi_MN", "pi_amount.pi_AN", "pi_amount.pi_CRN", "pi_amount.pi_SSN", "pi_amount.pi_IMEI", "pi_amount.pi_BRN", "pi_amount.pi_CPN", "pi_amount.pi_MCN"};
+	public static final String[] PRIVATE_SVC = {"SN", "PN", "DN", "FN", "CN", "MN", "AN", "CRN", "SSN", "IMEI", "BRN", "CPN", "MCN"};
 
 	public static String[] colors = {"#7cb5ec", "#c9cbf6", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1", "#B5CA92", "#a7efff", "#B8B8BA", "#FFB2F5", "#47C83E", "#fee79f", "#8bc4bf", "#bf4444", "#7CB823", "#19D4FF", "#097500"};
 
-	public static final String ABNL_AGGS_FIELDS = "pi_amount.pi_LAOP,pi_amount.pi_FCA,pi_amount.pi_AOH,pi_amount.pi_ID,pi_amount.pi_RS,pi_amount.pi_EC,pi_amount.pi_EF,pi_amount.pi_LTO,pi_amount.pi_LAO,pi_amount.pi_LF";
+//	public static final String ABNL_AGGS_FIELDS = "pi_amount.pi_LAOP,pi_amount.pi_FCA,pi_amount.pi_AOH,pi_amount.pi_ID,pi_amount.pi_RS,pi_amount.pi_EC,pi_amount.pi_EF,pi_amount.pi_LTO,pi_amount.pi_LAO,pi_amount.pi_LF";
+	public static final String[] ABNL_SVC = {"ID","RS","EC","EF","LTO","LAO","LF"};
 
-	public static final String[] ABNL_SVC = {
-			"pi_amount.pi_LAOP"
-			, "pi_amount.pi_FCA"
-			, "pi_amount.pi_AOH"
-			, "pi_amount.pi_ID"
-			, "pi_amount.pi_RS"
-			, "pi_amount.pi_EC"
-			, "pi_amount.pi_EF"
-			, "pi_amount.pi_LTO"
-			, "pi_amount.pi_LAO"
-			, "pi_amount.pi_LF"
-	};
+//	public static final String[] ABNL_SVC = {
+//			"pi_amount.pi_LAOP"
+//			, "pi_amount.pi_FCA"
+//			, "pi_amount.pi_AOH"
+//			, "pi_amount.pi_ID"
+//			, "pi_amount.pi_RS"
+//			, "pi_amount.pi_EC"
+//			, "pi_amount.pi_EF"
+//			, "pi_amount.pi_LTO"
+//			, "pi_amount.pi_LAO"
+//			, "pi_amount.pi_LF"
+//	};
+
+	public static String[] activePatterns = null; // 사용중인 패턴 정보
+	public static String[] activePrivatePatterns = null; // 사용중인 패턴 정보
+	public static String[] activeAnomalyPatterns = null; // 사용중인 패턴 정보
+
+	public static String[] orderedPatterns = null;  // 디폴트 대쉬보드에 사용할 패턴 순서
 
 	public static Map<String, String> userIds; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도
 
@@ -125,7 +138,6 @@ public class Config {
 	public static Map<String, String> userCoNms; //(key : id) (value: 이름) 통계 이름 추출 용도
 
 	public static Map<String, String> userBusiNms; //(key : id) (value: 이름) 통계 이름 추출 용도
-
 
 	public static Map<String, String> userDepts; //(key : id) (value: 이름) 통계 이름 추출 용도
 
@@ -435,7 +447,8 @@ public class Config {
 
 			reloadSabun();
 
-
+			reloadPattern();
+			reloadOrderedPatterns();
 
 
 //		loadElsFieldMap(); // els 필드 컨버터 jsp -> java
@@ -618,6 +631,26 @@ public class Config {
 		log.info("사용자 Email : {}", emails.size());
 	}
 
+	//패턴 정보 load
+	public void reloadPattern() {
+		List<PatternVO> patternInfo = patternService.allPatternCodes();
+
+		activePatterns = patternInfo.stream().filter(p -> p.getEnable().equals("Y")).map(PatternVO::getCode).toArray(String[]::new);
+		Set<String> privateSvc = new HashSet<>(Arrays.asList(PRIVATE_SVC));
+		Set<String> anomalySvc = new HashSet<>(Arrays.asList(ABNL_SVC));
+
+		activePrivatePatterns = Arrays.stream(activePatterns).filter(privateSvc::contains).toArray(String[]::new);
+		activeAnomalyPatterns = Arrays.stream(activePatterns).filter(anomalySvc::contains).toArray(String[]::new);
+	}
+
+	/**
+	 * 디폴트 대시보드 패턴 순서 (개인정보,이상행위)
+	 */
+	public void reloadOrderedPatterns() {
+		if(Common.isNotEmpty(Config.getString("private.patterns.ordered"))) {
+			orderedPatterns = Common.nvl(Config.getString("private.patterns.ordered")).trim().split(",");
+		}
+	}
 
 	public void reloadSabun() {
 		userSabun = new HashMap<>();
@@ -765,4 +798,17 @@ public class Config {
 //		elsFields.put("jikgubnm,jikgub", ElasticSearchCommon.USER_JIKGUBCD);
 //	}
 
+	// 디폴트 대시보드 개인정보 사용 패턴 불러오기
+	public static String[] getOrderedPatterns() {
+		String[] baseOrder = (orderedPatterns != null) ? orderedPatterns : new String[]{"AN","CN","DN","FN","MN","PN","SN","BRN","CPN","CRN","DRM","MCN","SSN","IMEI","ID","RS","EC","EF","LTO","LAO","LF"};
+		Set<String> usedSet = new HashSet<>(Arrays.asList(activePatterns));
+		List<String> result = new ArrayList<>();
+		for (String key : baseOrder) {
+			if (usedSet.contains(key)) {
+				result.add(key);
+				if (result.size() == 6) break;
+			}
+		}
+		return result.toArray(new String[0]);
+	}
 }

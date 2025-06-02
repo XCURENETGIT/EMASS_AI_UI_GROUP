@@ -1,7 +1,12 @@
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-
+<%
+	String anomalyPatterns = "";
+	if(!Common.isEmptyArray(Config.activeAnomalyPatterns)){
+		anomalyPatterns = String.join(",", Config.activeAnomalyPatterns);
+	}
+%>
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <style>
 	.interestUserCheck{
@@ -39,6 +44,18 @@
 			gridLineWidth : 0.1
 		}
 	});
+	var patternNameMap = {
+		LAOP : '<s:message code="bodyview.laop"/>',
+		AOH : '<s:message code="bodyview.aoh"/>',
+		FCA : '<s:message code="bodyview.fca"/>',
+		ID : '<s:message code="bodyview.id"/>',
+		RS : '<s:message code="bodyview.rs"/>',
+		EC : '<s:message code="bodyview.ec"/>',
+		EF : '<s:message code="bodyview.ef"/>',
+		LTO : '<s:message code="bodyview.lto"/>',
+		LAO : '<s:message code="bodyview.lao"/>',
+		LF : '<s:message code="bodyview.lf"/>',
+	}
 
 	var searchFlag = false;
 	var detailTotal = 0;
@@ -448,6 +465,7 @@
 	}
 
 	var abnlDetectGrid = new Xgrid('basicStatListGrid', contextRoot);
+	var anomalyPatterns = '<%=anomalyPatterns%>';
 	abnlDetectGrid.autoNumber();
 	abnlDetectGrid.colAdd("rowKey", '<s:message code="common.org.user"/>', 160, "center", false, 'link', function (row, cell, value, columnDef, dataContext) {
 
@@ -459,48 +477,17 @@
 		else userInfo = rowKey ;
 		return  userInfo;
 	});
+	if(anomalyPatterns != ''){
+		var patternArray = anomalyPatterns.split(',');
+		patternArray.forEach(pattern => {
+			var columnSize = 200;
 
-	abnlDetectGrid.colAdd('pi_amount.pi_LAOP', '<s:message code="bodyview.laop"/>', 260, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_AOH', '<s:message code="bodyview.aoh"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_FCA', '<s:message code="bodyview.fca"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_ID', '<s:message code="bodyview.id"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_RS', '<s:message code="bodyview.rs"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_EC', '<s:message code="bodyview.ec"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_EF', '<s:message code="bodyview.ef"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_LTO', '<s:message code="bodyview.lto"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_LAO', '<s:message code="bodyview.lao"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-	abnlDetectGrid.colAdd('pi_amount.pi_LF', '<s:message code="bodyview.lf"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value != undefined) return value.comma();
-		else return '';
-	});
-
+			abnlDetectGrid.colAdd('pi_amount.pi_' + pattern, patternNameMap[pattern], columnSize, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+				if (value != undefined) return value.comma();
+				else return '0';
+			});
+		});
+	}
 	abnlDetectGrid.loadExportMenu('<s:message code="DATA_STAT.STAT_ANOMALY_DETECTION"/>');
 	abnlDetectGrid.loadHeader(false);
 	abnlDetectGrid.initData('<s:message code="common.msg.search.click"/>');
@@ -635,6 +622,12 @@
 			xAxis_str: xAxis_str,
 			success: function (data, total) {
 				abnlDetectGrid.loadHeader(false);
+				if(data == null){
+					$('#chartArea1').html('<div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"><img src="<c:url value="/img/icon/img_nodata.png"/>" alt="No Data" width="100px;" height="100px" className="xcn_nodata"/></div>');
+					$('#space').height('7px');
+					searchFlag = false;
+					return;
+				}
 				abnlDetectGrid.setData(data.pivotData);
 				$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:' + abnlDetectGrid.data.length);
 				if (abnlDetectGrid.loadingPage == 0) abnlDetectGrid.Select(-1, -1);

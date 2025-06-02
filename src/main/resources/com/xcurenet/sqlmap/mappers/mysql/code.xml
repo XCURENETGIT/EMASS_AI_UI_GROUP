@@ -646,20 +646,20 @@
 
 	<!-- 패턴 -->
 	<select id="getCodePatternList" resultType="codeVO" parameterType="codeVO">
-		SELECT  code, codeName
+		SELECT  CODE AS code, NAME AS codeName, ENABLE as enable
 		FROM	(
-		SELECT  A.CODE AS code, A.NAME AS codeName
+		SELECT  A.CODE, A.NAME, A.ENABLE
 		FROM	UI_REGEXP A, UI_ADMIN_REGEXP B
 		WHERE	A.CODE 	= B.CODE
 		AND		B.ADMIN_ID 	= #{adminId}
 		UNION
-		SELECT  CODE, NAME
+		SELECT  CODE, NAME, ENABLE
 		FROM	UI_REGEXP
 		WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_REGEXP WHERE ADMIN_ID = #{adminId} )
 		) AS RS
-		WHERE	1=1
+		WHERE	ENABLE = 'Y'
 		<if test='searchStr!=null and searchStr!=""'>
-			AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+			AND		( CODE LIKE CONCAT('%', #{searchStr}, '%') OR NAME LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
 		ORDER	BY codeName
 	</select>
@@ -667,8 +667,9 @@
 	<select id="getCodePatternListAll" resultType="codeVO" parameterType="codeVO">
 		SELECT  CODE AS code, NAME AS codeName
 		FROM	UI_REGEXP
+		WHERE ENABLE = 'Y'
 		<if test='searchStr!=null and searchStr!=""'>
-			WHERE	( CODE LIKE CONCAT('%', #{searchStr}, '%') OR NAME LIKE CONCAT('%', #{searchStr}, '%') )
+			AND	( CODE LIKE CONCAT('%', #{searchStr}, '%') OR NAME LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
 		ORDER	BY codeName
 	</select>

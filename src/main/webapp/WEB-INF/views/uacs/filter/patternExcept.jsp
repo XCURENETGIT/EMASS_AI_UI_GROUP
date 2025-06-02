@@ -1,12 +1,5 @@
-<%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
-<%@ page import="com.xcurenet.pattern.service.PatternService" %>
-<%@ page import="net.sf.json.JSONArray" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
-<%
-	PatternService patternService = SpringContextUtil.getBean(PatternService.class);
-	String patternCodeStr = patternService.allPatternCodeStr(); //메뉴리스트 JSON 데이터로 받아옴
-%>
 
 <style type="text/css">
 	.radio-inline {
@@ -38,7 +31,6 @@
 	var pmenu_id = 'POLICY_SETUP';
 	var menu_id = 'POLICY_PATTERN';
 	var codeList=[];
-	var patternMap = <%=patternCodeStr%>
 
 	$(document).ready(function () {
 		getCodeList("regexp");
@@ -335,7 +327,21 @@
 		return str;
 	}
 
-
+	var patternNameMap = {
+		SN : '<s:message code="bodyview.sn"/>',
+		CN : '<s:message code="bodyview.cn"/>',
+		DN : '<s:message code="bodyview.dn"/>',
+		FN : '<s:message code="bodyview.fn"/>',
+		PN : '<s:message code="bodyview.pn"/>',
+		MN : '<s:message code="bodyview.mn"/>',
+		AN : '<s:message code="bodyview.an"/>',
+		CRN : '<s:message code="bodyview.crn"/>',
+		SSN : '<s:message code="bodyview.ssn"/>',
+		IMEI : '<s:message code="bodyview.imei"/>',
+		BRN : '<s:message code="bodyview.brn"/>',
+		CPN : '<s:message code="bodyview.cpn"/>',
+		MCN : '<s:message code="bodyview.mcn"/>',
+	}
 	/**
 	 * 패턴명 찾기
 	 * @param privateType
@@ -343,12 +349,9 @@
 	 */
 	function getName(privateType){
 		var result = "(" + privateType + ")";
-		$.each(patternMap,function (i,el){
-			if(el.code===privateType) {
-				result = el.name + result;
-				return;
-			}
-		});
+		if(patternNameMap[privateType] !== undefined){
+			return patternNameMap[privateType] + result;
+		}
 		return result;
 	}
 
