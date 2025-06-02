@@ -1505,7 +1505,7 @@ public class SolrCreateQuery {
 	String searchRegex = "[?(){}\\[\\]~!^:=/&:><]";
 	Pattern specialCharPattern = Pattern.compile(searchRegex);
 	private String getSearchQuery(String query) {
-		if (query.startsWith("|")) query = query.substring(1);
+		if (query.startsWith("|") || query.startsWith("+")) query = query.substring(1);
 		query = getTempQuery(query);
 		StringBuilder querySb = new StringBuilder();
 		List<String> queryList = preProcessQuery(query);
