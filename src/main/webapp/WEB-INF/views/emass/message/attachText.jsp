@@ -2,10 +2,11 @@
 <%@page import="net.sf.json.JSONObject" %>
 <%@page import="com.xcurenet.emass.message.service.EmsKeywordVO" %>
 <%@page import="com.xcurenet.emass.message.service.EmsMessageService" %>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@page import="org.springframework.web.context.WebApplicationContext" %>
+<%@page import="com.xcurenet.emass.message.service.EmsMessageVO" %>
 <%@page import="com.xcurenet.emass.message.service.EmsAttachTextVO" %>
 <%@page import="com.xcurenet.config.service.ConfigAdminService" %>
+<%@page import="com.xcurenet.emass.message.service.EmsPiVO" %>
+<%@page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@page import="com.xcurenet.config.service.ConfigAdminVO" %>
 <%@page import="java.util.ArrayList" %>
 <%@page import="java.util.List" %>
@@ -37,6 +38,15 @@
 			else if (Common.isEquals(type, "F")) fileNames.add(emsKeywordVO.getKeyword());
 		}
 	}
+
+	EmsMessageVO emass = emassService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+	ObjectMapper mapper = new ObjectMapper();
+	List<EmsPiVO> patterns = emass.getPatterns();
+	for (int i = 0; i < patterns.size(); i++) {
+
+		patterns.get(i).setKwds(Common.escapeJson(patterns.get(i).getKwds()));
+	}
+	String patternsStr = mapper.writeValueAsString(patterns);
 
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
 	String adminId = Common.getAdminId(session);
@@ -114,15 +124,8 @@
         let piHighlightList = [
 	        'SN', 'CN', 'DN', 'FN','PN','MN','AN','CRN','SSN','IMEI','BRN','CPN','MCN'
         ];
-		var ptnName = opener.getPatnName();
-		var patternKyword = opener.getPattern();
+		var patterns = JSON.parse('<%=patternsStr%>');
         $(document).ready(function () {
-            
-            if(ptnName != '') {
-                $('#patternDiv').css("display","");
-                popSetPatternDiv(ptnName)
-            }else {$('#patternDiv').css("display","none");}
-
             
             /* var totalPageA = '';
 			for (var i= 0; i < totalPage;  i++) {
@@ -148,13 +151,53 @@
                 $('#attachText').css('font-size', fontSize);
             });
 
+	        PatternCheck;
+
             $(document).on('click', '.pageNum', function () {
                 var t = Number($(this).text());
                 pageLoad(t);
             });
         });
 
+        function PatternCheck(){
+	        if (patterns == null || patterns.length == 0) {
+		        $('#patternDiv').css("display","none");
+		        return;
+	        }
+
+	        var patnName = "";
+	        for (let i = 0; i<patterns.length; i++){
+		        var name = $('#attachName').text();
+		        if(patterns[i].attachName != name){
+			        continue;
+		        }
+		        if (patterns[i].piid == "PN") $('#pnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "FN") $('#fnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "DN") $('#dnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "SN") $('#snCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "CN") $('#cnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "MN") $('#mnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "AN") $('#anCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "CRN") $('#crnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "SSN") $('#ssnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "IMEI") $('#imeiCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "BRN") $('#brnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "CPN") $('#cpnCnt').html(patterns[i].total.comma());
+		        if (patterns[i].piid == "MCN") $('#mcnCnt').html(patterns[i].total.comma());
+
+
+		        if(patnName.length > 0){
+			        patnName += ', ';
+		        }
+		        patnName += patterns[i].piName;
+	        }
+
+	        popSetPatternDiv(patnName);
+
+        }
+
         function findKeywordPages() {
+
             var sk = searchkey.replaceAll('\\(', '').replaceAll('\\)', '');
             ui.get({
                 url: 'findKeywordPages.xcn',
@@ -212,6 +255,7 @@
                 limit: limit,
                 success: function (data, total) {
                     $('#attachText').text(data);
+	                PatternCheck();
                     attachHighLight();
 					PatternHighlight();
                 },
@@ -241,12 +285,12 @@
         }
 
 		function PatternHighlight(){
-			if (patternKyword.length == 0) return;
+			if (patterns.length == 0) return;
 			let piResultList = [];
 
-			for(let i = 0; i< patternKyword.length; i++){
-				if (piHighlightList.includes(patternKyword[i].piid)){
-					setAttachPatternHighLight(patternKyword[i].kwds, 'K');
+			for(let i = 0; i< patterns.length; i++){
+				if (piHighlightList.includes(patterns[i].piid)){
+					setAttachPatternHighLight(patterns[i].kwds, 'K');
 				}
 			}
 		}
