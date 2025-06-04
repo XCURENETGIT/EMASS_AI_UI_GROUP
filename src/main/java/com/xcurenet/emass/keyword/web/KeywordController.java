@@ -45,7 +45,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.SETTING)
 @AuditMenu(Menu.KEYWORD_MGMT)
 @Slf4j
 public class KeywordController {

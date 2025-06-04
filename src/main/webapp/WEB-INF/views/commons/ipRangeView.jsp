@@ -62,7 +62,7 @@ function getData(lastRow) {
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>
+					<s:message code="SETTING.BUSI_IPRANGE_VIEW"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>
@@ -86,7 +86,7 @@ function getData(lastRow) {
 			if (grid.Col == grid.ColIndex('busiNm')) {
 			}
 		};
-		grid.loadExportMenu('<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>');
+		grid.loadExportMenu('<s:message code="SETTING.BUSI_IPRANGE_VIEW"/>');
 		grid.loadPageSize();
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');

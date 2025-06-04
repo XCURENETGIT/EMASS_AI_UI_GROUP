@@ -1149,7 +1149,7 @@
         return '<s:message code="mail.view.list"/>';
     });
 
-    grid.loadExportMenu('<s:message code="DATA_MONITOR.RESERVATION_ALARM"/>');
+    grid.loadExportMenu('<s:message code="SETTING.RESERVATION_ALARM"/>');
     grid.loadHeader(true);
     grid.initData('<s:message code="common.msg.search.click"/>');
     grid.onClick = function () {
