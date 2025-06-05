@@ -763,7 +763,6 @@
 			<span class="rightbtn"><button class="pop_btn02 applyBtn" data-toggle="collapse" data-target="#topic-reply" accesskey="A"> &#10004;<s:message code="common.msg.apply"/></button></span>
 		</div>
 		<div class="row bordd p12 clear mat8">
-			<span class="infotxt"><s:message code="setup.message.sms.server"/></span>
 			<ul>
 				<li>
 					<div class="checkbox mat16">

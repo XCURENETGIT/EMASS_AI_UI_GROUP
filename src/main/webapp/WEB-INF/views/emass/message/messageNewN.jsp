@@ -740,10 +740,7 @@
                 return split(term).pop();
             }
 
-            $(document).on('click','#exportMsg',function(){
-                if( $('#feedbackBtn').css('display') != 'none' ) $('.dropdown-menu.dropdown-menu-left').css('margin-left','90px');
-                else $('.dropdown-menu.dropdown-menu-left').css('margin-left','0px');
-            });
+
 
             ui.onBody('msgBody', 0, 0);
             con.init();
@@ -3255,7 +3252,7 @@
                     </div>
                     <div id="section_cen" style=" width:100px; float:right; z-index:999;" class="ui-layout-center">
                         <div class="viewSetup" style="position: absolute;top:7px;right:10px;z-index: 9;">
-                            <div style="display: inline-block; padding-left:10px; vertical-align: bottom;">
+                            <div style="display: inline-block; padding-left:10px; vertical-align: top;">
 
                                 <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
                                 <div  style="display: inline-block; padding-left:10px;margin-right:10px;  vertical-align: bottom;">
@@ -3302,15 +3299,17 @@
                                 </ul>
                             </div>
                                 <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px;" id="saveMsgData" class="btn05"><s:message code="filterInfo.setMsgFolder1"/></a>
-                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
-                                <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackcommon" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInNotOpen" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInOpen" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
-                                </ul>
+                                <div style="position: relative; display: inline-block;">
+                                    <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
+                                    <ul  class="dropdown-menu dropdown-menu-left" role="menu" id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackcommon" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInNotOpen" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInOpen" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
+                                    </ul>
+                                </div>
                                 <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                             </div>
                             <a href="javascript:;" class="btn05" style="color:#383838;font-size: 13px; margin-left:-4px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
