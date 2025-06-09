@@ -14,6 +14,7 @@
 	menuArr.push({id: 'SYSTEM', name: '<s:message code="SYSTEM"/>', p_id: null});
     menuArr.push({id: 'DASHBOARD', name: '<s:message code="DASHBOARD.DASHBOARD_DEFAULT"/>', p_id: null}); //대시보드
 	menuArr.push({id: 'DATA_MONITOR', name: '<s:message code="DATA_MONITOR"/>', p_id: null}); //조회
+	menuArr.push({id: 'DATA_REPORT', name: '<s:message code="DATA_REPORT"/>', p_id: null}); //보고서
 	menuArr.push({id: 'DATA_ANALYSIS', name: '<s:message code="DATA_ANALYSIS"/>', p_id: null}); //분석
 	menuArr.push({id: 'DATA_STAT', name: '<s:message code="DATA_STAT"/>', p_id: null}); //통계
 	menuArr.push({id: 'POLICY_SETUP', name: '<s:message code="POLICY_SETUP"/>', p_id: null}); //정책
@@ -53,7 +54,7 @@
 	    name: '<s:message code="SETTING.INTEREST_USER"/>',
 	    p_id: 'SETTING'
 	}); //관심 사용자 관리
-	menuArr.push({id: 'STAT_REPORT', name: '<s:message code="DATA_STAT.REPORT_CONTENT"/>', p_id: 'DATA_STAT'}); //리포트
+	menuArr.push({id: 'STAT_REPORT', name: '<s:message code="DATA_REPORT.REPORT_CONTENT"/>', p_id: 'DATA_REPORT'}); //리포트
 	menuArr.push({
 	    id: 'RESERVATION_ALARM',
 	    name: '<s:message code="SETTING.RESERVATION_ALARM"/>',
