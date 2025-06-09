@@ -1592,16 +1592,16 @@
                         </li>
 
                         <li>
-                            <label for="busiSelect" class=" col-xs-3"><s:message
-                                    code="condition.organization"/></label>
+                            <label for="busiSelect" class=" col-xs-3"><s:message code="condition.organization"/></label>
                             <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
                                 <select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
                                         data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+                            </div>
                                 <label class="checkbox-inline c-checkbox exceptOption2">
                                     <input type="checkbox" name="busi_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
-                                <p>
+
                                 <div class="btn-group" data-toggle="buttons" style="margin-top: 5px;">
                                     <button type="button" class="btn01" id="dept" style="border-radius: 0;">
                                         <img src="../img/subBtn_plus.png" alt="부서 추가"><s:message
@@ -1616,8 +1616,7 @@
                                     <input type="checkbox" name="dept_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
-                                </p>
-                            </div>
+
                         </li>
                         <li>
                             <label for="url" class=" col-xs-3">URL</label>
