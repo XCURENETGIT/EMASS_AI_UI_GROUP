@@ -192,7 +192,7 @@
 		<br>
 		<ul class="topMenuList"></ul>
 	</div>
-	<div class="setting settings">
+	<div class="setting">
 		<a href="javascript:;" id="systemSettingsMenu">
 			<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
 				<img src="<c:url value="/img/icon_gnb_setting.png"/>" alt="<s:message code="SETTINGS.MENU"/>">

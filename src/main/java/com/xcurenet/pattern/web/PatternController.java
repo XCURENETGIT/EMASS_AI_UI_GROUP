@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 
 @Log4j2
 @Controller
-@AuditParentMenu(ParentMenu.SETTING)
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.PATTERN_INFO)
 public class PatternController {
 	@Resource(name = "patternService")

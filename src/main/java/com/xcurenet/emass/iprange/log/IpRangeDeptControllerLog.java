@@ -31,7 +31,7 @@ public class IpRangeDeptControllerLog {
 		if(Common.isNotEmpty(searchStr)) information += "┌"+Prop.propFormat("condition.search_str")+": " + searchStr;
 		auditVo.setInformation(information);
 		if(Common.isNotEmpty(adminId)){
-			auditVo.setPMenuId(ParentMenu.SETTING.getParentMenuId());
+			auditVo.setPMenuId(ParentMenu.DATA_MONITOR.getParentMenuId());
 			auditVo.setMenuId(Menu.DEPT_IPRANGE_VIEW.getMenuId());
 		}
 		auditService.insertAudit(request, auditVo);

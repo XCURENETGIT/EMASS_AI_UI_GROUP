@@ -420,7 +420,7 @@
 	<div class="modal-content">
 		<form method="post" id="keywordPopForm">
 			<div class="modalHead">
-				<h2><s:message code="SETTING.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h2>
+				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
@@ -476,7 +476,7 @@
 	<div class="modal-content">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
-				<h2><s:message code="SETTING.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
+				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
@@ -598,7 +598,7 @@
 			return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; height:20px; vertical-align: 1px; font-weight:bold;'/>";
 		});
 	}
-	gridGroup.loadExportMenu('<s:message code="SETTING.KEYWORD_MGMT"/>');
+	gridGroup.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
 	gridGroup.loadHeader(false);
 	<%--//gridGroup.initData('<s:message code="common.msg.search.click"/>');--%>
 
@@ -642,7 +642,7 @@
 			$('#keywordPop').modal('show');
 		}
 	};
-	gridKeyword.loadExportMenu('<s:message code="SETTING.KEYWORD_MGMT"/>');
+	gridKeyword.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
 	gridKeyword.loadHeader(false);
 	gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
 </script>

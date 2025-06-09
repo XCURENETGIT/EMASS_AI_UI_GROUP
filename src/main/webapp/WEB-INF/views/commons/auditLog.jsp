@@ -13,14 +13,14 @@
 	var menuArr = [];
 	menuArr.push({id: 'SYSTEM', name: '<s:message code="SYSTEM"/>', p_id: null});
     menuArr.push({id: 'DASHBOARD', name: '<s:message code="DASHBOARD.DASHBOARD_DEFAULT"/>', p_id: null}); //대시보드
-	menuArr.push({id: 'DATA_MONITOR', name: '<s:message code="DATA_MONITOR"/>', p_id: null}); //조회
-	menuArr.push({id: 'DATA_ANALYSIS', name: '<s:message code="DATA_ANALYSIS"/>', p_id: null}); //분석
+	menuArr.push({id: 'DATA_MONITOR', name: '<s:message code="DATA_MONITOR"/>', p_id: null}); //모니터링
+	menuArr.push({id: 'DATA_REPORT', name: '<s:message code="DATA_REPORT"/>', p_id: null}); //보고서
 	menuArr.push({id: 'DATA_STAT', name: '<s:message code="DATA_STAT"/>', p_id: null}); //통계
+	menuArr.push({id: 'DATA_ANALYSIS', name: '<s:message code="DATA_ANALYSIS"/>', p_id: null}); //분석
 	menuArr.push({id: 'POLICY_SETUP', name: '<s:message code="POLICY_SETUP"/>', p_id: null}); //정책
 	menuArr.push({id: 'OPERATION_MGMT', name: '<s:message code="OPERATION_MGMT"/>', p_id: null}); //운용 관리
 	menuArr.push({id: 'CONNECTION', name: '<s:message code="SYSTEM.CONNECTION"/>', p_id: 'SYSTEM'});
 	menuArr.push({id: 'DASHBOARD', name: '<s:message code="DATA_MONITOR.DASHBOARD"/>', p_id: 'DASHBOARD'});
-	menuArr.push({id: 'SETTING', name: '<s:message code="SETTING"/>', p_id: null});
 	menuArr.push({
 	    id: 'DASHBOARD_MENU',
 	    name: '<s:message code="DATA_MONITOR.DASHBOARD_MENU"/>',
@@ -50,36 +50,36 @@
 	}); //파일전송 모아보기
 	menuArr.push({
 	    id: 'INTEREST_USER',
-	    name: '<s:message code="SETTING.INTEREST_USER"/>',
-	    p_id: 'SETTING'
+	    name: '<s:message code="DATA_MONITOR.INTEREST_USER"/>',
+	    p_id: 'DATA_MONITOR'
 	}); //관심 사용자 관리
-	menuArr.push({id: 'STAT_REPORT', name: '<s:message code="DATA_STAT.REPORT_CONTENT"/>', p_id: 'DATA_STAT'}); //리포트
+	menuArr.push({id: 'STAT_REPORT', name: '<s:message code="DATA_MONITOR.STAT_REPORT"/>', p_id: 'DATA_REPORT'}); //리포트
 	menuArr.push({
 	    id: 'RESERVATION_ALARM',
-	    name: '<s:message code="SETTING.RESERVATION_ALARM"/>',
-	    p_id: 'SETTING'
+	    name: '<s:message code="DATA_MONITOR.RESERVATION_ALARM"/>',
+	    p_id: 'DATA_MONITOR'
 	}); //예약 알림
-	menuArr.push({id: 'KEYWORD_MGMT', name: '<s:message code="SETTING.KEYWORD_MGMT"/>', p_id: 'SETTING'}); //예약어 관리
-	menuArr.push({id: 'CONSENT_MGMT', name: '<s:message code="SETTING.CONSENT_MGMT"/>', p_id: 'SETTING'}); //동의서 관리
+	menuArr.push({id: 'KEYWORD_MGMT', name: '<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>', p_id: 'DATA_MONITOR'}); //예약어 관리
+	menuArr.push({id: 'CONSENT_MGMT', name: '<s:message code="DATA_MONITOR.CONSENT_MGMT"/>', p_id: 'DATA_MONITOR'}); //동의서 관리
 	menuArr.push({
 	    id: 'BUSI_IPRANGE_VIEW',
-	    name: '<s:message code="SETTING.BUSI_IPRANGE_VIEW"/>',
-	    p_id: 'SETTING'
+	    name: '<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>',
+	    p_id: 'DATA_MONITOR'
 	}); //사업장 내부 IP 확인
 	menuArr.push({
 	    id: 'DEPT_IPRANGE_VIEW',
-	    name: '<s:message code="SETTING.DEPT_IPRANGE_VIEW"/>',
-	    p_id: 'SETTING'
+	    name: '<s:message code="DATA_MONITOR.DEPT_IPRANGE_VIEW"/>',
+	    p_id: 'DATA_MONITOR'
 	}); //부서 내부 IP 확인
 	menuArr.push({
 	    id: 'RELATION_KEYWORD',
-	    name: '<s:message code="SETTING.RELATION_KEYWORD"/>',
-	    p_id: 'SETTING'
+	    name: '<s:message code="DATA_MONITOR.RELATION_KEYWORD"/>',
+	    p_id: 'DATA_MONITOR'
 	}); //연관 검색어 관리
 	menuArr.push({
 	    id: 'PATTERN_INFO',
-	    name: '<s:message code="SETTING.PATTERN_INFO"/>',
-	    p_id: 'SETTING'
+	    name: '<s:message code="DATA_MONITOR.PATTERN_INFO"/>',
+	    p_id: 'DATA_MONITOR'
 	}); //패턴 관리
 	menuArr.push({
 	    id: 'ANALYSIS_RELATION',

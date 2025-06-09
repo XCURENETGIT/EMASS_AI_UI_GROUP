@@ -33,7 +33,7 @@ import net.sf.json.JSONObject;
 
 @Slf4j
 @Controller
-@AuditParentMenu(ParentMenu.SETTING)
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.KEYWORD_MGMT)
 public class KeywordGroupController {
 

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <head>
-	<title>EMASS AI - <s:message code="SETTING.CONSENT_MGMT"/></title>
+	<title>EMASS AI - <s:message code="DATA_MONITOR.CONSENT_MGMT"/></title>
 	<style type="text/css">
 		.ellipsis {
 			text-overflow: ellipsis;
@@ -605,7 +605,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					<s:message code="SETTING.CONSENT_MGMT"/> <s:message code="selectCodeAll.list"/>
+					<s:message code="DATA_MONITOR.CONSENT_MGMT"/> <s:message code="selectCodeAll.list"/>
 					<span id="consentCount"></span>
 				</button>
 			</div>
@@ -744,7 +744,7 @@
             });
         }
     };
-    grid.loadExportMenu('<s:message code="SETTING.CONSENT_MGMT"/>');
+    grid.loadExportMenu('<s:message code="DATA_MONITOR.CONSENT_MGMT"/>');
     grid.loadPageSize();
     grid.loadHeader(false);
     grid.initData('<s:message code="common.msg.search.click"/>');

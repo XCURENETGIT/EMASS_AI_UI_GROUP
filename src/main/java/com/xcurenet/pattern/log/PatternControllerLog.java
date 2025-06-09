@@ -34,7 +34,7 @@ public class PatternControllerLog {
 		String searchStr = Common.nvl(request.getParameter(""));
 		String information = "";
 
-		information += "[" + Prop.propFormat("SETTING.PATTERN_INFO") + " " + Prop.propFormat("common.msg.search") + "]";
+		information += "[" + Prop.propFormat("DATA_MONITOR.PATTERN_INFO") + " " + Prop.propFormat("common.msg.search") + "]";
 		if(Common.isNotEmpty(searchStr)) information += "┌"+Prop.propFormat("condition.search_str")+": " + searchStr;
 		auditVo.setInformation(information);
 		auditService.insertAudit(request, auditVo);

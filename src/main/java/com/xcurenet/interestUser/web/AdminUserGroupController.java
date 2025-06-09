@@ -48,7 +48,7 @@ import net.sf.json.JSONObject;
  */
 @Slf4j
 @Controller
-@AuditParentMenu(ParentMenu.SETTING)
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.INTEREST_USER)
 public class AdminUserGroupController {
 

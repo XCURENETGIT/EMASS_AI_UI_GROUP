@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@AuditParentMenu(ParentMenu.SETTING)
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.RELATION_KEYWORD)
 @Slf4j
 public class SearchWordController {

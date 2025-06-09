@@ -194,7 +194,7 @@ public class AlarmJob {
 					log.warn("adminid : " + adminId + "\t메시지 목록 조회 완료 0건 검출");
 				} else {
 					long totalCnt = solrVo.getNumFound();
-					String form_subject = Common.nvl(setSubjectData(subject, alarm_name, totalCnt, startDt, endDt), Prop.propFormat("SETTING.RESERVATION_ALARM")+"Mail. (" + alarm_name + ")"); // 서식 제목
+					String form_subject = Common.nvl(setSubjectData(subject, alarm_name, totalCnt, startDt, endDt), Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM")+"Mail. (" + alarm_name + ")"); // 서식 제목
 
 					log.warn("userid : " + adminId + "\t알림 쿼리 실행 결과 : " + totalCnt);
 
@@ -302,7 +302,7 @@ public class AlarmJob {
 			log.info("[Alarm mail] CsvWriter " + file.getName() + "파일 생성 완료");
 		} else {
 			file = new FileRenamePolicy().rename(new File(Common.TMP_PATH + dt + "/export_data_" + Common.getCurrentTime("yyyyMMdd_HHmmss") + ".xlsx"));
-			XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("SETTING.RESERVATION_ALARM", locale)+" Mail", header, data, new FileOutputStream(file));
+			XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" Mail", header, data, new FileOutputStream(file));
 			xlsx.execute();
 			log.info("[Alarm mail] XLSXWriter " + file.getName() + "파일 생성 완료");
 		}
@@ -455,7 +455,7 @@ public class AlarmJob {
 		_sb.append(" <table style='width: 800px;' border='0' cellspacing='0' cellpadding='0'> ");
 		_sb.append("	<tr> ");
 		_sb.append("		<td> ");
-		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS LTH "+Prop.propFormat("SETTING.RESERVATION_ALARM", locale)+" </span> ");
+		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS LTH "+Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" </span> ");
 		_sb.append("		</td> ");
 		_sb.append("	</tr> ");
 		_sb.append("	<tr> ");
@@ -740,7 +740,7 @@ public class AlarmJob {
 		_sb.append("	<tr> ");
 		_sb.append("	<tr> ");
 		_sb.append("		<td> ");
-		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS LTH "+Prop.propFormat("SETTING.RESERVATION_ALARM", locale)+" </span> ");
+		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS LTH "+Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" </span> ");
 		_sb.append("		</td> ");
 		_sb.append("	</tr> ");
 		_sb.append("	<tr> ");

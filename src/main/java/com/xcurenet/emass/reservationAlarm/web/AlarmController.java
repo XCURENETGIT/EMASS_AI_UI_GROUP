@@ -34,7 +34,7 @@ import net.sf.json.JSONObject;
  * Handles requests for the application home page.
  */
 @Controller
-@AuditParentMenu(ParentMenu.SETTING)
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.RESERVATION_ALARM)
 public class AlarmController {
 

@@ -225,12 +225,12 @@
 	<div class="modal-content">
 		<form method="post" id="searchWordPopForm">
 			<div class="modalHead">
-				<h2><s:message code="SETTING.RELATION_KEYWORD"/> - <s:message code="common.msg.add"/></h2>
+				<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="common.msg.add"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3><s:message code="SETTING.RELATION_KEYWORD"/> <s:message code="common.msg.add"/></h3>
+					<h3><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> <s:message code="common.msg.add"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						<s:message code="common.required.msg"/>
@@ -283,12 +283,12 @@
 	<div class="modal-content">
 		<form method="post" id="searchWordUpdatePopForm">
 			<div class="modalHead">
-				<h2><s:message code="SETTING.RELATION_KEYWORD"/> - <s:message code="common.msg.modify"/></h2>
+				<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="common.msg.modify"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3><s:message code="SETTING.RELATION_KEYWORD"/> <s:message code="common.msg.modify"/></h3>
+					<h3><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> <s:message code="common.msg.modify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						<s:message code="common.required.msg"/>
@@ -321,7 +321,7 @@
 <div class="modal" id="searchWordUpdatPop" aria-labelledby="searchWordUpdatPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
-			<h2><s:message code="SETTING.RELATION_KEYWORD"/> - <s:message code="common.msg.delete"/></h2>
+			<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="common.msg.delete"/></h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
@@ -369,7 +369,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					<s:message code="SETTING.RELATION_KEYWORD"/> <s:message code="selectCodeAll.list"/>
+					<s:message code="DATA_MONITOR.RELATION_KEYWORD"/> <s:message code="selectCodeAll.list"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>

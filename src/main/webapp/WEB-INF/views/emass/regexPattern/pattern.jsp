@@ -160,12 +160,12 @@
 	<div class="modal-content">
 		<form method="post" id="PatternPopForm">
 			<div class="modalHead">
-				<h2><s:message code="SETTING.PATTERN_INFO"/> - <s:message code="common.msg.addmodify"/></h2>
+				<h2><s:message code="DATA_MONITOR.PATTERN_INFO"/> - <s:message code="common.msg.addmodify"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3><s:message code="SETTING.PATTERN_INFO"/> - <s:message code="common.msg.addmodify"/></h3>
+					<h3><s:message code="DATA_MONITOR.PATTERN_INFO"/> - <s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						<s:message code="common.required.msg"/>
@@ -271,7 +271,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					<s:message code="SETTING.PATTERN_INFO"/>
+					<s:message code="DATA_MONITOR.PATTERN_INFO"/>
 					<span id="regexPatternCount"></span>
 				</button>
 			</div>
@@ -331,7 +331,7 @@
 	        $('#PatternPop').modal('show');
         }
     }
-    grid.loadExportMenu('<s:message code="SETTING.PATTERN_INFO"/>');
+    grid.loadExportMenu('<s:message code="DATA_MONITOR.PATTERN_INFO"/>');
     grid.loadHeader(false);
 
 
