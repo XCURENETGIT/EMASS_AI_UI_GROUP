@@ -50,6 +50,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import static com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl.JOIN_READ;
+
 @Log4j2
 @Controller
 public class AlarmJob {
@@ -186,8 +188,9 @@ public class AlarmJob {
 					sq.setRows(Common.nvz(alarm.getExcelMaxCnt(), EXCEL_MAX_ROW_CNT));
 				}
 
-				String sqToString = sq.getQuery();
+				if (Common.isEquals(readYn,"Y")) sq.setQuery(sq.getQuery() + String.format(JOIN_READ, adminId));
 
+				String sqToString = sq.getQuery();
 
 				SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId,readYn, null);
 				if (solrVo.getNumFound() < 1) {
