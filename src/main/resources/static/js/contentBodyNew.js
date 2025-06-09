@@ -2329,10 +2329,12 @@ function setBodyHighLight(defaultText, type) {
 
 function setPatternHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
+    var subject_obj = $("#subject");
         var  splitText =  defaultText.split(',');
         for (var j = 0; j < splitText.length; j++) {
             if (splitText[j] == '' ) continue;
             $(body_obj).highlight(splitText[j], type);
+            $(subject_obj).highlight(splitText[j], type);
          }
 }
 
