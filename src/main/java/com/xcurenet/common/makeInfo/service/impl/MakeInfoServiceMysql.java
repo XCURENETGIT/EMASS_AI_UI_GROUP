@@ -532,6 +532,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 					infoPrivateVO.setVERSION(obj.getInt("VERSION"));
 					infoPrivateVO.setCODE(obj.getString("CODE"));
 					infoPrivateVO.setREGEX(obj.optString("REGEX"));
+					infoPrivateVO.setENABLE(obj.optString("ENABLE"));
 					mongoUtil.insert(infoPrivateVO);
 				} else if (Common.isEquals(collectionName, "INFO_ACCOUNT")) {
 					InfoAccountVO infoAccountVO = new InfoAccountVO();

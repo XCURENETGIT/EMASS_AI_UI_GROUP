@@ -19,4 +19,8 @@ public class InfoPrivateVO {
 
 	@Field("REGEX")
 	private String REGEX;
+
+	@Field("ENABLE")
+	private String ENABLE;
+
 }

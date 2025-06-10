@@ -81,7 +81,7 @@
 
 	<!-- 개인정보? -->
 	<select id="getInfoRegExp" resultType="hashmap" parameterType="hashmap">
-		SELECT CODE AS CODE, NAME AS NAME, REGEX AS REGEX
+		SELECT CODE AS CODE, NAME AS NAME, REGEX AS REGEX,ENABLE as ENABLE
 		FROM UI_REGEXP
 		ORDER BY CODE
 		LIMIT	${offset}, ${pageSize}
