@@ -639,8 +639,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private List<AbstractAggregationBuilder<?>> getAbnlAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> pivotAggregations = new ArrayList<>();
 
-
-		String[] abnlList = Common.nvl(sq.get("group.field")).split(",");
+		String[] abnlList = sq.getParams("group.field");
 		String srcip =  Common.nvl(sq.get("facet.field"));
 		String limit =  Common.nvl(sq.get("aggregation.limit"));
 		AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(srcip.concat(Common.ANALYSIS_PIVOT_AGGS_SUFFIX))
