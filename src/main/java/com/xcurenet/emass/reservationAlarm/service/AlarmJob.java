@@ -51,6 +51,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 import static com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl.JOIN_READ;
+import static com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl.JOIN_UNREAD;
 
 @Log4j2
 @Controller
@@ -189,6 +190,7 @@ public class AlarmJob {
 				}
 
 				if (Common.isEquals(readYn,"Y")) sq.setQuery(sq.getQuery() + String.format(JOIN_READ, adminId));
+				else if (Common.isEquals(readYn, "N"))sq.setQuery(sq.getQuery() + String.format(JOIN_UNREAD, adminId));
 
 				String sqToString = sq.getQuery();
 
