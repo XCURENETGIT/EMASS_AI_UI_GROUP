@@ -418,7 +418,7 @@
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_ADMINREAD"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_ADMINREAD"/>');
 /*    grid1.loadPageSize();
     document.addEventListener("DOMContentLoaded", function() {
         var linkElements = document.querySelectorAll('a[data="5000"]');
