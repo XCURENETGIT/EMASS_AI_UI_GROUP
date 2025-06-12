@@ -571,7 +571,7 @@
         var dat = grid1.getRowData( grid1.Row );
         chartDat[tabID] = dat;
         printChart(dat);
-        gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');
+        gridObj.loadExportMenu('<s:message code="DATA_STAT.STAT_SENDER"/> ( ' + displayName + ' ) - ' + colKeyNm);
 /*        gridObj.loadPageSize();
         document.addEventListener("DOMContentLoaded", function() {
             var linkElements = document.querySelectorAll('a[data="5000"]');

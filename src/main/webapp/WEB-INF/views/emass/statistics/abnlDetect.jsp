@@ -550,7 +550,7 @@
 		chartDat[tabID] = dat;
 		printChart(dat);
 		console.log("333");
-		gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');
+		gridObj.loadExportMenu('<s:message code="DATA_STAT.STAT_ANOMALY_DETECTION"/> ( ' + displayName + ' ) - ' + colKeyNm);
 		gridObj.changePageSize = function (cnt) {
 			getDetailData('Y');
 		};
