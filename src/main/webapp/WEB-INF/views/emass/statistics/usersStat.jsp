@@ -462,7 +462,7 @@
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
     grid1.autoNumber();
     grid1.colAdd("rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link');
-    grid1.loadExportMenu('<s:message code="DATA_MONITOR.STAT_USER"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_USER"/>');
     /*grid1.loadPageSize();
     document.addEventListener("DOMContentLoaded", function() {
         var linkElements = document.querySelectorAll('a[data="5000"]');

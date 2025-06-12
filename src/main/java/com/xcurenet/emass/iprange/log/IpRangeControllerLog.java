@@ -38,7 +38,7 @@ public class IpRangeControllerLog {
 		String information = "["+Prop.propFormat("common.msg.search")+"]";
 		if(Common.isNotEmpty(searchStr)) information += "┌"+Prop.propFormat("condition.search_str")+": " + searchStr;
 		auditVo.setInformation(information);
-		auditVo.setPMenuId(ParentMenu.DATA_MONITOR.getParentMenuId());
+		auditVo.setPMenuId(ParentMenu.SETTING.getParentMenuId());
 		auditVo.setMenuId(Menu.BUSI_IPRANGE_VIEW.getMenuId());
 		auditService.insertAudit(request, auditVo);
 	}

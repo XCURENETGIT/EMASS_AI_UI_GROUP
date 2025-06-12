@@ -66,6 +66,7 @@ public class IpRangeController {
 	@RequestMapping(value = "/getIpRangeListByBusicd.xcn")
 	@Description("운용자별 사업장 권한에 따른 IP Range 리스트 조회")
 	@ResponseBody
+	@AuditOperation(Operation.SEARCH)
 	public XcnResponseVO getIpRangeListByBusicd(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
 		String adminId = Common.nvl(request.getParameter("adminId"));

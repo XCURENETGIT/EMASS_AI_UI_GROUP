@@ -599,7 +599,7 @@
 	<div class="modal-content" style="width: 700px;">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
-				<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-<s:message code="keyword.msg.upload"/></h2>
+				<h2><s:message code="SETTING.INTEREST_USER"/>-<s:message code="keyword.msg.upload"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
@@ -649,7 +649,7 @@
 <div class="modal" id="textUploadPop" aria-labelledby="textUploadPop" data-backdrop="static">
 	<div class="modal-content" style="width: 700px; height: 700px;">
 		<div class="modalHead">
-			<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-Text Upload</h2>
+			<h2><s:message code="SETTING.INTEREST_USER"/>-Text Upload</h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
@@ -731,7 +731,7 @@
     gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' />";
     });
-    gridGroup.loadExportMenu('<s:message code="DATA_MONITOR.INTEREST_USER"/>');
+    gridGroup.loadExportMenu('<s:message code="SETTING.INTEREST_USER"/>');
     gridGroup.loadHeader(false);
     gridGroup.initData('<s:message code="common.msg.search.click"/>');
 
@@ -772,7 +772,7 @@
         if (ceo == 'Y') return 'CEO';
         else return '';
     });
-    gridItem.loadExportMenu('<s:message code="DATA_MONITOR.INTEREST_USER"/>');
+    gridItem.loadExportMenu('<s:message code="SETTING.INTEREST_USER"/>');
     gridItem.loadHeader(true);
     gridItem.initData('<s:message code="userGroup.msg.select.group"/>');
 

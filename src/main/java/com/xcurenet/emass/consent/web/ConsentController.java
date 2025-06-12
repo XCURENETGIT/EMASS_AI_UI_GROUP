@@ -42,7 +42,7 @@ import net.sf.json.JSONObject;
 
 @Controller
 @Slf4j
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.SETTING)
 @AuditMenu(Menu.CONSENT_MGMT)
 public class ConsentController {
 
