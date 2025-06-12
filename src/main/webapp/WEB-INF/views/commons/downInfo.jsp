@@ -168,19 +168,21 @@
 				return;
 			}
 			ui.confirmMsg('<s:message code="download.msg.delete.confirm" />','','',function(rs) {
-				ui.get({
-					url			: 'removeDownInfoData.xcn',
-					data 		: JSON.stringify(data),
-					success		: function(data, total) {
-						alert('<s:message code="common.msg.deleted" />');
-					},
-					error		: function(status, message) {
+				if (rs) {
+					ui.get({
+						url			: 'removeDownInfoData.xcn',
+						data 		: JSON.stringify(data),
+						success		: function(data, total) {
+							alert('<s:message code="common.msg.deleted" />');
+						},
+						error		: function(status, message) {
 
-					},
-					complete 	: function() {
-						getData();
-					}
-				})
+						},
+						complete 	: function() {
+							getData();
+						}
+					})
+				}
 			});
 		}
 	</script>
