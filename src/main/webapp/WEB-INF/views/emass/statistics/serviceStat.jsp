@@ -100,7 +100,7 @@
 
 
             $('.optionBtn').removeClass('active');
-            $('#svc1').addClass('active');
+            $('#direction_svc').addClass('active');
             $('#busiSelect').selectpicker('val', '');
         });
 
