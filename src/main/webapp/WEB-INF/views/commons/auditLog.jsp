@@ -102,7 +102,7 @@
 	    name: '<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>',
 	    p_id: 'DATA_ANALYSIS'
 	}); //개인정보 유출관계 분석
-	menuArr.push({id: 'STAT_USER', name: '<s:message code="DATA_ANALYSIS.STAT_USER"/>', p_id: 'DATA_STAT'}); //사용자 통계
+	menuArr.push({id: 'STAT_USER', name: '<s:message code="DATA_STAT.STAT_USER"/>', p_id: 'DATA_STAT'}); //사용자 통계
 	menuArr.push({
 	    id: 'STAT_INTEREST',
 	    name: '<s:message code="DATA_ANALYSIS.STAT_INTEREST"/>',
