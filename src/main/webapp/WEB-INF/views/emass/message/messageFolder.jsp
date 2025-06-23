@@ -506,7 +506,7 @@ function initGrid(){
 				else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
 				else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
 				else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
-				else if (value == '0' return '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
+				else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
 				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
 				else return '-';
 			});

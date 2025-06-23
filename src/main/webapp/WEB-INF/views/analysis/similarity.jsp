@@ -80,7 +80,7 @@
 				$('#startdate').val(new Date().format('yyyy-mm-dd'));
 				$('#enddate').val(new Date().format('yyyy-mm-dd'));
 				$('#similarityText').val('');
-				$('#percent').val('60');
+				$('#percent').val('80');
 				$('#minDocFreq').val('');
 				$('#maxDocFreq').val('');
 				$('#minTermFreq').val('');
@@ -239,7 +239,6 @@
 				<span class="hyphen">~</span></div>
 			<div id="endDatePicker"><input type="text" class="txt_center" id="enddate" name='enddate' style="width: 110px;"></div>
 			<select id="percent" style="width: 120px;">
-				<option value="60"><s:message code="condition.info.similarity"/> 60%~</option>
 				<option value="80"><s:message code="condition.info.similarity"/> 80%~</option>
 				<option value="100"><s:message code="condition.info.similarity"/> 100%</option>
 			</select>
