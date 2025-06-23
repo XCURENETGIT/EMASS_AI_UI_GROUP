@@ -341,21 +341,33 @@
 
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 		grid.colAdd('ml_confd_class', '<s:message code="condition.infotype"/>', 100, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-			if (value == '3') return '<s:message code="condition.info.class4"/>';
-			else if (value == '4') return '<s:message code="condition.info.class3"/>';
-			else if (value == '2') return '<s:message code="condition.info.class2"/>';
-			else if (value == '1') return '<s:message code="condition.info.class1"/>';
-			else return '<s:message code="common.msg.noinfo"/>';
+			if (infoFeedbackMode == 'E'){
+				if (value == '3') return '<s:message code="condition.info.class4"/>';
+				else if (value == '4') return '<s:message code="condition.info.class3"/>';
+				else if (value == '2') return '<s:message code="condition.info.class2"/>';
+				else if (value == '1') return infoHynixConf == 'true' ? '<s:message code="condition.info.Y"/>' : '<s:message code="condition.info.class1"/>';
+				else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
+				else return '<s:message code="common.msg.noinfo"/>';
+			}else {
+				if (value == '4') return '<s:message code="condition.info.class4"/>';
+				else if (value == '3' || value == '2') return '<s:message code="condition.info.class3"/>';
+				else if (value == '1') return infoHynixConf == 'true' ? '<s:message code="condition.info.Y"/>' : '<s:message code="condition.info.class1"/>';
+				else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
+				else return '<s:message code="common.msg.noinfo"/>';
+			}
 		});
-		grid.colAdd('ml_confd_feedback', '<s:message code="condition.feedback"/>', 110, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-			if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/>';
-			else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
-			else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
-			else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
-			else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
-			else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
-			else return '-';
-		});
+
+		if (infoFeedbackLlm == 'false') {
+			grid.colAdd('ml_confd_feedback', '<s:message code="condition.feedback"/>', 110, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+				if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/>';
+				else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
+				else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
+				else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
+				else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
+				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
+				else return '-';
+			});
+		}
 	}
 	grid.colAdd('confidence', '<s:message code="condition.info.similarity"/>(%)', 100, 'right', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
 		return Math.floor(parseInt(value));

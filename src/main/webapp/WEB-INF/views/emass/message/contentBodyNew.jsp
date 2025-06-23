@@ -44,8 +44,10 @@
 	String op_body_save = Operation.BODY_SAVE.getOperation();
 	String op_body_print = Operation.BODY_PRINT.getOperation();
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
+	String infoFeedbackMode = Config.getString("info.feedback.mode");
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
+	boolean infoFeedbackLlm = Config.getBoolean("info.feedback.llm");
 	String adminId = Common.getAdminId(session);
 	ConfigAdminVO configAdminVo = configAdminService.getConfAdmin("message.keyword.highlight", adminId);
 	boolean keywordHighlight = true;
@@ -277,8 +279,10 @@
 		var infoHynixConf = '<%=infoHynixConf%>';
 		var isLlmSingle = '<%=isLlmSingle%>';
 		var isVietnam = '<%=isVietnam%>';
+		var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
 		var mode='';
 		var kHighlight = '<%=keywordHighlight%>';
+		var infoFeedbackMode = '<%=infoFeedbackMode%>';
 		var hostQueryUse = '<%=hostQuery%>';
 		var unknown =  '<s:message code="bodyview.unknown"/>';
 
@@ -314,6 +318,9 @@
 				if( infoHynixConf == 'true'){
 					$('#infoFeedbackTr').hide();
 					$('#docTr').show();
+				}else if (infoFeedbackLlm == 'true'){
+					$('#infoFeedbackTr').show();
+					$('#feedbackTypeDiv').hide();
 				}
 			} else{
 				$('#infoFeedbackTr').hide();
@@ -597,17 +604,24 @@
 
 
 		function getinfoTypeStr(val) {
-			if(val == '4') return '<s:message code="condition.info.class4"/>';
-			else if(val == '3') return '<s:message code="condition.info.class3"/>';
-			else if(val == '2') return '<s:message code="condition.info.class2"/>';
-			else if(val == '1') return '<s:message code="condition.info.class1"/>';
-			else return '<s:message code="common.msg.noinfo"/>';
+			if (infoFeedbackMode == 'E') {
+				if (val == '4') return '<s:message code="condition.info.class4"/>';
+				else if (val == '3') return '<s:message code="condition.info.class3"/>';
+				else if (val == '2') return '<s:message code="condition.info.class2"/>';
+				else if (val == '1')  return '<s:message code="condition.info.class1"/>';
+				else if(val == '0')  return '<s:message code="condition.info.N"/>';
+				else return '<s:message code="common.msg.noinfo"/>';
+			} else {
+				if (val == '4') return '<s:message code="condition.info.class4"/>';
+				else if (val == '2' || val == '3') return '<s:message code="condition.info.class2"/>';
+				else if (val == '1') return '<s:message code="condition.info.class1"/>';
+				else return '<s:message code="common.msg.noinfo"/>';
+			}
 		}
 		function getinfoTypeBgColor(val) {
-			if(val == '4') return 'red';
-			else if(val == '3') return 'orange';
-			else if(val == '2') return '#2393e1';
-			else if(val == '1') return '#bbb';
+			if (val == '4') return 'red';
+			else if (val == '2' || val == '3') return 'orange';
+			else if (val == '1') return "#2393e1";
 			else return '#ccc';
 		}
 
@@ -737,8 +751,9 @@
 									<span style="font-weight: bold;" id="subjectStr"></span>
 								</div>
 							</div>
-							<div class="panel-body">
-								<div id="infoFeedbackTr" class="pb12" style="display: none;">
+
+								<div class="panel-body" id="infoFeedbackTr" style="display: none">
+									<div class="pb12">
 									<div class="form-inline not-dashed">
 														<span style="display: inline-block;">
 															<span id="infoType"></span>
@@ -748,7 +763,8 @@
 															<span id="ml_confd_userid"></span>
 														</span>
 									</div>
-									<div class="form-inline not-dashed mat8 mab12">
+									</div>
+									<div class="form-inline not-dashed mat8 mab12" id="feedbackTypeDiv">
 
 										<label class="radio-inline c-radio">
 											<input type="radio" name="feedback" class="feedback" value="0">

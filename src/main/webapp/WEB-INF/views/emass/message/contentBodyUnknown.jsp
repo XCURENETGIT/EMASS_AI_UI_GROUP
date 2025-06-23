@@ -9,6 +9,7 @@ boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
 String op_attach_save = Operation.ATTACH_SAVE.getOperation();
 String op_body_save = Operation.BODY_SAVE.getOperation();
 String op_body_print = Operation.BODY_PRINT.getOperation();
+String infoFeedbackMode = Config.getString("info.feedback.mode");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -100,6 +101,7 @@ div#periodBodyMenu {position:absolute; visibility:hidden; top:0;text-align: left
 <script type="text/javascript">
 var popup_msgId = '<%=msgid%>';
 var popup_searchKey = '<%=searchKey%>';
+var infoFeedbackMode = '<%=infoFeedbackMode%>';
 $(document).ready(function(){
 	if(popup_msgId!= '') {
 		getMessage(popup_msgId, popup_searchKey);
@@ -147,17 +149,24 @@ var contentBody = {
 };
 
 function getinfoTypeStr(val) {
-	if(val == '4') return '<s:message code="condition.info.class4"/>';
-	else if(val == '3') return '<s:message code="condition.info.class3"/>';
-	else if(val == '2') return '<s:message code="condition.info.class2"/>';
-	else if(val == '1') return '<s:message code="condition.info.class1"/>';
-	else return '<s:message code="common.msg.noinfo"/>';
+	if (infoFeedbackMode == 'E') {
+		if (val == '4') return '<s:message code="condition.info.class4"/>';
+		else if (val == '3') return '<s:message code="condition.info.class3"/>';
+		else if (val == '2') return '<s:message code="condition.info.class2"/>';
+		else if (val == '1')  return '<s:message code="condition.info.class1"/>';
+		else if(val == '0')  return '<s:message code="condition.info.N"/>';
+		else return '<s:message code="common.msg.noinfo"/>';
+	} else {
+		if (val == '4') return '<s:message code="condition.info.class4"/>';
+		else if (val == '2' || val == '3') return '<s:message code="condition.info.class2"/>';
+		else if (val == '1') return '<s:message code="condition.info.class1"/>';
+		else return '<s:message code="common.msg.noinfo"/>';
+	}
 }
 function getinfoTypeBgColor(val) {
-	if(val == '4') return 'red';
-	else if(val == '3') return 'orange';
-	else if(val == '2') return '#2393e1';
-	else if(val == '1') return '#bbb';
+	if (val == '4') return 'red';
+	else if (val == '2' || val == '3') return 'orange';
+	else if (val == '1') return "#2393e1";
 	else return '#ccc';
 }
 

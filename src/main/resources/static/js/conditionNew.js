@@ -558,7 +558,7 @@ var con = {
 		$('#searchField').selectpicker('val', stringToArray(condition.searchField) );
 		$('#serviceType').selectpicker('val', stringToArray(condition.serviceType) );
 
-		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
+		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			$('#infoType').selectpicker('val', stringToArray(condition.infoType) );
 			$('#feedbackType').selectpicker('val', stringToArray(condition.feedbackType) );
 			$('#probType').selectpicker('val', stringToArray(condition.probType) );

@@ -67,6 +67,8 @@
     if (uri.contains("/deviceInfoDetailHadoop.do")) uri = "/commons/deviceInfo.do";
     if (uri.contains("/ems/dashboard.do")) uri += "?" + new org.springframework.web.util.UrlPathHelper().getOriginatingQueryString(request);
 
+	String infoFeedbackMode = Config.getString("info.feedback.mode");
+
     MenuService menuService = SpringContextUtil.getBean(MenuService.class);
     String menuId = "";
     String menuName = "";
@@ -579,6 +581,7 @@
 
         var filterSeq = '<%=filterSeq%>';
         var conditionParam = '<%=conditionParam%>';
+        var infoFeedbackMode = '<%=infoFeedbackMode%>';
         var readyFlag = false;
         var headerScrollTabs;
         var pageType="";
@@ -750,7 +753,10 @@
             getFilterSearchBox();
 
             if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
-                if(infoHynixConf == 'true'){
+                if (infoFeedbackLlm == 'true'){
+                    $('#infoFeedbackDiv').show();
+                    $('#secretDocuDiv, #feedbackTypeDiv, #sctDiv').hide();
+                }else if(infoHynixConf == 'true'){
                     $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
                     $('#secretDocuDiv').show();
                 }else{
@@ -2855,12 +2861,15 @@
                                         <div class="condition_item">
                                             <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.infotype"/></div>
                                             <select id="infoType" title="<s:message code="condition.infotype.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
-                                                <option value="4"><s:message code="condition.info.class4"/></option>
+                                                  <option value="4"><s:message code="condition.info.class4"/></option>
+                                                <%if(Common.isEquals(infoFeedbackMode, "E")){%>
                                                 <option value="3"><s:message code="condition.info.class3"/></option>
+                                                <%}%>
                                                 <option value="2"><s:message code="condition.info.class2"/></option>
                                                 <option value="1"><s:message code="condition.info.class1"/></option>
                                             </select>
                                         </div>
+                                         <div id="feedbackTypeDiv">
                                         <div class="condition_divider"></div>
                                         <div class="condition_item">
                                             <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.feedback"/></div>
@@ -2882,6 +2891,7 @@
                                                 <option value="0.1|0.5">10 ~ 49</option>
                                                 <option value="0|0.1">0 ~ 9</option>
                                             </select>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>

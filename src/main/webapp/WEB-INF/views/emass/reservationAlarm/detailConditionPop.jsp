@@ -117,6 +117,7 @@
     </style>
     <script type="text/javascript">
         var infoFeedbackYn = '<%=infoFeedbackYn%>';
+        var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
         var infoFeedbackConf = '<%=infoFeedbackConf%>';
         <%--var epmsgType = '<%=epmsgType%>';--%>
         var rsUppercase = '<%=rsUppercase%>';
@@ -142,7 +143,14 @@
                 document.getElementById('additionalUrlFields').appendChild(newInput);
             });*/
 
-            if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y') $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
+            if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y'){
+                if (infoFeedbackLlm == 'true'){
+                    $('#infoFeedbackDiv').show();
+                    $('#feedbackSelectDiv, #sctDiv, #probTypeDiv').hide();
+                }else {
+                    $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
+                }
+            }
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
 
             // if (epmsgType == "") {
@@ -1414,14 +1422,16 @@
                                         code="condition.infotype"/></label>
                                 <select id="infoTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
                                         multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-                                    <option value="4"><s:message code="condition.info.class4"/></option>
-                                    <option value="3"><s:message code="condition.info.class3"/></option>
-                                    <option value="2"><s:message code="condition.info.class2"/></option>
-                                    <option value="1"><s:message code="condition.info.class1"/></option>
+                                   <option value="4"><s:message code="condition.info.class4"/></option>
+									<%if (Common.isEquals(infoFeedbackMode, "E")) {%>
+									<option value="3"><s:message code="condition.info.class3"/></option>
+									<%}%>
+									<option value="2"><s:message code="condition.info.class2"/></option>
+									<option value="1"><s:message code="condition.info.class1"/></option>
                                 </select>
                             </div>
 
-                            <div class="mat8">
+                            <div class="mat8" id="feedbackSelectDiv">
                                 <label for="feedbackTypeSelect" class=" col-xs-3"><s:message
                                         code="condition.feedback"/></label>
                                 <select id="feedbackTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
@@ -1436,7 +1446,7 @@
                                 </select>
                             </div>
 
-                            <div class="mat8">
+                            <div class="mat8" id="probTypeDiv">
                                 <label for="probTypeSelect" class=" col-xs-3"><s:message
                                         code="condition.prob"/></label>
                                 <select id="probTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"

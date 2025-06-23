@@ -14,6 +14,7 @@
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 	boolean consentMenuEnable = Config.getBoolean("consent.menu.enable");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
+	boolean infoFeedbackLlm = Config.getBoolean("info.feedback.llm");
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	boolean isOCR = Config.isOCR;
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
@@ -34,6 +35,7 @@
 	let infoFeedbackYn = '<%=infoFeedbackYn%>';
 	var isOCR = '<%=isOCR%>';
 	let consentMenuEnable = '<%=consentMenuEnable%>';
+	let infoFeedbackLlm = '<%=infoFeedbackLlm%>';
 
 	if ($(window).height() < 510) {
 		document.write('<style>.container{top: 75px;} #titleClose{display: none;} #titleOpen{display: block;} .content_header{display: none;}</style>');

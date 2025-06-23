@@ -49,18 +49,21 @@ function initGrid( currGrid, gridColumn){
 			else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;' + mlConfdFeedbackMsg.F9;
 			else return '-';
 		});*/
-		currGrid.colAdd('ml_confd_feedback', gridColumn.ml_confd_feedback, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-			if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C1;
-			else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C2;
-			else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C3;
-			else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C4;
-			else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;' + mlConfdFeedbackMsg.F0;
-			else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;' + mlConfdFeedbackMsg.F9;
-			else return '-';
-		});
-		currGrid.colAdd('ml_confd_prob', gridColumn.ml_confd_prob, 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-			return probPercent(value);
-		});
+
+		if ( infoFeedbackLlm == 'false') {
+			currGrid.colAdd('ml_confd_feedback', gridColumn.ml_confd_feedback, 110, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+				if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C1;
+				else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C2;
+				else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C3;
+				else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C4;
+				else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;' + mlConfdFeedbackMsg.F0;
+				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;' + mlConfdFeedbackMsg.F9;
+				else return '-';
+			});
+			currGrid.colAdd('ml_confd_prob', gridColumn.ml_confd_prob, 110, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+				return probPercent(value);
+			});
+		}
 	}
 	currGrid.colAdd('attachcnt', gridColumn.attachcnt, 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';

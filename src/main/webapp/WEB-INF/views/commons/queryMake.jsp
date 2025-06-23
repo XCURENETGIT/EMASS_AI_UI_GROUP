@@ -12,6 +12,8 @@
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
+	boolean infoFeedbackLlm = Config.getBoolean("info.feedback.llm");
+	String infoFeedbackMode = Config.getString("info.feedback.mode");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -156,8 +158,10 @@
 
 		var infoFeedbackYn = '<%=infoFeedbackYn%>';
 		var infoFeedbackConf = '<%=infoFeedbackConf%>';
+		var infoFeedbackMode = '<%=infoFeedbackMode%>';
 		var infoHynixConf = '<%=infoHynixConf%>';
 		var epmsgType = '<%=epmsgType%>';
+		var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
 
 		var statType = "<%=statType%>";
 		var isOCR = <%=isOCR%>;
@@ -216,7 +220,8 @@
 			initSetDisplay();
 
 			if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
-				if(infoHynixConf == 'true'){
+				if (infoFeedbackLlm == 'true') $('#infoTypeTr').show();
+				else if(infoHynixConf == 'true'){
 					$('#skInfoTypeTr, #skFeedbackTypeTr, #skProbTypeTr, #sctTr').show();
 				}else{
 					$('#infoTypeTr, #feedbackTypeTr, #probTypeTr, #sctTr').show();
@@ -989,7 +994,7 @@
 								if(i > 0) {
 									addQueryText += " "
 								}
-								var sp = prob[i].split('|');
+								var sp = prob[i].split('|');feedbackTypeSelect
 								addQueryText += 'ml_confd_prob:[' + sp[0] + ' TO ' + sp[1] + ']';
 							}
 							addQueryText += ")";
@@ -1689,9 +1694,11 @@
 								<tr id="infoTypeTr" style="display: none;">
 									<th><s:message code="condition.infotype"/></th>
 									<td>
-										<select id="infoTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+										<select id="infoTypeSelect" class="selectpicker small border-radius-none border-radius-none infoTypeSelect" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
 											<option value="4"><s:message code="condition.info.class4"/></option>
+											<%if(Common.isEquals(infoFeedbackMode, "E")){%>
 											<option value="3"><s:message code="condition.info.class3"/></option>
+											<%}%>
 											<option value="2"><s:message code="condition.info.class2"/></option>
 											<option value="1"><s:message code="condition.info.class1"/></option>
 										</select>

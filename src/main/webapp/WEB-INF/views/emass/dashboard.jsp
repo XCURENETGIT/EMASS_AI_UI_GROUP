@@ -1447,7 +1447,7 @@
 
         if (alarmVal.searchField != '') searchStr += setConditionValStr(alarmVal.serviceFieldNm, '<s:message code="condition.field.search"/>');
 
-        if (infoFeedbackConf == 'true' && infoFeedbackYn == 'true') {
+        if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y') {
             if (alarmVal.infoType != '') searchStr += setConditionValStr(alarmVal.infoTypeNm, '<s:message code="condition.infotype"/>');
             if (alarmVal.feedbackType != '') searchStr += setConditionValStr(alarmVal.feedbackTypeNm, '<s:message code="condition.feedback"/>');
             if (alarmVal.probType != '') searchStr += setConditionValStr(alarmVal.probTypeNm, '<s:message code="condition.prob"/>');

@@ -55,6 +55,7 @@ var infoFeedbackYn = '<%=infoFeedbackYn%>';
 var infoFeedbackConf = '<%=infoFeedbackConf%>';
 var targetDate = '<%=targetDate%>';
 var subjectIsEmpty = '<%=subjectIsEmpty%>';
+var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
 var recommendTab = null;
 $(document).ready(function(){
 	// $('#startdatepicker').datetimepicker({

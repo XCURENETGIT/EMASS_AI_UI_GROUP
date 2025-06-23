@@ -1135,7 +1135,7 @@ SELECT 'attach.image.body', 'false', 'false', NOW() FROM DUAL
 WHERE NOT EXISTS (SELECT * FROM UI_CONF WHERE CONF_ID='attach.image.body');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)
-SELECT 'message.epmsg.val', 'N', 'N', NOW() FROM DUAL
+SELECT 'message.epmsg.val', '', '', NOW() FROM DUAL
 WHERE NOT EXISTS (SELECT * FROM UI_CONF WHERE CONF_ID='message.epmsg.val');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)
@@ -1143,7 +1143,7 @@ SELECT 'message.user.format', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#'
 WHERE NOT EXISTS (SELECT * FROM UI_CONF WHERE CONF_ID='message.user.format');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)
-SELECT 'info.feedback.used', 'false', 'false', NOW() FROM DUAL
+SELECT 'info.feedback.used', 'true', 'true', NOW() FROM DUAL
 WHERE NOT EXISTS (SELECT * FROM UI_CONF WHERE CONF_ID='info.feedback.used');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)

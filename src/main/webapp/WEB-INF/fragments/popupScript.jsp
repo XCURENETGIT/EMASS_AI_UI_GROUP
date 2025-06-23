@@ -19,7 +19,9 @@
     String statType = Common.nvl(request.getParameter("statType"));
     String infoFeedbackYn = Common.getInfoFeedbackYn(session);
     String epmsgType = Config.getString("message.epmsg.val");
+    String infoFeedbackMode = Config.getString("info.feedback.mode");
     boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
     boolean infoHynixConf = Config.getBoolean("info.hynix.used");
+    boolean infoFeedbackLlm = Config.getBoolean("info.feedback.llm");
     String recvsJikgub = Config.getString("recvs.jikgub.use");
 %>

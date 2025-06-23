@@ -135,7 +135,7 @@
 	}); //장비 트래픽 통계
 	menuArr.push({id: 'STAT_OCR', name: '<s:message code="DATA_STAT.STAT_OCR"/>', p_id: 'DATA_STAT'}); //OCR 통계
 	menuArr.push({id: 'STAT_ANOMALY_DETECTION', name: '<s:message code="DATA_STAT.STAT_ANOMALY_DETECTION"/>', p_id: 'DATA_STAT'}); //이상행위 검출 통계
-    if(infoFeedbackYn  == "true"){
+    if(infoFeedbackYn  == "Y"){
         menuArr.push({id: 'STAT_INFOTYPE', name: '<s:message code="DATA_STAT.STAT_INFOTYPE"/>', p_id: 'DATA_STAT'});
     } //정보처리 통계
 	menuArr.push({id: 'POLICY_NOLOG', name: '<s:message code="POLICY_SETUP.POLICY_NOLOG"/>', p_id: 'POLICY_SETUP'}); //데이터 미로깅 정책

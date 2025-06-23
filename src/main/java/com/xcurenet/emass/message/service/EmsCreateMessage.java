@@ -38,11 +38,14 @@ public class EmsCreateMessage {
 
 	public String infoFeedbackYn;
 
+	public boolean infoFeedbackLlm;
+
 	public EmsCreateMessage(HttpServletRequest request) {
 		this(Common.getLocale(request.getSession()));
 
 		infoFeedbackYn = Common.getInfoFeedbackYn(request.getSession());
 		infoFeedbackConf = Config.getBoolean("info.feedback.used");
+		infoFeedbackLlm = Config.getBoolean("info.feedback.llm");
 	}
 
 	public EmsCreateMessage(Locale locale) {
@@ -297,22 +300,32 @@ public class EmsCreateMessage {
 
 	private String getMlConfdClassStr(int ml_confd_class, Locale locale) {
 		String str = "";
-		if(ml_confd_class == 4) str += Prop.propFormat("condition.info.class4", locale);
-		else if(ml_confd_class == 3) str += Prop.propFormat("condition.info.class3", locale);
-		else if(ml_confd_class == 2) str += Prop.propFormat("condition.info.class2", locale);
-		else if(ml_confd_class == 1) str += Prop.propFormat("condition.info.class1", locale);
-		else str += Prop.propFormat("common.msg.noinfo", locale);
+		if (Common.isEquals(Config.getString("info.feedback.mode"),"E")) {
+			if (ml_confd_class == 4) str += Prop.propFormat("condition.info.class4", locale);
+			else if (ml_confd_class == 3) str += Prop.propFormat("condition.info.class3", locale);
+			else if (ml_confd_class == 2) str += Prop.propFormat("condition.info.class2", locale);
+			else if (ml_confd_class == 1) str += Prop.propFormat("condition.info.class1", locale);
+			else str += Prop.propFormat("common.msg.noinfo", locale);
+
+		}else{
+			if (ml_confd_class == 4) str += Prop.propFormat("condition.info.class4", locale);
+			else if (ml_confd_class == 2 || ml_confd_class == 3) str += Prop.propFormat("condition.info.class2", locale);
+			else if (ml_confd_class == 1) str += Prop.propFormat("condition.info.class1", locale);
+			else str += Prop.propFormat("common.msg.noinfo", locale);
+		}
+
 		return str;
 	}
 
 	private String getMlConfdProbPercent(double ml_confd_prob) {
-		if( ml_confd_prob == -1 ) return "";
+		if( ml_confd_prob == -1 || infoFeedbackLlm ) return "";
 		else return "(" + Math.floor(ml_confd_prob * 100) + "%)";
 
 	}
 
 	private String getMlConfdFeedbackStr(int ml_confd_feedback, Locale locale) {
 		String str = "";
+		if (infoFeedbackLlm) return "";
 		if(ml_confd_feedback == 1) str += Prop.propFormat("condition.info.feedback1", locale);
 		else if(ml_confd_feedback == 2) str += Prop.propFormat("condition.info.feedback2", locale);
 		else if(ml_confd_feedback == 3) str += Prop.propFormat("condition.info.feedback3", locale);

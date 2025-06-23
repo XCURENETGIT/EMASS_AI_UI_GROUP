@@ -6,6 +6,8 @@
 	String folderName = Common.nvl(request.getParameter("paramFolderName"));
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
+	boolean infoFeedbackLlm = Config.getBoolean("info.feedback.llm");
+	String infoFeedbackMode = Config.getString("info.feedback.mode");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -51,6 +53,8 @@ var folderSeq = '<%=folderSeq%>';
 var folderName = '<%=folderName%>';
 var infoFeedbackYn = '<%=infoFeedbackYn%>';
 var infoFeedbackConf = '<%=infoFeedbackConf%>';
+var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
+var infoFeedbackMode = '<%=infoFeedbackMode%>';
 var pageType='';
 var grid;
 var searchFlag = false;
@@ -470,11 +474,20 @@ function initGrid(){
 		else return '<s:message code="common.msg.noinfo"/>';
 	}); */
 	grid.colAdd('ml_confd_class', '<s:message code="condition.infotype"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == '4') return '<s:message code="condition.info.class4"/>';
-		else if (value == '3') return '<s:message code="condition.info.class3"/>';
-		else if (value == '2') return '<s:message code="condition.info.class2"/>';
-		else if (value == '1') return '<s:message code="condition.info.class1"/>';
-		else return '<s:message code="common.msg.noinfo"/>';
+		if (infoFeedbackMode == 'E'){
+			if (value == '3') return '<s:message code="condition.info.class4"/>';
+			else if (value == '4') return '<s:message code="condition.info.class3"/>';
+			else if (value == '2') return '<s:message code="condition.info.class2"/>';
+			else if (value == '1') return infoHynixConf == 'true' ? '<s:message code="condition.info.Y"/>' : '<s:message code="condition.info.class1"/>';
+			else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
+			else return '<s:message code="common.msg.noinfo"/>';
+		}else {
+			if (value == '4') return '<s:message code="condition.info.class4"/>';
+			else if (value == '3' || value == '2') return '<s:message code="condition.info.class3"/>';
+			else if (value == '1') return infoHynixConf == 'true' ? '<s:message code="condition.info.Y"/>' : '<s:message code="condition.info.class1"/>';
+			else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
+			else return '<s:message code="common.msg.noinfo"/>';
+		}
 	});
 	/* grid.colAdd('ml_confd_feedback_label', '<s:message code="condition.feedback"/>', 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		value = grid.getValue(row, 'ml_confd_feedback');
@@ -486,18 +499,23 @@ function initGrid(){
 		else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
 		else return '-';
 	}); */
-	grid.colAdd('ml_confd_feedback', '<s:message code="condition.feedback"/>', 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/>';
-		else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
-		else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
-		else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
-		else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
-		else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
-		else return '-';
-	});
-	grid.colAdd('ml_confd_prob', '<s:message code="condition.prob"/>(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		return probPercent(value);
-	});
+
+		if (infoFeedbackLlm == 'false') {
+			grid.colAdd('ml_confd_feedback', '<s:message code="condition.feedback"/>', 110, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+				if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/>';
+				else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
+				else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
+				else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
+				else if (value == '0' return '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
+				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
+				else return '-';
+			});
+
+			grid.colAdd('ml_confd_prob', '<s:message code="condition.prob"/>(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+				return probPercent(value);
+			});
+		}
+
 	}
 	grid.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '0';
