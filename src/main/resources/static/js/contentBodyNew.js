@@ -1168,9 +1168,12 @@ function setMessage(msg) {
         }
         var v = msg.ml_confd_class;
         var pr = msg.ml_confd_prob;
-        var str = '<span style="display: inline-block; color: #fff; background-color: ' + getinfoTypeBgColor(v) + '; padding: 3px 20px; border-radius: 3px;">' + getinfoTypeStr(v) + '</span>';
         var files = msg.files;
-        if (!(v == '-1' && infoFeedbackLlm))$('#infoType').html(str);
+
+        var str = '';
+        if (!(v == '-1' && infoFeedbackLlm)) str = '<span style="display: inline-block; color: #fff; background-color: ' + getinfoTypeBgColor(v) + '; padding: 3px 20px; border-radius: 3px;">' + getinfoTypeStr(v) + '</span>';
+
+        $('#infoType').html(str);
         $('#probType').html('');
         if (probPercent(pr) != '-' && !infoFeedbackLlm) $('#probType').html('<span style="font-weight: bold;">(' + probPercent(pr) + '%)</span>');
 
