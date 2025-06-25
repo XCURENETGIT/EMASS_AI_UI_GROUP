@@ -1178,6 +1178,8 @@
 					</div>
 				</div>
 				<!-- //본문내용 -->
+			<div id="ocr_attach_div">
+			</div>
 			</div>
 		</div>
 
@@ -1395,25 +1397,3 @@
 </script>
 <iframe id="MessageDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 </html>
-<%
-	/*
-	if ( no_data.isEmpty ( ) )
-	{
-		String ctime = msg.getCtime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
-		String ctime_yyyymmdd = ctime.substring(0, 8);
-		String ctime_yyyymm = ctime.substring(0, 6);
-		String ctime_yyyy = ctime.substring(0, 4);
-		String ctime_hh = ctime.substring(8, 10);
-
-		String allofus = Common.nvl ( msg.getAllOfUs() );
-		String inside = Common.nvl ( msg.getInSide() );
-		String attached = Common.nvl ( msg.getAttached() );
-
-		SolrCheckedVO solrCheckedVO = new SolrCheckedVO();
-		solrCheckedVO.setId(Common.getAdminId(session));
-		solrCheckedVO.setMsgid(msgId);
-
-		solrCheckedService.setRead(solrCheckedVO);
-	}
-*/
-%>

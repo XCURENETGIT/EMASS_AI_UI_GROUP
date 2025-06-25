@@ -1625,15 +1625,20 @@ function setFileDiv(msg) {
             }
         }
 
-        if (isOCR == 'true' && ocrYn) {
-            $('#bodyDiv').nextAll().remove();
+        if (ocrYn) {
+            $('#ocr_attach_div').html('');
+            if (ocrFiles.length > 0) {
+                $('#ocr_attach_div').css('display', '');
+            }
             setOcrFileDiv(ocrFiles);
             ocrFiles = [];
         } else {
-            $('#bodyDiv').nextAll().remove();
+            $('#ocr_attach_div').html('');
+            $('#ocr_attach_div').css('display', 'none');
         }
     } else {
-        $('#bodyDiv').nextAll().remove();
+        $('#ocr_attach_div').html('');
+        $('#ocr_attach_div').css('display', 'none');
         $('#fileDiv').css("display", "none");
     }
     getFold();
@@ -1956,7 +1961,7 @@ function setOcrFileDiv(files) {
         if (fileStr == "") {
             fileSpace = nvl(file.attachSpace, "");
 
-            fileStr += '<div class="row" id="">';
+            fileStr += '<div class="row">';
             fileStr += '	<div class="col-lg-12">';
             fileStr += '		<div class="panel panel-default">';
             fileStr += '				<div class="panel-heading body_toggle" id="">';
@@ -1983,7 +1988,7 @@ function setOcrFileDiv(files) {
         attachView += '<td>';
         attachView += '<img " style="max-width: 200px" src="data:image/' + attachExt + ';base64, ' + file.ocrImageStr + '"/>';
         attachView += '</td>';
-        attachView += '<td>' + nvl(file.ocrText).replaceAll("\n", "<br>") + '</td>';
+        attachView += '<td style="overflow-wrap: anywhere;">' + nvl(file.ocrText).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replaceAll("\n", "<br>") + '</td>';
         attachView += '</tr>';
 
         if (i == (fileLength - 1) || ((i + 1) <= (fileLength - 1) && nvl(files[i + 1].attachSpace, "") != fileSpace)) {
@@ -1998,7 +2003,7 @@ function setOcrFileDiv(files) {
             fileStr += '	</div>';
             fileStr += '</div>';
 
-            $('.content_body').append(fileStr);
+            $('#ocr_attach_div').append(fileStr);
             fileStr = "";
             attachView = "";
         }
