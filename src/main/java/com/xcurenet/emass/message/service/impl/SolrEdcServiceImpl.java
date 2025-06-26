@@ -37,7 +37,6 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilde
 import org.elasticsearch.search.aggregations.bucket.terms.IncludeExclude;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.ValueCountAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -532,7 +531,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		if (Common.isEquals(sq.get("piAnalysisYn"), "Y")) return getPiAnalysisAggregations(sq);
 		if (Common.isEquals(sq.get("gwAttached"), "Y")) return getGwAttachedAggregations(sq);
 		if (Common.isEquals(sq.get("abnlYn"), "Y")) return getAbnlAggregations(sq);
-		if (Common.isEquals(sq.get("facetCount"), "Y")) return getCountAggregations(sq);
 		if (null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
 		if ((null != sq.get("group") && Common.isEquals("true", sq.get("group")))) {
@@ -637,18 +635,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.minDocCount(mainFacetMinCount);
 		}
 
-	}
-
-	private List<AbstractAggregationBuilder<?>> getCountAggregations(SolrQuery sq) {
-		List<AbstractAggregationBuilder<?>> aggregationBuilders = new ArrayList<>();
-
-		String[] countList = sq.getParams("facet.field");
-		for (String field : countList) {
-			ValueCountAggregationBuilder aggregation = AggregationBuilders.count(field).field(field);
-			aggregationBuilders.add(aggregation);
-		}
-
-		return aggregationBuilders;
 	}
 	private List<AbstractAggregationBuilder<?>> getAbnlAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> pivotAggregations = new ArrayList<>();

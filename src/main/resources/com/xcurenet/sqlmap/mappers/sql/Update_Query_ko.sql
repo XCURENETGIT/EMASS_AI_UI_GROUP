@@ -639,12 +639,6 @@ UPDATE UI_REGEXP SET NAME = '대용량의 동일종류 첨부파일 하루 3회�
 UPDATE UI_REGEXP SET NAME = '타국에서 접속'    WHERE CODE =   'FCA';
 UPDATE UI_REGEXP SET NAME = '평균 접속 시간대 외의 접속'    WHERE CODE =   'AOH';
 
-UPDATE UI_REGEXP SET NAME = '대용량의 동일종류 첨부파일 하루 3회이상 외부전송'    WHERE CODE =   'LAOP';
-UPDATE UI_REGEXP SET NAME = '타국에서 접속'    WHERE CODE =   'FCA';
-UPDATE UI_REGEXP SET NAME = '평균 접속 시간대 외의 접속'    WHERE CODE =   'AOH';
-UPDATE UI_REGEXP SET NAME = '스테가노 그래피'    WHERE CODE =   'STG';
-
-
 
 
 UPDATE UI_ADMIN
