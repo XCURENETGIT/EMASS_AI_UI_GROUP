@@ -314,4 +314,28 @@ public class DashBoardPreDefineController {
 		FileTopVO todayFileVO = dashBoardPreDefineService.getTodayFilePerson(vo);
 		return new XcnResponseVO(XcnRspCode.OK, todayFileVO);
 	}
+
+	@RequestMapping(value = "/getSuspAbnlBhavior.xcn")
+	@Description("Dashboard - 금일 이상 행위 정보")
+	@ResponseBody
+	public XcnResponseVO getTodayAbnlBehavior(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		AbnlBhavDetectedVO vo = new AbnlBhavDetectedVO();
+
+		String dashboardPeriod = Config.getString("dashboard.period");
+		vo.setStartDt(LocalDate.parse(Common.getCurrentDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+				.minusDays(dashboardPeriod.equals("W") ? 7 : 0)
+				.minusMonths(dashboardPeriod.equals("1M") ? 1 : dashboardPeriod.equals("2M") ? 2 : 0)
+				.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "000000");
+
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		AbnlBhavDetectedVO abnlBhavDetectedVO = dashBoardPreDefineService.getTodayAbnlBehavior(vo, Common.getAdmin(session));
+		if (abnlBhavDetectedVO != null) {
+			vo.setFacet(abnlBhavDetectedVO.getFacet());
+		}
+		return new XcnResponseVO(XcnRspCode.OK, vo);
+	}
+
 }

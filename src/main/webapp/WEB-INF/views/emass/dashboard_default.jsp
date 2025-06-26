@@ -44,7 +44,6 @@
 		max-width: 63% !important;
 	}
 
-
 	.files :hover{
 		cursor: pointer;
 		text-decoration: underline;
@@ -223,6 +222,8 @@
         getBodySize();
         getTrafficData();
         getTodayTrafficData();
+	    getSuspAbnlBhavior();
+
 		if(patternSvc != ''){
 			var patternArray = patternSvc.split(',');
 			patternArray.forEach(pattern => {
@@ -251,6 +252,24 @@
 			    },
 			    complete: function () {
 
+			    }
+		    });
+	    }
+
+	    /**
+	     * 이상행위분석
+	     */
+	    function getSuspAbnlBhavior() {
+		    ui.get({
+			    url: 'getSuspAbnlBhavior.xcn',
+			    success: function (data, total) {
+				    if (areAllValuesZero(data.facet)) $('#abnlDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
+				    else abnlPrintChart(data.facet);
+			    },
+			    error: function (status, message) {
+				    //ui.alertMsg(message);
+			    },
+			    complete: function () {
 			    }
 		    });
 	    }
@@ -287,6 +306,50 @@
                 }
             });
         }
+
+	    function abnlPrintChart(data) {
+		    $('#abnlDataChart').html('');
+		    if (data.length == 0) {
+			    $('#abnlDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
+			    return;
+		    }
+		    $('#abnlDataChart').highcharts({
+			    exporting: {
+				    enabled: false
+			    },
+			    credits: chartAPI.credits,
+			    title: {
+				    text: ''
+			    },
+			    xAxis: {
+				    type: 'category',
+			    },
+			    yAxis: {
+				    type: 'logarithmic',
+				    min: 1,
+				    title: {
+					    text: '',
+				    }
+			    },
+			    legend: {
+				    enabled: false
+			    },
+			    tooltip: {
+				    pointFormat: '<s:message code="dashboard.collect.data_count"/> : <b>{point.y:,.0f} (<s:message code="common.msg.cnt"/>)</b>'
+			    },
+			    series: [{
+				    name: 'Population',
+				    data: data,
+				    dataLabels: {
+					    enabled: true,
+					    format: '{point.y:,.0f}',
+					    style: {
+						    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+					    }
+				    }
+			    }]
+		    });
+	    }
 
 
         function printChartTraffic2(dat) {
@@ -795,7 +858,7 @@
                     }
                     $('#todayGroupWareSum').html(todayGroupWareSum + " <span class='tit13'></span>");
 
-                    if (areAllValuesZero(data.facet))  $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
+                    if (areAllValuesZero(data.facet))  $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style=" display: block;"> ');
                     else printChart(data.facet);
 
                 },
@@ -1299,10 +1362,23 @@
 		<%--				금일 패턴 수집 건수 끝!!--%>
 		<%--			금일 서비스별 데이터 수집 비율 시작--%>
 		<div class="m_grapha">
-			<div class="graphaBox click" data-value="service">
-				<h3><s:message code="dashboard.msg.serviceRate"/></h3>
-				<div class="bordd" id="svcDataChart" style="display: flex;justify-content: center; align-items: center">
+			<div>
+				<div class="text_tab">
+					<span class="tab_links" onclick="menuTab(event, 'abnlTab')" id="preOpen" style="margin-bottom: 10px;"><s:message code="dashboard.todaySuspAbnlBhavior"/></span>
+					<span class="bar"></span>
+					<span class="tab_links" onclick="menuTab(event, 'svcTab')" style="margin-bottom: 10px;"><s:message code="dashboard.msg.serviceRate"/></span>
 				</div>
+
+				<%--				금일 이상 행위 의심 정보 시작 --%>
+				<div id="abnlTab" class="tab_content">
+					<div id="abnlDataChart" class="bordd" style="display: flex; justify-content: center; align-items: center; min-height: 400px; padding: 20px;"></div>
+				</div>
+				<%--				금일 이상 행위 의심 정보 끝 !!--%>
+				<%--			금일 서비스별 데이터 수집 비율 시작--%>
+				<div id="svcTab" class="tab_content">
+					<div id="svcDataChart" class="bordd" style="display: flex; justify-content: center; align-items: center; min-height: 400px; padding: 20px;"></div>
+				</div>
+				<%--			금일 서비스별 데이터 수집 비율 끝!!--%>
 			</div>
 			<%--			금일 서비스별 데이터 수집 비율 끝!!--%>
 
@@ -1310,7 +1386,7 @@
 			<div class="graphaBox">
 				<h3><s:message code="dashboard.msg.todayFileType"/></h3>
 				<%--				<div class="bordd"  style="display: flex;justify-content: center; align-items: center">--%>
-				<div class="bordd" style=" min-width: 400px; box-sizing: border-box; width: 100%">
+				<div class="bordd" style=" min-width: 400px; box-sizing: border-box; width: 100%; min-height: 400px;">
 					<div class="main_tab">
 						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXCEL</button>
 						<button class="tablink word" onclick="openCity('doc', this, '#3770C3')">DOC</button>
@@ -1402,6 +1478,25 @@
 
 
 <script>
+	document.addEventListener("DOMContentLoaded", function () {
+		document.getElementById("preOpen").click();
+	});
+
+	function menuTab(evt, elmnt) {
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tab_content");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+
+		tablinks = document.getElementsByClassName("tab_links");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].classList.remove("active");
+		}
+		document.getElementById(elmnt).style.display = "block";
+		evt.currentTarget.classList.add("active");
+	}
+
     function openCity(cityName, elmnt, color) {
         var i, tabcontent, tablink;
         tabcontent = document.getElementsByClassName("tabcontent");

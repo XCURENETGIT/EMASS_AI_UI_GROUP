@@ -1,17 +1,16 @@
 package com.xcurenet.emass.dashboard.service.impl;
 
+import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.device.service.DeviceTrafficStatService;
 import com.xcurenet.emass.dashboard.service.*;
-import com.xcurenet.emass.message.service.FacetVO;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-import com.xcurenet.emass.message.service.SolrEdcService;
-import com.xcurenet.emass.message.service.SolrEdcVO;
+import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
 import com.xcurenet.minio.MinioFileAdapter;
+import com.xcurenet.pattern.service.PatternVO;
 import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -139,6 +138,58 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		return result;
 	}
 
+	@Override
+	public AbnlBhavDetectedVO getTodayAbnlBehavior(AbnlBhavDetectedVO abnlBhavDetectedVO, AdminVO admin) throws SolrServerException, IOException{
+		AbnlBhavDetectedVO result = new AbnlBhavDetectedVO();
+
+		String query = String.format("+ctime:[%s TO %s]", abnlBhavDetectedVO.getStartDt(), abnlBhavDetectedVO.getEndDt());
+		query += " +pi_total:[1 TO *]";
+
+		SolrQuery sq = new SolrQuery();
+		sq.set("stDateStr", abnlBhavDetectedVO.getStartDt());
+		sq.set("etDateStr", abnlBhavDetectedVO.getEndDt());
+		sq.setStart(0);
+		sq.setRows(0);
+		sq.setFacet(true);
+		sq.setFacetMinCount(1);
+		sq.setFacetSort("Y");
+		sq.set("facetCount","Y");
+		sq.setParam("facet.field",  Arrays.stream(Config.ABNL_SVC).map(s -> "pi_amount.pi_" + s).toArray(String[]::new));
+		sq.setQuery(query);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, admin.getAdminId());
+
+		List<List<Object>> items = new ArrayList<>();
+		List<FacetVO> facet = edc.getFacet();
+		if (facet == null) result.setFacet(items);
+		else {
+
+			List<PatternVO> abnlPattern = Config.patternInfo;
+			for (FacetVO vo : facet) {
+				List<Object> item = new ArrayList<>();
+				for (PatternVO abnl : abnlPattern) {
+					if ("LAOP".equals(abnl.getCode()) && ("pi_amount.pi_LAOP").equals(vo.getName()))  {
+						item.add(abnl.getName());
+						long originalCount = vo.getCount();
+						if(vo.getCount() < 3) {
+							item.add(0);
+						}else{
+							long laopCount = (originalCount == 3) ? 1 : (originalCount / 2) + (originalCount % 2);
+							item.add(laopCount);
+						}
+						break;
+					} else if (Common.isEquals("pi_amount.pi_" + abnl.getCode(), vo.getName())) {
+						item.add(abnl.getName());
+						item.add(vo.getCount());
+						break;
+					}
+				}
+				items.add(item);
+			}
+		}
+		result.setFacet(items);
+
+		return result;
+	}
 
 
 	@Override

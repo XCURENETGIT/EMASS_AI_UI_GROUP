@@ -108,7 +108,7 @@ public class Config {
 	public static String[] colors = {"#7cb5ec", "#c9cbf6", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1", "#B5CA92", "#a7efff", "#B8B8BA", "#FFB2F5", "#47C83E", "#fee79f", "#8bc4bf", "#bf4444", "#7CB823", "#19D4FF", "#097500"};
 
 //	public static final String ABNL_AGGS_FIELDS = "pi_amount.pi_LAOP,pi_amount.pi_FCA,pi_amount.pi_AOH,pi_amount.pi_ID,pi_amount.pi_RS,pi_amount.pi_EC,pi_amount.pi_EF,pi_amount.pi_LTO,pi_amount.pi_LAO,pi_amount.pi_LF";
-	public static final String[] ABNL_SVC = {"ID","RS","EC","EF","LTO","LAO","LF"};
+	public static final String[] ABNL_SVC = {"ID","RS","EC","EF","LTO","LAO","LF","LAOP","FCA","AOH","STG"};
 
 //	public static final String[] ABNL_SVC = {
 //			"pi_amount.pi_LAOP"
@@ -162,6 +162,8 @@ public class Config {
 	public static List<PersCodeInfo> jikgubInfo = new ArrayList<>(); // 직급
 
 	public static List<PersCodeInfo> serviceInfo = new ArrayList<>(); // 서비스
+
+	public static List<PatternVO> patternInfo = new ArrayList<>(); //패턴코드
 
 
 	public final static String USER_FORMAT = "message.user.format";
@@ -633,7 +635,7 @@ public class Config {
 
 	//패턴 정보 load
 	public void reloadPattern() {
-		List<PatternVO> patternInfo = patternService.allPatternCodes();
+		patternInfo = patternService.allPatternCodes();
 
 		activePatterns = patternInfo.stream().filter(p -> p.getEnable().equals("Y")).map(PatternVO::getCode).toArray(String[]::new);
 		Set<String> privateSvc = new HashSet<>(Arrays.asList(PRIVATE_SVC));

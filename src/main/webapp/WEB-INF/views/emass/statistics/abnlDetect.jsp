@@ -55,6 +55,7 @@
 		LTO : '<s:message code="bodyview.lto"/>',
 		LAO : '<s:message code="bodyview.lao"/>',
 		LF : '<s:message code="bodyview.lf"/>',
+		STG : '<s:message code="bodyview.stg"/>',
 	}
 
 	var searchFlag = false;
