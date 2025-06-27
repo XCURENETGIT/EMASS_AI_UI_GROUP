@@ -442,7 +442,6 @@ function getBody(userCharset){
 			else $('#emassBody').html(data + getAppendGroupBody());
 			$("#emassBody").select();
 			Highlight();
-			PatternHighlight();
 		},
 		error : function(status, message) {
 			ui.alertMsg(message);

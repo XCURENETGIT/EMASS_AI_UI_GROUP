@@ -11,5 +11,6 @@ public class EmsPiVO {
 	private String piName;
 	private String kwds;
 	private long total;
+	private boolean customPattern;
 }
 

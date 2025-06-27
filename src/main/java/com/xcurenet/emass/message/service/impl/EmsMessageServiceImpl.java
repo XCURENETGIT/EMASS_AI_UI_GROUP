@@ -504,7 +504,12 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		Map<String, PatternVO> pattern = convertMap(selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getPatternAllList", new PatternVO()));
 		for (EmsPiVO emsPi : emsPis) {
 			PatternVO vo = pattern.get(emsPi.getPiid());
-			if (vo != null) emsPi.setPiName(vo.getName());
+			if (vo != null){
+				emsPi.setPiName(vo.getName());
+				if (Common.isNotEmpty(vo.getRegex())) emsPi.setCustomPattern(true);
+				else emsPi.setCustomPattern(false);
+
+			}
 		}
 		return emsPis;
 	}
