@@ -1137,6 +1137,13 @@ function setMessage(msg) {
     $('#helpHostDesc').html('');
    	$('#hostDiv a').attr("title", '');
 
+    if (msg.patterns != null && msg.patterns != undefined && msg.patterns != ''){
+        patnName = getPiName(msg.patterns);
+        patternKyword = msg.patterns;
+    }
+
+    setPatternDiv(msg.patterns);
+
     window.scrollTo(0, 0);
     if (msg == null) {
             $('#buttonDiv').css("display", "none");
@@ -2295,10 +2302,10 @@ function PatternHighlight() {
     loading_off();
     if (patternKyword.length == 0) return;
 
-    for(let i = 0; i< patternKyword.length; i++){
-       if (piHighlightList.includes(patternKyword[i].piid)){
-           setPatternHighLight(patternKyword[i].kwds, 'K');
-       }
+    for (let i = 0; i < patternKyword.length; i++) {
+        if (patternKyword[i].kwds) {
+            setPatternHighLight(patternKyword[i].kwds, 'K');
+        }
     }
 }
 
@@ -2327,10 +2334,14 @@ function setSubjectHighLight(defaultText, type) {
 function setBodyHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
     for (var i = 0; i < defaultText.length; i++) {
-        var  splitText =  defaultText[i].split(', ');
+        if (!defaultText[i] || defaultText[i] === '' || defaultText[i] === '0') {
+            continue;
+        }
+        var splitText = defaultText[i].split(', ');
         for (var j = 0; j < splitText.length; j++) {
-            if (splitText[j] == '' ) continue;
-            $(body_obj).highlight(splitText[j], type);
+            var keyword = splitText[j].trim();
+            if (keyword === '' || keyword === '0') continue;
+            $(body_obj).highlight(keyword, type);
         }
     }
 }
@@ -2338,12 +2349,13 @@ function setBodyHighLight(defaultText, type) {
 function setPatternHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
     var subject_obj = $("#subject");
-        var  splitText =  defaultText.split(',');
-        for (var j = 0; j < splitText.length; j++) {
-            if (splitText[j] == '' ) continue;
-            $(body_obj).highlight(splitText[j], type);
-            $(subject_obj).highlight(splitText[j], type);
-         }
+    var splitText = defaultText.split(',');
+    for (var j = 0; j < splitText.length; j++) {
+        var keyword = splitText[j].trim();
+        if (keyword === '') continue;
+        $(body_obj).highlight(keyword, type);
+        $(subject_obj).highlight(keyword, type);
+        }
 }
 
 
