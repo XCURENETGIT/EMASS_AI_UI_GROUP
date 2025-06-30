@@ -692,7 +692,7 @@ public class SolrCreateQuery {
 			if (Common.isNotEmpty(m_to)) {
 				StringBuffer toStr = new StringBuffer();
 				if (m_to.contains(" ")) {
-					toStr = createAndQurey(m_to.toLowerCase(), toField);
+					toStr = createOrQurey(m_to.toLowerCase(), toField);
 				} else if (m_to.startsWith("\"") && m_to.endsWith("\"")) {
 					toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
 				} else if (Config.getBoolean("sender.receiver.asta")) {
@@ -708,7 +708,7 @@ public class SolrCreateQuery {
 			if (Common.isNotEmpty(m_cc)) {
 				StringBuffer ccStr = new StringBuffer();
 				if (m_cc.contains(" ")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					ccStr = createAndQurey(m_cc.toLowerCase(), ccField);
+					ccStr = createOrQurey(m_cc.toLowerCase(), ccField);
 				} else if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) {
 					ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
 				} else if (Config.getBoolean("sender.receiver.asta")) {
@@ -724,7 +724,7 @@ public class SolrCreateQuery {
 			if (Common.isNotEmpty(m_bcc)) {
 				StringBuffer bccStr = new StringBuffer();
 				if (m_bcc.contains(" ")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					bccStr = createAndQurey(m_bcc.toLowerCase(), bccField);
+					bccStr = createOrQurey(m_bcc.toLowerCase(), bccField);
 				} else if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) {
 					bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
 				} else if (Config.getBoolean("sender.receiver.asta")) {
@@ -745,13 +745,13 @@ public class SolrCreateQuery {
 		if (Common.isEquals(receivers_upperCase, "Y")) {
 			// 대소문자 구분 체크
 			if (receivers.contains(" ")) {
-				queryStr = createAndQurey(receivers, new String[]{RECEIVER_UPPER});
+				queryStr = createOrQurey(receivers, new String[]{RECEIVER_UPPER});
 			} else {
 				queryStr.append(String.format("%s%s:(%s)", AND_QUERY, RECEIVER_UPPER, createOrQueryAsteriskAll(receivers))).append(SPACE);
 			}
 		} else if (Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 			if (receivers.contains(" ")) {
-				queryStr = createAndQurey(receivers.toLowerCase(), RECEIVER_NOTUPPER);
+				queryStr = createOrQurey(receivers.toLowerCase(), RECEIVER_NOTUPPER);
 			} else {
 				for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) { // 대소문자 구분 체크 X
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) {
@@ -768,7 +768,7 @@ public class SolrCreateQuery {
 			}
 		} else {
 			if (receivers.contains(" ")) {
-				queryStr = createAndQurey(receivers.toLowerCase(), RECEIVER);
+				queryStr = createOrQurey(receivers.toLowerCase(), RECEIVER);
 			}else {
 				for (int i = 0; i < RECEIVER.length; i++) {     // 대소문자 구분 체크
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) {
@@ -788,7 +788,7 @@ public class SolrCreateQuery {
 	}
 
 
-	private StringBuffer createAndQurey(String params, String[] searchField) {
+	private StringBuffer createOrQurey(String params, String[] searchField) {
 		StringBuffer queryStr = new StringBuffer();
 		String[] paramArr = params.split(" ");
 		List<String> tmp_list2 = new ArrayList<>();
@@ -801,7 +801,7 @@ public class SolrCreateQuery {
 			tmp_list2.add(tmp_list);
 		}
 		for (int k = 0; k < tmp_list2.size(); k++) {
-			queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list2.get(k)));
+			queryStr.append(String.format("%s(%s)", SPACE, tmp_list2.get(k)));
 		}
 		return queryStr;
 	}
