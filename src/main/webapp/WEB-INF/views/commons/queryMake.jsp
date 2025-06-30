@@ -1003,120 +1003,136 @@
 					case "busi":
 						var busiNm = $('#busi').val();
 						if(busiNm != "") {
+							var busiNmNmArr = busiNm.split(" ");
 							addQueryText = queryAddMinus + "businm:(";
 
-							var busiNmNmArr = busiNm.split("|");
-
-							for(var i = 0; i < busiNmNmArr.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
+							if (busiNmNmArr.length == 1){
+								addQueryText += busiNmNmArr[0]+"*";
+								addQueryText += ")";
+							}else{
+								for (var i = 0; i< busiNmNmArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR "
+									}
+									addQueryText += busiNmNmArr[i] + "*";
 								}
-								addQueryText += busiNmNmArr[i].ltrim().rtrim() + "*";
+								addQueryText += ")";
 							}
-
-							addQueryText += ")";
 						}
 						break;
 					case "dept":
 						var deptNm = $('#dept').val();
 						if(deptNm != "") {
+							var deptNmArr = deptNm.split(" ");
 							addQueryText = queryAddMinus + "deptnm:(";
 
-							var deptNmArr = deptNm.split("|");
-
-							for(var i = 0; i < deptNmArr.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
+							if (deptNmArr.length == 1){
+								addQueryText += deptNmArr[0]+"*";
+								addQueryText += ")";
+							}else{
+								for (var i = 0; i< deptNmArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR "
+									}
+									addQueryText += deptNmArr[i] + "*";
 								}
-								addQueryText += deptNmArr[i].ltrim().rtrim() + "*";
+								addQueryText += ")";
 							}
-
-							addQueryText += ")";
 						}
 						break;
 					case "host":
 						var host = $('#host').val();
 						if(host != "") {
+							var hostArr = host.split(" ");
 							addQueryText = queryAddMinus + "(";
-
-							var hostArr = host.split("|");
-							var hostStr = "";
-
-							for(var i = 0; i < hostArr.length; i++) {
-								if(i > 0) {
-									hostStr += " "
+							if (hostArr.length == 1){
+								addQueryText += " host:(" + hostArr[0] +"*" +")";
+								addQueryText += " host_str:(" +  hostArr[0] +"*" +")";
+							}else{
+								for (var i = 0; i<hostArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR";
+									}
+									addQueryText += " host:(" + hostArr[i] +"*" +")";
+									addQueryText += " host_str:(" +  hostArr[i] +"*" +")";
 								}
-								hostStr += hostArr[i].ltrim().rtrim() + "*";
+
 							}
-							addQueryText += " host:(" + hostStr +")";
-							addQueryText += " host_str:(" + hostStr +")";
 							addQueryText += ")";
+
 						}
 						break;
 					case "sabun":
 						var sabun = $('#sabun').val();
-						if(host != "") {
-							addQueryText = queryAddMinus + "(";
+						if(sabun != "") {
 
-							var sabunArr = sabun.split("|");
-							var sabuntStr = "";
+							var sabunArr = sabun.split(" ");
+							addQueryText = queryAddMinus + "sabun:(";
 
-							for(var i = 0; i < sabunArr.length; i++) {
-								if(i > 0) {
-									sabuntStr += " "
+							if (sabunArr.length == 1){
+								addQueryText += sabunArr[0]+"*";
+								addQueryText += ")";
+							}else{
+								for (var i = 0; i< sabunArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR "
+									}
+									addQueryText += sabunArr[i] + "*";
 								}
-								sabuntStr += sabunArr[i].ltrim().rtrim() + "*";
+								addQueryText += ")";
 							}
-							addQueryText += " sabun:(" + sabuntStr +")";
-							addQueryText += ")";
 						}
 						break;
 					case "sender":
 						var sender = $('#sender').val();
 						if(sender != "") {
+							var senderArr = sender.split(" ");
 							addQueryText = queryAddMinus + "(";
-
-							var senderArr = sender.split("|");
-							var senderStr = "";
-
-							for(var i = 0; i < senderArr.length; i++) {
-								if(i > 0) {
-									senderStr += " "
+							if (senderArr.length == 1){
+								addQueryText += " sender_str:(" + senderArr[0] +"*" +")";
+								addQueryText += " sname:(" +  senderArr[0] +"*" +")";
+								addQueryText += " srcip:(" +  senderArr[0] +"*" +")";
+							}else{
+								for (var i = 0; i<senderArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR";
+									}
+									addQueryText += " sender_str:(" + senderArr[i] +"*" +")";
+									addQueryText += " sname:(" +  senderArr[i] +"*" +")";
+									addQueryText += " srcip:(" +  senderArr[i] +"*" +")";
 								}
-								senderStr += senderArr[i].ltrim().rtrim(); // + "*";
+
 							}
-							addQueryText += "sender_str:(*" + senderStr +"*)";
-							addQueryText += " sname:(*" + senderStr +"*)";
-							addQueryText += " srcip:(*" + senderStr +"*)";
 							addQueryText += ")";
 						}
 						break;
 					case "receive":
 						var receive = $('#receive').val();
 						if(receive != "") {
+							var receiveArr = receive.split(" ");
 							addQueryText = queryAddMinus + "(";
-
-							var receiveArr = receive.split("|");
-							var receiveStr = "";
-
-
-							for(var i = 0; i < receiveArr.length; i++) {
-								if(i > 0) {
-									receiveStr += " "
+							if (receiveArr.length == 1){
+								addQueryText += " recvs:(" + receiveArr[0] +"*" +")";
+								addQueryText += " recvs_name:(" +  receiveArr[0] +"*" +")";
+								addQueryText += " dstip:(" +  receiveArr[0] +"*" +")";
+							}else{
+								for (var i = 0; i<receiveArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR";
+									}
+									addQueryText += " recvs:(" + receiveArr[i] +"*" +")";
+									addQueryText += " recvs_name:(" +  receiveArr[i] +"*" +")";
+									addQueryText += " dstip:(" +  receiveArr[i] +"*" +")";
 								}
-								receiveStr += receiveArr[i].ltrim().rtrim(); //+ "*";
-							}
 
-							addQueryText += "recvs:(*" + receiveStr +"*)";
-							addQueryText += " recvs_name:(*" + receiveStr +"*)";
-							addQueryText += " dstip:(*" + receiveStr +"*)";
+							}
 							addQueryText += ")";
 						}
 						break;
 					case "receiveEtc":
 						var receiveEtcObj = $('input:checkbox[name=receiveEtc]:checked');
 
-						var receiveEtcArr = $('#receiveEctVal').val().split("|");
+						var receiveEtcArr = $('#receiveEctVal').val().split(" ");
 						var receiveEtcStr = "";
 						if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
 
@@ -1127,16 +1143,14 @@
 							if(i > 0) {
 								receiveEtcStr += " "
 							}
-							receiveEtcStr += receiveEtcArr[i].ltrim().rtrim();// + "*"
+							receiveEtcStr += "( *"+receiveEtcArr[i].ltrim().rtrim()+"* )";
 						}
 
 						for(var i = 0; i < receiveEtcObj.length; i++) {
 							if(i > 0) {
 								addQueryText += " "
 							}
-
-
-                            addQueryText += receiveEtcObj[i].value + ":(*"  + receiveEtcStr  + "*)" ;
+                            addQueryText += receiveEtcObj[i].value + ":("  + receiveEtcStr  + ")" ;
 						}
 
 						if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
@@ -1293,21 +1307,23 @@
 					case "user":
 						var user = $('#user').val();
 						if(user != "") {
-							addQueryText = queryAddMinus + "(";
 
-							var userArr = user.split("|");
-							var userStr = "";
+							var userArr = user.split(" ");
+							addQueryText = queryAddMinus + "user:(";
 
-							for(var i = 0; i < userArr.length; i++) {
-								if(i > 0) {
-									userStr += " "
+							if (userArr.length == 1){
+								addQueryText += userArr[0]+"*";
+								addQueryText += ")";
+							}else{
+								for (var i = 0; i< userArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR "
+									}
+									addQueryText += userArr[i] + "*";
 								}
-								userStr += userArr[i].ltrim().rtrim() + "*";
+								addQueryText += ")";
 							}
 
-							addQueryText += "user:(" + userStr + ") user_str:(" + userStr + ") userid:(" + userStr + ") name:(" + userStr + ")";
-
-							addQueryText += ")";
 						}
 						break;
 

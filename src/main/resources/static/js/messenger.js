@@ -1451,7 +1451,7 @@ function setcurrentSchVal() {
     currentSchVal.searchStr = $('#searchStrInput').val();
     currentSchVal.readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     var dv = $('#userEmail').val().split('|');
-    currentSchVal.senders = dv.join(',');
+    currentSchVal.senders = dv.join(' ');
     if (currentSchVal.senders != '') currentSchVal.sendersStr = $('#userStr').val();
 
     currentSchVal.attachYn = $('button[name=attachYn].active').val();

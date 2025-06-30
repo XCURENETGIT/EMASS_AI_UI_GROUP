@@ -865,7 +865,7 @@
             // condition.senders = $('#senders').val();
 
             var dv = $('#userEmail').val().split('|');
-            condition.senders = dv.join(',');
+            condition.senders = dv.join(' ');
             if (condition.senders != '') condition.sendersStr = $('#userStr').val();
 
             condition.attachYn = $('button[name=attachYn].active').val();
