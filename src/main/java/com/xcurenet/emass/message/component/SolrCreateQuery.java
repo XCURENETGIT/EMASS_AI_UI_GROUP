@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -415,8 +416,15 @@ public class SolrCreateQuery {
 
 		if(Common.isNotEmpty(service3.toString())) {
 			if(Common.isNotEmpty(service4.toString())) {
+
+				List<String> service4List = Arrays.asList(service4.toString().substring(0, service4.toString().lastIndexOf(',')).split(","));
+
+				String filteredService3 = Arrays.stream(service3.toString().split(","))
+						.filter(s -> service4List.stream().noneMatch(f4 -> f4.startsWith(s)))  // ← 핵심 수정
+						.collect(Collectors.joining(","));
+
 				serviceQueryStr.append(String.format("%s(",AND_QUERY));
-				serviceQueryStr.append(String.format("%s%s:%s", SPACE, SERVICE_12, createOrQuery(service3.substring(0, service3.toString().lastIndexOf(',')))));
+				if (Common.isNotEmpty(filteredService3))  serviceQueryStr.append(String.format("%s%s:%s", SPACE, SERVICE_12, createOrQuery(filteredService3)));
 				serviceQueryStr.append(String.format(" %s%s:%s", SPACE, SERVICE, createOrQueryAppend(service4.substring(0, service4.toString().lastIndexOf(',')), SPECIAL_CHAR)));
 				serviceQueryStr.append(")" );
 
