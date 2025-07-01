@@ -801,6 +801,7 @@ public class SolrCreateQuery {
 		String[] paramArr = params.split(" ");
 		List<String> tmp_list2 = new ArrayList<>();
 		for (int j = 0; j < paramArr.length; j++) {
+			if (Common.isEmpty(paramArr[j])) continue;
 			String tmp_list = "";
 			for (int i = 0; i < searchField.length; i++) {
 				tmp_list += String.format("%s:(%s)", searchField[i], paramArr[j] + astaOption);
