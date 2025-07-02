@@ -206,6 +206,8 @@ public class Config {
 
 	public static Map<String, String> elsFields = new HashMap<>();
 
+	public static final Map<String, String> DEFAULT_PATTERN = new HashMap<>();
+
 	@Value("${llm.enabled:false}")
 	private boolean llmEnabled;
 
@@ -217,6 +219,9 @@ public class Config {
 
 	@Value("${llm.model}")
 	private String llmModel;
+
+	private String llmQuestion = "%s\n\n해당 URL이 어떤 사이트인지 알고싶어\n어떤 카테고리에 속하는지 아래 내용중에서 한개만 알려주고, 사이트의 국가 코드, 해당 사이트를 설명 해줘\n%s\n\n답변은 *을 제외하고 한글로 아래와 같이 알려줘\n\n카테고리 : \n사이트국가코드 : \n사이트설명 :";
+
 
 
 	public static ServiceGroupVO getServiceGroup(final String groupCd) {

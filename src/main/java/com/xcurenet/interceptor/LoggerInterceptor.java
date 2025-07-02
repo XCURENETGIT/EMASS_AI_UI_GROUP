@@ -34,7 +34,11 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			param.remove("_ses_user_name");
 			param.remove("_ses_user_ip");
 			param.remove("_ses_user_type");
-			log.info("{} {} {}", request.getMethod(), request.getRequestURI(), param);
+			if(Common.isNotEquals(url,"/emass/getLLMAnalysis.xcn") && Common.isNotEquals(url,"/emass/getValueLLMAnalysis.xcn")) { //llm분석인경우 parameter 로그 X
+				log.info("{} {} {}", request.getMethod(), request.getRequestURI(), param);
+			}else{
+				log.info("{} {}", request.getMethod(), url);
+			}
 		}
 
 		if (log.isDebugEnabled()) {

@@ -16,6 +16,7 @@ import com.xcurenet.emass.consent.service.ConsentVO;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
+import com.xcurenet.emass.message.service.vo.HostDescriptionVO;
 import com.xcurenet.gridfs.GridFs;
 import com.xcurenet.minio.MinioFileAdapter;
 import com.xcurenet.pattern.service.PatternVO;
@@ -544,6 +545,25 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return result;
 	}
 
+	@Override
+	public List<String> getLastPiText(List<String> kwds, String piId) {
+
+		Map<String, String> mp = Config.DEFAULT_PATTERN;
+		List<String> result = new ArrayList<>();
+
+		for(int i=0; i< kwds.size(); i++) {
+			String kwd = kwds.get(i);
+
+			if (mp.containsKey(piId)){
+				String masking = Common.maskString(kwd, mp.get(piId), "*");
+				result.add(masking);
+			}else{
+				result.add(kwd);
+			}
+		}
+
+		return result;
+	}
 
 	@Override
 	public List<Integer> findKeywordPages(String msgId, String attachId, String ocrYn, int limit, final String searchkey) {

@@ -1,8 +1,10 @@
 package com.xcurenet.emass.message.service;
 
 import com.xcurenet.code.service.CodeVO;
+import com.xcurenet.emass.message.service.vo.HostDescriptionVO;
 import com.xcurenet.searchWord.service.RelationKeywordVO;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -91,5 +93,7 @@ public interface EmsMessageService {
 	public int updateHost(final HostDescriptionVO hostDescriptionVO);
 
 	public List<String> keywordSeparation(String keyword);
+
+	public List<String> getLastPiText(List<String> kwds, String piid);
 
 }

@@ -636,15 +636,35 @@
 		DELETE	FROM UI_CHRONY	WHERE CORNY_DATATIME <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 1 MONTH)
 	</delete>
 
-	<select id="getLlm" resultType="llmVO" parameterType="string">
-		SELECT  LLM_CONF AS llmConf, LLM_PROMPT AS llmPromt, LLM_MODEL AS llmModel, LLM_CONTENT AS llmContent
-		FROM   UI_LLM
-		WHERE  LLM_CONF = #{type}
-	</select>
 
 	<select id="getBodyNationList" resultType="bodyNationVO">
 		SELECT  NATION_CD AS nationCd, NATION_NAME AS nationName, NATION as nation
 		FROM    UI_BODY_NATION
+	</select>
+
+	<select id="getHostCategoryList" resultType="hostCategoryVO">
+		SELECT  CATEGORY_CD AS categoryCd, CATEGORY_NM AS categoryNm
+		FROM    EMS_HOST_CATEGORY
+		ORDER   BY CATEGORY_CD ASC
+	</select>
+
+	<select id="getNationList" resultType="nationVO">
+		SELECT  NATION_CD AS nationCd,
+		NATION_KOR AS nationKor,
+		NATION_ENG AS nationEng
+		FROM    EMS_NATION
+		ORDER   BY NATION_CD ASC
+	</select>
+
+	<insert id="insertHostCategory" parameterType="hostVO">
+		REPLACE INTO EMS_HOST (HOST, CATEGORY_CD, NATION_CD, DESCRIPTION, PROCESS_YN)
+		VALUES (#{host}, #{categoryCd}, #{nationCd}, #{desc}, 'Y')
+	</insert>
+
+	<select id="getLlm" resultType="llmVO" parameterType="string">
+		SELECT  LLM_CONF AS llmConf, LLM_PROMPT AS llmPromt, LLM_MODEL AS llmModel, LLM_CONTENT AS llmContent
+		FROM   UI_LLM
+		WHERE  LLM_CONF = #{type}
 	</select>
 
 </mapper>

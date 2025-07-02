@@ -1053,3 +1053,12 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 
 .close {position: absolute;right:20px;top:14px; color: #999;font-size: 28px;font-weight: bold;    cursor: pointer !important;}
 .close:hover,.close:focus {color: black;text-decoration: none;    cursor: pointer !important;}
+
+.scanBtn01 {
+    color:#375E9A; height:20px; padding:0 8px; font-size:13px; line-height: normal; vertical-align:middle;display: inline-block; background: #F5F8FF;
+    float: right;
+}
+.scanBtn01:hover {
+    background-color:#E9EEFA;
+    cursor: pointer;
+}

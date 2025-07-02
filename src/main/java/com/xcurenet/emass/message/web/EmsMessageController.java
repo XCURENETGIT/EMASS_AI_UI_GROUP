@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.web;
 
+import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -33,11 +34,13 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONUtils;
+import org.apache.catalina.Session;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -836,61 +839,78 @@ public class EmsMessageController {
 	}
 
 
-
 	@RequestMapping(value = "/getEmassBodyStr.xcn")
 	@Description("EMASS 메시지 본문 조회")
 	@AuditOperation(Operation.BODY_VIEW)
 	@ResponseBody
-	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response, final Session session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String userCharset = Common.nvl(request.getParameter("userCharset"));
+		Locale locale = Common.getLocale(request.getSession());
+		AdminVO adminVo = Common.getAdmin(request.getSession());
 		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
+		if (Common.isEmpty(emsBody.getMsgId())) {
+			log.warn("Message is not found : {}", msgId);
+			return new XcnResponseVO(XcnRspCode.OK, noBodyMessage("N", null, locale));
+		}
+
+
+		/**
+		 * HTML 표시 기능 사용시
+		 */
+		ConfigAdminVO htmlViewOption = adminVo.getAdminConf("htmlView");
+		String htmlView = (Common.isNotEmpty(htmlViewOption)) ? Common.nvl(htmlViewOption.getVal()) : "N";
+		if (Common.isEquals(htmlView, "Y")) {
+			if (null == emsBody.getBody() || emsBody.getBody().length == 0 ) return new XcnResponseVO(XcnRspCode.OK, noBodyMessage("N", emsBody.getSvc(), locale));
+			else return new XcnResponseVO(XcnRspCode.OK, getBodyStrMaskingMsgid(getEmassOriginalBody(emsBody.getBody(), emsBody.getSvc()), emsBody.getMsgId()));
+		}
+
+		/* 미분류 */
+		if (Common.isUnclassifiedService(emsBody.getSvc())) {
+			List<String> keywordList = new ArrayList<>();
+			//  검출 내역 미리보기에 사용될 검색어,예약어
+			String keywords = Common.nvl(request.getParameter("keywords"));  // 예약어
+			String searchStrInput = Common.nvl(request.getParameter("searchStrInput")); // 검색어
+			//본문 탐지 키워드 리스트 추가
+			if (Common.isNotEmpty(keywords)) {
+				String[] keywordArr = keywords.split(", ");
+				for (String keyword : keywordArr) keywordList.add(keyword.trim());
+			}
+			//검색 키워드 리스트 추가
+			if (Common.isNotEmpty(searchStrInput)) keywordList.addAll(emsMessageService.keywordSeparation(searchStrInput));
+			//검출을 위한 리스트 all 소문자화
+			if (!keywordList.isEmpty()) {
+				keywordList = keywordList.stream().map(String::toLowerCase).collect(Collectors.toList());
+			}
+
+			ConfigAdminVO bodyPrettyOption = adminVo.getAdminConf("bodyPretty");
+			String bodyPretty = (Common.isNotEmpty(bodyPrettyOption)) ? Common.nvl(bodyPrettyOption.getVal()) : "N";
+			ConfigAdminVO detectPreviewOption = adminVo.getAdminConf("detectPreview");
+			String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
+			// 마스킹 여부 확인
+			return new XcnResponseVO(XcnRspCode.OK, getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody,locale));
+		} else {
+			/* 그 외 일반 */
+			return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
+		}
 	}
 
+	public static String noBodyMessage(final String previewFlag, final String svc, final Locale locale) {
+		boolean isUnclService = Common.isUnclassifiedService(svc);
+		if (Common.isEquals(previewFlag, "Y") && isUnclService) return Prop.propFormat("common.body.keyword.nodata", locale);
+		else return Prop.propFormat("common.msg.nocontent", locale);
+	}
 
+	public String getBodyStrMaskingMsgid(String bodyStr, String msgid) {
+		if(bodyStr != null) {
+			List<EmsPiVO> piVo = emsMessageService.getEmassPattern(msgid);
+			for(int i = 0; i < piVo.size(); i++) {
+				bodyStr = String.join(",", emsMessageService.getLastPiText(Common.toList(bodyStr, ","), piVo.get(i).getPiid()));
+			}
+		}
 
-
-//	@RequestMapping(value = "/getEmassBodyStr.xcn")
-//	@Description("EMASS 메시지 본문 조회")
-//	@AuditOperation(Operation.BODY_VIEW)
-//	@ResponseBody
-//	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-//		List<String> keywordList = new ArrayList<>();
-//		String msgId = Common.nvl(request.getParameter("msgId"));
-//		String userCharset = Common.nvl(request.getParameter("userCharset"));
-//
-//
-//		//  검출 내역 미리보기에 사용될 검색어,예약어
-//		String keywords = Common.nvl(request.getParameter("keywords"));  // 예약어
-//		String searchStrInput = Common.nvl(request.getParameter("searchStrInput")); // 검색어
-//
-//		//본문 탐지 키워드 리스트 추가
-//		if (Common.isNotEmpty(keywords)) {
-//			String[] keywordArr = keywords.split(", ");
-//			for (String keyword : keywordArr) keywordList.add(keyword.trim());
-//		}
-//
-//		//검색 키워드 리스트 추가
-//		if (Common.isNotEmpty(searchStrInput)) keywordList.addAll(emsMessageService.keywordSeparation(searchStrInput));
-//
-//		//검출을 위한 리스트 all 소문자화
-//		if(keywordList.size() > 0){
-//			keywordList = keywordList.stream().map(m -> m.toLowerCase()).collect(Collectors.toList());
-//		}
-//
-//		String adminId = Common.getAdminId(request);
-//		ConfigAdminVO bodyPrettyOption = configAdminService.getConfAdmin("bodyPretty", adminId);
-//		String bodyPretty = (Common.isNotEmpty(bodyPrettyOption)) ? Common.nvl(bodyPrettyOption.getVal()) : "N";
-//		ConfigAdminVO detectPreviewOption = configAdminService.getConfAdmin("detectPreview", adminId);
-//		String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
-//
-//		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-//		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody));
-//	}
-
-
-
+		return bodyStr;
+	}
 
 	@RequestMapping(value = "/getEmassBodySave.xcn")
 	@Description("EMASS grid 메시지 본문 저장")
@@ -1022,13 +1042,26 @@ public class EmsMessageController {
 	}
 
 	@Description("EMASS 원문 내용 조회")
-	public String getEmassOriginalBody(final HttpServletRequest request, final String msgId) throws Exception {
-		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		if (emsBody == null || emsBody.getBody() == null) return Prop.propFormat("common.msg.nocontent", request);
+	public String getEmassOriginalBody(byte[] bodyContents,String svc) throws Exception {
+		if(null == bodyContents) return Prop.propFormat("common.msg.nocontent");
+		String charset = DetectCharset.getCharset(bodyContents);
+		if (Common.isOrEquals(charset, "UTF-8", "EUC-KR")) return Common.toString(bodyContents, charset);
+		else {
+			if (charset == null || (charset != "UTF-8" && charset != "EUC-KR")) charset = "EUC-KR";
+			if (null != svc && svc.indexOf("EMM") > -1) {
+				/* KNOX인 데이터는 mimeParser로 해석 */
+				MimeParser mimeParser = new MimeParser(bodyContents);
+				if (Common.isEquals(mimeParser.getMimeBodyVo().getContentTransferEncoding(), "base64")) {
+					MimeVo mimeVo = mimeParser.getMimeBodyVo();
+					return IOUtils.toString(mimeVo.getBody(), "UTF-8");
+				}
+			}
+			String bodyStr = Common.toString(bodyContents, charset);
+			Document doc = Jsoup.parse(bodyStr);
+			Elements rows = doc.select("body");
 
-		String charset = DetectCharset.getCharset(emsBody.getBody());
-		if (charset == null || (charset != "UTF-8" && charset != "EUC-KR")) charset = DEFAULT_ENCODING;
-		return Common.toString(emsBody.getBody(), charset);
+			return getBodyHtmlContent(rows);
+		}
 	}
 
 	@Description("EMASS 헤더 내용 조회")
@@ -1151,59 +1184,117 @@ public class EmsMessageController {
 	}
 
 
+	/**
+	 * 본문 상세보기 (미분류 & 모니터링 제외 전용)
+	 *
+	 * @param bodyPretty
+	 * @param previewFlag
+	 * @param keywordList
+	 * @param userCharset
+	 * @param emsBody
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String getBodyStr(final String bodyPretty, final String previewFlag, List<String> keywordList, String userCharset, EmsBodyVO emsBody,Locale locale) throws UnsupportedEncodingException {
+		if (emsBody == null) return noBodyMessage(previewFlag, emsBody.getSvc(), locale);
+		String body = getBodyStrProc(Common.UTF8, emsBody);
+		if (body == null) return noBodyMessage(previewFlag, emsBody.getSvc(), locale);
+		log.debug("body length {}", body.length());
+		String mergeBodyText = body;
+		try {
+			// 정돈되게
+			if (Common.isEquals(bodyPretty, "Y")) {
+				mergeBodyText = unknownSvcRemoveHtmlBody(emsBody, sanitizeAndEscape(body, Common.ignoreTags)); // 문서 정돈 기능
+			}
+			// 미리보기
+			if (Common.isEquals(previewFlag, "Y")) {
+				Document doc = Jsoup.parse(mergeBodyText);
+				mergeBodyText = bodyPreviewDetect(doc, keywordList); // 키워드 검출 미리보기 기능
+			}
+		} catch (Exception e) {
+			log.error("", e);
+		}
+		return getUnknownSvcDocBody(mergeBodyText, emsBody, locale);
+	}
 
+	public static String getUnknownSvcDocBody(final String bodyStr, EmsBodyVO emsBody,Locale locale) {
+		Document doc = Jsoup.parse(bodyStr); //태그 변환을 위한 Jsoup Parser
+		String uri = emsBody.getHost();
+		if (Common.isEmpty(uri)) uri = emsBody.getSrcIp();
+		doc.setBaseUri("http://" + uri);
+		changeLink(doc);
+		changeThTag(doc, locale);
+		return replaceTagBody(doc);
 
+	}
 
-	public static String getBodyStr(final String bodyPretty, final String previewFlag, List<String> keywordList, String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
-		if (emsBody == null || Common.isEquals(emsBody.getBody().length,0)) return Prop.propFormat("common.msg.nocontent");
-		String body = getBodyStrProc(userCharset, emsBody);
-		if (emsBody.getSvc().startsWith("Q")) return body;
-		else if(body.length() > Common.BODY_CONTEXT_SIZE ) return Common.BODY_CONTEXT_SIZE_OVER;
-		else {
-			/* 미분류&모니터링 제외만 해당 기능 사용 */
-			if(emsBody.getSvc().startsWith("U") || emsBody.getSvc().startsWith("X")) {
-				if (Common.isEquals(bodyPretty, "Y")) {
-					/* sanitizeAndEscape()    body 내용에 꺽쇠<>가 들어갈시 escape처리 */
-					body = unknownSvcRemoveHtmlBody(emsBody, sanitizeAndEscape(body, Common.allowedTags)); // 문서 정돈 기능
-				} else {
-					body = sanitizeAndEscape(body, Common.allowedTags);
+	public static String replaceTagBody(Document doc) {
+		Element bodyEl = doc.body();
+		replaceTagNames(bodyEl, "HTML", "XHTML", false);
+		replaceTagNames(bodyEl, "META", "XMETA", false);
+		replaceTagNames(bodyEl, "STYLE", "XSTYLE", true);
+		replaceTagNames(bodyEl, "SCRIPT", "TEXTAREA", true);
+		replaceTagNames(bodyEl, "LINK", "XLINK", true);
+		replaceTagNames(bodyEl, "BUTTON", "XBUTTON", false);
+		replaceTagNames(bodyEl, "BASE", "XBASE", true);
+		replaceTagNames(bodyEl, "IFRAME", "XIFRAME", true);
+		return doc.body().html();
+	}
+
+	public static void changeThTag(Document doc,Locale locale){
+		Elements elems = doc.select("table.response > tbody > tr, table.request > tbody > tr");
+		for (Element tr : elems) {
+			Elements thElements = tr.select("> th");
+			if (!thElements.isEmpty()) {
+				for (Element th : thElements) {
+					String text = th.text();
+					String buttonHtml = "<span class=\"scanBtn01\"><i class=\"fa fa-spinner\" width=\"23px;\" height=\"23px;\" aria-hidden=\"true\" style=\"display: none; margin-right: 5px; \"></i>" +
+							"<img alt=\"\" class='scanImg' src=\"../img/ztree/AI2.gif\" width=\"23px;\" height=\"23px;\" style=\"margin-top:-2px; !important;\">" + Common.nvl(Prop.propFormat("DATA_ANALYSIS.ANALYSIS", locale)) + "</img></span>";
+					th.html(text + buttonHtml);
 				}
-				if (Common.isEquals(previewFlag, "Y")) body = bodyPreviewDetect(body, keywordList); // 키워드 검출 미리보기 기능
 			}
 
-			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
-
-			String uri = emsBody.getHost();
-			if (Common.isEmpty(uri)) uri = emsBody.getSrcIp();
-
-			doc.setBaseUri("http://" + uri);
-			changeLink(doc);
-
-			Element bodyEl = doc.body();
-
-			reValueTag(bodyEl, "input", "type", "button");    /* submit방지 */
-			replaceTagNames(bodyEl, "div#header", "div", true);
-			replaceTagNames(bodyEl, "header", "xheader", true);
-
-			replaceTagNames(bodyEl, "HTML", "XHTML", false);
-			replaceTagNames(bodyEl, "META", "XMETA", false);
-			replaceTagNames(bodyEl, "STYLE", "XSTYLE", true);
-			replaceTagNames(bodyEl, "SCRIPT", "TEXTAREA", true);
-			replaceTagNames(bodyEl, "LINK", "XLINK", true);
-			replaceTagNames(bodyEl, "BUTTON", "XBUTTON", false);
-			replaceTagNames(bodyEl, "BASE", "XBASE", true);
-			replaceTagNames(bodyEl, "IFRAME", "XIFRAME", true);
-
-			return doc.body().html();
+			/**
+			 * td 안에 html이 존재할경우 모든 class 제거 (emass css에 영향을 받으므로)
+			 */
+			Elements tdElements = tr.select("> td");
+			if (!tdElements.isEmpty()) {
+				for (Element td : tdElements) {
+					String content = td.html();
+					EmsBodyType bodyType = preContentType(content);
+					if(Common.isEquals(bodyType,EmsBodyType.HTML) || Common.isEquals(bodyType,EmsBodyType.MAYBE_HTML)){
+						removeClassRecursively(td);
+					}
+				}
+			}
 		}
 	}
 
 
 
+	public static void removeClassRecursively(Element element) {
+		element.removeAttr("class");  // class 속성 완전 제거
+		Elements children = element.children(); // 자식 요소들 가져오기
+		for (Element child : children) {
+			removeClassRecursively(child);  // 자식 요소에 대해 재귀 호출
+		}
+	}
 
 
 
-
+	public static EmsBodyType preContentType(String str) {
+		if (str == null) return EmsBodyType.NONE;
+		String strTmp = str.toLowerCase().replaceAll(" ", "").trim();
+		if (Common.isEmpty(strTmp)) return EmsBodyType.NONE;
+		else if (mayBeJSON(strTmp)) return EmsBodyType.JSON;
+		else if (str.startsWith("<!DOCTYPE html") || str.startsWith("<html>")) return EmsBodyType.HTML;
+		else if (strTmp.startsWith("mime-version") || strTmp.indexOf("message-id") > -1 || strTmp.indexOf("mime-version") > -1 || strTmp.indexOf("content-type:text/html") > -1)
+			return EmsBodyType.MIME;
+		else if (DetectHtml.isHtml(str)) return EmsBodyType.HTML;
+		else if (strTmp.startsWith("<table") || strTmp.startsWith("<div") || strTmp.startsWith("<p") || strTmp.indexOf("<styletype='text/css'>") > -1 || strTmp.indexOf("<table") > -1 || strTmp.indexOf("<style") > -1)
+			return EmsBodyType.MAYBE_HTML;
+		else return EmsBodyType.OTHER;
+	}
 
 
 
@@ -1797,27 +1888,122 @@ public class EmsMessageController {
 	 * @param keywordList
 	 * @return
 	 */
-	private static String bodyPreviewDetect(String bodyText, List<String> keywordList) {
-		String cleanBody = Common.stripNonValidChar(bodyText);
-		try {
-			cleanBody = Common.stripTags(cleanBody);
-		} catch (final Exception e) { // jsoup 에서 처리 못하는 데이터는 무시하고 그냥 넣음
-			log.info("",e);
-		}
+	private static String bodyPreviewDetect(Document doc, List<String> keywordList) {
+		List<Map<String, String>> detectList = new ArrayList<>();
 
-		String originalText = cleanBody.replaceAll("\\n+", "");
-		String compareBodyText = originalText.toLowerCase(); // 키워드 검출을 위한 소문자화
+		//tr 태그 존재시
+		if (Common.isNotEmpty(doc.select("tr"))) {
+			Elements rows = doc.select("tr");
 
-		int mapidx = 0;
-		Map<String,String> reqMap = new HashMap<>();
-		List<String> contents  = extractKeywordsAndContext(originalText,compareBodyText,keywordList,30);
-		for (String content : contents) {
-			mapidx++;
-			reqMap.put(String.format("match_%s",mapidx),String.format("<tr><th>%s</th><td>%s</td></tr>", "", content));
+			Iterator<Element> iterator = rows.iterator();
+			int mapidx = 0;
+			while (iterator.hasNext()) {
+				Map<String, String> reqMap = new HashMap<>();
+				Element row = iterator.next();
+
+				/* Th Content */
+				String thOrigianlText = "";
+				String thCompareText = "";
+				if (Common.isNotEmpty(row.select("th"))) {
+					thOrigianlText = row.select("th").text();
+					thCompareText = thOrigianlText.toLowerCase();
+					String resultThStr = extractKeywordsAndContextStr(thOrigianlText, thCompareText, keywordList, 30);
+					if (Common.isNotEmpty(resultThStr)) {
+						reqMap.put(String.format("match_th_%s", mapidx), String.format("<tr><th>%s</th><td>%s</td></tr>", thOrigianlText, resultThStr));
+						detectList.add(reqMap);
+					}
+				}
+
+				/* Td Content */
+				String origianlText = "";
+				String compareText = "";
+				if (Common.isNotEmpty(row.select("td"))) {
+					origianlText = Common.isNotEmpty(row.select("td")) ? row.select("td").text() : "";
+					compareText = origianlText.toLowerCase();
+					String resultTdStr = extractKeywordsAndContextStr(origianlText, compareText, keywordList, 30);
+					if (Common.isNotEmpty(resultTdStr)) {
+						reqMap.put(String.format("match_td_%s", mapidx), String.format("<tr><th>%s</th><td>%s</td></tr>", thOrigianlText, resultTdStr));
+						detectList.add(reqMap);
+					}
+				}
+				mapidx++;
+			}
+		} else {
+			/* tr 태그 존재 안할시 */
+			String text = doc.text();
+
+			String originalText = text;
+			String compareBodyText = originalText.toLowerCase(); // 키워드 검출을 위한 소문자화
+
+			int mapidx = 0;
+			Map<String, String> reqMap = new HashMap<>();
+			List<String> contents = extractKeywordsAndContext(originalText, compareBodyText, keywordList, 30);
+			for (String content : contents) {
+				mapidx++;
+				reqMap.put(String.format("match_%s", mapidx), String.format("<tr><th>%s</th><td>%s</td></tr>", "detection content", content));
+				detectList.add(reqMap);
+			}
 		}
-		return bodyPreviewParse(reqMap);
+		return bodyPreviewParse(detectList);
 	}
 
+
+	/**
+	 * String 리턴
+	 *
+	 * @param detectMap
+	 * @return
+	 */
+	private static String bodyPreviewParse(final List<Map<String, String>> detectList) {
+		String resultBody = Prop.propFormat("common.keyword.nodata");
+		if (Common.isEmpty(detectList)) return resultBody;
+		if (detectList.size() > 0) {
+			resultBody = detectList.stream().flatMap(m -> m.entrySet().stream().map(entry -> entry.getValue())).collect(Collectors.joining());
+			return bodyhtmlPrefix.concat(resultBody).concat(bodyhtmlSuffix);
+		} else return resultBody;
+	}
+
+
+	/***
+	 * 텍스트 검출
+	 * @param text
+	 * @param compareBodyText
+	 * @param keywords
+	 * @param contextLength
+	 * @return
+	 */
+	public static String extractKeywordsAndContextStr(String text, String compareBodyText, List<String> keywords, int contextLength) {
+		List<String> results = new ArrayList<>();
+		List<Range> ranges = new ArrayList<>();
+		for (String keyword : keywords) {
+			int index = 0;
+			while ((index = compareBodyText.indexOf(keyword, index)) != -1) {
+				int start = Math.max(0, index - contextLength);
+				int end = Math.min(text.length(), index + keyword.length() + contextLength);
+				boolean added = false;
+				for (Range r : ranges) {
+					if (r.isOverlapping(start, end)) {
+						r.expand(start, end);
+						added = true;
+						break;
+					}
+				}
+				if (!added) {
+					ranges.add(new Range(start, end));
+				}
+				index += keyword.length(); // Move past the current keyword
+			}
+		}
+
+		// Collect results based on merged ranges
+		for (Range r : ranges) {
+			results.add(text.substring(r.start, r.end));
+		}
+		Collections.reverse(results);
+		if (results.size() > 0) {
+			return StringUtils.join(results, "");
+		} else return null;
+	}
 	/**
 	 * String 리턴
 	 * @param detectMap
@@ -1993,6 +2179,15 @@ public class EmsMessageController {
 			return textParser(JSONSerializer.toJSON(text.replaceAll("\\n", "").replaceAll(" ", "").trim()).toString(4, 1));
 		}
 		return text;
+	}
+
+
+	public static String getBodyHtmlContent(Elements rows) {
+		StringBuilder bodyHtml = new StringBuilder();
+		for (Element row : rows) {
+			bodyHtml.append(row.html());
+		}
+		return bodyHtml.toString();
 	}
 
 

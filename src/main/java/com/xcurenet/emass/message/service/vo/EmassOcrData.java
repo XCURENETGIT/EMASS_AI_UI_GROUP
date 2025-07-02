@@ -16,4 +16,21 @@ public class EmassOcrData {
 
 	@Field("ocrAttachTextPath")
 	private Collection<String> ocrAttachTextPath = new ArrayList<>();
+
+    @Data
+    public static class HostDescriptionVO {
+
+        String host;
+        String scheme;
+        String port;
+        String categoryCd;
+        String categoryNm;
+        String nationCd;
+        String description;
+        String type;
+        String processYn;
+        String nationEn;
+        String nationKo;
+
+    }
 }

@@ -1105,11 +1105,28 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse) {
     if (kHighlight != undefined) keywordHighlight = kHighlight;
     if (hostQueryUse != undefined) hostQuery = hostQueryUse;
 
+    var consentId = ''
+    if(window.opener == null) {
+        consentId = parent.$('#consentUserId').val();
+    }else {
+        if(typeof consentUserId !== 'undefined'){
+            consentId = consentUserId;
+        }
+    }
+
     ui.get({
         url: 'getEmassMessageNew.xcn',
         msgId: msgId,
-        consentUserId: parent.$('#consentUserId').val(),
+        consentUserId: consentId,
         success: function (data, total) {
+            if (data == null){
+                $('#buttonDiv').css("display", "none");
+                $('#msgDiv').css("display", "none");
+                $('#notfoundmsgDiv').css("display", "");
+                $('#notfoundconsentDiv').css("display", "none");
+                $('#notSelectDiv').css("display", "none");
+                return;
+            }
             setRead(data); //읽음 여부 처리
             setMessage(data);
         },
@@ -1120,7 +1137,6 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse) {
         }
     });
 }
-
 function getProtocolNm(protocol) {
     var p = nvl(protocol);
     if (p == '') return '';
@@ -2015,40 +2031,29 @@ function getHostDescription(host, svc) {
         url: 'getHostDescription.xcn',
         host: host,
         success: function (data, total) {
-            if (data != null) {
-                if (data.description == null) { //host 설명
-                    $('#hostDescriptionDiv').html("");
-                    $("#hostDescriptionDiv").css("display", "none");
+            if (svc.startsWith("X") || svc.startsWith("U")) {   //미분류 데이터 일때
+                $("#parentDiv").css("display", "");
+                $("#hostCategoryDiv").css("display", "inline-block");
+                $('#hostCategory').val(host)
+                if (data == null || data.categoryNm == null) {
+                    $('#hostCategory').val(host);
+                    $('#hostCategory').html("AI 검색");
+                    $('#hostCategoryDiv').addClass('searchCategory');
                 } else {
-                    $('#hostDescriptionDiv').html(data.description);
-                    $("#hostDescriptionDiv").css("display", "");
-                }
-                if (data.categoryNm != null && (svc.startsWith("X") || svc.startsWith("U"))) { // host category
-                    $("#hostCategoryDiv").css("display", "inline-block");
-                    $("#parentDiv").css("display", "flex");
-                    $('#hostCategory').html( contentBody.category + ": " + data.categoryNm);
-                }else{
-                    $("#hostCategoryDiv").css("display", "none");
+                    $('#hostCategory').val(data.categoryNm);
+                    $('#hostCategory').html(data.categoryNm);
+                    $('#hostCategoryDiv').removeClass('searchCategory');
                 }
 
-                if (data.nationCd != null && (svc.startsWith("X") || svc.startsWith("U"))){
-                    var imageName =mainContext+"/img/nation/"+ data.nationCd+".png";
-                    let str = '';
-                    if ( data.nationCd != 'XX'){
-                        str += "<img src="+imageName+">";
-                    }
-                    $("#hostNationDiv").css("display", "inline-block");
-                    $("#parentDiv").css("display", "flex");
-                    if (lo == "ko") str += data.nationKo;
-                    else str += data.nationEn;
-                    console.log(str);
-                    $('#hostNation').html( contentBody.nation + ": " + str);
-                } else{
-                    $("#hostNationDiv").css("display", "none");
+                if (data == null || data.description == null) {
+                    $("#helpHostDesc").css("display", "none");
+                } else {
+                    $("#helpHostDesc").css("display", "block").html(data.description);
                 }
-            }else{
-                $("#hostDescriptionDiv").css("display", "none");
+            } else {
                 $("#parentDiv").css("display", "none");
+                $("#hostCategoryDiv").css("display", "none");
+                $("#helpHostDesc").css("display", "none");
             }
         },
         error: function (status, message) {

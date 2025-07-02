@@ -1255,3 +1255,12 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 .subject_readY{
 	font-weight: normal;
 }
+
+.scanBtn01 {
+	color:#375E9A; height:20px; padding:0 8px; font-size:13px; line-height: normal; vertical-align:middle;display: inline-block; background: #F5F8FF;
+	float: right;
+}
+.scanBtn01:hover {
+	background-color:#E9EEFA;
+	cursor: pointer;
+}

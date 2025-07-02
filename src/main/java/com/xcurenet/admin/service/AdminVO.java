@@ -2,7 +2,12 @@ package com.xcurenet.admin.service;
 
 import com.xcurenet.common.util.Common;
 
+import com.xcurenet.config.service.ConfigAdminVO;
 import lombok.Data;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class AdminVO {
@@ -105,5 +110,26 @@ public class AdminVO {
 	private String encryptAlgorithm;
 	private String encryptSize;
 	private String encryptKey;
+
+	private List<ConfigAdminVO> adminConfList;
+
+	/* 이상 행위 필드 */
+	private String abnlAlarmHidden;
+	private String abnlMailHidden;
+	private String abnlSmsHidden;
+
+	public ConfigAdminVO getAdminConf(String confId) {
+		if(adminConfList == null) return null;
+
+		return adminConfList.stream().filter(adminConf -> adminConf.getConfId().equals(confId)).findFirst().orElse(null);
+	}
+
+	public List<ConfigAdminVO> getAdminConfOption(){
+		if(adminConfList == null) return null;
+
+		String[] options = new String[] {"body.snippet.sum.use","toccbcc.sum.use","toccbcc.sum.count","message.overlap.use","message.keyword.highlight","host.query.use","session.info"};
+
+		return adminConfList.stream().filter(adminConf -> Arrays.asList(options).contains(adminConf.getConfId())).collect(Collectors.toList());
+	}
 	
 }

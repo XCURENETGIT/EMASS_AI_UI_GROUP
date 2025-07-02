@@ -23,12 +23,21 @@ public class LLMServiceController {
 
 	private final LLMService llmService;
 
+
 	@RequestMapping(value = "/getHostDescription.xcn")
 	@Description("LLM 기반 URL 카테고리 및 설명")
 	@ResponseBody
 	public XcnResponseVO getHostDescription(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, llmService.getHostDescription(Common.nvl(request.getParameter("host"))));
 	}
+
+	@RequestMapping(value = "/getLLMUrlAnalysis.xcn")
+	@Description("LLM URL 내용 분석")
+	@ResponseBody
+	public XcnResponseVO getLLMUrlAnalysis(final HttpServletRequest request) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, llmService.getLLMUrlAnalysis(Common.nvl(request.getParameter("chat"))));
+	}
+
 
 	@RequestMapping(value = "/getLLMAnalysis.xcn")
 	@Description("LLM 내용 분석, 요약, 번역 등...")
@@ -39,6 +48,16 @@ public class LLMServiceController {
 		String type = Common.nvl(param.get("type"));
 		return new XcnResponseVO(XcnRspCode.OK, llmService.getLLMAnalysis(chat, type));
 	}
+
+
+	@RequestMapping(value = "/getValueLLMAnalysis.xcn")
+	@Description("텍스트 분석")
+	@ResponseBody
+	public XcnResponseVO getValueLLMAnalysis(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		JSONObject requestParam = Common.getParam(request);
+		return new XcnResponseVO(XcnRspCode.OK, llmService.getValueLLMAnalysis(requestParam,"value.analysis"));
+	}
+
 
 
 }

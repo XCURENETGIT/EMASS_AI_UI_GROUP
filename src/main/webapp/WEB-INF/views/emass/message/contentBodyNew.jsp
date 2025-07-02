@@ -78,6 +78,9 @@
 
 	String BODY_SIZE_OVER = Common.BODY_CONTEXT_SIZE_OVER;
 
+	String adminType = Common.getAdminType(session);
+	String firstAdminYn = Common.getFirstAdminYn(session);
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -85,6 +88,12 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 	<title>EMASS AI - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
 	<style type="text/css">
+		.scanBtn01{
+			border: 1px solid #375E9A;
+			border-radius: 2px;
+			height: 25px!important;
+			padding: 2px 8px !important;
+		}
 
 		#emassBody li{
 			list-style-position: inside;
@@ -268,7 +277,6 @@
 		input[type="checkbox"]:disabled {width:0; height:0; border:none;}*/
 
 		#emassBody table {table-layout: fixed; }
-		#emassBody img { width:100%;}
 	</style>
 	<script type="text/javascript">
 		var popup_msgId = '<%=msgid%>';
@@ -374,32 +382,34 @@
 			}
 
 			function bodyPreview() {
+				$('#emassBody').html('');
 				ui.onBody('content_body', 0, 0);
 				ui.get({
 					url: 'getEmassBodyStr.xcn',
 					msgId: msgId,
 					userCharset: $('#bodyEncoding').val(),
-					keywords : $('#bodyStr').text(),
+					keywords: $('#bodyStr').text(),
 					searchStrInput: parent.$('#searchStrInput').val(),
-					menuId : 'MESSAGE_INFO',
-					pMenuId : 'DATA_MONITOR',
-					success : function(data, total) {
-						if(data==null || nvl( data,'')=='') data = message.msgNocontent;
+					menuId: 'MESSAGE_INFO',
+					pMenuId: 'DATA_MONITOR',
+					success: function (data, total) {
+						if (isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
+						else {
+							$('#emassBody').html(data + getAppendGroupBody());
+						}
 
-						if(isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
-						else $('#emassBody').html(data + getAppendGroupBody());
 						$("#emassBody").select();
 						Highlight();
+						PatternHighlight();
 					},
-					error : function(status, message) {
+					error: function (status, message) {
 						ui.alertMsg(message);
 					},
-					complete : function() {
+					complete: function () {
 						ui.off('content_body');
 					}
 				});
 			}
-
 
 
 
@@ -414,7 +424,6 @@
 					parent.openNologUrlPop(host_path);
 				}
 			});
-
 			$(document).on('click', '#helpHost', function(){
 				$("#helpView").css("display", "");
 				$("#hostcategoryImg").css("display", "none");
@@ -441,6 +450,29 @@
 					}
 				});
 			});
+
+
+			$(document).on('click', '.searchCategory', function () {
+
+				$("#helpView").css("display", "");
+				$("#hostcategoryImg").css("display", "none");
+				ui.get({
+					url: 'getLLMUrlAnalysis.xcn',
+					chat: $('#hostCategory').val(),
+					success: function (data, total) {
+						getHostDescription(data.host, 'X');
+					},
+					error: function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete: function () {
+						$("#helpView").css("display", "none");
+						$("#hostcategoryImg").css("display", "");
+					}
+				});
+			});
+
+
 
 			$(document).on('click', '#koreaBody', function(){
 				$('#summaryModal h2').html('<s:message code="llm.info.korea"/> ');
@@ -522,36 +554,133 @@
 				});
 			});
 
-			$(document).on('click', '#contentBody', function(){
-				$('#summaryModal h2').html('<s:message code="llm.info.summary"/>');
+			$(document).on('click', '#contentBody', function () {
+				$('#summaryModal h2').html('내용 요약');
 				$("#helpView4").css("display", "");
 				$("#llmImg3").css("display", "none");
 
 				var requestData = {
-					type: 'content.summary',
-					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n'
+					chat: limitStringLength($('#emassBody').text(), 2000)+ '\n\n\n',
+					type: "content.summary"
 				}
-
+				disableEvent();
 				ui.post({
-					url : 'getLLMAnalysis.xcn',
+					url: 'getLLMAnalysis.xcn',
 					data: requestData,
-					success : function ( data, total ) {
-						$('#summaryContent').html('<s:message code="llm.info.summaryString"/><br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+					success: function (data, total) {
+						$('#summaryContent').html('아래 내용은 본문을 요약한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
 						$("#summaryModal").modal('show');
+						enableEvent();
 					},
-					error : function (status, message) {
+					error: function (status, message) {
 						ui.alertMsg(message);
+						enableEvent();
 					},
-					complete : function (){
+					complete: function () {
 						$("#helpView4").css("display", "none");
 						$("#llmImg3").css("display", "");
+						enableEvent();
+					}
+				});
+
+
+				// ai 요약 버튼
+				$('#aiSummaryBtn').click(function (e) {
+					openAISummaryPop();
+				});
+
+			});
+
+
+			$(document).on('click', '.scanBtn01', function(e) {
+
+				var _this = $(this);
+				var _th = _this.closest('tr').find('th');
+				var _td = _this.closest('tr').find('td');
+				if (_td.find('span.llm_response').length > 0) {
+					alert('<s:message code="value.analysis.completed"/>');
+					return;
+				}
+
+				var th_text = _th.contents().not('span.scanBtn01').text().trim();
+				var _th_scanBtn01 = _this.closest('tr').find('th').find('span.scanBtn01');
+				_th_scanBtn01.find('i.fa.fa-spinner').css('display', '');
+				_th_scanBtn01.find('img.scanImg').css('display', 'none');
+				var tableClass = $(this).closest('table').attr('class');
+				var requestData = {
+					path_prompt: $('#hostDiv').text(),
+					key_prompt: th_text,
+					value_prompt: limitStringLength(_td.text(),2000),
+					trans_type: tableClass
+				}
+
+				disableEvent();
+				ui.post({
+					url: 'getValueLLMAnalysis.xcn',
+					data: requestData,
+					success: function (data, total) {
+						if(data != null) {
+							_td.append('</br>' + '<span class=llm_response style="background-color:#e0d2fa;">' + data.response + '</span></br>');
+							_th_scanBtn01.find('i.fa.fa-spinner').css('display', 'none');
+							_th_scanBtn01.find('img.scanImg').css('display', '');
+						}
+						enableEvent();
+					},
+					error: function (status, message) {
+						ui.alertMsg(message);
+						_th_scanBtn01.find('i.fa.fa-spinner').css('display', 'none');
+						_th_scanBtn01.find('img.scanImg').css('display', '');
+						enableEvent();
+					},
+					complete: function () {
+						_th_scanBtn01.find('i.fa.fa-spinner').css('display', 'none');
+						_th_scanBtn01.find('img.scanImg').css('display', '');
+						enableEvent();
 					}
 				});
 			});
 
+
+
+
+
 		});
 
+		// 메시지 본문 조회 팝업
+		function openAISummaryPop(msgId){
+			var url  = '<c:url value="/ems/aiSummary.do"/>';
+			return fnOpenWindow(url, 'No_Title'+makeDateTime(), 640, 700, 'resize');
+		}
 
+		function disableEvent() {
+			// 모든 경우에 대해 현재 창의 요소들을 비활성화
+			$('button').prop('disabled', true);
+			$('select').prop('disabled', true);
+			$('a').prop('disabled', true);
+			$('input[type="radio"]').prop('disabled', true);
+			$('input[type="checkbox"]').prop('disabled', true);
+			$('input[type="text"]').prop('disabled', true);
+
+			// 추가로 부모창에 함수가 있다면 호출
+			if (!window.opener && parent.disableEventContent && typeof parent.disableEventContent === 'function') {
+				parent.disableEventContent();
+			}
+		}
+
+		function enableEvent() {
+			// 모든 경우에 대해 현재 창의 요소들을 활성화
+			$('button').prop('disabled', false);
+			$('select').prop('disabled', false);
+			$('a').prop('disabled', false);
+			$('input[type="radio"]').prop('disabled', false);
+			$('input[type="checkbox"]').prop('disabled', false);
+			$('input[type="text"]').prop('disabled', false);
+
+			// 추가로 부모창에 함수가 있다면 호출
+			if (!window.opener && parent.enableEventContent && typeof parent.enableEventContent === 'function') {
+				parent.enableEventContent();
+			}
+		}
 
 		function limitStringLength(inputString, maxLength) {
 			return inputString.length <= maxLength ? inputString : inputString.substring(0, maxLength);
@@ -879,79 +1008,70 @@
 											</td>
 										</tr>
 										<tr id="hostTr">
-											<th>HOST/Path <i id="nologUrlBtn" class="fa fa-chain-broken nologUrlBtn" aria-hidden="true"></i></th>
-											<td colspan="3">
+										<th class="fold_clickTh">HOST/Path
+										<% if (Common.isEquals(adminType,"S") || Common.isEquals(firstAdminYn, "Y")){%>
+											<i id="nologUrlBtn" class="fa fa-chain-broken nologUrlBtn" aria-hidden="true"></i>
+										<%} %>
+										</th>
+										<td class="fold_clickTd" colspan="3">
+											<%--												카테고리 , 국가 요약--%>
 												<%if(isLlmEnabled){%>
-												<i id="helpView" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i>
-												<img id="helpHost" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;">
-												<%}%>
-												<div id="hostDiv" style="padding-left: 10px;display: inline"></div>
-												<%if(isLlmEnabled){%>
-												<br>
-												<div>
-													<div id="parentDiv" style="display: flex; flex-direction: row; align-items: center;">
-														<div id="hostCategoryDiv" style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
-															<img id="hostcategoryImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
-															<span id="hostCategory" style="color: #375E9A"></span>
-														</div>&nbsp;&nbsp;
-														<div id="hostNationDiv" style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
-															<img id="hostNationImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
-															<span id="hostNation" style="color: #375E9A"></span>
-														</div>
-													</div>
-
-												</div>
-												<%}%>
-												<%if(isLlmEnabled){%>
-												<div id="helpHostDesc" style="display: block;padding-top: 10px; padding-bottom: 10px;"></div>
-												<%}%>
-												<div id="hostDescriptionDiv" style="display:block"></div>
-											</td>
-										</tr>
-										<%if(infoHynixConf){%>
-										<tr id="docTr">
-											<th><s:message code="condition.itype"/></th>
-											<td colspan="3">
-												<div id="docDiv">
-
-												</div>
-											</td>
-										</tr>
-										<%}%>
-										<tr id="epmsgTr" style="display:none;">
-											<th><s:message code="condition.epmsgType.list"/></th>
-											<td colspan="3">
-												<div id="epmsgDiv">
-												</div>
-											</td>
-										</tr>
-										<tr id="msgIdTr" style="display:none;">
-											<th><s:message code="common.msg.msgid"/></th>
-											<td colspan="3">
-												<div id="msgIdDiv">
-												</div>
-											</td>
-										</tr>
-										<tr id="participantTr" style="display:none;">
-											<th><s:message code="condition.participation"/></th>
-											<td colspan="3">
-												<div id="participantDiv">
-												</div>
-											</td>
-										</tr>
-										<tr id="rootmtrTr" style="display:none;">
-											<th><s:message code="condition.xrootmtr"/></th>
-											<td colspan="3">
-												<div id="rootmtrDiv">
-												</div>
-											</td>
-										</tr>
-									</table>
-								</div>
+											<div id="parentDiv" style="display: flex; flex-direction: row; align-items: center;">
+												<button class="btn01" id="hostCategoryDiv"><i id="helpView" class="fa fa-spinner" aria-hidden="true" style="display: none"></i>
+													<img id="hostcategoryImg" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;"
+														 style="margin-top: -2px!important;"><span id="hostCategory" style="color: #375E9A"></span></button>
+											</div>
+											<div id="hostNationDiv"
+												 style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
+												<img id="hostNationImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
+												<span id="hostNation" style="color: #375E9A"></span>
+											</div>
 							</div>
+							<%}%>
+							<div id="hostDiv" style=" width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+							<span class="more-button" id="moreButton" style="display: none"><s:message code="common.message.moreBtn"/></span>
+							<%--												host 내용 설명--%>
+							<%if (isLlmEnabled) {%>
+							<div id="helpHostDesc" style="display: none;padding-top: 10px; padding-bottom: 10px;"></div>
+							<%}%>
+							<div id="hostDescriptionDiv" style="display:block">
+							</div>
+							</td>
+							</tr>
+							<tr id="epmsgTr" style="display:none;">
+								<th><s:message code="condition.epmsgType.list"/></th>
+								<td colspan="3">
+									<div id="epmsgDiv">
+									</div>
+								</td>
+							</tr>
+							<tr id="msgIdTr" style="display:none;">
+								<th><s:message code="common.msg.msgid"/></th>
+								<td colspan="3">
+									<div id="msgIdDiv">
+									</div>
+								</td>
+							</tr>
+							<tr id="participantTr" style="display:none;">
+								<th><s:message code="condition.participation"/></th>
+								<td colspan="3">
+									<div id="participantDiv">
+									</div>
+								</td>
+							</tr>
+							<tr id="rootmtrTr" style="display:none;">
+								<th><s:message code="condition.xrootmtr"/></th>
+								<td colspan="3">
+									<div id="rootmtrDiv">
+									</div>
+								</td>
+							</tr>
+							</table>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
 				<!-- 파일정보 -->
 				<div id="fileDiv" class="row" style="overflow: visible;">
 					<div class="col-lg-12">
@@ -1098,23 +1218,42 @@
 				</div>
 
 				<!-- LLM AI 정보 -->
-				<%if(isLlmEnabled){%>
-				<div class="row" id="LLMDIV" >
-					<div class="col-lg-12">
-						<div class="panel panel-default">
-							<div class="panel-heading" style="padding:10px 12px 9px;">
-								AI
-							</div>
-							<div class="panel-body" id="LLMAREA" style="overflow: auto;padding-top:10px;">
-								<button class="btn01" id="koreaBody"><i id="helpView2" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg1" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"><s:message code="llm.info.korea"/></button>
-								<button class="btn01" id="summaryBody"><i id="helpView3" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg2" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"><s:message code="llm.info.keyword"/></button>
-								<button class="btn01" id="contentBody"><i id="helpView4" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg3" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> <s:message code="llm.info.summary"/></button>
-								<%if(!isLlmSingle){%><button class="btn01" id="serviceBody"><i id="helpView5" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg4" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"></i> <s:message code="llm.info.body"/></button>	<%}%>
-							</div>
-						</div>
+					<%if (isLlmEnabled) {%>
+		<div class="row" id="LLMDIV">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading" style="padding:10px 12px 9px;">
+						AI
+					</div>
+					<div class="panel-body" id="LLMAREA" style="overflow: auto;padding-top:10px;">
+						<button class="btn01" id="koreaBody"><i id="helpView2" class="fa fa-spinner" aria-hidden="true" style="display: none"></i>
+							<img id="llmImg1" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;">
+							<s:message code="ai.translate"/>
+						</button>
+						<button class="btn01" id="summaryBody"><i id="helpView3" class="fa fa-spinner" aria-hidden="true" style="display: none"></i><img id="llmImg2" alt=""
+																																						 src="<c:url value="/img/ztree/AI2.gif"/>"
+																																						 width="23px;" height="23px;"
+																																						 style="margin-top: -6px!important;">
+							<s:message code="ai.analysis.keyword"/>
+						</button>
+						<button class="btn01" id="contentBody"><i id="helpView4" class="fa fa-spinner" aria-hidden="true" style="display: none"></i><img id="llmImg3" alt=""
+																																						 src="<c:url value="/img/ztree/AI2.gif"/>"
+																																						 width="23px;" height="23px;"
+																																						 style="margin-top: -6px!important;">
+							<s:message code="ai.summary.content"/>
+						</button>
+						<%if (!isLlmSingle) {%>
+						<button class="btn01" id="serviceBody"><i id="helpView5" class="fa fa-spinner" aria-hidden="true" style="display: none"></i><img id="llmImg4" alt=""
+																																						 src="<c:url value="/img/ztree/AI2.gif"/>"
+																																						 width="23px;" height="23px;"style="margin-top: -6px!important;"></i>
+							<s:message code="ai.analysis.content"/>
+						</button>
+						<%}%>
 					</div>
 				</div>
-				<%}%>
+			</div>
+		</div>
+		<%}%>
 
 				<!-- 본문내용 -->
 				<div class="row" id="bodyDiv">

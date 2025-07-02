@@ -109,7 +109,11 @@
 
 		<typeAlias alias="chronyVO" type="com.xcurenet.common.ntp.service.ChronyVO" />
 
-		<typeAlias alias="hostDescriptionVO" type="com.xcurenet.emass.message.service.HostDescriptionVO" />
+		<typeAlias alias="hostDescriptionVO" type="com.xcurenet.emass.message.service.vo.HostDescriptionVO" />
+		<typeAlias alias="hostVO" type="com.xcurenet.emass.message.service.vo.HostVO"/>
+		<typeAlias alias="hostCategoryVO" type="com.xcurenet.emass.message.service.vo.HostCategoryVO"/>
+		<typeAlias alias="nationVO" type="com.xcurenet.emass.message.service.vo.NationVO"/>
+
 		<typeAlias alias="patternExceptVO" type="com.xcurenet.emass.filter.service.PatternExceptVO"/>
 		<typeAlias alias="commonCodeVO" type="com.xcurenet.emass.message.service.CommonCodeVO"/>
 

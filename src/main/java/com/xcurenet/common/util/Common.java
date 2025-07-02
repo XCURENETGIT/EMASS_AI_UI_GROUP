@@ -8,6 +8,7 @@ import com.xcurenet.common.parser.useragent.Client;
 import com.xcurenet.common.parser.useragent.Parser;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.component.AttachFile;
 import com.xcurenet.emass.message.service.EmsReDefined;
 import com.xcurenet.emass.searchHistory.vo.SearchHistoryGroupVO;
@@ -25,10 +26,16 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,13 +119,16 @@ public class Common {
 	public static final int BODY_CONTEXT_SIZE = 500000;
 	public static final String BODY_CONTEXT_SIZE_OVER = "BODY_SIZE_OVER";
 
+	/* 본문 깔끔하게 기능 허용하지 않을 태그*/
+	public static final String ignoreTags = "img";
+
 	/* 기본 사용 태그 */
 	public static final String allowedTags = "pre,code,a, b, i, u, em, strong, br, ul, ol, li, table,tbody,head,html,DOCTYPE, tr, td, th, div, span, form, input, textarea, button, label, h1, h2, h3, h4, h5, h6, p,style";
 
 
 
 	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
+	public static final DateTimeFormatter YYYYMMDDHHMMSS = DateTimeFormat.forPattern("yyyyMMddHHmmss");
 	public static final DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
 
 	public static final DateTimeFormatter yyyy_MM_dd_HH_mm_ss = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
@@ -2732,6 +2742,39 @@ public class Common {
 		}
 		return result;
 	}
+
+	public static String maskString(String str, String pattern, String maskStr) {
+		List<String> patterns = new ArrayList<String>();
+		patterns.add(pattern);
+		return maskString(str, patterns, maskStr, 0);
+	}
+
+	public static String maskString(String str, List<String> patterns, String maskStr, int visibleCharacters) {
+		if (str == null || str.length() < 1 || patterns == null || maskStr == null) return str;
+		if (visibleCharacters < 0) visibleCharacters = 0;
+		String stringToMask = str;
+		String maskedString = str;
+		for (String regEx : patterns) {
+			Pattern p = Pattern.compile(regEx);
+			Matcher m = p.matcher(stringToMask);
+			while (m.find()) {
+				int startIdx = m.start();
+				int endIdx = m.end();
+				String patternMatch = stringToMask.substring(startIdx, endIdx);
+				if (visibleCharacters == 0) visibleCharacters = patternMatch.length() / 2;
+				String partToBeMasked = patternMatch.substring(visibleCharacters, patternMatch.length());
+				StringBuilder mask = new StringBuilder();
+				for (int i = 0; i < partToBeMasked.length(); i++) {
+					mask.append(maskStr);
+				}
+				String maskedNumber = patternMatch.substring(0, visibleCharacters) + mask;
+				maskedString = maskedString.replace(patternMatch, maskedNumber);
+			}
+		}
+		return maskedString;
+
+
+	}
 	
 public static String getDateDay(String date, String dateType) throws Exception {
 		
@@ -2799,6 +2842,83 @@ public static String getDateDay(String date, String dateType) throws Exception {
 		return Jsoup.parse(body).text();
 	}
 
+	public static boolean restStatusOk(final String url, final RestTemplate restTemplate) {
+		boolean result = false;
+		try {
+			return Common.isEquals(restTemplate.getForEntity(url, String.class).getStatusCode(), HttpStatus.OK);
+		} catch (HttpClientErrorException e) {
+			log.debug("error {}", e.getStatusCode());
+			return result;
+		} catch (HttpServerErrorException e) {
+			log.debug("error {}", e.getStatusCode());
+			return result;
+		} catch (RestClientException e) {
+			log.debug("error {}", e.getMessage());
+			return result;
+		}
+	}
+
+	/**
+	 * 미분류 & 모니터링제외 서비스인지 확인
+	 *
+	 * @param svc
+	 * @return
+	 */
+	public static boolean isUnclassifiedService(final String svc) {
+		if (svc.startsWith("U") || svc.startsWith("X")) return true;
+		else return false;
+	}
+
+
+	/**
+	 * solr 객체 깊은 복사
+	 *
+	 * @param query
+	 * @return
+	 */
+	public static SolrQuery queryDeepCopy(SolrQuery query) {
+		SolrQuery copy = new SolrQuery();
+		copy.setQuery(query.getQuery());
+		copy.setStart(query.getStart());
+		copy.setRows(query.getRows());
+		copy.setFields(query.getFields());
+		for (String param : query.getParameterNames()) {
+			copy.setParam(param, query.getParams(param));
+		}
+		for (SolrQuery.SortClause sort : query.getSorts()) {
+			copy.addSort(sort.getItem(), sort.getOrder());
+		}
+
+		return copy;
+	}
+
+
+	/**
+	 * MongoDB 검색용도 날짜 변환
+	 * @return
+	 */
+	public static String getStartDate(final String date) {
+		return date + "00000000000000".substring(date.length());
+	}
+
+	public static String getEndDate(final String date) {
+		return date + "99991231235959".substring(date.length());
+	}
+
+	public static DateTime searchDateParse(final String date){
+		return LocalDateTime.parse(date, YYYYMMDDHHMMSS).toDateTime(DateTimeZone.UTC);
+	}
+
+	public static String getUserFormat(final AdminVO admin){
+		String dfVal = Config.getString(Config.USER_FORMAT, "#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#/#sabun#");
+
+		ConfigAdminVO configAdminVO = null;
+		if(admin != null && admin.getAdminConfList() != null){
+			configAdminVO = admin.getAdminConfList().stream().filter(adminConf -> adminConf.getConfId().equals(Config.USER_FORMAT)).findFirst().orElse(null);
+		}
+
+		return configAdminVO == null ? dfVal : configAdminVO.getVal();
+	}
 	/***
 	 * inputStream 헤더를 읽어 Gzip인지 확인
 	 * @param inputStream
