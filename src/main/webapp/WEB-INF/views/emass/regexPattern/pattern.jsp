@@ -285,9 +285,9 @@
     grid.onCheckBox();
     grid.autoNumber();
     grid.colAdd('type', '<s:message code="common.msg.separator"/>', 130, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        let regex = grid.getValue(row, grid.ColIndex('regex'));
-        if (regex === undefined || regex === '' || regex === null) return '<s:message code="pattern.common"/>';
-        else return '<s:message code="pattern.custom"/>';
+	    if (value == 'A') return "<s:message code="common.pattern.danger"/>";
+	    else if (value == 'N') return "<s:message code="common.pattern.person"/>";
+	    else return '<s:message code="pattern.custom"/>';
     });
     grid.colAdd('code', '<s:message code="pattern.code"/>', 100, 'center', false, 'link');
     grid.colAdd('name', '<s:message code="pattern.name"/>', 200, 'left', false, 'nomal');

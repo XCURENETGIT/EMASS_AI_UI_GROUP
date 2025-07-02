@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS UI_REGEXP(
     CODE  varchar(255)  NOT NULL    COMMENT '패턴 코드',
     NAME  VARCHAR(255)  NOT NULL    COMMENT '패턴 이름',
     REGEX  VARCHAR(255)  NULL    COMMENT '패턴 정규식',
+    CODE_TYPE  CHAR(1)  NOT NULL    DEFAULT 'C'     COMMENT '패턴 코드 타입 N:개인정보 A:이상행위의심 C:사용자 정의',
     ENABLE char(1) DEFAULT 'Y' COMMENT '패턴 사용 여부 Y:사용 N:사용안함',
 PRIMARY KEY (CODE)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='패턴 코드';
 

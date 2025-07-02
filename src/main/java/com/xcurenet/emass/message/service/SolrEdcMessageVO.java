@@ -20,6 +20,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedSum;
+import org.elasticsearch.search.aggregations.metrics.ParsedValueCount;
 import org.elasticsearch.search.aggregations.metrics.ValueCount;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -278,7 +279,14 @@ public class SolrEdcMessageVO {
 
 				}
 
-			}else{
+			} else if (aggregation instanceof ParsedValueCount) {
+			ParsedValueCount valueCount = (ParsedValueCount) aggregation;
+			long count = valueCount.getValue();
+			String key = valueCount.getName();
+			facetItem.put(key, count);
+			facetlist.add(key);
+			facetParse(key, count);
+			} else{
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				facetTotal = buckets.size();
 				Iterator iter = buckets.iterator();
@@ -423,6 +431,18 @@ public class SolrEdcMessageVO {
 						pivotResult.add(pivotItem);
 					}
 				}
+			}else if (aggregation instanceof ParsedValueCount) {
+				ParsedValueCount valueCount = (ParsedValueCount) aggregation;
+				long count = valueCount.getValue(); // 집계된 개수를 가져옵니다
+
+				Map<String, Object> pivotItem = new HashMap<>();
+
+				pivotItem.put("name", valueCount.getName());
+				pivotItem.put("count", count);
+
+				// pivotResult에 추가
+				pivotResult.add(pivotItem);
+
 			}else{
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();

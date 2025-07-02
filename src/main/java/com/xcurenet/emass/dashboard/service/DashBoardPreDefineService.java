@@ -1,5 +1,6 @@
 package com.xcurenet.emass.dashboard.service;
 
+import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.common.vo.XcnResponseVO;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -34,4 +35,6 @@ public interface DashBoardPreDefineService {
 	public List<Map<String, Object>> getTodayTrafficSize() throws Exception;
 
 	public TodayPatternVO getTodayPattern(TodayPatternVO vo) throws SolrServerException, IOException;
+
+	public AbnlBhavDetectedVO getTodayAbnlBehavior(AbnlBhavDetectedVO vo, AdminVO admin)  throws SolrServerException, IOException;
 }

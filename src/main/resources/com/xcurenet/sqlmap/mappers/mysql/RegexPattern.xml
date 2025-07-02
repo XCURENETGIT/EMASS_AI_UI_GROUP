@@ -3,7 +3,7 @@
 
 <mapper namespace="com.xcurenet.sqlmap.mappers.mysql.regexPattern">
 	<select id = "getPatternList" resultType="patternVO" parameterType="hashMap">
-		SELECT CODE AS code, REGEX AS regex, NAME AS name, ENABLE AS enable
+		SELECT CODE AS code, REGEX AS regex, NAME AS name, ENABLE AS enable, CODE_TYPE AS type
 		FROM UI_REGEXP
 		<if test='searchStr!=null and searchStr!=""'>
 			WHERE NAME  LIKE CONCAT('%', #{searchStr}, '%')
@@ -15,8 +15,8 @@
 	</select>
 
 	<insert id="insertPattern" parameterType="patternVO">
-		INSERT INTO UI_REGEXP (CODE, NAME,REGEX,ENABLE)
-		VALUES (#{code}, #{name}, #{regex}, #{enable})
+		INSERT INTO UI_REGEXP (CODE, NAME,REGEX,ENABLE,CODE_TYPE)
+		VALUES (#{code}, #{name}, #{regex}, #{enable}, #{type})
 	</insert>
 
 	<select id="isPatternName" resultType="int" parameterType="patternVO">

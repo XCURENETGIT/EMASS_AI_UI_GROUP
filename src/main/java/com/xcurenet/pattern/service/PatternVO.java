@@ -15,4 +15,5 @@ public class PatternVO {
 	private String unitId;
 	private String adminId;
 	private String searchStr;
+	private String type;
 }

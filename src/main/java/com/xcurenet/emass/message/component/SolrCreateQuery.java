@@ -420,7 +420,7 @@ public class SolrCreateQuery {
 				List<String> service4List = Arrays.asList(service4.toString().substring(0, service4.toString().lastIndexOf(',')).split(","));
 
 				String filteredService3 = Arrays.stream(service3.toString().split(","))
-						.filter(s -> service4List.stream().noneMatch(f4 -> f4.startsWith(s)))  // ← 핵심 수정
+						.filter(s -> service4List.stream().noneMatch(f4 -> f4.startsWith(s)))
 						.collect(Collectors.joining(","));
 
 				serviceQueryStr.append(String.format("%s(",AND_QUERY));

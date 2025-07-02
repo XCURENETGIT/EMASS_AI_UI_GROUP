@@ -38,6 +38,7 @@ public class PatternServiceImpl extends XcnAbstractDAO implements PatternService
 	@Override
 	public void insertPattern(PatternVO patternVO, String adminId) {
 		patternVO.setCode(patternVO.getCode().toUpperCase());
+		patternVO.setType("C");
 		insert("com.xcurenet.sqlmap.mappers.mysql.regexPattern.insertPattern", patternVO);
 
 		infoServiceMysql.addInfoRegExp();
