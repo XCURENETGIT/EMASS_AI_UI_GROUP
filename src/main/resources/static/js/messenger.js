@@ -1205,19 +1205,21 @@ function noNextDataMsg(){
 }
 
 function checkDate(idx){
-    var lastTime = $('.timeline').children().last().attr('ctime');
-
-    if( idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx-1].ctime.substring(0, 10) ){
-        return '';
+    if(idx==detailDataSet.length-1){
+        var str = '<div class="conversation-start">';
+        str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
+        str += '</div>'
     }
-    if( lastTime != undefined && detailDataSet[idx].ctime.substring(0, 10) == lastTime.substring(0, 10) ){
-        return '';
+    else {
+        if ( detailDataSet[idx].ctime.substring(0, 10) != detailDataSet[idx + 1].ctime.substring(0, 10)) {
+
+            var str = '<div class="conversation-start">';
+            str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
+            str += '</div>'
+        } else {
+            str = '';
+        }
     }
-
-    var str='<div class="conversation-start">';
-    str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
-    str +='</div>'
-
     return str;
 }
 
