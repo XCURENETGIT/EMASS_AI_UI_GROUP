@@ -55,6 +55,13 @@ public class OwlnestController {
 
 		long total = 0;
 		if(!Common.isEmpty(solrVo)) {
+			List<SolrEdcVO> resultList = new ArrayList<>();
+			for (SolrEdcVO solrEdcVO : solrVo.getEmass()) {
+				if (Double.parseDouble(solrEdcVO.getConfidence()) >= 80) {
+					resultList.add(solrEdcVO);
+				}
+			}
+			solrVo.setEmass(resultList);
 			total = solrVo.getNumFound();
 		}else{
 			solrVo = new SolrEdcMessageVO();
