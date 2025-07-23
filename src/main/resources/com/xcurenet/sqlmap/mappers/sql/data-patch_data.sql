@@ -537,8 +537,8 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('QUKJ', '메신저', '기타', '참여', 'O', 291, 'Y', 'MSG'),
 ('QUKL', '메신저', '기타', '떠남', 'O', 292, 'Y', 'MSG'),
 ('QTAS', '메신저', '네이버 톡톡', '발신', 'O', 293, 'Y', ''),
-('QTAC', '메신저', '네이버 톡톡', '채팅', 'O', 294, '', ''),
-('QTAF', '메신저', '네이버 톡톡', '파일전송', 'O', 295, '', ''),
+('QTAC', '메신저', '네이버 톡톡', '채팅', 'O', 294, 'Y', ''),
+('QTAF', '메신저', '네이버 톡톡', '파일전송', 'O', 295, 'Y', ''),
 ('FFTC', '파일전송', 'FTP', 'CMD', 'O', 296, 'Y', ''),
 ('FFTG', '파일전송', 'FTP', 'GET', 'I', 297, 'Y', ''),
 ('FFTP', '파일전송', 'FTP', 'PUT', 'O', 298, 'Y', ''),
@@ -764,7 +764,7 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('IQBS', '생성형 AI', 'QuillBot', '발신', 'I', 518, 'Y', ''),
 ('ICHC', '생성형 AI', 'Character.ai', '발신', 'I', 519, 'Y', ''),
 ('ISRS', '생성형 AI', 'Sora/Openai', '발신', 'I', 520, 'Y', ''),
-('ISRR', '생성형 AI', 'Sora/Openai', '수신', 'O', 521, '', ''),
+('ISRR', '생성형 AI', 'Sora/Openai', '수신', 'O', 521, 'Y', ''),
 ('INNS', '생성형 AI', 'Nano AI', '발신', 'I', 522, 'Y', ''),
 ('IDBS', '생성형 AI', 'Doubao', '발신', 'I', 523, 'Y', ''),
 ('ITYS', '생성형 AI', 'Tongyi', '발신', 'I', 524, 'Y', ''),
@@ -799,8 +799,8 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('IOES', '생성형 AI', 'Codex/OpenAI', '발신', 'O', 553, 'Y', ''),
 ('IJLS', '생성형 AI', 'Jules', '발신', 'O', 554, 'Y', ''),
 ('IHVS', '생성형 AI', 'Harvey', '발신', 'O', 555, 'Y', ''),
-('IXAS', '생성형 AI', 'x.AI', '발신', 'O', 556, '', ''),
-('ICES', '생성형 AI', 'Cohere', '발신', 'O', 557, '', ''),
+('IXAS', '생성형 AI', 'x.AI', '발신', 'O', 556, 'Y', ''),
+('ICES', '생성형 AI', 'Cohere', '발신', 'O', 557, 'Y', ''),
 ('PDOS', '프로젝트', 'dooray', '발신', 'O', 558, 'Y', ''),
 ('PGIS', '프로젝트', 'github', '발신', 'O', 559, 'Y', ''),
 ('PGLS', '프로젝트', 'Glassdoor', '발신', 'O', 560, 'Y', ''),
@@ -865,6 +865,10 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('JBDS', '웹사이트', 'Baidu', '발신', 'O', 619, 'Y', ''),
 ('JANS', '웹사이트', 'Anthropic', '발신', 'O', 620, 'Y', ''),
 ('RGUS', '원격접속', '아파치 과카몰리', '발신', 'O', 621, 'Y', '');
+
+UPDATE UI_SERVICE
+SET USE_YN = 'Y'
+WHERE USE_YN = '';
 
 UPDATE UI_SERVICE
 SET SERVICENM_LV2 = 'Microsoft Copilot'
