@@ -160,6 +160,9 @@
 				ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 				return;
 			}
+
+			if (tab == undefined) tab = document.querySelector('.codeTab li.active a').id;
+
 			grid.on();
 			searchFlag = true;
 			ui.get({
@@ -304,8 +307,7 @@
 			<div class="subtab">
 				<div class="subtab">
 					<ul class="nav nav-tabs codeTab" id="typeTab">
-						<li class="active" style="text-align: center;"><a data-toggle="tab" id="allTab"><s:message code="common.msg.all"/></a></li>
-						<li style=" text-align: center"><a data-toggle="tab" id="subjectTab"><s:message code="condition.subject"/></a></li>
+						<li class="active" style=" text-align: center"><a data-toggle="tab" id="subjectTab"><s:message code="condition.subject"/></a></li>
 						<li style=" text-align: center"><a data-toggle="tab" id="bodyTab"><s:message code="condition.body"/></a></li>
 						<li style=" text-align: center"><a data-toggle="tab" id="fileTab"><s:message code="condition.attach"/></a></li>
 					</ul>

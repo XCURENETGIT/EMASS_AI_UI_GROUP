@@ -86,6 +86,8 @@ function getData(tab) {
 	if(searchFlag) return;
 	grid.on();
 	searchFlag=true;
+
+	if (tab == undefined) tab = document.querySelector('.codeTab li.active a').id;
 	ui.get({
 		url 		: 'getRecommendData.xcn',
 		msgId		: msgId,
@@ -215,8 +217,7 @@ function regexpInfoViewer(row, selectedGrid){
 					<div class="mat16" style="height: 70%;">
 						<div class="subtab">
 							<ul class="nav nav-tabs codeTab" id="codeTab">
-								<li class="active" style=" text-align: center"><a data-toggle="tab" href="#allRecommend" id="allRecommendTab"><s:message code="common.msg.all"/></a></li>
-								<li style=" text-align: center"><a data-toggle="tab" href="#bodyRecommend" id="bodyRecommendTab"><s:message code="condition.body"/></a></li>
+								<li class="active" style=" text-align: center"><a data-toggle="tab" href="#bodyRecommend" id="bodyRecommendTab"><s:message code="condition.body"/></a></li>
 								<li style=" text-align: center"><a data-toggle="tab" href="#attachRecommend" id="attachRecommendTab"><s:message code="condition.attach"/></a></li>
 								<li style=" text-align: center"><a data-toggle="tab" href="#subjectRecommend" id="subjectRecommendTab"><s:message code="condition.subject"/></a></li>
 							</ul>
