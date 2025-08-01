@@ -432,6 +432,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 				Map<String, Object> item = new HashMap<>();
 				boolean isAdd = false;
 				for (FacetVO vo : facet) {
+					if (index > 20) index = 0;
 					if (Common.isEquals(group.getGroupCd(), vo.getName())) {
 						item.put("name", Config.getServiceGroupNm(vo.getName()));
 						item.put("y", vo.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : vo.getCount());
@@ -452,11 +453,13 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 			int index = 0;
 			for (FacetVO facetVO : facet){
 				Map<String, Object> item = new HashMap<>();
+				if (index > 20) index = 0;
 				item.put("name", facetVO.getName());
 				item.put("y", facetVO.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : facetVO.getCount());
 				item.put("color", Config.colors[index++]);
 				items.add(item);
 			}
+			if (Common.isEquals(dashChartX,"ctime_hh") || Common.isEquals(dashChartX,"ctime_yyyymmddhh")) items = items.stream().filter(m->Common.isNotEmpty(m.get("name"))).sorted((o1, o2) -> o1.get("name").toString().compareTo(o2.get("name").toString()) ).collect(Collectors.toList());
 			result.setChartData(items);
 
 		}
