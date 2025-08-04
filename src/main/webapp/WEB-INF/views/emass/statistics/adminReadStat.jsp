@@ -79,20 +79,6 @@
             printChart(totalChartDat);
         });
 
-
-		//
-        // $('#startdatepicker').datetimepicker({
-        //     format: 'YYYY-MM-DD',
-        //     locale: 'ko',
-        //     defaultDate: moment(new Date())
-        // });
-		//
-        // $('#enddatepicker').datetimepicker({
-        //     format: 'YYYY-MM-DD',
-        //     locale: 'ko',
-        //     defaultDate: moment(new Date())
-        // });
-
         $("#adminId").html(getAdminOptions());
 
         $(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
