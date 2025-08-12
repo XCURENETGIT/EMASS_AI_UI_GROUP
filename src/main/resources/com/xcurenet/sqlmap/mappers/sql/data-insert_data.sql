@@ -744,8 +744,6 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('KAAR', '웹서비스(분류)', '웹 수신', '수신', 'I', 631, 'Y', ''),
 ('KAAS', '웹서비스(분류)', '웹 발신', '발신', 'O', 632, 'Y', '');
 
-UPDATE SQL 미리보기 (다국어)
--- 한국어 SQL (1개)
 
 
 INSERT
