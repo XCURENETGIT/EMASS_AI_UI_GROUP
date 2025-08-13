@@ -6,7 +6,6 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.aiDashboard.model.*;
 import com.xcurenet.emass.aiDashboard.service.AiDashboardService;
 import lombok.extern.log4j.Log4j2;
-import org.checkerframework.checker.units.qual.N;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
