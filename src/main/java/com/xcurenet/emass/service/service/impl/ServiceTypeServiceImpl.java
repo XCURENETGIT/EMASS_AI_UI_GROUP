@@ -91,5 +91,9 @@ public class ServiceTypeServiceImpl extends XcnAbstractDAO implements ServiceTyp
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.service.getServiceListAuth",param);
 	}
 
+	@Override
+	public List<ServiceTypeVO> getAIService() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.service.getAIService");
+	}
 
 }

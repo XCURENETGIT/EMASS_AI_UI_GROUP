@@ -43,6 +43,7 @@
 	<select id ="allPatternCode" resultType="patternVO">
 		SELECT
 			CODE AS code,
+			CODE_TYPE AS type,
 			NAME AS name,
 		    ENABLE AS enable
 		FROM UI_REGEXP

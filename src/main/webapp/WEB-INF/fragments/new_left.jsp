@@ -53,7 +53,6 @@
 	$(document).ready(function () {
 		createMenuList(0); //init Menu
 		sideBar = $("#sideBar");
-
 		let currentMenu = null;
 		for (let k in menuList) {
 			if(mainUri.indexOf(menuList[k].menuLink) > -1){
@@ -75,7 +74,6 @@
 				try {
 					$(this).find('img').attr('src', $(this).find('img').attr('src').replaceAll('_on.png', '.png'));
 				} catch(e) {
-					//ignore
 				}
 			});
 
@@ -99,9 +97,6 @@
 		});
 	});
 
-
-
-	// Left Menu외 다른곳 클리 시 자동 닫힘.
 	$(document).on("click", function (event) {
 		if (!sideBar.is(event.target) && sideBar.has(event.target).length === 0 && !$('#topMenu').is(event.target) && $('#topMenu').has(event.target).length === 0) {
 			sideBar.hide();
@@ -129,8 +124,6 @@
                     if ((menuList[k].menuId == "SEARCH_LOG") && (consentMenuEnable == "false")) continue;
 					html += '<li><span>-</span>';
                     html += '<a menuClick id="' + menuList[k].menuLink + '" url="' + mainContext + '/' + menuList[k].menuLink + '" menuid="' + menuList[k].menuId + '">' + menuList[k].defaultName + '</a>';
-
-                    //html += '<a menuClick id="' + menuList[k].menuLink + '" url="' + mainContext + '/' + menuList[k].menuLink + '" 'menuid=' + menuList[l].menuId + '>' + menuList[k].defaultName + '</a>';
                     html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl class="topMenuList">';
 					for (let l in menuList) {
                         if (menuList[l].menuUseyn == "N")continue;
@@ -186,12 +179,10 @@
 	<!--Menu-->
 	<div id="gnb">
 		<ul id="topMenu">
-
 		</ul>
 	</div>
-
 	<!--//Menu sideBar-->
-	<div class="gnbMenu" id="sideBar">
+	<div class="gnbMenu" id="sideBar" style="z-index: 10000;">
 		<h2 id="childMainMenuName"></h2>
 		<br>
 		<ul class="topMenuList"></ul>

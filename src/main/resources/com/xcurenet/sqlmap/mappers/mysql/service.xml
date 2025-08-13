@@ -160,4 +160,16 @@
 		WHERE	LEFT(SERVICECD, 3) = #{serviceCd}
 	</update>
 
+
+	<select id="getAIService" resultType="serviceTypeVO">
+		SELECT  DISTINCT
+				LEFT(A.SERVICECD, 3) AS serviceCd,
+				A.SERVICENM_LV2 AS serviceNm
+		FROM   UI_SERVICE A
+		WHERE  A.USE_YN = 'Y'
+		AND  LEFT(A.SERVICECD, 1) = 'I'
+	</select>
+
+
+
 </mapper>

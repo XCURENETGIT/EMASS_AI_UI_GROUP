@@ -92,6 +92,8 @@ public class Config {
 
 	public static List<ServiceTypeVO> serviceTypesAll;
 
+	public static List<ServiceTypeVO> aiServices;
+
 	public static List<ServiceTypeVO> sendMailTypes;
 
 	public static List<ServiceGroupVO> serviceGroups;
@@ -414,6 +416,8 @@ public class Config {
 			serviceTypes = serviceTypeService.getServiceConfList();
 
 			serviceTypesAll = serviceTypeService.getServiceDeepList();
+
+			aiServices = serviceTypeService.getAIService();
 
 			serviceGroups = serviceGroupService.getServiceGroupList();
 
@@ -817,4 +821,12 @@ public class Config {
 		}
 		return result.toArray(new String[0]);
 	}
+
+	public static String getPiName(final String code) {
+		String result = patternInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		if (Common.isEmpty(result)) result = "";
+		return result;
+	}
+
+
 }

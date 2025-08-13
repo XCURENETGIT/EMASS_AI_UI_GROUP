@@ -32,4 +32,6 @@ public interface ServiceTypeService {
 
 
 	public List<ServiceTypeVO> getServiceListForHostPage(String adminId);
+
+	public List<ServiceTypeVO> getAIService();
 }

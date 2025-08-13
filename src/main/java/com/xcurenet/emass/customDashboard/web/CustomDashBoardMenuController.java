@@ -42,21 +42,39 @@ public class CustomDashBoardMenuController {
 	@Description("DashBoard 페이지")
 	public String dashboard(final CustomDashboardMenuVO customDashboardMenuVo, final HttpSession session) {
 		customDashboardMenuVo.setAdminId(Common.getAdminId(session));
-		if (customDashboardMenuVo.getMenuKey() == null){
+		String dashboardUrl = "";
+		if (Common.isEmpty(customDashboardMenuVo.getMenuKey())) {
 			CustomDashboardMenuVO customDashboardMenuVO = customDashBoardService.getDefaultDashBoardContent(customDashboardMenuVo);
-			if (customDashBoardService.isDefaultDashboard(customDashboardMenuVO) == "true") return "/emass/dashboard_default";
-		}
-		List<CustomDashboardMenuVO> result = customDashBoardService.getDashBoardMenuList(customDashboardMenuVo);
-		if(CollectionUtils.isNotEmpty(result)) {
-			if (Common.isEquals(customDashBoardService.isDefaultDashboard(customDashboardMenuVo),"true")){
-				return "/emass/dashboard_default";
-			}else{
-				return "/emass/dashboard";
+			if (Common.isEquals(customDashboardMenuVO.getDefaultDashboard(), "Y")) {
+				dashboardUrl = "default";
+			}
+			else if (Common.isEquals(customDashboardMenuVO.getDefaultDashboard(), "I")) {
+				dashboardUrl = "ai";
+			}else dashboardUrl = "custom";
+		} else {
+			List<CustomDashboardMenuVO> result = customDashBoardService.getDashBoardMenuList(customDashboardMenuVo);
+			for (CustomDashboardMenuVO menuVO : result) {
+				if (Common.isEquals(menuVO.getDefaultDashboard(), "I")) {
+					dashboardUrl = "ai";
+				} else if (Common.isEquals(menuVO.getDefaultDashboard(), "Y")) {
+					if (Common.isEquals(customDashBoardService.isDefaultDashboard(customDashboardMenuVo), "true")) {
+						dashboardUrl = "default";
+					}
+				}else dashboardUrl = "custom";
 			}
 		}
-		else {
-			return "/error/403";
-		}
+		return moveDashboard(dashboardUrl);
+	}
+
+
+	public String moveDashboard(final String dashboardUrl) {
+		if(Common.isEquals(dashboardUrl,"default")){
+			return "/emass/dashboard_default";
+		}else if(Common.isEquals(dashboardUrl,"ai")) {
+			return "/emass/ai_dashboard";
+		}else if(Common.isEquals(dashboardUrl,"custom")){
+			return "/emass/dashboard";
+		}else return "/error/403";
 	}
 	
 	@RequestMapping(value = "/getDashBoardMenu.xcn")
