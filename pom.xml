@@ -10,7 +10,6 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<packaging>war</packaging>
-
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emassai</artifactId>
 	<version>1.0.183</version>
