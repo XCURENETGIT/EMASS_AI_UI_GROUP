@@ -38,14 +38,19 @@ public class DeviceVO {
 
 	private String hddSmsUseYn;
 	private String hddNotifyUseYn;
+	private String hddEmailUseYn;
 	private String cpuSmsUseYn;
 	private String cpuNotifyUseYn;
+	private String cpuEmailUseYn;
 	private String memSmsUseYn;
 	private String memNotifyUseYn;
+	private String memEmailUseYn;
 	private String processSmsUseYn;
 	private String processNotifyUseYn;
+	private String processEmailUseYn;
 	private String interfaceSmsUseYn;
 	private String interfaceNotifyUseYn;
+	private String interfaceEmailUseYn;
 	private int ruleApplyResult;
 	private String ruleApplyMessage;
 }

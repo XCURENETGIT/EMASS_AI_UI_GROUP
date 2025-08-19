@@ -43,6 +43,7 @@ public class TrapMessageProcessor {
 	@Resource(name = "adminService")
 	public AdminService adminService;
 
+
 	public void insertTrapMessage(JSONObject param, JSONObject trap_data) throws Exception {
 		SnmpTrapVO trap = new SnmpTrapVO();
 		try {
@@ -108,6 +109,23 @@ public class TrapMessageProcessor {
 				for (int i = 0; i < admins.size(); i++) {
 					template.convertAndSendToUser(Common.nvl(admins.get(i).get("ADMIN_ID")), "/trap", trap);
 				}
+
+				if (Common.isEquals(smsType, SmsType.DISK_THRESHOLD)) {
+					admins = adminService.getAdminEmailByConfId("device.hdd.email." + device.getDeviceSeq());
+				} else if (Common.isOrEquals(smsType, SmsType.PROCESS_SHUTDOWN, SmsType.PROCESS_STARTUP)) {
+					admins = adminService.getAdminEmailByConfId("device.process.email." + device.getDeviceSeq());
+				} else if (Common.isOrEquals(smsType, SmsType.COLLECTION_STATUS_PROBLEM)) {
+					admins = adminService.getAdminEmailByConfId("device.interface.email." + device.getDeviceSeq());
+				} else if (Common.isOrEquals(smsType, SmsType.MEMORY_THRESHOLD)) {
+					admins = adminService.getAdminEmailByConfId("device.mem.email." + device.getDeviceSeq());
+				} else if (Common.isOrEquals(smsType, SmsType.CPU_THRESHOLD)) {
+					admins = adminService.getAdminEmailByConfId("device.cpu.email." + device.getDeviceSeq());
+				}
+
+				for (Map<String, Object> admin : admins) {
+					auditMailSender.saveSnmpMail(trap,Common.nvl(admin.get("ADMIN_EMAIL")));
+				}
+
 			}
 		} catch (Exception e) {
 			log.error("", e);

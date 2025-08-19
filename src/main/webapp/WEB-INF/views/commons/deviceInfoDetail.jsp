@@ -169,6 +169,10 @@
                 var confId = 'device.hdd.notify.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
+	        $('#email_file').click(function () {
+		        var confId = 'device.hdd.email.' + $('#deviceSelect').selectpicker('val');
+		        saveAlarmCheck(confId, $(this).prop('checked'));
+	        });
             $('#sms_file_cpu').click(function () {
                 var confId = 'device.cpu.sms.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
@@ -177,7 +181,12 @@
                 var confId = 'device.cpu.notify.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
-            $('#sms_file_mem').click(function () {
+	        $('#email_file_cpu').click(function () {
+		        var confId = 'device.cpu.email.' + $('#deviceSelect').selectpicker('val');
+		        saveAlarmCheck(confId, $(this).prop('checked'));
+	        });
+
+	        $('#sms_file_mem').click(function () {
                 var confId = 'device.mem.sms.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
@@ -185,6 +194,10 @@
                 var confId = 'device.mem.notify.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
+	        $('#email_file_mem').click(function () {
+		        var confId = 'device.mem.email.' + $('#deviceSelect').selectpicker('val');
+		        saveAlarmCheck(confId, $(this).prop('checked'));
+	        });
             $('#sms_proc').click(function(){
                 var confId = 'device.process.sms.'+ $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
@@ -193,6 +206,10 @@
                 var confId = 'device.process.notify.'+ $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
+	        $('#email_proc').click(function(){
+		        var confId = 'device.process.email.'+ $('#deviceSelect').selectpicker('val');
+		        saveAlarmCheck(confId, $(this).prop('checked'));
+	        });
             $('#sms_inter').click(function () {
                 var confId = 'device.interface.sms.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
@@ -201,6 +218,10 @@
                 var confId = 'device.interface.notify.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
+	        $('#email_inter').click(function () {
+		        var confId = 'device.interface.email.' + $('#deviceSelect').selectpicker('val');
+		        saveAlarmCheck(confId, $(this).prop('checked'));
+	        });
 
             $('.savePopBtn').click(function () {
                 if (!checkIP($('#deviceIp').val())) {
@@ -977,30 +998,45 @@
             if(confId == 'device.hdd.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.filesystem.alarm"/>';
             }
+	        if(confId == 'device.hdd.email.1'){
+		        deviceConfName = '<s:message code="deviceInfo.filesystem.email"/>';
+	        }
             if(confId == 'device.cpu.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.cpu.sms"/>';
             }
             if(confId == 'device.cpu.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.cpu.alarm"/>';
             }
+	        if(confId == 'device.cpu.email.1'){
+		        deviceConfName = '<s:message code="deviceInfo.cpu.email"/>';
+	        }
             if(confId == 'device.mem.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.mem.sms"/>';
             }
             if(confId == 'device.mem.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.mem.alarm"/>';
             }
+	        if(confId == 'device.mem.email.1'){
+		        deviceConfName = '<s:message code="deviceInfo.mem.email"/>';
+	        }
             if(confId == 'device.process.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.process.sms"/>';
             }
             if(confId == 'device.process.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.process.alarm"/>';
             }
+	        if(confId == 'device.process.email.1'){
+		        deviceConfName = '<s:message code="deviceInfo.process.email"/>';
+	        }
             if(confId == 'device.interface.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.interface.sms"/>';
             }
             if(confId == 'device.interface.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.interface.alarm"/>';
             }
+	        if(confId == 'device.interface.email.1'){
+		        deviceConfName = '<s:message code="deviceInfo.interface.email"/>';
+	        }
             if(checked){
                 deviceStatus = ' <s:message code="deviceInfo.check"/>';
             }else{
@@ -1025,25 +1061,35 @@
         function setAlarmCheck(data) {
             $('#sms_file').prop('checked', false);
             $('#notify_file').prop('checked', false);
+	        $('#email_file').prop('checked', false);
             $('#sms_file_cpu').prop('checked', false);
             $('#notify_file_cpu').prop('checked', false);
+	        $('#email_file_cpu').prop('checked', false);
             $('#sms_file_mem').prop('checked', false);
             $('#notify_file_mem').prop('checked', false);
+	        $('#email_file_mem').prop('checked', false);
             $('#sms_proc').prop('checked', false);
             $('#notify_proc').prop('checked', false);
+	        $('#email_proc').prop('checked', false);
             $('#sms_inter').prop('checked', false);
             $('#notify_inter').prop('checked', false);
+	        $('#email_inter').prop('checked', false);
 
             if(data.hddSmsUseYn=='Y') $('#sms_file').prop('checked', true);
             if(data.hddNotifyUseYn=='Y') $('#notify_file').prop('checked', true);
+	        if(data.hddEmailUseYn=='Y') $('#email_file').prop('checked', true);
             if(data.cpuSmsUseYn=='Y') $('#sms_file_cpu').prop('checked', true);
             if(data.cpuNotifyUseYn=='Y') $('#notify_file_cpu').prop('checked', true);
+	        if(data.cpuEmailUseYn=='Y') $('#email_file_cpu').prop('checked', true);
             if(data.memSmsUseYn=='Y') $('#sms_file_mem').prop('checked', true);
             if(data.memNotifyUseYn=='Y') $('#notify_file_mem').prop('checked', true);
+	        if(data.memEmailUseYn=='Y') $('#email_file_mem').prop('checked', true);
             if(data.processSmsUseYn=='Y') $('#sms_proc').prop('checked', true);
             if(data.processNotifyUseYn=='Y') $('#notify_proc').prop('checked', true);
+	        if(data.processEmailUseYn=='Y') $('#email_proc').prop('checked', true);
             if(data.interfaceSmsUseYn=='Y') $('#sms_inter').prop('checked', true);
             if(data.interfaceNotifyUseYn=='Y') $('#notify_inter').prop('checked', true);
+	        if(data.interfaceEmailUseYn=='Y') $('#email_inter').prop('checked', true);
         }
 
         //장비 탭 생성
@@ -1547,6 +1593,7 @@
 							<i class="fa fa-bar-chart-o fa-fw"></i> CPU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<label for="sms_file_cpu"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="sms_file_cpu"><span class=" checktit">SMS</span></label>
 							<label class="notify_file_cpu"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="notify_file_cpu"><span class=" checktit"><s:message code="deviceInfo.alarm"/></span></label>
+							<label class="email_file_cpu"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="email_file_cpu"><span class=" checktit">Email</span></label>
 							<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 							<span style="float: right;">
 									<a href="javascript:void(0)" class="alertChangeCpu"><span
@@ -1565,6 +1612,7 @@
 							<label for="sms_file_mem"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="sms_file_mem"><span class=" checktit">SMS</span></label>
 							<label class="notify_file_mem"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="notify_file_mem"><span class=" checktit"><s:message
 									code="deviceInfo.alarm"/></span></label>
+							<label class="email_file_mem"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="email_file_mem"><span class=" checktit">Email</span></label>
 							<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 							<span style="float: right;">
 									<a href="javascript:void(0)" class="alertChangeMemory"><span
@@ -1631,6 +1679,7 @@
 										class=" checktit">SMS</span></label>
 								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_file" style="margin-left: 8px;"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
+								<label class="email_inter"><input class="checkbox" type="checkbox" id="email_file" style="margin-left: 8px;"><span class=" checktit">Email</label>
 								<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 							</div>
 						</div>
@@ -1649,6 +1698,7 @@
 										class=" checktit">SMS</span></label>
 								<label class="notify_proc"><input class="checkbox" type="checkbox" id="notify_proc" style="margin-left: 8px;"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
+								<label class="email_proc"><input class="checkbox" type="checkbox" id="email_proc" style="margin-left: 8px;"><span class=" checktit">Email</span></label>
 								<label>(<s:message code="deviceInfo.set.alarm.change.critical"/>)</label>
 							</div>
 						</div>
@@ -1680,6 +1730,7 @@
 								<label for="sms_inter"><input class="checkbox" type="checkbox" id="sms_inter" style="margin-left: 8px;"><span class=" checktit">SMS</span></label>
 								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_inter"><span class=" checktit" style="margin-left: 8px;"><s:message
 										code="deviceInfo.alarm"/></span></label>
+								<label class="email_inter"><input class="checkbox" type="checkbox" id="email_inter"><span class=" checktit" style="margin-left: 8px;">Email</span></label>
 								<label>(<s:message code="deviceInfo.set.alarm.status2"/>)</label>
 							</div>
 						</div>

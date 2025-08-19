@@ -555,4 +555,16 @@
 		FROM	UI_ADMIN_MENU
 		WHERE	ADMIN_ID	= #{adminId}
 	</select>
+
+	<select id="getAdminEmailByConfId" resultType="hashmap" parameterType="string">
+		SELECT  A.ADMIN_EMAIL
+		FROM	UI_ADMIN A, UI_CONF_ADMIN B
+		WHERE	A.ADMIN_ID = B.ADMIN_ID
+		AND		B.CONF_ID = #{confId}
+		AND		B.VAL = 'Y'
+		AND		A.ADMIN_TYPE = 'S'
+		AND		A.USE_YN = 'Y'
+		AND		IFNULL(A.ADMIN_EMAIL,'') != ''
+	</select>
+
 </mapper>

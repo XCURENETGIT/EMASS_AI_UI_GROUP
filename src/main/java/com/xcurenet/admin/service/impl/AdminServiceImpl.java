@@ -343,6 +343,11 @@ public class AdminServiceImpl extends XcnAbstractDAO implements AdminService {
 	}
 
 	@Override
+	public List<Map<String, Object>> getAdminEmailByConfId(String confId) {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.admin.getAdminEmailByConfId", confId);
+	}
+
+	@Override
 	public String getAdminMenu(String adminId) {
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.admin.getAdminMenuById", adminId);
 	}

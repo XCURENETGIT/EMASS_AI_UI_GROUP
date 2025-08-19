@@ -111,40 +111,59 @@ public class DeviceController {
 		if (device != null) {
 			ConfigAdminVO hddSms = configAdminService.getConfAdmin("device.hdd.sms." + deviceSeq, adminId);
 			ConfigAdminVO hddNotify = configAdminService.getConfAdmin("device.hdd.notify." + deviceSeq, adminId);
+			ConfigAdminVO hddEmail = configAdminService.getConfAdmin("device.hdd.email." + deviceSeq, adminId);
 			ConfigAdminVO cpuSms = configAdminService.getConfAdmin("device.cpu.sms." + deviceSeq, adminId);
 			ConfigAdminVO cpuNotify = configAdminService.getConfAdmin("device.cpu.notify." + deviceSeq, adminId);
+			ConfigAdminVO cpuEmail = configAdminService.getConfAdmin("device.cpu.email." + deviceSeq, adminId);
 			ConfigAdminVO memSms = configAdminService.getConfAdmin("device.mem.sms." + deviceSeq, adminId);
 			ConfigAdminVO memNotify = configAdminService.getConfAdmin("device.mem.notify." + deviceSeq, adminId);
+			ConfigAdminVO memEmail = configAdminService.getConfAdmin("device.mem.email." + deviceSeq, adminId);
 			ConfigAdminVO processSms = configAdminService.getConfAdmin("device.process.sms." + deviceSeq, adminId);
 			ConfigAdminVO processNofity = configAdminService.getConfAdmin("device.process.notify." + deviceSeq, adminId);
+			ConfigAdminVO processEmail = configAdminService.getConfAdmin("device.process.email." + deviceSeq, adminId);
 			ConfigAdminVO interfaceSms = configAdminService.getConfAdmin("device.interface.sms." + deviceSeq, adminId);
 			ConfigAdminVO interfaceNofity = configAdminService.getConfAdmin("device.interface.notify." + deviceSeq, adminId);
+			ConfigAdminVO interfaceEmail = configAdminService.getConfAdmin("device.interface.email." + deviceSeq, adminId);
 
 			device.setHddSmsUseYn("N");
 			device.setHddNotifyUseYn("N");
+			device.setHddEmailUseYn("N");
 
 			device.setCpuSmsUseYn("N");
 			device.setCpuNotifyUseYn("N");
+			device.setCpuEmailUseYn("N");
+
 			device.setMemSmsUseYn("N");
 			device.setMemNotifyUseYn("N");
+			device.setMemEmailUseYn("N");
 
 			device.setProcessSmsUseYn("N");
 			device.setProcessNotifyUseYn("N");
+			device.setProcessEmailUseYn("N");
+
 			device.setInterfaceSmsUseYn("N");
 			device.setInterfaceNotifyUseYn("N");
+			device.setInterfaceEmailUseYn("N");
 
 			if (hddSms != null) device.setHddSmsUseYn(Common.nvl(hddSms.getVal(), "N"));
 			if (hddNotify != null) device.setHddNotifyUseYn(Common.nvl(hddNotify.getVal(), "N"));
+			if (hddEmail != null) device.setHddEmailUseYn(Common.nvl(hddEmail.getVal(), "N"));
 
 			if (cpuSms != null) device.setCpuSmsUseYn(Common.nvl(cpuSms.getVal(), "N"));
 			if (cpuNotify != null) device.setCpuNotifyUseYn(Common.nvl(cpuNotify.getVal(), "N"));
+			if (cpuEmail != null) device.setCpuEmailUseYn(Common.nvl(cpuEmail.getVal(), "N"));
+
 			if (memSms != null) device.setMemSmsUseYn(Common.nvl(memSms.getVal(), "N"));
 			if (memNotify != null) device.setMemNotifyUseYn(Common.nvl(memNotify.getVal(), "N"));
+			if (memEmail != null) device.setMemEmailUseYn(Common.nvl(memEmail.getVal(), "N"));
 
 			if (processSms != null) device.setProcessSmsUseYn(Common.nvl(processSms.getVal(), "N"));
 			if (processNofity != null) device.setProcessNotifyUseYn(Common.nvl(processNofity.getVal(), "N"));
+			if (processEmail != null) device.setProcessEmailUseYn(Common.nvl(processEmail.getVal(), "N"));
+
 			if (interfaceSms != null) device.setInterfaceSmsUseYn(Common.nvl(interfaceSms.getVal(), "N"));
 			if (interfaceNofity != null) device.setInterfaceNotifyUseYn(Common.nvl(interfaceNofity.getVal(), "N"));
+			if (interfaceEmail != null) device.setInterfaceEmailUseYn(Common.nvl(interfaceEmail.getVal(), "N"));
 		}
 
 		return new XcnResponseVO(XcnRspCode.OK, device);

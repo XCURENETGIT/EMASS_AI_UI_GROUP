@@ -48,6 +48,8 @@ public interface AdminService {
 	public int insertSystemIpMac(final String systemIp1, final String systemIp2);
 
 	public String getAdminMenu(final String adminId);
+
+	public List<Map<String, Object>> getAdminEmailByConfId(String confId);
 	
 	/**
 	 * 구글 OTP 관련

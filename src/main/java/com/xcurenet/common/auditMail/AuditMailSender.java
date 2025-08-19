@@ -30,6 +30,8 @@ public class AuditMailSender {
 
 	private static DateTimeFormatter yyyyMMddHH = DateTimeFormat.forPattern("yyyyMMddHH");
 
+	public static final DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
+
 	public boolean send(final SnmpTrapVO trap, final JSONObject devInfo, final DeviceVO device) {
 
 
@@ -92,6 +94,50 @@ public class AuditMailSender {
 			IOUtils.closeQuietly(info_bw);
 			IOUtils.closeQuietly(body_bw);
 		}
+	}
+
+	/**
+	 *   장비관리 snmp 알림
+	 *
+	 */
+	public void saveSnmpMail(SnmpTrapVO trapVO, String to) {
+		String nowTime = yyyy_MM_dd.print(DateTime.now()).toString();
+		String file_name = yyyyMMddHHmmss.print(DateTime.now()).toString() + "_device_alarm_mail_" + Common.lpad(String.valueOf(Common.getNextSeq()), 5, "0");
+
+		final String from = Config.getString("system.mail.addr");
+		if (Common.isEmpty(from)) return;
+
+		String info_file_name = file_name + ".info";
+		String body_file_name = file_name + ".body";
+		String directory = MailInfo.ALARM_PATH + nowTime + MailInfo.SLASH;
+
+		Common.mkdirs(directory + MailInfo.SUCCESS);
+
+		StringBuffer info = new StringBuffer();
+		info.append("RESULT : ").append(MailInfo.ENTER);
+		info.append("SUBJECT : ").append(trapVO.getTitle()).append(MailInfo.ENTER);
+		info.append("FROM : ").append(from).append(MailInfo.ENTER);
+		info.append("TO : ").append(to).append(MailInfo.ENTER);
+		info.append("CC : ").append(MailInfo.ENTER);
+		info.append("BODY : ").append(directory + body_file_name).append(MailInfo.ENTER);
+		info.append("ATTACH : ");
+
+		BufferedWriter info_bw = null;
+		BufferedWriter body_bw = null;
+		try {
+			info_bw = new BufferedWriter(new FileWriter(directory + info_file_name));
+			info_bw.write(info.toString());
+
+			body_bw = new BufferedWriter(new FileWriter(directory + body_file_name));
+			body_bw.write(trapVO.getContent());
+
+		} catch (IOException e) {
+			log.error("", e.getMessage());
+		} finally {
+			IOUtils.closeQuietly(info_bw);
+			IOUtils.closeQuietly(body_bw);
+		}
+
 	}
 
 	public static String hdd(Object sizez) {
