@@ -88,7 +88,7 @@ public class EmsReDefined {
 //				} else {
 //					edc.setRecvsStr(checkInOut(edc.getRecvs()) + String.join(",", edc.getRecvs()));
 //				}
-				edc.setRecvsStr(reRecvs(edc.getRecvs(), summaryVal));
+				edc.setRecvsStr(reRecvs(edc.getRecvs(), summaryVal, edc.getRecvs_info()));
 			} else edc.setRecvsStr("");
 			
 			if(Common.isNotEmpty(edc.getTo())) edc.setTo(reToccBcc(edc.getTo(), summaryVal));
@@ -364,8 +364,11 @@ public class EmsReDefined {
 		return obj.getString("name") + "<" + target + ">";
 	}
 	
-	public String reRecvs(List<String> recvs, String summary) {
-		String result = checkInOut(recvs);
+	public String reRecvs(List<String> recvs, String summary, Map<String, List<Map<String, Object>>> recvsInfo) {
+		String result = "";
+		if (Common.isNotEmpty(recvsInfo)) result = checkInoutInfo2(recvsInfo,"recvs");
+		else result = checkInOut(recvs);
+
 		
 		for(int i=0; i<recvs.size(); i++) {
 			String target = recvs.get(i);

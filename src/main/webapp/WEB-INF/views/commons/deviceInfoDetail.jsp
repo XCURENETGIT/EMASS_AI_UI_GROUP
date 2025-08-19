@@ -1675,11 +1675,11 @@
 						<div class="panel-heading">
 							<div class="form-inline not-dashed">
 								<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="deviceInfo.filesystem"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<label for="sms_inter"><input class="checkbox" type="checkbox" id="sms_file" style="margin-left: 8px;"><span
+								<label for="sms_file"><input class="checkbox" type="checkbox" id="sms_file" style="margin-left: 8px;"><span
 										class=" checktit">SMS</span></label>
 								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_file" style="margin-left: 8px;"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
-								<label class="email_inter"><input class="checkbox" type="checkbox" id="email_file" style="margin-left: 8px;"><span class=" checktit">Email</label>
+								<label class="email_inter"><input class="checkbox" type="checkbox" id="email_file"><span class=" checktit">Email</label>
 								<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 							</div>
 						</div>
@@ -1698,7 +1698,7 @@
 										class=" checktit">SMS</span></label>
 								<label class="notify_proc"><input class="checkbox" type="checkbox" id="notify_proc" style="margin-left: 8px;"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
-								<label class="email_proc"><input class="checkbox" type="checkbox" id="email_proc" style="margin-left: 8px;"><span class=" checktit">Email</span></label>
+								<label class="email_proc" style="margin-left: 5px;"><input class="checkbox" type="checkbox" id="email_proc" style="margin-left: 8px;"><span class=" checktit">Email</span></label>
 								<label>(<s:message code="deviceInfo.set.alarm.change.critical"/>)</label>
 							</div>
 						</div>
@@ -1728,9 +1728,9 @@
 							<div class="form-inline not-dashed">
 								<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="deviceInfo.interface"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<label for="sms_inter"><input class="checkbox" type="checkbox" id="sms_inter" style="margin-left: 8px;"><span class=" checktit">SMS</span></label>
-								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_inter"><span class=" checktit" style="margin-left: 8px;"><s:message
+								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_inter"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
-								<label class="email_inter"><input class="checkbox" type="checkbox" id="email_inter"><span class=" checktit" style="margin-left: 8px;">Email</span></label>
+								<label class="email_inter" style="margin-left: 5px;"><input class="checkbox" type="checkbox" id="email_inter"><span class=" checktit">Email</span></label>
 								<label>(<s:message code="deviceInfo.set.alarm.status2"/>)</label>
 							</div>
 						</div>
