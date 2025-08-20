@@ -207,6 +207,11 @@ public class SolrEdcStatController {
 
 		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
 
+		if (yAxis.equals("host_str")){
+			String space = "\"\")";
+			query += " -host_str:(".concat(space);
+		}
+
 		sq.setQuery(query);
 		sq.setStart(0);
 		sq.setRows(0);
