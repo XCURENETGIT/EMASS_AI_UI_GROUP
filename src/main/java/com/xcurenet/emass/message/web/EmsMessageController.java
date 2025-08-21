@@ -38,7 +38,9 @@ import org.apache.catalina.Session;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.zip.Zip64Mode;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -820,12 +822,12 @@ public class EmsMessageController {
 			if (body != null) {
 				in = new ByteArrayInputStream(body.getBytes());
 
-				os.putArchiveEntry(new ZipArchiveEntry(String.format("/messages/%s/body.html", edc.getMsgid())));
+				os.putArchiveEntry(new ZipArchiveEntry(String.format("messages/%s/body.html", edc.getMsgid())));
 				IOUtils.copy(in, os);
 				os.closeArchiveEntry();
 			} else {
 				in = new ByteArrayInputStream("no data".getBytes());
-				os.putArchiveEntry(new ZipArchiveEntry(String.format("/messages/%s/", edc.getMsgid())));
+				os.putArchiveEntry(new ZipArchiveEntry(String.format("messages/%s/", edc.getMsgid())));
 				IOUtils.copy(in, os);
 				os.closeArchiveEntry();
 			}
