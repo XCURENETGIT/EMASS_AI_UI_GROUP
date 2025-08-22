@@ -88,9 +88,10 @@ public class UserJob extends UserCommon implements Job {
 				UserVO user = findUserInfo(getUser(confCols, insa, basepoint, deptBasepoint));
 				if (Common.isEmpty(user.getUserId())) log.warn("[USER INSA LOAD] user info load fail user id is null {}", insa);
 				else if (Common.isEmpty(user.getUserNm())) log.warn("[USER INSA LOAD] user info load fail user name is null {}", insa);
-				else if (Common.isEmpty(user.getUserEmail()) && Common.isEmpty(user.getUserIp())) log.warn("[USER INSA LOAD] user info load fail user email user ip is null {}", insa);
+				else if (Common.isEmpty(user.getUserEmail())) log.warn("[USER INSA LOAD] user info load fail user email is null {}", insa);
 				else users.add(user);
 			}
+
 			log.info("[USER INSA LOAD] user info load end total:{}", users.size());
 			log.info("[USER INSA LOAD] Org Insert new cocd:{}", newCos.size());
 			log.info("[USER INSA LOAD] Org Insert new General:{}", newGeneral.size());
