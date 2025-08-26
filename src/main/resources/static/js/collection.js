@@ -754,12 +754,13 @@ function makeList2(nextFlag){
     for (var i =0; i <detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
+        var inOut = obj.direction_svc;
         str += checkDate(i);
 
-        str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
+        str += '<li class="p20 bubble '+ (inOut == 'O'? 'txt_right slide_right' : 'txt_left slide_left')+' timeline-inverted'+(i==0 && !nextFlag ? ' lastReadLi' : '') + '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
         var svc3 = obj.svc3;
-        str+='	<div class="me timeline-panel" >';
+        str +='<div class=" ' + (inOut == 'O'? 'me' : 'you')+ ' timeline-panel">';
 
         if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
@@ -832,12 +833,13 @@ function makeList(nextFlag){
     for (var i =detailDataSet.length-1; i >=0; i--) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
+        var inOut = obj.direction_svc;
         str += checkDate(i);
 
-        str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
+        str += '<li class="p20 bubble '+ (inOut == 'O'? 'txt_right slide_right' : 'txt_left slide_left') + ' timeline-inverted' +(i==0 && !nextFlag ? ' lastReadLi' : '') + '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
         var svc3 = obj.svc3;
-        str+='	<div class="me timeline-panel">';
+        str +='<div class=" ' + (inOut == 'O'? 'me' : 'you')+ ' timeline-panel">';
 
         if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
