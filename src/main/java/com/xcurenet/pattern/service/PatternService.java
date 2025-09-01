@@ -15,4 +15,6 @@ public interface PatternService {
 	void updatePattern(PatternVO patternVO, String adminId);
 
 	List<PatternVO> allPatternCodes();
+
+	public List<PatternVO> getPatternTypeCodes(String enable,String codeType);
 }

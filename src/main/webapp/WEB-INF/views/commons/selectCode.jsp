@@ -432,6 +432,11 @@
         grid.colAdd('code', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'link');
         grid.colAdd('codeName', '<s:message code="filterInfo.service"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'regexp') {
+	    grid.colAdd('codeType', '<s:message code="common.msg.separator"/>', 120, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+		    if (value == 'A') return "<s:message code="common.pattern.danger"/>";
+		    else if (value == 'N') return "<s:message code="common.pattern.person"/>";
+		    else return "<s:message code="pattern.custom"/>";
+	    });
         grid.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
         grid.colAdd('codeName', '<s:message code="common.msg.regexp"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'user' || codeType == 'senders' || codeType == 'receivers') {

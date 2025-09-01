@@ -167,24 +167,10 @@
 
 	        var patnName = "";
 	        for (let i = 0; i<patterns.length; i++){
-		        var name = $('#attachName').text();
+		        var name = $('#attachName').text().trim();
 		        if(patterns[i].attachName != name){
 			        continue;
 		        }
-		        if (patterns[i].piid == "PN") $('#pnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "FN") $('#fnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "DN") $('#dnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "SN") $('#snCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "CN") $('#cnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "MN") $('#mnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "AN") $('#anCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "CRN") $('#crnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "SSN") $('#ssnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "IMEI") $('#imeiCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "BRN") $('#brnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "CPN") $('#cpnCnt').html(patterns[i].total.comma());
-		        if (patterns[i].piid == "MCN") $('#mcnCnt').html(patterns[i].total.comma());
-
 
 		        if(patnName.length > 0){
 			        patnName += ', ';
@@ -289,19 +275,32 @@
 			let piResultList = [];
 
 			for(let i = 0; i< patterns.length; i++){
-				if (piHighlightList.includes(patterns[i].piid)){
-					setAttachPatternHighLight(patterns[i].kwds, 'K');
+				if (piHighlightList.includes(patterns[i].piid)  || patterns[i].customPattern == true){
+					setAttachPatternHighLight(patterns[i].kwds, 'P', patterns[i].piid, patterns[i].customPattern);
 				}
 			}
 		}
 
-        function setAttachPatternHighLight(defaultText, type) {
+        function setAttachPatternHighLight(defaultText, type, piid, customPattern) {
 	        var body_obj = $("#attachText");
 	        var  splitText =  defaultText.split(',');
 	        for (var j = 0; j < splitText.length; j++) {
 		        if (splitText[j] == '' ) continue;
-		        $(body_obj).highlight(splitText[j], type);
+		        $(body_obj).highlight(maskText(splitText[j], customPattern), type, piid);
+
 	        }
+        }
+
+        function maskText(text, customPattern) {
+	        if (customPattern == true) return text;
+	        var str = $.trim(text);
+	        var visibleLength = str.length / 2;
+
+	        var result = str.substring(0, visibleLength);
+	        for (var i = 0; i < str.length - visibleLength; i++) {
+		        result += '*';
+	        }
+	        return result;
         }
 
         function setFileNameHighLight(defaultText, type) {
@@ -335,10 +334,8 @@
                 pat = pat.trim().replaceAll("\\(", "").replaceAll("\\)", "");
                 var skip = 0;
                 if (node.nodeType == 3) {
-                    console.log("node.nodeType == 3");
                     if (pat.substring(0, 1) == '/' && pat.substring(pat.length - 1) == '/') {
                         //var pos = node.data.toUpperCase().indexOf(pat);
-	                    console.log("정규식if")
 
                         var solrQueryText = pat.replaceAll('/', '');
                         var re = new RegExp(solrQueryText, 'ig');

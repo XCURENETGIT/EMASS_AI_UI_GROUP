@@ -818,7 +818,7 @@ public class EmsMessageController {
 		EmsBodyVO emsBody = emsMessageService.getEmassBody(edc.getMsgid(), firstAdminYn, adminType);
 		InputStream in = null;
 		try {
-			String body = new EmsCreateMessage(locale).getHeaderMessage(edc.getMsgid(), getBodyStr(null, emsBody), null, locale, firstAdminYn, adminId, adminType);
+			String body = new EmsCreateMessage(locale).getHeaderMessage(edc.getMsgid(), getBodyStrMasking(null, emsBody), null, locale, firstAdminYn, adminId, adminType);
 			if (body != null) {
 				in = new ByteArrayInputStream(body.getBytes());
 
@@ -890,11 +890,26 @@ public class EmsMessageController {
 			ConfigAdminVO detectPreviewOption = adminVo.getAdminConf("detectPreview");
 			String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
 			// 마스킹 여부 확인
-			return new XcnResponseVO(XcnRspCode.OK, getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody,locale));
+			return new XcnResponseVO(XcnRspCode.OK, getBodyStrMaskingMsgid(getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody,locale), msgId));
 		} else {
 			/* 그 외 일반 */
-			return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
+			return new XcnResponseVO(XcnRspCode.OK, getBodyStrMasking(userCharset, emsBody));
 		}
+	}
+
+
+
+	public String getBodyStrMasking(String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
+		String bodyStr = getBodyStr(userCharset, emsBody);
+
+		if(bodyStr != null) {
+			List<EmsPiVO> piVo = emsMessageService.getEmassPattern(emsBody.getMsgId());
+			for(int i = 0; i < piVo.size(); i++) {
+				bodyStr = String.join(",", emsMessageService.getLastPiText(Common.toList(bodyStr, ","), piVo.get(i)));
+			}
+		}
+
+		return bodyStr;
 	}
 
 	public static String noBodyMessage(final String previewFlag, final String svc, final Locale locale) {
@@ -907,7 +922,7 @@ public class EmsMessageController {
 		if(bodyStr != null) {
 			List<EmsPiVO> piVo = emsMessageService.getEmassPattern(msgid);
 			for(int i = 0; i < piVo.size(); i++) {
-				bodyStr = String.join(",", emsMessageService.getLastPiText(Common.toList(bodyStr, ","), piVo.get(i).getPiid()));
+				bodyStr = String.join(",", emsMessageService.getLastPiText(Common.toList(bodyStr, ","), piVo.get(i)));
 			}
 		}
 
@@ -946,7 +961,7 @@ public class EmsMessageController {
 				response.setHeader("Connection", "close");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getEncodingFileName(request, fileName) + ".html\"");
 			}
-			out.write(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+			out.write(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStrMasking(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -963,7 +978,7 @@ public class EmsMessageController {
 		String print = Common.nvl(request.getParameter("print"));
 
 		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		String result = Common.nvl(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())));
+		String result = Common.nvl(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStrMasking(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())));
 		/*
 		try {
 			EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()));
@@ -1002,7 +1017,7 @@ public class EmsMessageController {
 					EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 					InputStream in = null;
 					try {
-						String body = new EmsCreateMessage(locale).getHeaderMessage(msgId, getBodyStr(null, emsBody), null, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
+						String body = new EmsCreateMessage(locale).getHeaderMessage(msgId, getBodyStrMasking(null, emsBody), null, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
 						if (body != null) {
 							in = new ByteArrayInputStream(body.getBytes());
 
@@ -1533,7 +1548,8 @@ public class EmsMessageController {
 		String ocrYn = Common.nvl(request.getParameter("ocrYn"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
-		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassAttachText(msgId, attachId, ocrYn, offset, limit));
+		String attachText =  emsMessageService.getEmassAttachText(msgId, attachId, ocrYn, offset, limit);
+		return new XcnResponseVO(XcnRspCode.OK, getBodyStrMaskingMsgid(attachText, msgId));
 	}
 
 	@RequestMapping(value = "/getEmassPattern.xcn")

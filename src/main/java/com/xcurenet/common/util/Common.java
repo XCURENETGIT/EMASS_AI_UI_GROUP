@@ -2775,6 +2775,17 @@ public class Common {
 
 
 	}
+	public static String getMaskingPiKeyword(String keyword, String maskStr){
+		String str = StringUtils.trim(keyword);
+		int visibleLength = keyword.length() / 2;
+
+		StringBuilder result = new StringBuilder();
+		result.append(str.substring(0, visibleLength));
+		for (int i = 0; i < str.length() - visibleLength; i++){
+			result.append(maskStr);
+		}
+		return result.toString();
+	}
 	
 public static String getDateDay(String date, String dateType) throws Exception {
 		

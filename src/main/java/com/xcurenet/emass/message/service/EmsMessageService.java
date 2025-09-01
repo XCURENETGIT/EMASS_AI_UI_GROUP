@@ -94,6 +94,6 @@ public interface EmsMessageService {
 
 	public List<String> keywordSeparation(String keyword);
 
-	public List<String> getLastPiText(List<String> kwds, String piid);
+	public List<String> getLastPiText(List<String> kwds, EmsPiVO pi);
 
 }

@@ -17,6 +17,7 @@
 <%
 	
 	EmsMessageService emsMessageService = SpringContextUtil.getBean(EmsMessageService.class);
+	EmsMessageController emsMessageController = SpringContextUtil.getBean(EmsMessageController.class);
 	JSONObject param = Common.getParam ( request );
 	String msgId = Common.nvl( param.get("msgId"));
 	String xRootMtr = Common.nvl( param.get("xRootMtr"));
@@ -36,8 +37,8 @@
 	int idx = 0;
 	for(String id : msgIds) {
 		emsBody.add(emsMessageService.getEmassBody(id, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession())));
-		emsBodyStr.add(Common.nvl(new EmsCreateMessage(request).getHeaderMessage(id, EmsMessageController.getBodyStr(userCharset, emsBody.get(idx)), "N", Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()))));
-		
+		emsBodyStr.add(Common.nvl(new EmsCreateMessage(request).getHeaderMessage(id, emsMessageController.getBodyStrMasking(userCharset,emsBody.get(idx)), "N", Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()))));
+
 		Document doc = Jsoup.parse(emsBodyStr.get(idx), Common.UTF8);
 		Elements cssEl = doc.getElementsByTag("style");
 		styleStr = cssEl.toString();

@@ -12,6 +12,7 @@
 <%@ page import="com.xcurenet.common.parser.mime.MimeVo" %>
 <%@ page import="org.apache.commons.io.IOUtils" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%@ page import="com.xcurenet.emass.message.web.EmsMessageController" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -22,6 +23,7 @@
 
 	WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(((HttpServletRequest) request).getSession().getServletContext());
 	EmsMessageService emassService = wac.getBean(EmsMessageService.class);
+	EmsMessageController emsMessageController = wac.getBean(EmsMessageController.class);
 	
 	String body = "";
 	String title = "";
@@ -55,7 +57,7 @@
 		else{
 			String charset = DetectCharset.getCharset(emsBody.getBody());
 			if (charset == null || (charset != "UTF-8" && charset != "EUC-KR")) charset = default_encoding;
-			body = Common.toString(emsBody.getBody(), charset);
+			body = emsMessageController.getBodyStrMaskingMsgid(Common.toString(emsBody.getBody(), charset), msgId);
 
 			if (emsBody.getSvc().indexOf("EMM") > -1) {
 				/* KNOX인 데이터는 mimeParser로 해석 */

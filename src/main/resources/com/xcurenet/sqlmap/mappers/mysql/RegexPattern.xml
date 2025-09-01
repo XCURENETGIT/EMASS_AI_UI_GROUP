@@ -49,4 +49,13 @@
 		FROM UI_REGEXP
 	</select>
 
+	<select id ="getPatternTypeCodes" resultType="com.xcurenet.pattern.service.PatternVO" parameterType="map">
+		SELECT
+		CODE AS code,
+		REGEX AS regex
+		FROM UI_REGEXP
+		WHERE 1=1
+		AND CODE_TYPE = #{codeType}
+	</select>
+
 </mapper>

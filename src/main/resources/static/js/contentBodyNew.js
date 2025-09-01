@@ -2302,7 +2302,7 @@ function PatternHighlight() {
 
     for(let i = 0; i< patternKyword.length; i++){
         if (piHighlightList.includes(patternKyword[i].piid) || patternKyword[i].customPattern == true){
-            setPatternHighLight(patternKyword[i].kwds, 'K');
+            setPatternHighLight(patternKyword[i].kwds, 'K', patternKyword[i].customPattern);
         }
     }
 }
@@ -2343,15 +2343,28 @@ function setBodyHighLight(defaultText, type) {
     }
 }
 
-function setPatternHighLight(defaultText, type) {
+function setPatternHighLight(defaultText, type, customPattern) {
     var body_obj = $("#emassBody");
     var subject_obj = $("#subject");
     var  splitText =  defaultText.split(',');
     for (var j = 0; j < splitText.length; j++) {
-        if (splitText[j] == '' ) continue;
-        $(body_obj).highlight(splitText[j], type);
-        $(subject_obj).highlight(splitText[j], type);
+        if (splitText[j] == '') continue;
+        $(body_obj).highlight(maskText(splitText[j], customPattern), type);
+        $(subject_obj).highlight(maskText(splitText[j], customPattern), type);
     }
+}
+// 패턴 마스킹 처리 하이라이팅
+function maskText(text, customPattern) {
+    if (customPattern == true) return text;
+    var str = $.trim(text);
+    var visibleLength = str.length / 2;
+
+    var result = str.substring(0, visibleLength);
+    for (var i = 0; i < str.length - visibleLength; i++) {
+        result += '*';
+    }
+    console.log("result: "+result);
+    return result;
 }
 
 

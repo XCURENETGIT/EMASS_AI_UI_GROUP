@@ -133,6 +133,8 @@ public class Config {
 
 	public static Map<String, String> userIds; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도
 
+	public static Map<String,String> maskPatternInfo = new HashMap<>();  //마스킹 pattern
+
 	public static Map<String, String> userIds2;
 
 	public static Map<String, String> userNames; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도
@@ -645,12 +647,19 @@ public class Config {
 	public void reloadPattern() {
 		patternInfo = patternService.allPatternCodes();
 
+
 		activePatterns = patternInfo.stream().filter(p -> p.getEnable().equals("Y")).map(PatternVO::getCode).toArray(String[]::new);
 		Set<String> privateSvc = new HashSet<>(Arrays.asList(PRIVATE_SVC));
 		Set<String> anomalySvc = new HashSet<>(Arrays.asList(ABNL_SVC));
 
 		activePrivatePatterns = Arrays.stream(activePatterns).filter(privateSvc::contains).toArray(String[]::new);
 		activeAnomalyPatterns = Arrays.stream(activePatterns).filter(anomalySvc::contains).toArray(String[]::new);
+
+		// 마스킹 패턴 저장
+		patternInfo.stream()
+				.filter(vo -> "N".equals(vo.getType()))
+				.forEach(vo -> maskPatternInfo.put(vo.getCode(), vo.getRegex()));
+
 	}
 
 	/**

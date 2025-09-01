@@ -340,7 +340,7 @@ public class MessengerController {
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			String body = emsMessageController.getBodyStrMasking("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
 		}
 
@@ -360,7 +360,7 @@ public class MessengerController {
 
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			String body = emsMessageController.getBodyStrMasking("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
 //			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
 //				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
@@ -381,7 +381,7 @@ public class MessengerController {
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			String body = emsMessageController.getBodyStrMasking("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
 //			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
 //				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());

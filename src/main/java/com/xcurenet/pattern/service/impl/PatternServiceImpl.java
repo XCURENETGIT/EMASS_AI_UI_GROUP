@@ -69,4 +69,12 @@ public class PatternServiceImpl extends XcnAbstractDAO implements PatternService
 	public List<PatternVO> allPatternCodes() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.regexPattern.allPatternCode", null);
 	}
+
+	@Override
+	public List<PatternVO> getPatternTypeCodes(String enable,String codeType) {
+		Map<String,Object> params = new HashMap<>();
+		params.put("enable", enable);
+		params.put("codeType", codeType);
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.regexPattern.getPatternTypeCodes", params);
+	}
 }

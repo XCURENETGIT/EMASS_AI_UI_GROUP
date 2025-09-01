@@ -536,7 +536,7 @@ public class CollectionController {
 
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			String body = emsMessageController.getBodyStrMasking("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -1174,7 +1174,7 @@ public class CollectionController {
 						String filePath = tempDirPath + File.separator + fileName;
 
 						try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-							fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStr(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+							fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStrMasking(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
 						}
 					}
 

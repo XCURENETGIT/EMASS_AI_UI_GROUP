@@ -646,14 +646,14 @@
 
 	<!-- 패턴 -->
 	<select id="getCodePatternList" resultType="codeVO" parameterType="codeVO">
-		SELECT  CODE AS code, NAME AS codeName, ENABLE as enable
+		SELECT  CODE AS code, NAME AS codeName, ENABLE as enable, CODE_TYPE as codeType
 		FROM	(
-		SELECT  A.CODE, A.NAME, A.ENABLE
+		SELECT  A.CODE, A.NAME, A.ENABLE, A.CODE_TYPE
 		FROM	UI_REGEXP A, UI_ADMIN_REGEXP B
 		WHERE	A.CODE 	= B.CODE
 		AND		B.ADMIN_ID 	= #{adminId}
 		UNION
-		SELECT  CODE, NAME, ENABLE
+		SELECT  CODE, NAME, ENABLE, CODE_TYPE
 		FROM	UI_REGEXP
 		WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_REGEXP WHERE ADMIN_ID = #{adminId} )
 		) AS RS

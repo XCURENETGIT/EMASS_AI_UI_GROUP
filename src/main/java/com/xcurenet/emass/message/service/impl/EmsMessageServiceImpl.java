@@ -24,6 +24,7 @@ import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.jetbrains.annotations.NotNull;
@@ -225,7 +226,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			if(("").equals(emsMessageVO.getSubject())){
 				emsMessageVO.setSubjectIsEmpty(true);
 			}
-			emsMessageVO.setSubject(EmsReDefined.reSubject(emsMessageVO));
+			emsMessageVO.setSubject(getMaskingText(EmsReDefined.reSubject(emsMessageVO), emsMessageVO.getPatterns()));
 
 			/* userIp 가져오기*/
 			String ip = "";
@@ -302,6 +303,30 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 			return getConsentMessage(emsMessageVO, firstAdminYn, adminType);
 		}
+	}
+
+	public String getMaskingText(String content, List<EmsPiVO> piList) {
+		String result = content;
+		for(EmsPiVO pi : piList){
+			result = getMaskingText(result, pi);
+		}
+		return result;
+	}
+
+	public String getMaskingText(String content, EmsPiVO pi) {
+		// 마스킹해야되는 pi 가 아니라면 그대로 return
+		if(!Config.maskPatternInfo.keySet().contains(pi.getPiid())) return content;
+
+		List<String> keywords = List.of(pi.getKwds().split(","));
+		String result = content;
+		for (String keyword : keywords) {
+			String kwd = StringUtils.trim(keyword);
+			if (result.contains(kwd)) {
+				String masked = Common.getMaskingPiKeyword(kwd, "*");
+				result = result.replace(kwd, masked);
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -537,7 +562,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			if ((Common.isEmpty(piId) || Common.isEquals(piId, pi.getPiid())) && (Common.isEmpty(type) || Common.isEquals(type, pi.getType())) && (Common.isEmpty(attachName) || Common.isEquals(attachName, pi.getAttachName()))) {
 				EmsPiDetailVO vo = new EmsPiDetailVO();
 				vo.setAttachName(pi.getAttachName());
-				vo.setKwds(pi.getKwds());
+				if(Config.maskPatternInfo.keySet().contains(pi.getPiid())) {
+					vo.setKwds(Arrays.stream(pi.getKwds().split(","))
+							.map(s -> Common.getMaskingPiKeyword(s, "*"))   // Common 클래스의 static 메서드 호출
+							.collect(Collectors.joining(",")));
+				} else {
+					vo.setKwds(pi.getKwds());
+				}
 				vo.setAmount(pi.getTotal());
 				result.add(vo);
 			}
@@ -546,23 +577,24 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	}
 
 	@Override
-	public List<String> getLastPiText(List<String> kwds, String piId) {
+	public List<String> getLastPiText(List<String> contents, EmsPiVO pi) {
+		// 마스킹해야되는 pi 가 아니라면 그대로 return
+		if(!Config.maskPatternInfo.keySet().contains(pi.getPiid())) return contents;
 
-		Map<String, String> mp = Config.DEFAULT_PATTERN;
-		List<String> result = new ArrayList<>();
-
-		for(int i=0; i< kwds.size(); i++) {
-			String kwd = kwds.get(i);
-
-			if (mp.containsKey(piId)){
-				String masking = Common.maskString(kwd, mp.get(piId), "*");
-				result.add(masking);
-			}else{
-				result.add(kwd);
-			}
-		}
-
-		return result;
+		List<String> keywords = List.of(pi.getKwds().split(","));
+		return contents.stream()
+				.map(content -> {
+					String result = content;
+					for (String keyword : keywords) {
+						String kwd = StringUtils.trim(keyword);
+						if (result.contains(kwd)) {
+							String masked = Common.getMaskingPiKeyword(kwd, "*");
+							result = result.replace(kwd, masked);
+						}
+					}
+					return result;
+				})
+				.collect(Collectors.toList());
 	}
 
 	@Override
