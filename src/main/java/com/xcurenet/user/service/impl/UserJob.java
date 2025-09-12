@@ -165,6 +165,8 @@ public class UserJob extends UserCommon implements Job {
 			} else if (Common.isEquals(userAttr, "deptNm")) {
 				if(Common.isEquals(deptBasepoint, "F")) {
 					user.setDeptNm(val);
+					//회사명 + 회사 코드 없을 경우 회사 미분류로 자동 설정
+					if (Common.isEquals(userAttr, "coCd") && Common.isEquals(userAttr, "coNm")) user.setCoCd("C00-00");
 				}
 			} else if (Common.isEquals(userAttr, "jikinNm")) {
 				user.setJikinNm(val);
