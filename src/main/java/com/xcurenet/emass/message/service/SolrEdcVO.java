@@ -70,6 +70,8 @@ public class SolrEdcVO {
     public String jikgubnm;
     public String sender;
 
+    public String org_sender;
+
     public List<String> allofus;
 
     public List<String> recvs;

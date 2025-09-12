@@ -131,6 +131,9 @@ public class EmassMessageData {
 	@Field("sender")
 	private EmassUserData senderInfo;
 
+	@Field("orgSender")
+	private String orgSender;
+
 	@Field("recv")
 	private EmassRecvData recvInfo;
 

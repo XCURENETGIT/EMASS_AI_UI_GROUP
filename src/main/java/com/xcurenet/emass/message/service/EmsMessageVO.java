@@ -44,6 +44,7 @@ public class EmsMessageVO {
 	private String path;
 	private String query;
 	private String sender;
+	private String org_sender;
 	private String opinion;
 	private String devWriter;
 	private String devDecoder;

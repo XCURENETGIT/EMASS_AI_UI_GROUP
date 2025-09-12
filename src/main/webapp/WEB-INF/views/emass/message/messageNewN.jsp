@@ -771,6 +771,8 @@
             $('#searchBtn').click(function(){searchData( );}); //일반 검색 버튼 클릭
             $('#searchQueryBtn').click(function(){toggleSolrQuery();}); //고급 버튼 클릭
             $("#searchStrInput").keypress(function(e){if( e.keyCode == 13) searchData( );}); //통합 검색 엔터키
+            $("#realSenders").keypress(function(e){if( e.keyCode == 13) searchData( );}); //발신자 검색 엔터키
+
 
             var dateObj = new Date();
             $('#startdatepicker').datetimepicker({
@@ -2915,6 +2917,15 @@
                                         <%} %>
                                         <div class="condition_not"><label><input type="checkbox" id="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
                                         <input class="condition_input_text" type="text" id="senders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
+                                    </div>
+                                     <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                          <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.org_sender"/></div>
+                                        <%if(Common.isEquals(rsUppercase, "Y")) {%>
+                                        <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="realSenders_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
+                                        <%} %>
+                                        <div class="condition_not"><label><input type="checkbox" id="realSenders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <input class="condition_input_text" type="text" id="realSenders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
                                     </div>
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">

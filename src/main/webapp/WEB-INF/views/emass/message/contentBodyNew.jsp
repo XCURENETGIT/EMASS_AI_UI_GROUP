@@ -973,7 +973,13 @@
 												</div>
 											</td>
 										</tr>
-
+										<tr id="actualSenderTr" class="fold_clickTr" style="display: none;">
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="condition.org_sender"/></span></th>
+											<td class="fold_clickTd" colspan="3">
+												<div id="actualSenderDiv" class="fold">
+												</div>
+											</td>
+										</tr>
 										<tr id="toTr" class="fold_clickTr">
 											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="condition.to"/></span></th>
 											<td class="fold_clickTd" colspan="3">

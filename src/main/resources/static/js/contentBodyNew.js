@@ -1280,14 +1280,41 @@ function setMessage(msg) {
     $('#userIdTd').html(msg.usrId);
 
 
-    $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip));
-    if (msg.toList.length == 0) {
-        $('#toTr').css("display", "none");
-        $('#receiveUserDiv').html('');
+    $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip, msg.org_sender));
+
+    // 실제발신자 정보 표시 (별도 행으로 표시)
+    if (msg.org_sender && msg.org_sender.trim() !== '') {
+        try {
+            var orgSenderObj = JSON.parse(msg.org_sender);
+            var orgSenderId = orgSenderObj.id || msg.org_sender;
+            var insideValue = orgSenderObj.inside || 'N'; // inside 값이 없으면 기본값 'N'
+
+            var actualOutSideCnt = 0;
+            var actualInSideCnt = 0;
+            if (insideValue == 'N') actualOutSideCnt = 1;
+            else actualInSideCnt = 1;
+
+            $('#actualSenderTr').show();
+            $('#actualSenderDiv').html('<span class="userInfoSpan notuser" recvid="' + orgSenderId + '" recvip="" recvemail="" recvname="" recvconm="" recvbusinm="" recvsuborgnm="" recvdeptnm="" recvjikgubnm="" recvsabun="">' + orgSenderId + '</span>');
+
+            setTimeout(function () {
+                var actualSenderText = $('#actualSenderTr > th.fold_clickTh .trTitle').text().replace(/\[.*\]/, '') || '실제 발신자';
+                $('#actualSenderTr > th.fold_clickTh .trTitle').html(actualSenderText + '[' + actualOutSideCnt + '/' + actualInSideCnt + ']');
+            }, 1);
+        } catch (e) {
+            $('#actualSenderTr').show();
+            $('#actualSenderDiv').html('<span class="userInfoSpan notuser" recvid="' + msg.org_sender + '" recvip="" recvemail="" recvname="" recvconm="" recvbusinm="" recvsuborgnm="" recvdeptnm="" recvjikgubnm="" recvsabun="">' + msg.org_sender + '</span>');
+
+            // 기본값으로 외부 사용자 처리
+            setTimeout(function () {
+                var actualSenderText = $('#actualSenderTr > th.fold_clickTh .trTitle').text().replace(/\[.*\]/, '') || '실제 발신자';
+                $('#actualSenderTr > th.fold_clickTh .trTitle').html(actualSenderText + '[1/0]');
+            }, 1);
+        }
     } else {
-        $('#toTr').css("display", "");
-        $('#receiveUserDiv').html(userHtml(msg.toList, 'toTr', srcip, dstip, usrip));
+        $('#actualSenderTr').hide();
     }
+
 
     if (msg.ccList.length == 0) {
         $('#ccTr').css("display", "none");
@@ -1427,7 +1454,7 @@ function getPattern(){
     return patternKyword;
 }
 
-function userHtml(userList, tr, srcip, dstip, usrip) {
+function userHtml(userList, tr, srcip, dstip, usrip, orgSender) {
 
     var userDivHtml = "";
 
@@ -1437,6 +1464,18 @@ function userHtml(userList, tr, srcip, dstip, usrip) {
         var user = userList[i];
         if (nvl(user.inSide) == 'N') outSideCnt++;
         else inSideCnt++;
+    }
+
+    // 실제 발신자도 카운팅에 포함
+    if (orgSender && orgSender.trim() !== '') {
+        try {
+            var orgSenderObj = JSON.parse(orgSender);
+            var insideValue = orgSenderObj.inside || 'N';
+            if (insideValue == 'N') outSideCnt++;
+            else inSideCnt++;
+        } catch (e) {
+            outSideCnt++;
+        }
     }
     var str = '';
     if (tr == 'userTr') str = contentBody.user;
