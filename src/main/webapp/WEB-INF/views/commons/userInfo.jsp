@@ -398,6 +398,11 @@
                     $('#userNm').focus();
                     return;
                 }
+	            if( $('#userEmail').val() == '' ){
+		            ui.alertMsg('<s:message code="admin.msg.enter.email"/>');
+		            $('#userEmail').focus();
+		            return;
+	            }
 
                 var ip = $('#userIp').val().trimAll();
                 var email = $('#userEmail').val().trimAll();
@@ -1711,9 +1716,11 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="userEmail" class="fname">E-Mail</label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="userEmail" id="userEmail" placeholder="<s:message code="userInfo.msg.email"/>">
+
 						</div>
 					</div>
 					<div class="row">
