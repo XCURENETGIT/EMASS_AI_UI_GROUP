@@ -209,7 +209,7 @@ function insertAdminFilterData(){
 			$('#endDayPop').focus();
 			return;
 		}
-		if(startDt < endDt) {
+		if(parseInt(startDt) < parseInt(endDt)) {
 			ui.alertMsg(condition.messageNumbercheck);
 			$('#startDayPop').focus();
 			return;
