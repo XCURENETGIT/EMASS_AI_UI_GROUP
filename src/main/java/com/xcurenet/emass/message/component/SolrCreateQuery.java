@@ -75,10 +75,9 @@ public class SolrCreateQuery {
 	public static final String IP_DEPTCD = "ip_deptcd";
 	public static final String USERKEY = "userkey";
 	public static final String EPMSG_TYPE = "epmsg_type";
-	public static final String[] SENDER = {"sender_str", "sname", "srcip"};
-	public static final String SENDER_UPPER = "sender_str";
-	public static final String[] SENDER_NOTUPPER = {"sender", "sname", "srcip"};
-	public static final String ORG_SENDER = "org_sender_str";
+	public static final String[] SENDER = {"sender_str", "sname", "org_sender_str", "org_sname", "srcip"};
+	public static final String[] SENDER_UPPER = {"sender_str", "org_sender_str"};
+	public static final String[] SENDER_NOTUPPER = {"sender", "sname", "org_sender", "org_sname", "srcip"};
 	public static final String[] RECEIVER = {"recvs", "recvs_name", "dstip"};
 	public static final String[] RECEIVER_NOTUPPER = {"to", "tname", "cc", "cname", "bcc", "bname", "recvs_name", "dstip"};
 	public static final String[] toField = {"to", "tname"};
@@ -644,7 +643,9 @@ public class SolrCreateQuery {
 		senders_not = specialChars(senders_not); // 특수문자 escape
 		StringBuffer queryStr = new StringBuffer();
 		if (Common.isEquals(senders_upperCase, "Y")) {
-			queryStr.append(String.format("%s%s:(%s)", AND_QUERY, SENDER_UPPER, createOrQuery(sender))).append(SPACE);
+			for (int i = 0; i < SENDER_UPPER.length; i++) {
+				queryStr.append(String.format("%s%s:(%s)", AND_QUERY, SENDER_UPPER[i], createOrQuery(sender))).append(SPACE);
+			}
 		} else if (Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 			for (int i = 0; i < SENDER_NOTUPPER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:(%s)", SENDER_NOTUPPER[i], sender)).append(SPACE);
@@ -659,36 +660,6 @@ public class SolrCreateQuery {
 			}
 		}
 		if (Common.isEquals(senders_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
-		else return addQuery(String.format("%s(%s)", AND_QUERY, queryStr.toString()));
-	}
-
-
-	/**
-	 * 실제 발신자 쿼리 (org_sender 필드)
-	 *
-	 * @param realSender
-	 * @param realSenders_not
-	 * @param realSenders_upperCase
-	 * @return
-	 */
-	public SolrCreateQuery setRealSender(String realSender, String realSenders_not, String realSenders_upperCase) {
-		if (Common.isEmpty(realSender)) return this;
-
-		realSender = specialChars(realSender); // 특수문자 escape
-		realSenders_not = specialChars(realSenders_not); // 특수문자 escape
-
-		StringBuffer queryStr = new StringBuffer();
-		if (Common.isEquals(realSenders_upperCase, "Y")) {
-			queryStr.append(String.format("%s%s:(%s)", AND_QUERY, ORG_SENDER, createOrQuery(realSender))).append(SPACE);
-		} else {
-			if (realSender.startsWith("\"") && realSender.endsWith("\"")) {
-				queryStr.append(String.format("%s:(%s)", ORG_SENDER, realSender)).append(SPACE);
-			} else {
-				// 정확한 매칭만 시도 (디버깅용)
-				queryStr.append(String.format("%s:%s", ORG_SENDER, realSender)).append(SPACE);
-			}
-		}
-		if (Common.isEquals(realSenders_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY, queryStr.toString()));
 	}
 
@@ -1378,10 +1349,6 @@ public class SolrCreateQuery {
 			String senders_not = Common.nvl(condition.get("senders_not")); //발신자 부정
 			String senders_upperCase = Common.nvl(condition.get("senders_upperCase")); //발신자 대/소문자 구분
 
-			String realSenders = Common.nvl(condition.get("realSenders")); // 실제 발신자
-			String realSenders_not = Common.nvl(condition.get("realSenders_not")); //실제 발신자 부정
-			String realSenders_upperCase = Common.nvl(condition.get("realSenders_upperCase")); //실제 발신자 대/소문자 구분
-
 			String receive_option = Common.nvl(condition.get("receive_option")); //수신자 상세
 			String receivers = Common.nvl(condition.get("receivers")); // 수신자
 			String receivers_not = Common.nvl(condition.get("receivers_not")); //수진자 부정
@@ -1527,7 +1494,6 @@ public class SolrCreateQuery {
 			setJikgub(jikgub, jikgub_not);
 			setEpmsgType(epmsg_type);
 			setSender(senders, senders_not, senders_upperCase);
-			setRealSender(realSenders, realSenders_not, realSenders_upperCase);
 			setReciver(receive_option, receivers, receivers_not, receivers_upperCase, m_to, m_to_not, m_cc, m_cc_not, m_bcc, m_bcc_not);
 			setRcvJikgub(rcvJikgub,recv_jikgub_not);
 			setUrl(url, url_not);

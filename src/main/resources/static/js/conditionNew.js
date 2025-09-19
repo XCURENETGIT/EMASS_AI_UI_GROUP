@@ -183,7 +183,6 @@ var con = {
 		$('#m_cc'+endId).val('');
 		$('#m_bcc'+endId).val('');
 		$('#senders'+endId).val('');
-		$('#realSenders' + endId).val('');
 		$('#rcvJikgub'+endId).selectpicker('val', []);
 
 		// $('#initEpmsg'+endId).selectpicker('val', []);
@@ -216,8 +215,6 @@ var con = {
 
 		$('input:checkbox[id="senders_not"]').prop("checked", false);
 		$('input:checkbox[id="senders_not"]').prop("disabled", true);
-		$('input:checkbox[id="realSenders_not"]').prop("checked", false);
-		$('input:checkbox[id="realSenders_not"]').prop("disabled", true);
 		$('input:checkbox[id="adminAllRead"]').prop("checked", true);
 		$('input:checkbox[id="receivers_not"]').prop("checked", false);
 		$('input:checkbox[id="receivers_not"]').prop("disabled", true);
@@ -447,13 +444,6 @@ var con = {
 		}
 		condition.senders_not = $('input:checkbox[id="senders_not"]').is(":checked") ? 'Y' : '';
 
-		condition.realSenders = $('#realSenders').val();
-		if (rsUppercase == "Y") {
-			condition.realSenders_upperCase = $('input:checkbox[id="realSenders_upperCase"]').is(":checked") ? 'Y' : '';
-		}
-		condition.realSenders_not = $('input:checkbox[id="realSenders_not"]').is(":checked") ? 'Y' : '';
-
-
 		condition.allOfus = $('#allOfus').val();
 
 		condition.userGroupSeq = $('#userGroupSeq').val();
@@ -627,14 +617,6 @@ var con = {
 		if(rsUppercase == "Y") {
 			$('input:checkbox[id="senders_upperCase"]').prop("disabled", condition.senders == '' ? true : false);
 			$('input:checkbox[id="senders_upperCase"]').prop("checked", condition.senders_upperCase == 'Y' ? true : false);
-		}
-
-		$('#realSenders').val(condition.realSenders);
-		$('input:checkbox[id="realSenders_not"]').prop("disabled", condition.realSenders == '' ? true : false);
-		$('input:checkbox[id="realSenders_not"]').prop("checked", condition.realSenders_not == 'Y' ? true : false);
-		if (rsUppercase == "Y") {
-			$('input:checkbox[id="realSenders_upperCase"]').prop("disabled", condition.realSenders == '' ? true : false);
-			$('input:checkbox[id="realSenders_upperCase"]').prop("checked", condition.realSenders_upperCase == 'Y' ? true : false);
 		}
 
 		$('input:checkbox[id="adminAllRead"]').prop("checked", condition.adminAllRead == 'Y' ? true : false);
