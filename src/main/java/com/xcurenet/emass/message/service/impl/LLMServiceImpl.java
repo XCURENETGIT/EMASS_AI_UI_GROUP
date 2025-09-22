@@ -98,7 +98,7 @@ public class LLMServiceImpl extends XcnAbstractDAO implements LLMService {
 		if (Common.isEmpty(llmVO)) return null;
 
 		param.put("model", llmVO.getLlmModel());
-		param.put("prompt", chat+llmVO.getLlmPromt());
+		param.put("prompt", (chat + llmVO.getLlmPromt()).replaceAll("\n", "\r\n"));
 		param.put("stream", false);
 
 		Document doc = Jsoup.connect(conf.getLlmUrl()).timeout(conf.getLlmTimeout()).header("Content-Type", "application/json;charset=UTF-8").method(Connection.Method.POST).requestBody(param.toString()).ignoreContentType(true).post();
