@@ -35,7 +35,7 @@ public class DeviceScheduler {
 	@Autowired
 	private ApplicationContext context;
 
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
 		synchronized (devices) {
 			devices.clear();
@@ -49,13 +49,13 @@ public class DeviceScheduler {
 		init();
 	}
 
-	@Scheduled(fixedDelay = 300000, initialDelay = 2000)
+//	@Scheduled(fixedDelay = 300000, initialDelay = 2000)
 	@Description("장비 정보 Reload")
 	public void deviceReload() {
 		init();
 	}
 
-	@Scheduled(fixedDelay = 10000, initialDelay = 10000)
+//	@Scheduled(fixedDelay = 10000, initialDelay = 10000)
 	@Description("장비 상태 모니터링 스케쥴러")
 	public void deviceStatus() {
 		synchronized (devices) {
