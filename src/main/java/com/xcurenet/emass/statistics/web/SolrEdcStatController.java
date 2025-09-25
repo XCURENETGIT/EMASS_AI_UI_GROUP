@@ -990,7 +990,6 @@ public class SolrEdcStatController {
 				sq.addFilterQuery("-ceo:Y");
 			}
 
-			sq.addFilterQuery("-svc:QEKH");
 			JSONObject param = new JSONObject();
 			param.put("adminId", adminId);
 			param.put("queryType", Config.getString("query.type", "A"));

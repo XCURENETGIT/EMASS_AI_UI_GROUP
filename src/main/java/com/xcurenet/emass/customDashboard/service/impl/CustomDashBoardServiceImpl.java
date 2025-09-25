@@ -612,8 +612,6 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 				sq.addFilterQuery("-ceo:Y");
 			}
 
-			sq.addFilterQuery("-svc:QEKH");
-
 			param.put("adminId", adminId);
 			param.put("queryType", Config.getString("query.type", "A"));
 			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);

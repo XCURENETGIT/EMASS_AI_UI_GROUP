@@ -1074,7 +1074,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			} else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
 				sq.addFilterQuery("-ceo:Y");
 			}
-			sq.addFilterQuery("-svc:QEKH");
 			JSONObject param = new JSONObject();
 			param.put("adminId", adminId);
 			param.put("queryType", Config.getString("query.type", "A"));
