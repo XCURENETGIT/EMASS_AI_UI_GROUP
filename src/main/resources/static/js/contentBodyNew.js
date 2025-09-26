@@ -2430,6 +2430,7 @@ function setHighLight(defaultText, type) {
     var bccUserDiv_obj = $("#bccUserDiv");
     var hostDiv_obj = $("#hostDiv");
     var attachDiv_obj = $("#attachDiv");
+    var actualSenderDiv_obj = $("#actualSenderDiv");
     for (var i = 0; i < defaultText.length; i++) {
         if (defaultText[i] == '') continue;
         $(body_obj).highlight(defaultText[i], 'B' + type);
@@ -2443,6 +2444,7 @@ function setHighLight(defaultText, type) {
         $(bccUserDiv_obj).highlight(defaultText[i], type);
         $(hostDiv_obj).highlight(defaultText[i], type);
         $(attachDiv_obj).highlight(defaultText[i], type);
+        $(actualSenderDiv_obj).highlight(defaultText[i], type);
     }
 }
 

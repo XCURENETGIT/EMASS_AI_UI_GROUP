@@ -498,7 +498,7 @@
             var chk = false;
             if(searchType == "" || searchType == null) {
                 chk = true;
-            } else if (searchType == "sender_str" || searchType == "sname"){
+            } else if (searchType == "sender_str" || searchType == "sname"  || searchType == "org_sender_str" || searchType == "org_sname"){
                 if(column == "sender") chk = true;
             } else if (searchType == "recvs" || searchType == "recvs_name"){
                 if(column == "recvs" || column == "to" || column == "cc" || column == "bcc") chk = true;
