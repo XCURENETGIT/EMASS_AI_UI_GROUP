@@ -477,6 +477,7 @@
 		$('#serviceType').selectpicker({
 			size: 'auto',
 			width:'260px',
+			size: '15',
 			searchLabel:true,
 			collapseExtend:true,
 			noneSelectedText:msgCondition.serviceAll,

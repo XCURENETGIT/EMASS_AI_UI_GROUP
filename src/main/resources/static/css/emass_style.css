@@ -1264,3 +1264,25 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 	background-color:#E9EEFA;
 	cursor: pointer;
 }
+
+.expandCollapse{
+	display: inline;
+	width: 0;
+	height: 0;
+	margin-right: 5px;
+	vertical-align: middle;
+	color : #000;
+}
+.collapse_text, .fa-chevron-down{
+	color: rgb(0, 0, 238);
+}
+.collapse_text, .fa-chevron-right{
+	color: rgb(0, 0, 238);
+}
+.bs-actionsbox {
+	margin: 0 !important;
+}
+.bs-searchbox{
+	width: 100%;
+	margin: 0 !important;
+}
