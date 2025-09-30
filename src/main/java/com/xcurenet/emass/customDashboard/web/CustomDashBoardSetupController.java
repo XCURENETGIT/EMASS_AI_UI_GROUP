@@ -68,7 +68,7 @@ public class CustomDashBoardSetupController {
 		List<String> adminId = Common.toList(request.getParameter("adminIds"), ",");
 		List<String> oldAdmin = Common.toList(Common.nvl(request.getParameter("deleteData")), ",");
 		if(Common.isNotEmpty(oldAdmin)) customDashBoardService.deleteDashBoardaAdminShare(dashKey, oldAdmin);
-		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.insertDashboardShare(dashKey, adminId));
+		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.insertDashboardShare(dashKey, adminId, Common.getAdminId(request)));
 	}
 	
 	@RequestMapping(value = "/updateDashBoardContent.xcn")
@@ -77,7 +77,7 @@ public class CustomDashBoardSetupController {
 	@ResponseBody
 	public XcnResponseVO updateDashBoardContent(final CustomDashboardVO customDashboardVo, final HttpSession session) throws Exception {
 		customDashboardVo.setAdminId(Common.getAdminId(session));
-		if(Common.isNotEquals(Common.getAdminId(session), "sysadmin")) customDashBoardService.deleteDashboardShare(Common.getAdminId(session), "", customDashboardVo.getDashKey());
+		if(Common.isNotEquals(Common.getFirstAdminYn(session), "Y")) customDashBoardService.deleteDashboardShare(Common.getAdminId(session), "", customDashboardVo.getDashKey());
 		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.saveDashBoardContent(customDashboardVo));
 	}
 	
@@ -85,7 +85,7 @@ public class CustomDashBoardSetupController {
 	@Description("Dashboard - 항목 삭제")
 	@AuditOperation(Operation.DELETE)
 	@ResponseBody
-	public XcnResponseVO deleteDashBoardContent(final HttpServletRequest request) throws Exception {
+	public XcnResponseVO deleteDashBoardContent(final HttpServletRequest request, HttpSession session) throws Exception {
 		List<CustomDashboardVO> customDashboardVos = new ArrayList<>();
 		
 		String deleteData = Common.nvl(request.getParameter("deleteData"));
@@ -93,8 +93,8 @@ public class CustomDashBoardSetupController {
 		for (int i = 0; i < data.size(); i++) {
 			JSONObject obj = data.getJSONObject(i);
 			CustomDashboardVO vo= (CustomDashboardVO) JSONObject.toBean(obj, CustomDashboardVO.class);
-			if(Common.isNotEquals(Common.getAdminId(request), "sysadmin")) customDashBoardService.deleteDashboardShare(Common.getAdminId(request), "", vo.getDashKey());
-			else if (Common.isEquals(Common.getAdminId(request), "sysadmin")) customDashBoardService.deleteAdminShare(vo.getDashKey());
+			if(Common.isNotEquals(Common.getFirstAdminYn(session), "Y")) customDashBoardService.deleteDashboardShare(Common.getAdminId(request), "", vo.getDashKey());
+			else if (Common.isEquals(Common.getFirstAdminYn(session), "Y")) customDashBoardService.deleteAdminShare(vo.getDashKey());
 			customDashboardVos.add(i, vo);
 		}
 		

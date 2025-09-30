@@ -21,7 +21,7 @@ public interface CustomDashBoardService {
 	public List<CustomDashboardVO> getDashBoardContentList(final CustomDashboardVO customDashboardVo) throws Exception;
 	public int saveDashBoardContent(final CustomDashboardVO customDashboardVo);
 	public int deleteDashBoardContent(final List<CustomDashboardVO> customDashboardVos);
-	public int insertDashboardShare(List<String> dashKey, List<String> adminId);
+	public int insertDashboardShare(List<String> dashKey, List<String> adminId, String loginAdminId);
 	public int deleteDashBoardaAdminShare(List<String> dashKey, List<String> oldAdmin);
 	public List<AdminVO> getShareAdmin(List<String> dashKey);
 	public int isShareExist(String adminId, String pdashKey, String dashKey);

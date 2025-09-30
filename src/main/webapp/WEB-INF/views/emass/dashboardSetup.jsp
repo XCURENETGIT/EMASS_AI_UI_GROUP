@@ -841,7 +841,7 @@
 		<button type="button" class="btn02" accesskey="E" id="dashboardDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>"
 		                                                                               alt="삭제"><s:message
 				code="common.msg.delete"/></button>
-		<c:if test="${_USERCREDENTIAL_.adminId eq 'sysadmin'}">
+		<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y' && _USERCREDENTIAL_.adminType eq 'S'}">
 			<button type="button" class="btn03" accesskey="S" id="dashboardShareBtn"><span
 					class="glyphicon glyphicon-share"></span>&nbsp;<s:message code="common.msg.share"/></button>
 		</c:if>
@@ -902,7 +902,7 @@
     gridDashboard.colAdd('dashCondition', '<s:message code="filterInfo.filter"/>', 400, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         return printAlarmValStr('', JSON.parse(value), 'return');
     });
-    if (adminId == 'sysadmin') {
+    if(firstAdminYn == 'Y' && adminType == 'S') {
         gridDashboard.colAdd('adminIds', '<s:message code="selectAdmin.share.adminIds"/>', 400, 'left', false, 'nomal');
     }
     gridDashboard.onClick = function () {

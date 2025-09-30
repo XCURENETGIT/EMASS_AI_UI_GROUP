@@ -158,14 +158,14 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	}
 
 	@Override
-	public int insertDashboardShare(List<String> dashKey, List<String> adminId) {
+	public int insertDashboardShare(List<String> dashKey, List<String> adminId, String loginAdminId) {
 		Map<String, Object> params = new HashMap<>();
 		CustomDashboardVO customDashboardVo = new CustomDashboardVO();
 		int result = 0;
 
 		for (int i = 0; i < dashKey.size(); i++) {
 			customDashboardVo.setDashKey(dashKey.get(i));
-			customDashboardVo.setAdminId("sysadmin");
+			customDashboardVo.setAdminId(loginAdminId);
 			customDashboardVo = selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getDashBoardContentList", customDashboardVo);
 
 			for (int j = 0; j < adminId.size(); j++) {
