@@ -41,6 +41,12 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 	private static final String ABBREVIATION = "ui.dashboard.abbreviation";
 
+	public SolrQuery createIndex(String startDt, String endDt, SolrQuery sq){
+		if (Common.isNotEmpty(startDt)) sq.setParam("stDateStr", startDt);
+		if (Common.isNotEmpty(endDt)) sq.setParam("etDateStr", endDt);
+		return sq;
+	}
+
 	@Override
 	public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
 		TodayDataStatusVO result = new TodayDataStatusVO();
@@ -71,6 +77,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 		sq.setQuery(String.format("+ctime:[%s TO %s]", todayDataStatusVO.getStartDt(), todayDataStatusVO.getEndDt()));
 
+		sq = createIndex(todayDataStatusVO.getStartDt(), todayDataStatusVO.getEndDt(), sq);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, todayDataStatusVO.getAdminId());
 		result.setPivotData(edc.getPivotData());
 
@@ -92,6 +100,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);
+
+		sq = createIndex(vo.getStartDt(), vo.getEndDt(), sq);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		return result;
@@ -118,6 +128,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setQuery(sb.toString());
 		sq.setRows(0);
 
+		sq = createIndex(patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt(), sq);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		sq.setQuery(sb.toString());
@@ -133,11 +144,11 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);
+
+		sq = createIndex(vo.getStartDt(), vo.getEndDt(), sq);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-
 		return result;
 	}
 
@@ -160,6 +171,9 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(sb.toString());
 		sq.setRows(0);
+
+		sq = createIndex(riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt(), sq);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
 		return result;
@@ -183,6 +197,9 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.set("facetCount","Y");
 		sq.setParam("facet.field",  Arrays.stream(Config.ABNL_SVC).map(s -> "pi_amount.pi_" + s).toArray(String[]::new));
 		sq.setQuery(query);
+
+		sq = createIndex(abnlBhavDetectedVO.getStartDt(), abnlBhavDetectedVO.getEndDt(), sq);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, admin.getAdminId());
 
 		List<List<Object>> items = new ArrayList<>();
@@ -231,6 +248,9 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		sq.setQuery(query);
 		sq.setRows(0);
+
+		sq = createIndex(keywordDetectionVO.getStartDt(), keywordDetectionVO.getEndDt(), sq);
+
 		edc = solrEdcService.getEmassMessage(sq, keywordDetectionVO.getAdminId());
 		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		return result;
@@ -244,6 +264,9 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setRows(10);
 		sq.setSort("attachsize", SolrQuery.ORDER.desc);
 		sq.setQuery(query);
+
+		sq = createIndex(vo.getStartDt(), vo.getEndDt(), sq);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		List<String> filesize = new ArrayList<>();
 		List<String> fileType = new ArrayList<>();
@@ -284,6 +307,9 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setFacetLimit(10);
 		sq.setFacetMinCount(1);
 		sq.setQuery(query);
+
+		sq = createIndex(vo.getStartDt(), vo.getEndDt(), sq);
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		List<List<Object>> items = new ArrayList<>();
 		if (edc.getFacet() == null) result.setFacet(items);
@@ -334,6 +360,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setSort("ctime_yyyymmdd", SolrQuery.ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
+
+		sq = createIndex(vo.getStartDt(), vo.getEndDt(), sq);
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 
@@ -478,6 +506,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setFacetLimit(-1);
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
+
+		sq = createIndex(serviceDataLoggingVO.getStartDt(), serviceDataLoggingVO.getEndDt(), sq);
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, serviceDataLoggingVO.getAdminId());
 		List<List<Object>> items = new ArrayList<>();

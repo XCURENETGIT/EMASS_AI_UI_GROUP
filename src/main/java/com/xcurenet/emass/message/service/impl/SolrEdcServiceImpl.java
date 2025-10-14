@@ -8,6 +8,7 @@ import com.xcurenet.admin.service.impl.AdminServiceImpl;
 import com.xcurenet.common.elasticsearch.ElasticsearchConfig;
 import com.xcurenet.common.snmp.get.GetSnmp;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.DateUtil;
 import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.config.service.ConfigAdminService;
@@ -78,7 +79,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	public static String All_JOIN_READ = " +checked.readId:*";
 
-	public static IndexCoordinates defaultIndex = IndexCoordinates.of("edc_*");
+	public static String defaultIndex = "edc_*";
+
 	public static IndexCoordinates defaultHistoryIndex = IndexCoordinates.of("ems_search_history_*");
 
 	@Resource
@@ -355,8 +357,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	//집계검색
 	public SearchHits<SolrEdcVO> aggsSearch(Query searchQuery, SolrQuery sq) {
 		searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
-		IndexCoordinates indexCoordinates = defaultIndex;
-		if (!Common.isEmpty(sq.get("indics"))) indexCoordinates = IndexCoordinates.of(sq.get("indics"));
+
+		IndexCoordinates indexCoordinates = createIndex(sq);
+		log.debug("검색 인덱스 확인 : {}",Arrays.toString(indexCoordinates.getIndexNames()));
 
 		return operation.search(searchQuery, SolrEdcVO.class, indexCoordinates);
 	}
@@ -366,9 +369,29 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		log.info("searchAfter : {}", searchAfter);
 		searchQuery.setPageable(PageRequest.of(0, sq.getRows()));
 
-		IndexCoordinates indexCoordinates = defaultIndex;
-		if (!Common.isEmpty(sq.get("indics"))) indexCoordinates = IndexCoordinates.of(sq.get("indics"));
+		IndexCoordinates indexCoordinates = createIndex(sq);
+		log.debug("검색 인덱스 확인 : {}",Arrays.toString(indexCoordinates.getIndexNames()));
 		return operation.search(searchQuery, SolrEdcVO.class, indexCoordinates);
+	}
+
+	public IndexCoordinates createIndex(SolrQuery sq) {
+		if (!Common.isEmpty(sq.get("indics"))) {
+			return IndexCoordinates.of(sq.get("indics"));
+		}
+		String stDateStr = sq.get("stDateStr");
+		String etDateStr = sq.get("etDateStr");
+
+		if (Common.isEmpty(stDateStr) || Common.isEmpty(etDateStr)) {
+			return IndexCoordinates.of(defaultIndex + "_*");
+		}
+		String[] indics;
+
+		String dateRange = DateUtil.getYearMonthStringRange (stDateStr, etDateStr);
+		indics = Arrays.stream(dateRange.split(","))
+				.map(m -> defaultIndex + "_" + m)
+				.toArray(String[]::new);
+
+		return IndexCoordinates.of(indics);
 	}
 
 

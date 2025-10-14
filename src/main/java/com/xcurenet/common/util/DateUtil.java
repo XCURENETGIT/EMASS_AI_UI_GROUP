@@ -3,8 +3,11 @@ package com.xcurenet.common.util;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -62,9 +65,37 @@ public class DateUtil {
 		else return null;
 	}
 
+	public static LocalDate convertToLocalDate(String dateStr) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+		LocalDate date = LocalDate.parse(dateStr, formatter);
+		return date;
+	}
 
 
+	public static String getYearMonthStringRange(String startDateStr,String endDateStr){
+		LocalDate startDate = convertToLocalDate(startDateStr);
+		LocalDate endDate = convertToLocalDate(endDateStr);
+		if(Common.isNotEmpty(startDate) && Common.isNotEmpty(endDate)){
+			return 	getYearMonthStringRange(startDate,endDate);
+		}else return "";
+	}
 
+	public static String getYearMonthStringRange(LocalDate startDate, LocalDate endDate) {
+		// 결과를 저장할 Set (중복 제거 및 순서 유지)
+		Set<String> yearMonthSet = new LinkedHashSet<>();
+		// 시작 날짜를 YearMonth로 변환
+		YearMonth currentYearMonth = YearMonth.from(startDate);
+		// 종료 날짜를 YearMonth로 변환
+		YearMonth endYearMonth = YearMonth.from(endDate);
+
+		// 시작 연월부터 종료 연월까지 반복
+		while (!currentYearMonth.isAfter(endYearMonth)) {
+			yearMonthSet.add(currentYearMonth.toString().replace("-", ""));
+			currentYearMonth = currentYearMonth.plusMonths(1);
+		}
+		// 결과를 쉼표로 연결하여 반환
+		return yearMonthSet.stream().sorted().collect(Collectors.joining(","));
+	}
 
 
 }

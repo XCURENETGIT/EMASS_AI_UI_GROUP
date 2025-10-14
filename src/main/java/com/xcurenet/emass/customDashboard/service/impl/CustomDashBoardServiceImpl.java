@@ -644,6 +644,17 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		try {
 			SolrQuery sq = solrCreateQuery.makeQuery(conditions, customDashboardVo.getAdminId()).setQuery();
 
+
+			//인덱스 지정
+			String startDt = conditions.getJSONObject(0).get("startDateSelect").toString();
+			String endDt = conditions.getJSONObject(0).get("endDateSelect").toString();
+			int startTimeSelect = Integer.parseInt(conditions.getJSONObject(0).get("startTimeSelect").toString());
+			int endTimeSelect = Integer.parseInt(conditions.getJSONObject(0).get("endTimeSelect").toString());
+
+			if (Common.isNotEmpty(startDt) && Common.isNotEmpty(startTimeSelect)) sq.set("stDateStr", solrCreateQuery.getStartDt(startDt, startTimeSelect));
+			if (Common.isNotEmpty(endDt) && Common.isNotEmpty(endTimeSelect)) sq.set("etDateStr", solrCreateQuery.getEndDt(endDt, endTimeSelect));
+
+
 			if( Common.isNotEquals(customDashboardVo.getDashType(), "L") ) {
 				sq.setRows(0);
 			}else {

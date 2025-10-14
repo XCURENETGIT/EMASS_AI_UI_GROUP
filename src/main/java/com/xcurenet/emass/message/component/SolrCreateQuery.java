@@ -1338,6 +1338,8 @@ public class SolrCreateQuery {
 			String startDt = Common.nvl(condition.get("startDt")); // 검색 시작일
 			String endDt = Common.nvl(condition.get("endDt")); // 검색 종료일
 
+			setDateStr(startDt, endDt);
+
 			String startDateSelect = Common.nvl(condition.get("startDateSelect")); //
 			int startTimeSelect = Common.nvz(condition.get("startTimeSelect")); //
 			String endDateSelect = Common.nvl(condition.get("endDateSelect")); //
@@ -1535,7 +1537,7 @@ public class SolrCreateQuery {
 		return result;
 	}
 
-	private String getEndDt(String endDateSelect, int endTimeSelect) {
+	public String getEndDt(String endDateSelect, int endTimeSelect) {
 		String result = "";
 		DateTime endDt = new DateTime(DateTimeZone.forID("Asia/Seoul"));
 		if (endDateSelect.equals("Y")) result = String.format("%s%02d5959", yyyyMMdd.print(endDt.minusDays(1)), endTimeSelect);
@@ -1866,5 +1868,11 @@ public class SolrCreateQuery {
 		result.append(")");
 
 		return result.toString();
+	}
+
+	//검색 인덱스
+	public void setDateStr(final String startDt, final String endDt) {
+		if (Common.isNotEmpty(startDt)) sq.setParam("stDateStr", startDt);
+		if (Common.isNotEmpty(endDt)) sq.setParam("etDateStr", endDt);
 	}
 }
