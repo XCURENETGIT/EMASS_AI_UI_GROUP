@@ -73,25 +73,68 @@ public class UserJob extends UserCommon implements Job {
 			if (confCols.size() == 0) return;
 
 			InsaFileMerge fileMerge = new InsaFileMerge();
-			File insaFile = fileMerge.getInsaFile(path);
-			if (!insaFile.exists()) {
-				log.warn("[INSA AUTO IMPORT] FILE NOT FOUND..PATH : {}" + insaFile);
-				return;
+
+			String[] paths = path.split(",");
+
+			log.info("[INSA AUTO IMPORT] file paths: {}", paths.length);
+
+			orgInfoLoad();
+
+			// 로컬 테스트
+			for (int i = 0; i < paths.length; i++) {
+				String singlePath = paths[i].trim();
+				if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+					if (singlePath.startsWith("/users/")) {
+						paths[i] = System.getProperty("user.dir") + "/users/" + singlePath.substring(singlePath.lastIndexOf('/') + 1);
+						log.info("[INSA AUTO IMPORT] 로컬 환경 경로 변환: {}", paths[i]);
+					}
+				}
 			}
 
+			// 파일별 개별 처리
+			for (int i = 0; i < paths.length; i++) {
+				String singlePath = paths[i].trim();
+				if (Common.isEmpty(singlePath)) continue;
+
+				// 첫 번째 파일(index 0)은 기존 파일
+				boolean isFirstFile = (i == 0);
+				processSingleFile(singlePath, confCols, basepoint, deptBasepoint, delimiter, fileMerge, isFirstFile);
+			}
+
+			// 모든 파일 처리 완료 후 MakeInfo 업데이트
+			log.info("[MAKE INFO] update make info user data start");
+			MakeInfoService makeInfo = SpringContextUtil.getBean(MakeInfoService.class);
+			makeInfo.addInfoUser();
+			log.info("[MAKE INFO] update make info user data end");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			log.info("[INSA AUTO IMPORT] insa db auto import duration {}", TimeUtil.print());
+		}
+	}
+
+	private void processSingleFile(String singlePath, JSONArray confCols, String basepoint, String deptBasepoint, String delimiter, InsaFileMerge fileMerge, boolean isFirstFile) {
+		try {
+			File originalFile = new File(singlePath);
+			String originalFileName = originalFile.getName();
+			// 파일 처리
+			File insaFile;
+			insaFile = fileMerge.getInsaFile(singlePath, originalFileName);
+
 			JSONArray insas = readerInsa(insaFile.getAbsolutePath(), delimiter);
-			orgInfoLoad();
 
 			List<UserVO> users = new ArrayList<>();
 			for (int i = 0, s = insas.size(); i < s; i++) {
 				JSONObject insa = insas.getJSONObject(i);
 				UserVO user = findUserInfo(getUser(confCols, insa, basepoint, deptBasepoint));
-				if (Common.isEmpty(user.getUserId())) log.warn("[USER INSA LOAD] user info load fail user id is null {}", insa);
-				else if (Common.isEmpty(user.getUserNm())) log.warn("[USER INSA LOAD] user info load fail user name is null {}", insa);
-				else if (Common.isEmpty(user.getUserEmail())) log.warn("[USER INSA LOAD] user info load fail user email is null {}", insa);
+				if (Common.isEmpty(user.getUserId()))
+					log.warn("[USER INSA LOAD] user info load fail user id is null {}", insa);
+				else if (Common.isEmpty(user.getUserNm()))
+					log.warn("[USER INSA LOAD] user info load fail user name is null {}", insa);
+				else if (Common.isEmpty(user.getUserEmail()) && Common.isEmpty(user.getUserIp()))
+					log.warn("[USER INSA LOAD] user info load fail user email user ip is null {}", insa);
 				else users.add(user);
 			}
-
 			log.info("[USER INSA LOAD] user info load end total:{}", users.size());
 			log.info("[USER INSA LOAD] Org Insert new cocd:{}", newCos.size());
 			log.info("[USER INSA LOAD] Org Insert new General:{}", newGeneral.size());
@@ -100,36 +143,50 @@ public class UserJob extends UserCommon implements Job {
 			log.info("[USER INSA LOAD] Org Insert new Jikgub:{}", newJikgub.size());
 			log.info("[USER INSA LOAD] Org Insert new Jikin:{}", newJikin.size());
 
-			UserService userService = SpringContextUtil.getBean(UserService.class);
 
-			log.info("[USER INSA LOAD] Org Insert Start : {}", Common.getDateTime(System.currentTimeMillis()));
-			boolean result = userService.scheduleUser(users, newCos, newGeneral, newBusi, newDept, newJikgub, newJikin);
-			log.info("[USER INSA LOAD] Org Insert end : {}", Common.getDateTime(System.currentTimeMillis()));
-			if (result) {
-				String backup = insaFile.getParent() + File.separator + "backup" + File.separator;
-				Common.mkdirs(backup);
-				File dst = new File(backup + insaFile.getName());
-				try {
-					FileUtils.moveFile(insaFile, dst);
-				} catch (Exception e) {
-					e.printStackTrace();
+			// DB 업데이트 (파일별 개별 처리)
+			if (users.size() > 0) {
+				UserService userService = SpringContextUtil.getBean(UserService.class);
+
+				log.info("[USER INSA LOAD] Org Insert Start : {} (first file: {})", Common.getDateTime(System.currentTimeMillis()), isFirstFile);
+				boolean result = userService.scheduleUser(users, newCos, newGeneral, newBusi, newDept, newJikgub, newJikin, isFirstFile);
+				log.info("[USER INSA LOAD] Org Insert end : {}", Common.getDateTime(System.currentTimeMillis()));
+
+				if (result) {
+					try {
+						String backup = originalFile.getParent() + File.separator + "backup" + File.separator;
+						Common.mkdirs(backup);
+						log.info("[INSA AUTO IMPORT] backup root: {}", backup);
+
+
+						String timestamp = Common.getDateTimeFormat();
+
+						// 확장자 제거하고 파일명 생성
+						String fileNameWithoutExt = originalFileName;
+						int lastDotIndex = originalFileName.lastIndexOf('.');
+						if (lastDotIndex > 0) {
+							fileNameWithoutExt = originalFileName.substring(0, lastDotIndex);
+						}
+
+						// 백업 파일명: 파일명_yyyyMMddHHmmss.dat
+						String backupFileName = fileNameWithoutExt + "_" + timestamp + ".dat";
+						File dst = new File(backup + backupFileName);
+						log.info("[INSA AUTO IMPORT] backup file: {}", dst.getAbsolutePath());
+
+						//파일 경로로 이동
+						FileUtils.moveFile(originalFile, dst);
+						log.info("[INSA AUTO IMPORT] insa db auto import success");
+					} catch (Exception e) {
+						log.error("[INSA AUTO IMPORT] insa db auto import fail");
+					}
+
+					log.info("[INSA AUTO IMPORT] update make info user data end");
+				} else {
+					log.warn("[INSA AUTO IMPORT] insa db auto import fail");
 				}
-				
-				fileMerge.backupFile(path);
-
-				log.info("[INSA AUTO IMPORT] insa db auto import success");
-
-				log.info("[MAKE INFO] update make info user data start");
-				MakeInfoService makeInfo = SpringContextUtil.getBean(MakeInfoService.class);
-				makeInfo.addInfoUser();
-				log.info("[MAKE INFO] update make info user data end");
-			} else {
-				log.warn("[INSA AUTO IMPORT] insa db auto import fail");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			log.info("[INSA AUTO IMPORT] insa db auto import duration {}", TimeUtil.print());
+			log.error("[INSA AUTO IMPORT] error occurred: {}", singlePath, e);
 		}
 	}
 
