@@ -56,7 +56,9 @@ public interface UserService {
 	public int deleteUser(final UserVO user);
 
 	public boolean scheduleUser(final List<UserVO> users, List<CoVO> cos, List<GeneralVO> generals, List<BusiVO> busis, List<DeptVO> depts, List<JikgubVO> jikgubs, List<JikinVO> jikins);
-	
+
+	public boolean scheduleUser(final List<UserVO> users, List<CoVO> cos, List<GeneralVO> generals, List<BusiVO> busis, List<DeptVO> depts, List<JikgubVO> jikgubs, List<JikinVO> jikins, boolean isFirstFile);
+
 	public List<UserGroupVO> getUserGroupList(final String searchStr, String adminId, String adminType);	 
 	
 	public boolean isUserGroupExist(final UserGroupVO userGroup);

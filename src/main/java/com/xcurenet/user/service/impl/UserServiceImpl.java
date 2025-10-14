@@ -406,52 +406,59 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 
 	@Override
 	public boolean scheduleUser(List<UserVO> users, List<CoVO> cos, List<GeneralVO> generals, List<BusiVO> busis, List<DeptVO> depts, List<JikgubVO> jikgubs, List<JikinVO> jikins) {
+		return scheduleUser(users, cos, generals, busis, depts, jikgubs, jikins, true);
+	}
+
+	public boolean scheduleUser(List<UserVO> users, List<CoVO> cos, List<GeneralVO> generals, List<BusiVO> busis, List<DeptVO> depts, List<JikgubVO> jikgubs, List<JikinVO> jikins, boolean isFirstFile) {
 		boolean result = false;
 		TransactionManager tx = getTransactionManager();
 		try {
 			tx.start();
 
-			TimeUtil.start();
-			delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteAllUserEmails", null);
-			delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteAllUserIps", null);
-			delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteAllUsers", null);
-			log.info("[USER INSA LOAD] delete all user info time:{}", TimeUtil.print());
+			// 첫 번째 파일인 경우에만 기존 데이터 삭제 후 insert
+			if (isFirstFile) {
+				TimeUtil.start();
+				delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteAllUserEmails", null);
+				delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteAllUserIps", null);
+				delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteAllUsers", null);
+				log.info("[USER INSA LOAD] delete all user info time:{}", TimeUtil.print());
 
-			TimeUtil.start();
-			for (CoVO vo : cos) {
-				insert("com.xcurenet.sqlmap.mappers.mysql.code.insertCo", vo);
-			}
-			log.info("[USER INSA LOAD] insert coCd time:{}", TimeUtil.print());
+				TimeUtil.start();
+				for (CoVO vo : cos) {
+					insert("com.xcurenet.sqlmap.mappers.mysql.code.insertCo", vo);
+				}
+				log.info("[USER INSA LOAD] insert coCd time:{}", TimeUtil.print());
 
-			TimeUtil.start();
-			for (GeneralVO vo : generals) {
-				insert("com.xcurenet.sqlmap.mappers.mysql.code.insertGeneral", vo);
-			}
-			log.info("[USER INSA LOAD] insert generals time:{}", TimeUtil.print());
+				TimeUtil.start();
+				for (GeneralVO vo : generals) {
+					insert("com.xcurenet.sqlmap.mappers.mysql.code.insertGeneral", vo);
+				}
+				log.info("[USER INSA LOAD] insert generals time:{}", TimeUtil.print());
 
-			TimeUtil.start();
-			for (BusiVO vo : busis) {
-				insert("com.xcurenet.sqlmap.mappers.mysql.code.insertBusi", vo);
-			}
-			log.info("[USER INSA LOAD] insert busis time:{}", TimeUtil.print());
+				TimeUtil.start();
+				for (BusiVO vo : busis) {
+					insert("com.xcurenet.sqlmap.mappers.mysql.code.insertBusi", vo);
+				}
+				log.info("[USER INSA LOAD] insert busis time:{}", TimeUtil.print());
 
-			TimeUtil.start();
-			for (DeptVO vo : depts) {
-				insert("com.xcurenet.sqlmap.mappers.mysql.code.insertDept", vo);
-			}
-			log.info("[USER INSA LOAD] insert depts time:{}", TimeUtil.print());
+				TimeUtil.start();
+				for (DeptVO vo : depts) {
+					insert("com.xcurenet.sqlmap.mappers.mysql.code.insertDept", vo);
+				}
+				log.info("[USER INSA LOAD] insert depts time:{}", TimeUtil.print());
 
-			TimeUtil.start();
-			for (JikgubVO vo : jikgubs) {
-				insert("com.xcurenet.sqlmap.mappers.mysql.code.insertJikgub", vo);
-			}
-			log.info("[USER INSA LOAD] insert jikgubs time:{}", TimeUtil.print());
+				TimeUtil.start();
+				for (JikgubVO vo : jikgubs) {
+					insert("com.xcurenet.sqlmap.mappers.mysql.code.insertJikgub", vo);
+				}
+				log.info("[USER INSA LOAD] insert jikgubs time:{}", TimeUtil.print());
 
-			TimeUtil.start();
-			for (JikinVO vo : jikins) {
-				insert("com.xcurenet.sqlmap.mappers.mysql.code.insertJikin", vo);
+				TimeUtil.start();
+				for (JikinVO vo : jikins) {
+					insert("com.xcurenet.sqlmap.mappers.mysql.code.insertJikin", vo);
+				}
+				log.info("[USER INSA LOAD] insert jikins time:{}", TimeUtil.print());
 			}
-			log.info("[USER INSA LOAD] insert jikins time:{}", TimeUtil.print());
 
 			TimeUtil.start();
 			for (UserVO user : users) {
@@ -466,7 +473,9 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteUserGroupByInsaAuto", null);
+			if (isFirstFile) {
+				delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteUserGroupByInsaAuto", null);
+			}
 			tx.end();
 		}
 		return result;

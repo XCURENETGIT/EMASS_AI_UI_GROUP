@@ -341,34 +341,34 @@
 		                return;
 	                }
                 }
-                var checkedInsaText = '';
-                var checkedInsa = $('input:radio[name="insa\\.auto"]:checked').val();
-                if(checkedInsa=='Y'){
-                    checkedInsaText = '<s:message code="userInfo.autolink"/>';
-                }else{
-                    checkedInsaText = '<s:message code="userInfo.directlink"/>';
+            var checkedInsaText = '';
+            var checkedInsa = $('input:radio[name="insa\\.auto"]:checked').val();
+            if(checkedInsa=='Y'){
+                checkedInsaText = '<s:message code="userInfo.autolink"/>';
+            }else{
+                checkedInsaText = '<s:message code="userInfo.directlink"/>';
+            }
+            var data = valueCheckInfo();
+            ui.confirmMsg('<s:message code="common.msg.confirm.apply"/>', '', '', function(rs){
+                if(rs) {
+                    ui.on('setUserPopBtn');
+                    ui.get({
+                        url : 'setConf.xcn',
+                        data : JSON.stringify(data),
+                        checkedInsaText : checkedInsaText,
+                        success : function ( data, total ) {
+                            ui.alertMsg('<s:message code="common.msg.applied"/>');
+                            $('#setUserPop').modal('hide');
+                        },
+                        error : function (status, message) {
+                            ui.alertMsg(message);
+                        },
+                        complete : function (){
+                            ui.off('setUserPopBtn');
+                        }
+                    });
                 }
-                var data = valueCheckInfo();
-                ui.confirmMsg('<s:message code="common.msg.confirm.apply"/>', '', '', function(rs){
-                    if(rs) {
-                        ui.on('setUserPopBtn');
-                        ui.get({
-                            url : 'setConf.xcn',
-                            data : JSON.stringify(data),
-                            checkedInsaText : checkedInsaText,
-                            success : function ( data, total ) {
-                                ui.alertMsg('<s:message code="common.msg.applied"/>');
-                                $('#setUserPop').modal('hide');
-                            },
-                            error : function (status, message) {
-                                ui.alertMsg(message);
-                            },
-                            complete : function (){
-                                ui.off('setUserPopBtn');
-                            }
-                        });
-                    }
-                });
+            });
             });
             $('#setInfoBtn').click(function(){
                 $('#setUserPop').modal();
@@ -388,7 +388,7 @@
 
             $('.savePopBtn').click(function(){
                 var mode = $('#userPop').attr('mode');
-                if( $('#userId').val() == '' ){
+                if( $('#userId').val().ltrim().rtrim() == '' ){
                     ui.alertMsg('<s:message code="userInfo.msg.enter.id"/>');
                     $('#userId').focus();
                     return;
@@ -1107,7 +1107,22 @@
                 data.push({confId:'insa.auto', val:'Y'});
                 data.push({confId:'insa.basepoint', val:$('input:radio[name="insa\\.basepoint"]:checked').val()});
                 data.push({confId:'insa.dept.basepoint', val:$('input:radio[name="insa\\.dept\\.basepoint"]:checked').val()});
-                data.push({confId:'insa.path', val:$('#'+idIndicator('insa.path')).val()});
+                // 파일 처리 (쉼표로 구분)
+                var pathValue = $('#'+idIndicator('insa.path')).val();
+
+                if (pathValue) {
+                    var paths = pathValue.split(',').map(function(path) {
+                        return path.trim();
+                    }).filter(function(path) {
+                        return path.length > 0;
+                    });
+
+                    var finalPathValue = paths.join(',');
+
+                    data.push({confId:'insa.path', val:finalPathValue});
+                } else {
+                    data.push({confId:'insa.path', val:''});
+                }
                 //data.push({confId:'insa.sepa', val:$('#'+idIndicator('insa.sepa')).val()});
                 data.push({confId:'insa.sepa', val:$('#'+idIndicator('insa.sepa option:selected')).val()});
 
@@ -1427,8 +1442,8 @@
 							<div class="mat16">
 								<label for="fname"><s:message code="userInfo.colseparator"/></label>
 								<select class="w100" id="insa.sepa">
-									<option value="|" selected> | </option>
-									<option value=","> , </option>
+									<option value="|"> | </option>
+									<option value="," selected> , </option>
 								</select>
 							</div>
 							<div class="mat16">
