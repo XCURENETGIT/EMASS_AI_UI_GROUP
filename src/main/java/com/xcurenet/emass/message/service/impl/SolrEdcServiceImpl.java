@@ -224,7 +224,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String[] include_fields = (Common.isNotEmpty(sq.getFields())) ? sq.getFields().split(",") : new String[]{""};
 		NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
 				.withSourceFilter(new FetchSourceFilter(include_fields,null))
-				.withFields(fields)
 				.withQuery(complateQuery)
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
