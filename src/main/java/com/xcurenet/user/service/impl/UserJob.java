@@ -80,17 +80,6 @@ public class UserJob extends UserCommon implements Job {
 
 			orgInfoLoad();
 
-			// 로컬 테스트
-			for (int i = 0; i < paths.length; i++) {
-				String singlePath = paths[i].trim();
-				if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-					if (singlePath.startsWith("/users/")) {
-						paths[i] = System.getProperty("user.dir") + "/users/" + singlePath.substring(singlePath.lastIndexOf('/') + 1);
-						log.info("[INSA AUTO IMPORT] 로컬 환경 경로 변환: {}", paths[i]);
-					}
-				}
-			}
-
 			// 파일별 개별 처리
 			for (int i = 0; i < paths.length; i++) {
 				String singlePath = paths[i].trim();
