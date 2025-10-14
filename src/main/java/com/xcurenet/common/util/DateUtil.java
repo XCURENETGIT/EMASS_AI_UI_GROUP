@@ -76,7 +76,7 @@ public class DateUtil {
 		LocalDate startDate = convertToLocalDate(startDateStr);
 		LocalDate endDate = convertToLocalDate(endDateStr);
 		if(Common.isNotEmpty(startDate) && Common.isNotEmpty(endDate)){
-			return 	getYearMonthStringRange(startDate,endDate);
+			return getYearMonthStringRange(startDate,endDate);
 		}else return "";
 	}
 

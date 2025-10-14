@@ -386,7 +386,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 		String[] indics;
 
-		String dateRange = DateUtil.getYearMonthStringRange (stDateStr, etDateStr);
+		String dateRange = DateUtil.getYearMonthStringRange(stDateStr, etDateStr);
 		indics = Arrays.stream(dateRange.split(","))
 				.map(m -> defaultIndex + "_" + m)
 				.toArray(String[]::new);
