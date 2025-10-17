@@ -2,7 +2,9 @@ package com.xcurenet.user.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.quartz.Job;
@@ -29,6 +31,8 @@ import net.sf.json.JSONObject;
 @Slf4j
 @Component
 public class UserJob extends UserCommon implements Job {
+	// 처리된 이메일 저장 (파일 간 중복 방지용)
+	private Set<String> processedEmails = new HashSet<>();
 
 	public static void main(String[] args) {
 		/*ApplicationContext context = new ClassPathXmlApplicationContext("com/spring/context-*.xml");
@@ -80,6 +84,9 @@ public class UserJob extends UserCommon implements Job {
 
 			orgInfoLoad();
 
+			// 이메일 중복 체크를 위한 Set 초기화
+			processedEmails.clear();
+
 			// 파일별 개별 처리
 			for (int i = 0; i < paths.length; i++) {
 				String singlePath = paths[i].trim();
@@ -116,13 +123,27 @@ public class UserJob extends UserCommon implements Job {
 			for (int i = 0, s = insas.size(); i < s; i++) {
 				JSONObject insa = insas.getJSONObject(i);
 				UserVO user = findUserInfo(getUser(confCols, insa, basepoint, deptBasepoint));
+
+				// 두 번째 파일부터 이메일 중복 체크
+				if (!isFirstFile && Common.isNotEmpty(user.getUserEmail())) {
+					if (processedEmails.contains(user.getUserEmail())) {
+						log.info("[USER INSA LOAD] duplicate email skipped: {}", user.getUserEmail());
+						continue;
+					}
+				}
 				if (Common.isEmpty(user.getUserId()))
 					log.warn("[USER INSA LOAD] user info load fail user id is null {}", insa);
 				else if (Common.isEmpty(user.getUserNm()))
 					log.warn("[USER INSA LOAD] user info load fail user name is null {}", insa);
 				else if (Common.isEmpty(user.getUserEmail()) && Common.isEmpty(user.getUserIp()))
 					log.warn("[USER INSA LOAD] user info load fail user email user ip is null {}", insa);
-				else users.add(user);
+				else {
+					users.add(user);
+					// 등록 성공한 사용자의 이메일 저장 (모든 파일에서)
+					if (Common.isNotEmpty(user.getUserEmail())) {
+						processedEmails.add(user.getUserEmail());
+					}
+				}
 			}
 			log.info("[USER INSA LOAD] user info load end total:{}", users.size());
 			log.info("[USER INSA LOAD] Org Insert new cocd:{}", newCos.size());
