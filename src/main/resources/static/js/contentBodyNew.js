@@ -1282,6 +1282,15 @@ function setMessage(msg) {
 
     $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip, msg.org_sender));
 
+    //받는 사람
+    if (msg.toList.length == 0) {
+        $('#toTr').css("display", "none");
+        $('#receiveUserDiv').html('');
+    } else {
+        $('#toTr').css("display", "");
+        $('#receiveUserDiv').html(userHtml(msg.toList, 'toTr', srcip, dstip, usrip));
+    }
+
     // 실제발신자 정보 표시 (별도 행으로 표시)
     if (msg.org_sender && msg.org_sender.trim() !== '') {
         try {
