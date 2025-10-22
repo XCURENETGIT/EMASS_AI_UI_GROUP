@@ -17,6 +17,7 @@ import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.service.vo.HostDescriptionVO;
+import com.xcurenet.emass.message.web.EmsMessageController;
 import com.xcurenet.gridfs.GridFs;
 import com.xcurenet.minio.MinioFileAdapter;
 import com.xcurenet.pattern.service.PatternVO;
@@ -69,6 +70,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Autowired
 	public ConfigAdminService configAdminService;
+
+	@Autowired
+	public EmsMessageController emsMessageController;
 
 	@Autowired
 	public MinioFileAdapter minioFileAdapter;
@@ -415,7 +419,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 				EmsAttachTextVO ocrVo = getAttachTextByHash(attachVO.getAttachHash());
 				if (Common.isNotEmpty(ocrVo)) {
 					attachVO.setOcrYn("Y");
-					attachVO.setOcrText(ocrVo.getAttachText());
+					attachVO.setOcrText(emsMessageController.getBodyStrMaskingMsgid(ocrVo.getAttachText(),msgId));
 					try (InputStream is = minioFileAdapter.findFile(attachVO.getAttachPath())) {
 						if (is == null) continue;
 						attachVO.setOcrImageStr(ImageUtils.imageResize(is, 200));

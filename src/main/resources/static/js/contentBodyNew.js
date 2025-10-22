@@ -2052,7 +2052,7 @@ function setOcrFileDiv(files) {
         attachView += '<td>';
         attachView += '<img " style="max-width: 200px" src="data:image/' + attachExt + ';base64, ' + file.ocrImageStr + '"/>';
         attachView += '</td>';
-        attachView += '<td style="overflow-wrap: anywhere;">' + nvl(file.ocrText).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replaceAll("\n", "<br>") + '</td>';
+        attachView += '<td style="overflow-wrap: anywhere;" id="ocrFile">' + nvl(file.ocrText).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replaceAll("\n", "<br>") + '</td>';
         attachView += '</tr>';
 
         if (i == (fileLength - 1) || ((i + 1) <= (fileLength - 1) && nvl(files[i + 1].attachSpace, "") != fileSpace)) {
@@ -2394,11 +2394,13 @@ function setBodyHighLight(defaultText, type) {
 function setPatternHighLight(defaultText, type, customPattern) {
     var body_obj = $("#emassBody");
     var subject_obj = $("#subject");
+    var ocr_obj = $("#ocrFile");
     var  splitText =  defaultText.split(',');
     for (var j = 0; j < splitText.length; j++) {
         if (splitText[j] == '') continue;
         $(body_obj).highlight(maskText(splitText[j], customPattern), type);
         $(subject_obj).highlight(maskText(splitText[j], customPattern), type);
+        $(ocr_obj).highlight(maskText(splitText[j], customPattern), type);
     }
 }
 // 패턴 마스킹 처리 하이라이팅
