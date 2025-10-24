@@ -3,6 +3,7 @@ package com.xcurenet.searchWord.service;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface SearchWordService {
@@ -12,18 +13,17 @@ public interface SearchWordService {
 
 	public boolean isSearchWord(SearchWordVO searchWordVO);
 
-
 	public int insertRelSearchWord(SearchWordVO searchWordVO);
 
 	public int tableIsExist();
 
 	public int tableNum();
 
-	public int findSearchWordNum(SearchWordVO searchWordVO);
-
 	public int deleteSearchWord(List<SearchWordVO> searchWords);
 
 	public int updateSearchWord(SearchWordVO searchWordVO);
 
 	public int deleteSearchRelWord(List<SearchWordVO> searchWords, int keywordId);
+
+	public Map<String, Object> importSearchWordBatch(List<String> dataLines);
 }

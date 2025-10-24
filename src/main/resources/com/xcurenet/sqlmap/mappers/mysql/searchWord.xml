@@ -9,7 +9,7 @@
 	<select id = "getSearchWordList" resultType="com.xcurenet.searchWord.service.SearchWordVO" parameterType="hashMap">
 		SELECT A.KEYWORD_ID AS keywordId, A.KEYWORD AS searchWord,
 		(
-		SELECT GROUP_CONCAT(B.KEYWORD_REL SEPARATOR ', ')
+		SELECT GROUP_CONCAT(B.KEYWORD_REL ORDER BY B.KEYWORD_REL_ID SEPARATOR ', ')
 		FROM XCN_KEYWORD_REL AS B
 		WHERE A.KEYWORD_ID = B.KEYWORD_ID
 		GROUP  BY A.KEYWORD_ID
@@ -28,14 +28,14 @@
 	<!--키워드 연관 리스트 조회 (메시지 페이지 검색용)-->
 	<select id = "getRelationKeywordList" resultType="com.xcurenet.searchWord.service.RelationKeywordVO" parameterType="hashMap">
 		SELECT
-			KEYWORD_REL as keyword
+		KEYWORD_REL as keyword
 		FROM XCN_KEYWORD_REL
 		WHERE KEYWORD_ID in (
-			SELECT  KEYWORD_ID
-			FROM	XCN_KEYWORD
-			WHERE	KEYWORD = #{searchKeyword}
+		SELECT  KEYWORD_ID
+		FROM	XCN_KEYWORD
+		WHERE	KEYWORD = #{searchKeyword}
 		)
-		ORDER BY WEIGHT DESC
+		ORDER BY WEIGHT DESC, KEYWORD_REL_ID
 	</select>
 
 	<!--	검색 키워드 삭제-->
@@ -43,10 +43,35 @@
 		DELETE	FROM XCN_KEYWORD WHERE KEYWORD_ID = #{keywordId}
 	</delete>
 
-	<!--	연관 키워드 개별 삭제-->
-	<delete id="deleteSearchRelWord" parameterType="hashMap">
-		DELETE	FROM XCN_KEYWORD_REL
-		WHERE  KEYWORD_REL= #{relationWord} AND KEYWORD_ID = #{keywordId}
+	<!--	연관 키워드 조회 (기존 데이터용)-->
+	<select id="getKeywordRelValue" parameterType="int" resultType="string">
+		SELECT KEYWORD_REL
+		FROM XCN_KEYWORD_REL
+		WHERE KEYWORD_ID = #{keywordId}
+		LIMIT 1
+	</select>
+
+	<!--	연관 키워드 값 업데이트 (기존 데이터용)-->
+	<update id="updateKeywordRelValue" parameterType="hashMap">
+		UPDATE XCN_KEYWORD_REL
+		SET KEYWORD_REL = #{newKeywordRel}
+		WHERE KEYWORD_ID = #{keywordId}
+	</update>
+
+	<!--	KEYWORD_ID 기준 리스트 조회-->
+	<select id="getKeywordRelListByRelId" parameterType="int" resultType="string">
+		SELECT KEYWORD_REL
+		FROM XCN_KEYWORD_REL
+		WHERE KEYWORD_ID = #{keywordId}
+		ORDER BY KEYWORD_REL_ID
+	</select>
+
+	<!--	특정 키워드 개별 row 삭제-->
+	<delete id="deleteSearchRelByKeyword" parameterType="hashMap">
+		DELETE FROM XCN_KEYWORD_REL
+		WHERE KEYWORD_ID = #{keywordId}
+		AND KEYWORD_REL = #{keyword}
+		LIMIT 1
 	</delete>
 
 	<!--	 연관 키워드 전체 삭제-->
@@ -56,7 +81,8 @@
 
 
 	<!--	검색키워드 등록-->
-	<insert id="insertSearchWord" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+	<insert id="insertSearchWord" parameterType="com.xcurenet.searchWord.service.SearchWordVO"
+			useGeneratedKeys="true" keyProperty="keywordId">
 		INSERT INTO XCN_KEYWORD (KEYWORD) VALUES(#{searchWord})
 	</insert>
 
@@ -75,10 +101,10 @@
 	</update>
 
 	<!--	키워드 중복 체크--><select id="isSearchWordExist" resultType="int" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
-		SELECT COUNT(*) AS CNT
-		FROM XCN_KEYWORD
-		WHERE BINARY KEYWORD = BINARY #{searchWord}
-	</select>
+	SELECT COUNT(*) AS CNT
+	FROM XCN_KEYWORD
+	WHERE BINARY KEYWORD = BINARY #{searchWord}
+</select>
 
 
 	<!--	검색키워드  기본키 찾기-->
@@ -104,9 +130,48 @@
 
 	<!--전체 테이블 확인 -->
 	<select id ="tableNum" resultType="int">
-	SELECT COUNT(1)
-	FROM information_schema.TABLES
-	WHERE TABLE_NAME = 'UI_ADMIN'
+		SELECT COUNT(1)
+		FROM information_schema.TABLES
+		WHERE TABLE_NAME = 'UI_ADMIN'
+	</select>
+
+	<!-- 키워드 배치 등록 -->
+	<insert id="insertSearchWordBatch" parameterType="list"
+			useGeneratedKeys="true" keyProperty="keywordId">
+		INSERT INTO XCN_KEYWORD (KEYWORD)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.searchWord})
+		</foreach>
+	</insert>
+
+	<!-- 연관키워드 배치 등록 -->
+	<insert id="insertSearchRelWordBatch" parameterType="list">
+		INSERT INTO XCN_KEYWORD_REL (KEYWORD_ID, KEYWORD_REL, WEIGHT)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.keywordId}, #{item.relationWord}, #{item.searchWordRelaNumber})
+		</foreach>
+	</insert>
+
+	<!-- 키워드 ID 배치 조회 -->
+	<select id="getSearchWordIds" parameterType="list" resultType="hashmap">
+		SELECT KEYWORD_ID as keywordId, KEYWORD as searchWord
+		FROM   XCN_KEYWORD
+		WHERE  KEYWORD IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item.searchWord}
+		</foreach>
+	</select>
+
+	<!-- 기존 연관키워드 배치 조회 (중복 체크용) -->
+	<select id="getExistingRelWords" parameterType="hashmap" resultType="hashmap">
+		SELECT KEYWORD_ID as keywordId, KEYWORD_REL as keywordRel
+		FROM   XCN_KEYWORD_REL
+		WHERE  KEYWORD_ID IN
+		<foreach collection="keywordIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
 	</select>
 
 </mapper>

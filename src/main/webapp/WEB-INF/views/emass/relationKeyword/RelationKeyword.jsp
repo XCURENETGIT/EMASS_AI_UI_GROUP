@@ -186,8 +186,134 @@
                 }
             });
         });
+
+		$('#uploadBtn').click(function () {
+			$('#uploadPop').modal('show');
+			$('#attach').val('');
+			$('#attachFileName').text('<s:message code="keyword.msg.upload.file"/>');
+		});
+
+		$('#attach').on('change', function() {
+			var file = this.files[0];
+			if(file){
+				if(file.size > 10 * 1024 * 1024){
+					ui.alertMsg('<s:message code="keyword.batch.upload.filesize.max"/>');
+					$(this).val("");
+					$("#attachFileName").text("<s:message code='keyword.msg.upload.file'/>");
+					return;
+				}
+
+				var fileName = file.name;
+				var fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+				if(!["txt", "csv", "xlsx"].includes(fileExt)){
+					ui.alertMsg('<s:message code="keyword.batch.upload.invalid.ext.client"/>');
+					$(this).val("");
+					$("#attachFileName").text("<s:message code='keyword.msg.upload.file'/>");
+					return;
+				}
+
+				$("#attachFileName").text(fileName);
+			} else {
+				$("#attachFileName").text("<s:message code='keyword.msg.upload.file'/>");
+			}
+		});
+
+		$('.uploadPopBtn').click(function () {
+			importKeyword();
+		});
+
         getGroupData();
+
+
     });
+
+	function importKeyword() {
+		var attach = $('[name=attach]').val();
+		if (attach == "") {
+			ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () {
+				$("#attach").click();
+			});
+			return;
+		}
+
+		var fileExt = attach.substring(attach.lastIndexOf(".") + 1, attach.length).toLowerCase();
+		if(!["txt", "csv", "xlsx"].includes(fileExt)){
+			ui.alertMsg('<s:message code="keyword.batch.upload.invalid.ext.client"/>');
+			return;
+		}
+
+		ui.confirmMsg('<s:message code="keyword.batch.upload.confirm"/>', '', '', function (rs) {
+			if (rs) {
+				loadingOn("uploadPop");
+
+				var formData = new FormData();
+				var fileInput = document.getElementById('attach');
+				if(fileInput.files.length > 0) {
+					formData.append('attach', fileInput.files[0]);
+				}
+
+				$.ajax({
+					url: '<c:url value="/importSearchWordBatch.xcn"/>',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					dataType: 'json',
+					success: function (result) {
+						if (result.success) {
+							var successCount = (result.data.newKeywords || 0) + (result.data.newRelationWords || 0);
+							var errorCount = result.data.errorCount || 0;
+
+							var msgTemplate = '<s:message code="keyword.batch.upload.complete"/>';
+							var msg = msgTemplate.replace('{0}', successCount).replace('{1}', errorCount);
+
+							if(result.data.errorMessages && result.data.errorMessages.length > 0) {
+								console.log('- error:', result.data.errorMessages);
+							}
+
+							ui.alertMsg(msg, function() {
+								$('#uploadPop').modal('hide');
+								getGroupData();
+							});
+						} else {
+							var errorMsg = result.message || '<s:message code="keyword.batch.upload.process.error"/>';
+							ui.alertMsg(errorMsg);
+						}
+					},
+					error: function (xhr, status, error) {
+						ui.alertMsg('<s:message code="keyword.batch.upload.upload.error"/>');
+					},
+					complete: function () {
+						loadingOff("uploadPop");
+						$('#attach').val('');
+						$('#attachFileName').text('<s:message code="keyword.msg.upload.file"/>');
+					}
+				});
+			}
+		});
+	}
+
+	function loadingOn(id) {
+		var obj = $('#' + id);
+		var hei = obj.height();
+		$(obj).append('<div class="loading_div"><i class="fa fa-spinner fa-spin fa-3x fa-fw" style="margin-top:' + (hei / 2.5) + 'px"></i></div>');
+		$('.loading_div').css({
+			"position": "absolute",
+			"top": "0px",
+			"left": "15px",
+			"right": "15px",
+			"bottom": "20px",
+			"background-color": "#F0F0F0",
+			"opacity": "0.3",
+			"z-index": "998",
+			"text-align": "center"
+		});
+	}
+
+	function loadingOff(id) {
+		var obj = $('#' + id + ' .loading_div');
+		obj.remove();
+	}
 
     function getGroupData(flag) {
         if (searchFlag) return false;
@@ -316,6 +442,45 @@
 	</div>
 </div>
 
+<!--연관 키워드 업로드 -->
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
+		<div class="modalHead">
+			<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="keyword.msg.upload"/></h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+			<div class="modalCon">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
+						</div>
+						<div class="col-65">
+							<div>
+								<label for="attach" class="pop_btn02" style="height: 26px;"><span style="line-height: 1.8;"><s:message code="keyword.select.file"/></span></label>
+								<span style="color:#333; background: #FFF; width:40%; height:26px; line-height: 1.8;  padding:0 8px; vertical-align:middle;  font-size:14px; position: absolute;" id="attachFileName"> <s:message code="keyword.msg.upload.file"/></span>
+							</div>
+							<span id="attachSpan"><input type="file"  name="attach" id="attach" style="visibility:hidden" accept=".txt,.csv,.xlsx"></span>
+						</div>
+					</div>
+				</div>
+			<div class="info"> <s:message code="common.guidance"/>
+				<div class="form-inline" style="padding-left: 10px;">1) <s:message code="keyword.batch.upload.guide1"/></div>
+				<div class="form-inline" style="padding-left: 10px;">2) <s:message code="keyword.batch.upload.guide2"/></div>
+				<div class="form-inline" style="padding-left: 10px;">3) <s:message code="keyword.batch.upload.guide3"/></div>
+				<div class="form-inline" style="padding-left: 10px;">  - <s:message code="keyword.batch.upload.guide3.example"/></div>
+				<div class="form-inline" style="padding-left: 10px;">4) <s:message code="keyword.batch.upload.guide4"/></div>
+				<div class="form-inline" style="padding-left: 10px;">5) <s:message code="keyword.batch.upload.guide5"/></div>
+			</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02 uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
 
 <!--연관 키워드 상세보기, 삭제 -->
 <div class="modal" id="searchWordUpdatPop" aria-labelledby="searchWordUpdatPop" data-backdrop="static">
@@ -363,6 +528,7 @@
 			</div>
 			<button type="button" class="btn01" accesskey="A" id="searchWordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 			<button type="button" class="btn02" accesskey="E" id="searchWordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
 		</div>
 	</div>
 	<div class="content xcn_full">

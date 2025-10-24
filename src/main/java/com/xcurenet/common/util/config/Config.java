@@ -190,6 +190,7 @@ public class Config {
 	public static final String ADMIN_FILTER_TMP = "/users/emassai/filter/tmp/";
 	public static final String DID_BACKUP = "/users/emassai/uacs/did/backup/";
 	public static final String KEYWORD_TMP = "/users/emassai/keyword/tmp/";
+	public static final String RELKEYWORD_TMP = "/users/emassai_plus/relkeyword/tmp/";
 	public static final String IPRANGE_TMP = "/users/emassai/iprange/tmp/";
 	public static final String IPRANGE_DEPT_TMP = "/users/emassai/iprangeDept/tmp/";
 	public static final String DID_XML = "did.xml";
