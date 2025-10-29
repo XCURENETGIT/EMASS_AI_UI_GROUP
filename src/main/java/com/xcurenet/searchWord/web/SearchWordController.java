@@ -132,7 +132,7 @@ public class SearchWordController {
 
             log.info("[Keyword Batch] file: {}, format: {}", fileName, fileExt);
 
-            String tmp = "Config.RELKEYWORD_TMP";
+            String tmp = Config.RELKEYWORD_TMP;
 
             Common.mkdirs(tmp);
 
