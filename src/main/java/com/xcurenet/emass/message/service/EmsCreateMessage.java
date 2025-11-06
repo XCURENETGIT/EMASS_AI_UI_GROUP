@@ -393,7 +393,7 @@ public class EmsCreateMessage {
 			String[] ext = Common.toArray(file.getAttachName(), ".");
 			if (ext.length > 1 && Common.isEquals(file.getAttachExt(), ext[ext.length - 1])) checkExt = true;
 
-			resultStr += "	<tr id=\"" + file.getAttachId() + "\" size=\"" + file.getAttachSize() + "\"  class=\"" + (Common.isEmpty(file.getAttachPath()) == true ? "notfound" : "") + " " + (checkExt ? "" : "differentExt") + "\" > ";
+			resultStr += "	<tr id=\"" + file.getAttachId() + "\" size=\"" + file.getAttachSize() + "\"  class=\"" + (Common.isEmpty(file.getAttachPath()) == true || Common.isEquals(file.getAttachNameExist(),"F")? "notfound" : "") + " " + (checkExt ? "" : "differentExt") + "\" > ";
 			resultStr += "		<td><span class=\"attachName\"><span class=\"glyphicon glyphicon-paperclip\" style=\"padding-right:5px;\"></span>" + file.getAttachName() + "</span></td> ";
 			resultStr += "		<td style=\"text-align: right;\">" + Common.convertFileSize(file.getAttachSize()) + "</td> ";
 			resultStr += "		<td style=\"text-align: center;\"><span class=\"attachExt\"><span class=\"glyphicon glyphicon-download-alt\"></span>&nbsp;" + file.getAttachExt() + "" + (Common.isEquals(file.getAttachExt(), "unknown") ? "(txt)" : "") + "</span></td> ";
@@ -464,6 +464,7 @@ public class EmsCreateMessage {
 			for (int i = 0; i < files.size(); i++) {
 				EmsAttachVO file = files.get(i);
 				String base64Image = "";
+				if (Common.isEquals(file.getAttachNameExist(),"E") || Common.isEquals(file.getAttachNameExist(),"F")) continue;
 				try (InputStream in = minioFileAdapter.findFile(file.getAttachPath())) {
 					if (in == null) continue;
 					base64Image = ImageUtils.imageResize(in, 200);

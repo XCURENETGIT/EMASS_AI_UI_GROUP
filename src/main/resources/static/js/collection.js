@@ -716,7 +716,7 @@ function filediv(data) {
         var ext = attachName.split(".");
         var trClass = "found";
 
-        if(nvl(file.attachPath) == "") trClass = "notfound";
+        if(nvl(file.attachPath) == "" ||  file.attachNameExist == 'F') trClass = "notfound";
         if(ext.length > 1 && nvl(attachExt) == ext[ext.length-1]) {
             extClass = "";
         } else {

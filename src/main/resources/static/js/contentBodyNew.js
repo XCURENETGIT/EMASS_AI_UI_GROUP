@@ -1625,7 +1625,7 @@ function setFileDiv(msg) {
 
             if (attachFeedbackDate == undefined || attachFeedbackDate == null) attachFeedbackDate = '-';
 
-            if (nvl(file.attachPath) == "") trClass = "notfound";
+            if (nvl(file.attachPath) == "" || attachNameExist == "F") trClass = "notfound";
 
             if (file.attachSize == 0 || file.attachExt== "N"){ //파일 없음
                 extClass =" fileNoSizeNo"

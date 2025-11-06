@@ -42,8 +42,19 @@ public class EmsAttachDownload {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
-        String fileName = (Common.isEquals(prediction, "Y")) ? attach.getAttachName() + "." + (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : attach.getAttachExt()) : attach.getAttachName();
-        oneFileDownloadResponse(attach.getAttachPath(), fileName, request, response);
+	    String attachPath = attach.getAttachPath();
+	    String attachName = attach.getAttachName();
+	    if (Common.isEquals(attach.getAttachNameExist(),"F")) return;
+	    else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+		    // 텍스트 경로로 변경
+		    attachPath = attach.getAttachTextPath();
+		    attachName += ".txt";
+	    }
+	    String fileName = Common.isEquals(prediction, "Y") ? attach.getAttachName() + "." +
+			    (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : (Common.isEquals(attach.getAttachNameExist(), "E") ? "txt" : attach.getAttachExt())) : attachName;
+
+
+	    oneFileDownloadResponse(attachPath, fileName, request, response);
     }
 
 
@@ -65,13 +76,23 @@ public class EmsAttachDownload {
         try (OutputStream out = response.getOutputStream();
              ArchiveOutputStream os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out)) {
             for (EmsAttachVO attach : attachs) {
-                try (InputStream in = minioFileAdapter.findFile(attach.getAttachPath())) {
+	            String attachPath = attach.getAttachPath();
+	            String attachName = attach.getAttachName();
+	            if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+	            else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+		            // 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
+		            attachPath = attach.getAttachTextPath();
+		            attachName += ".txt";
+	            }
+                try (InputStream in = minioFileAdapter.findFile(attachPath)) {
                     if (in == null) continue;
                     if (Common.isEquals(prediction, "Y")) {
                         attach.setAttachName(attach.getAttachName() + "." + attach.getAttachExt());
                     }
-                    String fileName = Common.isEquals(prediction, "Y") ? attach.getAttachName() + "." + (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : attach.getAttachExt()) : attach.getAttachName();
-                    String subject = EmsReDefined.reSubject(getFileName(attach));
+	                String fileName = Common.isEquals(prediction, "Y") ? attach.getAttachName() + "." +
+			                (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : (Common.isEquals(attach.getAttachNameExist(), "E") ? "txt" : attach.getAttachExt())) : attachName;
+
+	                String subject = EmsReDefined.reSubject(getFileName(attach));
                     String dir = Common.getEDCFileName(attach.getCtime(), attach.getUserId(), attach.getName(), subject, attach.getMsgId());
                     os.putArchiveEntry(new ZipArchiveEntry(dir + File.separator + fileName));
                     IOUtils.copy(in, os);

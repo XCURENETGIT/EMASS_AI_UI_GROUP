@@ -1190,10 +1190,17 @@ public class MessengerController {
 		for (MessengerGroupVO item : list) {
 			List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
 			for (EmsAttachVO attach : attachs) {
-				String path = attach.getAttachPath();
+				String attachPath = attach.getAttachPath();
+				String attachName = attach.getAttachName();
+				if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+				else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+					// 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
+					attachPath = attach.getAttachTextPath();
+					attachName += ".txt";
+				}
 				Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid()));
-				try (InputStream in = minioFileAdapter.findFile(path);
-					 FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attach.getAttachName())));) {
+				try (InputStream in = minioFileAdapter.findFile(attachPath);
+					 FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attachName)));) {
 					if (in == null) continue;
 					IOUtils.copy(in, out);
 				} catch (Exception e) {
@@ -1299,11 +1306,19 @@ public class MessengerController {
 			for (MessengerGroupVO item : list) {
 				List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
 				for (EmsAttachVO attach : attachs) {
-					try(InputStream  in = minioFileAdapter.findFile(attach.getAttachPath())){
+					String attachPath = attach.getAttachPath();
+					String attachName = attach.getAttachName();
+					if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+					else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+						// 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
+						attachPath = attach.getAttachTextPath();
+						attachName += ".txt";
+					}
+					try(InputStream  in = minioFileAdapter.findFile(attachPath)){
 						String path = attach.getAttachPath();
 						log.info("path:{} ", path);
 						if (in == null) continue;
-						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attach.getAttachName())));
+						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attachName)));
 						IOUtils.copy(in, os);
 						os.closeArchiveEntry();
 					} catch (ClientAbortException e) {

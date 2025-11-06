@@ -1181,10 +1181,23 @@ public class CollectionController {
 						EmsAttachDownload attachDown = new EmsAttachDownload();
 						List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(solrEdcGroupVO.getEmass().get(i).getMsgid(), null);
 						for (EmsAttachVO attach : attachs) {
-							String path = attach.getAttachPath();
+							String attachPath = attach.getAttachPath();
+							String attachName = attach.getAttachName();
+							if (Common.isEquals(attach.getAttachNameExist(), "F")) continue;
+							if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+								// 텍스트 경로로 변경
+								attachPath = attach.getAttachTextPath();
+
+								// 파일 확장자 txt 강제 변경
+								int dotIdx = attachName.lastIndexOf('.');
+								if (dotIdx > 0) {
+									attachName = attachName.substring(0, dotIdx);
+								}
+								attachName += ".txt";
+							}
 							Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid()));
-							try (InputStream in = minioFileAdapter.findFile(path);
-							     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid(), attach.getAttachName())));) {
+							try (InputStream in = minioFileAdapter.findFile(attachPath);
+							     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid(), attachName)));) {
 								if (in != null) IOUtils.copy(in, out);
 							} catch (Exception e) {
 								log.error("", e);
@@ -1470,10 +1483,22 @@ public class CollectionController {
 		for (MessengerGroupVO item : list) {
 			List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
 			for (EmsAttachVO attach : attachs) {
-				String path = attach.getAttachPath();
+				String attachPath = attach.getAttachPath();
+				String attachName = attach.getAttachName();
+				if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+					// 텍스트 경로로 변경
+					attachPath = attach.getAttachTextPath();
+
+					// 파일 확장자 txt 강제 변경
+					int dotIdx = attachName.lastIndexOf('.');
+					if (dotIdx > 0) {
+						attachName = attachName.substring(0, dotIdx);
+					}
+					attachName += ".txt";
+				}
 				Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid()));
-				try (InputStream in = minioFileAdapter.findFile(path);
-				     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attach.getAttachName())));) {
+				try (InputStream in = minioFileAdapter.findFile(attachPath);
+				     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attachName)));) {
 					if (in != null) IOUtils.copy(in, out);
 				} catch (Exception e) {
 					log.error("", e);
@@ -1583,12 +1608,24 @@ public class CollectionController {
 				for (EmsAttachVO attach : attachs) {
 					InputStream in = null;
 					try {
-						String path = attach.getAttachPath();
+						String attachPath = attach.getAttachPath();
+						String attachName = attach.getAttachName();
+						if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+							// 텍스트 경로로 변경
+							attachPath = attach.getAttachTextPath();
+
+							// 파일 확장자 txt 강제 변경
+							int dotIdx = attachName.lastIndexOf('.');
+							if (dotIdx > 0) {
+								attachName = attachName.substring(0, dotIdx);
+							}
+							attachName += ".txt";
+						}
 						String harPath = attach.getAttachHarPath();
-						log.info("path:{}, harPath:{}", path, harPath);
+						log.info("path:{}, harPath:{}", attachPath, harPath);
 						in = minioFileAdapter.findFile(attach.getAttachPath());
 						if (in == null) continue;
-						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attach.getAttachName())));
+						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attachName)));
 						IOUtils.copy(in, os);
 						os.closeArchiveEntry();
 					} catch (ClientAbortException e) {

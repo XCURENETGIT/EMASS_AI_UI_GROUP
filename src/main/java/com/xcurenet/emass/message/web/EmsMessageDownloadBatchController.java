@@ -262,9 +262,17 @@ public class EmsMessageDownloadBatchController {
 		Common.mkdirs(dir.getPath());
 		List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(edc.getMsgid(), null);
 		for (EmsAttachVO attach : attachs) {
-			try (InputStream in = minioFileAdapter.findFile(attach.getAttachPath())) {
+			String attachPath = attach.getAttachPath();
+			String attachName = attach.getAttachName();
+			if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+			else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+				// 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
+				attachPath = attach.getAttachTextPath();
+				attachName += ".txt";
+			}
+			try (InputStream in = minioFileAdapter.findFile(attachPath)) {
 				if (in == null) continue;
-				File file = new File(Common.makeFilepath(dir.getPath(), Common.removeInvalidName(attach.getAttachName())));
+				File file = new File(Common.makeFilepath(dir.getPath(), Common.removeInvalidName(attachName)));
 				try (FileOutputStream out = new FileOutputStream(file)) {
 					IOUtils.copyLarge(in, out);
 				}

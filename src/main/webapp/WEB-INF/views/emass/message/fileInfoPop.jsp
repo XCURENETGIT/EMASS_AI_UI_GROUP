@@ -344,7 +344,7 @@ function filePreviewEv( obj )
 									String [] ext = Common.toArray(file.getAttachName(), ".");
 									if( ext.length > 1 && Common.isEquals((file.getAttachExt()).toLowerCase(), (ext[ext.length-1]).toLowerCase() )) checkExt = true;
 							%>
-							<tr id="<%=file.getAttachId()%>" size="<%=file.getAttachSize()%>" class="<%=(Common.isEmpty(file.getAttachPath())==true ? "notfound" : "found")%> <%=checkExt ? "" : "differentExt" %>" >
+							<tr id="<%=file.getAttachId()%>" size="<%=file.getAttachSize()%>" class="<%=(Common.isEmpty(file.getAttachPath())==true || Common.isEquals(file.getAttachNameExist(),"F") ? "notfound" : "found")%> <%=checkExt ? "" : "differentExt" %>" >
 								<td>
 									<span style="padding-right:5px;" class="attach_<%=file.getAttachExt() %> attach_file_img"></span>
 									<span class="<%= (file.isConsentFlag() || adminTypeCode.equals("S") ? "attachName" : "") %>" attachname="<%=file.getAttachName()%>">

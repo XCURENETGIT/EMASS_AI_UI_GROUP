@@ -420,6 +420,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 				if (Common.isNotEmpty(ocrVo)) {
 					attachVO.setOcrYn("Y");
 					attachVO.setOcrText(emsMessageController.getBodyStrMaskingMsgid(ocrVo.getAttachText(),msgId));
+					if (Common.isEquals(attachVO.getAttachNameExist(),"E") || Common.isEquals(attachVO.getAttachNameExist(),"F")) continue;
 					try (InputStream is = minioFileAdapter.findFile(attachVO.getAttachPath())) {
 						if (is == null) continue;
 						attachVO.setOcrImageStr(ImageUtils.imageResize(is, 200));
