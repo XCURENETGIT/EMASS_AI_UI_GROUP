@@ -149,7 +149,7 @@ var eikon2 = {
         var searchStr = $('#searchMsgStrInput').val();
         var userkey = $('#selectUserInfo').attr("data-name");
         var srcip = $('#selectUserInfo').attr("data-srcip");
-        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"0000000";
+        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"000000";
         var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"235959";
 
         if( offset < 0 ) searchOffset = $('#searchResult').html() - 1;
