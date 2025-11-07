@@ -1627,7 +1627,7 @@ function setFileDiv(msg) {
 
             if (nvl(file.attachPath) == "" || attachNameExist == "F") trClass = "notfound";
 
-            if (file.attachSize == 0 || file.attachExt== "N"){ //파일 없음
+            if (file.attachSize == 0 || file.attachExt == "N" || attachNameExist == "F"){ //파일 없음
                 extClass =" fileNoSizeNo"
                 attachExt="-";
             }else { //파일 있을 경우

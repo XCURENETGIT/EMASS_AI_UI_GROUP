@@ -36,7 +36,7 @@ public class EmsAttachDownload {
     @Description("단건 파일 다운로드")
     public void oneFileDownload(final EmsAttachVO attach, final HttpServletRequest request, final HttpServletResponse response, final String prediction) throws Exception {
         response.setCharacterEncoding(Common.UTF8);
-        if (attach.getAttachSize() <= Integer.MAX_VALUE) response.setContentLength((int) attach.getAttachSize());
+        if (attach.getAttachSize() <= Integer.MAX_VALUE && Common.isNotEquals(attach.getAttachNameExist(),"E")) response.setContentLength((int) attach.getAttachSize());
         if (attach == null) {
             log.warn("file not found..attach is null");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -50,8 +50,12 @@ public class EmsAttachDownload {
 		    attachPath = attach.getAttachTextPath();
 		    attachName += ".txt";
 	    }
-	    String fileName = Common.isEquals(prediction, "Y") ? attach.getAttachName() + "." +
-			    (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : (Common.isEquals(attach.getAttachNameExist(), "E") ? "txt" : attach.getAttachExt())) : attachName;
+
+	    String fileName;
+	    if (Common.isEquals(prediction, "Y")) {
+		    String ext = (Common.isEquals(attach.getAttachExt(), "unknown") || Common.isEquals(attach.getAttachNameExist(), "E")) ? "txt" : attach.getAttachExt();
+		    fileName = attach.getAttachName() + "." + ext;
+	    } else fileName = attachName;
 
 
 	    oneFileDownloadResponse(attachPath, fileName, request, response);
@@ -89,8 +93,12 @@ public class EmsAttachDownload {
                     if (Common.isEquals(prediction, "Y")) {
                         attach.setAttachName(attach.getAttachName() + "." + attach.getAttachExt());
                     }
-	                String fileName = Common.isEquals(prediction, "Y") ? attach.getAttachName() + "." +
-			                (Common.isEquals(attach.getAttachExt(), "unknown") ? "txt" : (Common.isEquals(attach.getAttachNameExist(), "E") ? "txt" : attach.getAttachExt())) : attachName;
+	                String fileName;
+	                if (Common.isEquals(prediction, "Y")) {
+		                String ext = (Common.isEquals(attach.getAttachExt(), "unknown") || Common.isEquals(attach.getAttachNameExist(), "E")) ? "txt" : attach.getAttachExt();
+		                fileName = attach.getAttachName() + "." + ext;
+	                } else fileName = attachName;
+
 
 	                String subject = EmsReDefined.reSubject(getFileName(attach));
                     String dir = Common.getEDCFileName(attach.getCtime(), attach.getUserId(), attach.getName(), subject, attach.getMsgId());

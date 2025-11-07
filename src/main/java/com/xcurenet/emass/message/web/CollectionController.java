@@ -1183,18 +1183,13 @@ public class CollectionController {
 						for (EmsAttachVO attach : attachs) {
 							String attachPath = attach.getAttachPath();
 							String attachName = attach.getAttachName();
-							if (Common.isEquals(attach.getAttachNameExist(), "F")) continue;
-							if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
-								// 텍스트 경로로 변경
+							if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+							else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+								// 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
 								attachPath = attach.getAttachTextPath();
-
-								// 파일 확장자 txt 강제 변경
-								int dotIdx = attachName.lastIndexOf('.');
-								if (dotIdx > 0) {
-									attachName = attachName.substring(0, dotIdx);
-								}
 								attachName += ".txt";
 							}
+
 							Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid()));
 							try (InputStream in = minioFileAdapter.findFile(attachPath);
 							     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid(), attachName)));) {
@@ -1485,15 +1480,10 @@ public class CollectionController {
 			for (EmsAttachVO attach : attachs) {
 				String attachPath = attach.getAttachPath();
 				String attachName = attach.getAttachName();
-				if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
-					// 텍스트 경로로 변경
+				if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+				else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+					// 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
 					attachPath = attach.getAttachTextPath();
-
-					// 파일 확장자 txt 강제 변경
-					int dotIdx = attachName.lastIndexOf('.');
-					if (dotIdx > 0) {
-						attachName = attachName.substring(0, dotIdx);
-					}
 					attachName += ".txt";
 				}
 				Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid()));
@@ -1610,15 +1600,10 @@ public class CollectionController {
 					try {
 						String attachPath = attach.getAttachPath();
 						String attachName = attach.getAttachName();
-						if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
-							// 텍스트 경로로 변경
+						if (Common.isEquals(attach.getAttachNameExist(),"F")) continue;
+						else if (Common.isEquals(attach.getAttachNameExist(), "E") && Common.isNotEmpty(attach.getAttachTextPath())) {
+							// 첨부파일 경로 text 경로 변경 및 확장자 txt 변경
 							attachPath = attach.getAttachTextPath();
-
-							// 파일 확장자 txt 강제 변경
-							int dotIdx = attachName.lastIndexOf('.');
-							if (dotIdx > 0) {
-								attachName = attachName.substring(0, dotIdx);
-							}
 							attachName += ".txt";
 						}
 						String harPath = attach.getAttachHarPath();
