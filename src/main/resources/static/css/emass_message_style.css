@@ -171,6 +171,13 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_messenger .messengerList {}
 .inner_messenger .chatList { position: relative; background-color: #606973; }
 .inner_messenger .rightFile { background-color: #414A54;}
+.inner_messenger > .leftSearch,
+.inner_messenger > .messengerList,
+.inner_messenger > .chatList,
+.inner_messenger > .fileGroupList,
+.inner_messenger > .rightFile {
+	min-width: 0;
+}
 .rightFileList ul li:first-child {padding-top:0; !important;}
 .rightFileList ul li {border-bottom:1px solid #656C74; padding:12px; !important;}
 
@@ -683,15 +690,18 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 }
 .messengerList .messengerBox .people .person span {display: inline-block;}
 .messengerList .messengerBox .people .person p {margin:4px;}
-.messengerList .messengerBox .people .person .left{position: relative; float:left; width:70%; }
+.messengerList .messengerBox .people .person .left{position: relative; float:left; width:70%; overflow: hidden;}
+.messengerList .messengerBox .people .person .left p {display: flex; align-items: center; margin:4px; overflow: hidden;}
+.messengerList .messengerBox .people .person .left p .preview {flex:1 1 auto; min-width: 0;}
+.messengerList .messengerBox .people .person .left p .name {flex:0 1 auto; min-width: 0;}
 .messengerList .messengerBox .people .person .right{position: relative; float:right; width:30%; text-align: right;}
 .messengerList .messengerBox .people .person .logo{padding-left:20px;font-size:16px; font-weight:300;}
 .messengerList .messengerBox .people .person .chatid {height:16px;line-height: 16px; font-size: 16PX; font-weight: 600;}
 .messengerList .messengerBox .people .person .file { width:16px; height:16px; vertical-align: top;
     background:url(../img/ico_link_angled.png) left center no-repeat;}
-.messengerList .messengerBox .people .person .name {font-size: 14px; color:#555;}
+.messengerList .messengerBox .people .person .name {font-size: 14px; color:#555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45%;}
 .messengerList .messengerBox .people .person .bar {width:1px; height:10px; background-color: #ddd; margin:0 4px;}
-.messengerList .messengerBox .people .person .preview {font-size: 14px;color:#111;width: 60%;white-space: nowrap;text-overflow: ellipsis;}
+.messengerList .messengerBox .people .person .preview {font-size: 14px;color:#111;width: 60%;white-space: nowrap;text-overflow: ellipsis; overflow: hidden;}
 .messengerList .messengerBox .people .person .time {font-size: 14px; color:#777;}
 .messengerList .messengerBox .people .person .new {margin-left:4px; background-color:#1A73F9; color:#fff; padding:4px 8px; font-weight:600; font-size:14px; border-radius:16px ; -webkit-border-radius:16px ; -moz-border-radius:16px ; -ms-border-radius:16px ; -o-border-radius:16px ; }
 .messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
