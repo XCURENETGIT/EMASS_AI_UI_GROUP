@@ -233,7 +233,10 @@ var eikon = {
         });
     },
     getMessengerGroupTextExport: function (attachUrl, xrootmtr) {
-        if (detailDataSet.length == 0) return;
+        if (detailDataSet.length == 0) {
+            ui.alertMsg(nodataMsg);
+            return;
+        }
 
         try {
             AttachDown.location.href = attachUrl;
@@ -242,7 +245,10 @@ var eikon = {
         }
     },
     getMessengerGroupAllExport: function (attachUrl) {
-        if (detailDataSet.length == 0) return;
+        if (detailDataSet.length == 0) {
+            ui.alertMsg(nodataMsg);
+            return;
+        }
 
         try {
             AttachDown.location.href = attachUrl;

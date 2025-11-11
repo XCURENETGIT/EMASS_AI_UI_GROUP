@@ -120,7 +120,10 @@ var eikon2 = {
         getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, '',type);
     },
     getCollectionGroupTextExport : function(attachUrl, userkey){
-        if( detailDataSet.length == 0 ) return;
+        if (detailDataSet.length == 0) {
+            ui.alertMsg(nodataMsg);
+            return;
+        }
 
         try {
             AttachDown.location.href = attachUrl;
@@ -129,7 +132,10 @@ var eikon2 = {
         }
     },
     getCollectionGroupTextExport : function(attachUrl){
-        if( detailDataSet.length == 0 ) return;
+        if( detailDataSet.length == 0 ) {
+            ui.alertMsg(nodataMsg);
+            return;
+        }
 
         try {
             AttachDown.location.href = attachUrl;

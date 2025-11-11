@@ -337,7 +337,10 @@
                 var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
-                if (userkey == '') return;
+                if (userkey == null || userkey === '') {
+                    ui.alertMsg(nodataMsg);
+                    return;
+                }
 
                 var svc12 = $('#selectUserInfo').attr('data-svc12');
 
@@ -673,7 +676,10 @@
             var userkey = $('#selectUserInfo').attr('data-name');
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('usr_id');
-            if (userkey == '') return;
+            if (userkey == null || userkey === '') {
+                ui.alertMsg(nodataMsg);
+                return;
+            }
             var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"000000";
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
@@ -1126,9 +1132,9 @@
 					<div class="myDropdown mal16">
 						<span><s:message code="analysis.relation.ui.export"/> &#9662;</span>
 						<div class="dropdown-content">
-							<a href="#" onclick="downloadList('xlsx')" class="excel_down"><s:message code="common.msg.excel"/></a>
-							<a href="#" onclick="downloadList('txt')" class="txt_down"><s:message code="common.msg.text"/></a>
-							<a href="#" onclick="downloadList('html')" class="html_down"><s:message code="eikon.msg.html"/></a>
+							<a href="#" class="excel_down"><s:message code="common.msg.excel"/></a>
+							<a href="#" class="txt_down"><s:message code="common.msg.text"/></a>
+							<a href="#" class="html_down"><s:message code="eikon.msg.html"/></a>
 							<a href="#" class="excel_file_down"><s:message code="common.msg.excel"/>+<s:message code="consent.attach"/></a>
 						</div>
 					</div>
