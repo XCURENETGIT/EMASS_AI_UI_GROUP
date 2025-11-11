@@ -320,10 +320,10 @@
                 var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
-            if (userkey == null || userkey === '') {
-                ui.alertMsg(nodataMsg);
-                return;
-            }
+				if (userkey == null || userkey === '') {
+					ui.alertMsg(nodataMsg);
+					return;
+				}
 
                 var svc12 = $('#selectUserInfo').attr('data-svc12');
 

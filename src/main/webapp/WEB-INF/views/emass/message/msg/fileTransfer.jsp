@@ -181,6 +181,7 @@
 			$('#searchBtn').click(function () {
                 $('#group_list').scrollTop(0);
                 isEnd = false;
+                toggleDetailActions(false);
 				if (messengerListCnt == 0) {
 					ui.alertMsg('<s:message code="eikon.noList"/>');
 					return;
@@ -253,7 +254,17 @@
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val());
             });
 
-            $('.txt_down').click(function () {
+            function toggleDetailActions(show) {
+                if (show) {
+                    $('#saveBtn, #printBtn').show();
+                } else {
+                    $('#saveBtn, #printBtn').hide();
+                }
+            }
+
+            toggleDetailActions(false);
+
+			$('.txt_down').click(function () {
 				downloadList('txt');
 				hideSelect();
 			});
@@ -399,6 +410,7 @@
             $(document).on('click', '.person', function () {
 
 				if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
+                    toggleDetailActions(false);
 					return;
 				}
 				//if($(this).hasClass('active')) return;
@@ -425,6 +437,7 @@
 			});
 
 			$('input[name="searchType"]:radio').change(function () {
+                toggleDetailActions(false);
 				eikon2.getCollectionList(1);
 			});
 
@@ -440,6 +453,7 @@
 				var msgid = $(this).attr('msgid');
 
 				getFileDetailMessage(msgid);
+                toggleDetailActions(true);
 				hideUserSelect();
 			});
 
@@ -1035,8 +1049,8 @@
 					<div class="btnform">
 				<%--		<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>
 						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>--%>
-						<button class="btn05" id="saveBtn"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/></button>
-						<button class="btn05" id="printBtn"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄"><s:message code="common.msg.print"/></button>
+						<button class="btn05" id="saveBtn" style="display:none;"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/></button>
+						<button class="btn05" id="printBtn" style="display:none;"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄"><s:message code="common.msg.print"/></button>
 					</div>
 				</div>
 			</div>
