@@ -471,7 +471,7 @@ public class EmsCreateMessage {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if (Common.isEquals(file.getOcrYn(), "Y")) {
+				if (Common.isEquals(file.getOcrYn(), "Y") && Common.isNotEmpty(file.getOcrText())) {
 					resultStr += "	<tr> ";
 					resultStr += "	<th colspan=\"2\">" + file.getAttachName() + "</td> ";
 					resultStr += "	</tr> ";
