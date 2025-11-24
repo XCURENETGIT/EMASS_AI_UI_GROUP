@@ -116,13 +116,12 @@
 				offset 		: grid.data.length,
 				limit 		: grid.pageSize,
 				success 	: function(data, total) {
-                    console.log(data);
 					grid.appendData(data);
-					if($('input[name="autoRefresh"]').is(":checked")) {
 						window.setTimeout(function(){
-							getData();
+							if($('input[name="autoRefresh"]').is(":checked")) {
+								getData();
+							}
 						}, 5000);
-					}
 				},
 				error 		: function(status, message) {
 					ui.alertMsg(message);
@@ -270,6 +269,7 @@
 								<option value="X"><s:message code="download.msg.expired"/></option>
 								<option value="E"><s:message code="common.msg.noresult"/></option>
 								<option value="C"><s:message code="common.msg.cancel"/></option>
+								<option value="H"><s:message code="download.msg.shutdown"/></option>
 							</select>
 						</div>
 						<div class="btn-group">
@@ -279,6 +279,7 @@
 
 							<span class="inner_emass">
 									<label><input type="checkbox" id="autoRefresh" name="autoRefresh" checked="checked"> Auto Refresh</label>
+										<label><s:message code="download.msg.info"/></label>
 								</span>
 						</div>
 					</div>
@@ -329,9 +330,7 @@
 	});
 	grid.colAdd('downVal', '<s:message code="common.msg.download"/> <s:message code="analysis.freedom.ui.condition"/>', 300, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 		var statStr = grid.getValue(row, 'statusStr');
-        console.log(value);
         let modifiedString = value.replace(/\[.*?\]┌/, '');
-        // console.log(modifiedString);
 		if( statStr == 'X' ) return '<span class="deleteText">' + modifiedString.replaceAll('┌', '<br>') + '</span>';
 		return modifiedString.replaceAll('┌', '<br>');
 	});

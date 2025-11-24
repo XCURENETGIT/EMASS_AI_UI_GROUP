@@ -104,10 +104,13 @@
             } else {
                 grid.loadingPage++;
             }
+
+	        var statusSel = $('#statusSel option:selected').val();
             searchFlag=true;
             ui.get({
                 url 		: 'getDownBatchListMessenger.xcn',
                 offset 		: grid.data.length,
+	            statusSel	: statusSel,
                 limit 		: grid.pageSize,
                 success 	: function(data, total) {
                     grid.appendData(data);
@@ -231,6 +234,7 @@
 
 							<span class="inner_emass">
 									<label><input type="checkbox" id="autoRefresh" name="autoRefresh" checked="checked"> Auto Refresh</label>
+									<label><s:message code="download.msg.info"/></label>
 								</span>
 						</div>
 					</div>
@@ -257,7 +261,6 @@
     grid.colAdd('downVal', '<s:message code="common.msg.download"/> <s:message code="analysis.freedom.ui.condition"/>', 300, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
         var statStr = grid.getValue(row, 'statusStr');
         let modifiedString = value.replace(/\[.*?\]┌/, '');
-        // console.log(modifiedString);
         if( statStr == 'X' ) return '<span class="deleteText">' + modifiedString.replaceAll('┌', '<br>') + '</span>';
         return modifiedString.replaceAll('┌', '<br>');
     });

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.xcurenet.common.util.Common;
 import org.springframework.stereotype.Service;
 
 import com.xcurenet.common.dao.XcnAbstractDAO;
@@ -48,11 +49,12 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 
 
 	@Override
-	public List<DownloadBatchVO> getDownloadBatchListMessenger(String adminId, int offset, int limit) {
+	public List<DownloadBatchVO> getDownloadBatchListMessenger(String adminId, int offset, int limit, String statusSel) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("adminId", adminId);
 		param.put("offset", offset);
 		param.put("limit", limit);
+		param.put("statusSel", statusSel);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getDownloadBatchListMessenger", param);
 	}
 
@@ -69,7 +71,11 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 		param.put("adminId", adminId);
 		param.put("exportTypeSel", exportTypeSel);
 		param.put("fileExtSel", fileExtSel);
-		param.put("statusSel", statusSel);
+		if(Common.isNotEmpty(statusSel) && Common.isEquals(statusSel,"C")){
+			param.put("statusArr", new String[]{"C","M"});
+		}else {
+			param.put("statusSel", statusSel);
+		}
 		param.put("offset", offset);
 		param.put("limit", limit);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getDownloadBatchList", param);

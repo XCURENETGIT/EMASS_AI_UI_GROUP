@@ -31,7 +31,7 @@ public interface DownloadBatchService {
 
 	public int inserDownloadBatchMessenger(DownloadBatchVO vo);
 
-	public List<DownloadBatchVO> getDownloadBatchListMessenger(String adminId, int offset, int limit);
+	public List<DownloadBatchVO> getDownloadBatchListMessenger(String adminId, int offset, int limit, String statusSel);
 
 	public String getMaxDownSeqMessenger();
 

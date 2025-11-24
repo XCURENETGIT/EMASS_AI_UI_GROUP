@@ -439,17 +439,23 @@
 		FROM 	UI_DOWNLOAD_BATCH
 		WHERE 	ADMIN_ID = #{adminId}
 		<if test='exportTypeSel!=null and exportTypeSel!=""'>
-		AND 	EXPORT_TYPE = #{exportTypeSel}
+			AND 	EXPORT_TYPE = #{exportTypeSel}
 		</if>
 		<if test='fileExtSel!=null and fileExtSel!=""'>
-		AND 	EXPORT_FILE_EXT = #{fileExtSel}
+			AND 	EXPORT_FILE_EXT = #{fileExtSel}
 		</if>
 		<if test='statusSel!=null and statusSel!=""'>
-		AND 	STATUS_STR = #{statusSel}
+			AND 	STATUS_STR = #{statusSel}
+		</if>
+		<if test='statusArr!=null and statusArr!=""'>
+			AND 	STATUS_STR IN
+			<foreach item="item" index="index" collection="statusArr" open="(" separator="," close=")">
+				#{item}
+			</foreach>
 		</if>
 		ORDER 	BY REQ_DT DESC
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
 
@@ -593,6 +599,9 @@
 		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize
 		FROM 	UI_DOWNLOAD_BATCH_MESSENGER
 		WHERE 	ADMIN_ID = #{adminId}
+		<if test='statusSel!=null and statusSel!=""'>
+			AND 	STATUS_STR = #{statusSel}
+		</if>
 		ORDER 	BY REQ_DT DESC
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
