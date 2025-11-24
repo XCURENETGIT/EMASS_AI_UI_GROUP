@@ -1790,7 +1790,8 @@ public class EmsMessageController {
 		String adminId = Common.getAdminId(request);
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
-		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.getDownloadBatchListMessenger(adminId, offset, limit));
+		String statusSel = Common.nvl(request.getParameter("statusSel"));
+		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.getDownloadBatchListMessenger(adminId, offset, limit, statusSel));
 	}
 
 
