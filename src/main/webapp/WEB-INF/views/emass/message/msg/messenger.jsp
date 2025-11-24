@@ -232,7 +232,6 @@
                 <%--    return;--%>
                 <%--}--%>
 
-                setcurrentSchVal();
                 eikon.getMessengerList(1);
             });
             $("#searchStrInput").keypress(function (e) {
@@ -551,6 +550,7 @@
                 isContextEnd=false;
                 $(this).attr('class', 'active');
                 $('button[name="searchType"]').not(this).attr('class', 'tablinks');
+	            setcurrentSchVal();
                 eikon.getMessengerList(1)
             });
             $('#groupFileCnt').click(function () {

@@ -215,7 +215,7 @@ public class PdfWriter {
 
 		doc.add(emassPro);
 
-		Paragraph title = new Paragraph("컨텐츠 현황보고서", new Font(baseFont8, 50, Font.BOLD, new BaseColor(0, 102, 204)));
+		Paragraph title = new Paragraph(Prop.propFormat("common.report.title"), new Font(baseFont8, 50, Font.BOLD, new BaseColor(0, 102, 204)));
 		title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
 		title.setSpacingAfter(20);
 		doc.add(title);
@@ -226,7 +226,7 @@ public class PdfWriter {
 		period.setSpacingBefore(doc.getPageSize().getHeight() * 0.02f); // 적절한 간격 조절
 		doc.add(period);
 
-		emptyLine(20);
+		emptyLine(19);
 
 		Paragraph company = new Paragraph("COPYRIGHT© XCURENET. ALL RIGHTS RESERVED.", new Font(baseFont3, 10, Font.BOLD));
 		company.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);

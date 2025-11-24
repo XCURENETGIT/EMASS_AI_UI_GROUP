@@ -1166,7 +1166,7 @@ public class CollectionController {
 				log.info("Export process stopped due to status 'C'");
 				return;
 			} else {
-				for (int i = 0; i < solrEdcGroupVO.getNumFound(); i++) {
+				for (int i = 0; i < solrEdcGroupVO.getEmass().size(); i++) {
 					EmsBodyVO emsBody = emsMessageService.getEmassBody(solrEdcGroupVO.getEmass().get(i).getMsgid(), Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 					if (Common.isNotEquals(print, "Y")) {
 						String subject = EmsReDefined.reSubject(getFileName(emsBody));
