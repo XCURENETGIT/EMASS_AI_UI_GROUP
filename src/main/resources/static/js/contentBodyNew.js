@@ -2502,7 +2502,6 @@ function focusKeyword(type) {
 }
 
 function setRead(msgData) {
-    return
     var ctime = msgData.ctime.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
     var ctime_yyyymmdd = ctime.substring(0, 8);
     var ctime_yyyymm = ctime.substring(0, 6);
