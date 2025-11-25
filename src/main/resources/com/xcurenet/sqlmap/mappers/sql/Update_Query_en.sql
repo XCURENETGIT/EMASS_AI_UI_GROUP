@@ -728,12 +728,6 @@ UPDATE UI_REGEXP SET NAME = 'Access from abroad'    WHERE CODE =   'FCA';
 UPDATE UI_REGEXP SET NAME = 'Access Outside of Average Access Time'    WHERE CODE =   'AOH';
 
 
-
-
-UPDATE UI_ADMIN
-SET ADMIN_NAME = 'System Administrator'
-WHERE ADMIN_ID = 'sysadmin';
-
 UPDATE UI_CO SET CONM = 'Unlabeled' WHERE COCD = 'C00-00';
 UPDATE UI_BUSI SET BUSINM = 'Unlabeled' WHERE BUSICD = 'C00-00';
 UPDATE UI_GENERAL SET GENERALNM = 'Unlabeled' WHERE GENERALCD = 'C00-00';
