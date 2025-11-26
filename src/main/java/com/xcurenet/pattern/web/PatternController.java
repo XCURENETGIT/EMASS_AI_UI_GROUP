@@ -56,9 +56,10 @@ public class PatternController {
 	@ResponseBody
 	public XcnResponseVO getPattern(final HttpServletRequest request, final HttpSession httpSession) throws Exception{
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
+		String patternType = Common.nvl(request.getParameter("patternType"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
-		return new XcnResponseVO(XcnRspCode.OK, patternService.getPatternService(searchStr, offset, limit));
+		return new XcnResponseVO(XcnRspCode.OK, patternService.getPatternService(searchStr, offset, limit, patternType));
 	}
 
 	@RequestMapping(value = "/insertPattern.xcn")

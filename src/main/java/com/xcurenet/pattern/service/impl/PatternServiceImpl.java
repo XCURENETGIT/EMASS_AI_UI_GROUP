@@ -18,13 +18,13 @@ public class PatternServiceImpl extends XcnAbstractDAO implements PatternService
 	public MakeInfoServiceMysql infoServiceMysql;
 
 	@Override
-	public List<PatternVO> getPatternService(String searchStr, int offset, int limit) {
+	public List<PatternVO> getPatternService(String searchStr, int offset, int limit, String patternType) {
 
 		Map<String, Object> param = new HashMap();
 		param.put("limit", limit);
 		param.put("offset", offset);
 		param.put("searchStr", searchStr);
-
+		param.put("patternType", patternType);
 
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.regexPattern.getPatternList", param);
 

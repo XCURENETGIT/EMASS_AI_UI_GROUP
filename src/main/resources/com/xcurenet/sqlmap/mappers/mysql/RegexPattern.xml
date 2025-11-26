@@ -5,10 +5,17 @@
 	<select id = "getPatternList" resultType="patternVO" parameterType="hashMap">
 		SELECT CODE AS code, REGEX AS regex, NAME AS name, ENABLE AS enable, CODE_TYPE AS type
 		FROM UI_REGEXP
-		<if test='searchStr!=null and searchStr!=""'>
-			WHERE NAME  LIKE CONCAT('%', #{searchStr}, '%')
+		WHERE 1=1
+		<if test='patternType!=null and patternType!="" and patternType=="C"'>
+			AND CODE_TYPE = 'C'
 		</if>
-		ORDER BY (CASE WHEN REGEX IS NULL THEN 0 ELSE 1 END), CODE
+		<if test='patternType!=null and patternType!="" and patternType!="C"'>
+			AND CODE_TYPE != 'C'
+		</if>
+		<if test='searchStr!=null and searchStr!=""'>
+			AND NAME LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		ORDER BY CODE_TYPE, (CASE WHEN REGEX IS NULL THEN 0 ELSE 1 END), CODE
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>

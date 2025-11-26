@@ -17,6 +17,14 @@
             getData();
         });
 
+        $('.nav-tabs a').click(function () {
+            $('.nav-tabs li').removeClass('active');
+            $(this).parent().addClass('active');
+            var patternType = $(this).data('value');
+            toggleRegexColumn(patternType === 'C');
+            getData();
+        });
+
         $('#PatternInsertBtn').click(function () {
             $('#code,#name,#regex').prop('disabled', false);
             $('#PatternPop input[type=text]').val('');
@@ -136,8 +144,18 @@
         grid.on();
 
 
+        var patternType = 'default'; // 기본값: 기본 제공 패턴
+        var activeTab = $('.nav-tabs li.active a');
+        if (activeTab.length > 0) {
+            var tabValue = activeTab.data('value');
+            if (tabValue) {
+                patternType = tabValue;
+            }
+        }
+        
         ui.get({
             searchStr: $('#searchName').val(),
+			patternType: patternType,
             url: 'getPattern.xcn',
             offset: grid.data.length,
             limit: grid.pageSize,
@@ -270,10 +288,10 @@
 	<div class="content xcn_full">
 		<div class="contentSub">
 			<div class="subtab">
-				<button class="active">
-					<s:message code="SETTING.PATTERN_INFO"/>
-					<span id="regexPatternCount"></span>
-				</button>
+				<ul class="nav-tabs">
+					<li class="active" style=" text-align: center"><a data-toggle="tab" href="#getData" id="patternTypeDefault" class="coTabClass" data-value="default"><s:message code="pattern.default"/></a></li>
+					<li style="text-align: center"><a data-toggle="tab" href="#getData" id="patternTypeCustom" data-value="C"><s:message code="pattern.custom"/></a></li>
+				</ul>
 			</div>
 			<div id="patternGrid" class="slickGrid gridArea"></div>
 		</div>
@@ -291,7 +309,6 @@
     });
     grid.colAdd('code', '<s:message code="pattern.code"/>', 100, 'center', false, 'link');
     grid.colAdd('name', '<s:message code="pattern.name"/>', 200, 'left', false, 'nomal');
-    grid.colAdd('regex', '<s:message code="pattern.regexPattern"/>', 500, 'left', false, 'nomal');
     grid.colAdd('enable', '<s:message code="pattern.enable"/>', 130, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
 	    if (value == null || value == '' || value == undefined || value == 'N') return '<s:message code="common.msg.unuse"/>';
 	    else  return '<s:message code="common.msg.use"/>';
@@ -333,6 +350,18 @@
     }
     grid.loadExportMenu('<s:message code="SETTING.PATTERN_INFO"/>');
     grid.loadHeader(false);
+    
+    function toggleRegexColumn(show) {
+        if (show) {
+            if (!grid.isAdd('regex')) {
+                grid.colAdd('regex', '<s:message code="pattern.regexPattern"/>', 500, 'left', false, 'nomal');
+                grid.setColumns();
+            }
+        } else {
+            grid.columns = grid.columns.filter(function(col) { return col.id !== 'regex'; });
+            grid.setColumns();
+        }
+    }
 
 
 </script>

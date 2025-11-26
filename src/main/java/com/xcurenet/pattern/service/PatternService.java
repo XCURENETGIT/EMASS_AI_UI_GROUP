@@ -4,7 +4,7 @@ package com.xcurenet.pattern.service;
 import java.util.List;
 
 public interface PatternService {
-	List<PatternVO> getPatternService(String searchStr, int offset, int limit);
+	List<PatternVO> getPatternService(String searchStr, int offset, int limit, String patternType);
 
 	boolean isPatternCode(PatternVO patternVO);
 
