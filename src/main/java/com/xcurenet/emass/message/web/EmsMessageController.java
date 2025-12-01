@@ -1394,6 +1394,7 @@ public class EmsMessageController {
 			case MAYBE_HTML:
 				return bodyStr;
 			case HTML:
+				bodyStr = bodyStr.replaceAll("&nbsp(?!;)", "&nbsp;");
 				return bodyStr;
 			case MIME:
 				MimeParser parser = new MimeParser(body, userCharset);
