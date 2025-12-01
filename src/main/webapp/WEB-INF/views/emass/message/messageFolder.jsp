@@ -694,9 +694,9 @@ function viewer_open( row, selectedGrid ){
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' ')); 
 	openMessageBodyPop( grid.id, msgid, '', bodySizeNum);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 	grid.Select(row,0);
 }
 

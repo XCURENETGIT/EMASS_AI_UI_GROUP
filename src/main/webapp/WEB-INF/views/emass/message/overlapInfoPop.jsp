@@ -355,7 +355,7 @@ function viewer_open( row, selectedGrid ){
 	
 	openMessageBodyPop( grid.id, msgid, '', bodySizeNum);
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 
 }
 
@@ -366,9 +366,9 @@ function viewer_openPop( row, selectedGrid ){
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
 	popWin = openMessageBodyPop( grid.id, msgid, '', bodySizeNum);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 }
 
 function setGridFeedback(value){
@@ -394,9 +394,9 @@ function viewer_newOpen(row, selectedGrid){
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
 	openMessageBodyPop( '', msgid, '', bodySizeNum);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 }
 
 function drawGrid() {

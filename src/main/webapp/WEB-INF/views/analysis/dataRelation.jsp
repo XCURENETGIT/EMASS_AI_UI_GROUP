@@ -730,7 +730,7 @@
         openMessageBodyPop( tabGrid.id, msgid, '', bodySize);
 
         var readYn = tabGrid.getValue(row, 'readYn');
-        tabGrid.setValue(row, tabGrid.ColIndex('readYn'), 'Y');
+        tabGrid.setValue(row, 'readYn', 'Y');
         tabGrid.Select(row,0);
     }
 
@@ -739,7 +739,7 @@
         openMessageBodyPop( '', msgid, '', bodySize);
 
         var readYn = tabGrid.getValue(row, 'readYn');
-        tabGrid.setValue(row, tabGrid.ColIndex('readYn'), 'Y');
+        tabGrid.setValue(row, 'readYn', 'Y');
     }
 
     function prevMsg( ) {

@@ -711,7 +711,7 @@ function eventEnterSearch(event) {
 			openMessageBodyPop( grid2.id, msgid, '', bodySize);
 			
 			var readYn = grid2.getValue(row, 'readYn');
-			grid2.setValue(row, grid2.ColIndex('readYn'), 'Y');
+			grid2.setValue(row, 'readYn', 'Y');
 			grid2.Select(row,0);
 		}
 
@@ -720,7 +720,7 @@ function eventEnterSearch(event) {
 			openMessageBodyPop( '', msgid, '', bodySize);
 			
 			var readYn = grid2.getValue(row, 'readYn');
-			grid2.setValue(row, grid2.ColIndex('readYn'), 'Y');
+			grid2.setValue(row, 'readYn', 'Y');
 		}
 
 		function prevMsg( ) {

@@ -606,7 +606,7 @@ function viewer_open( row, selectedGrid ){
 		openMessageBodyUnknownPop( grid.id, msgid, searchKeyword());
 	}
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 
 }
 
@@ -615,9 +615,9 @@ function viewer_openPop( row, selectedGrid ){
 	var msgid = grid.getValue(row, 'msgid');
 	
 	popWin = openMessageBodyUnknownPop( grid.id, msgid, searchKeyword());
-	
+
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 }
 
 function viewer_openFocus(row, selectedGrid ){
@@ -647,9 +647,9 @@ function setGridFeedbackMulti(value){
 function viewer_newOpen(row, selectedGrid){
 	var msgid = grid.getValue(row, 'msgid');
 	openMessageBodyUnknownPop( '', msgid, searchKeyword());
-	
+
 	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+	grid.setValue(row, 'readYn', 'Y');
 }
 
 function setReadDisplayChangeRootmtr( rootmtr ){
@@ -660,7 +660,7 @@ function setReadDisplayChangeRootmtr( rootmtr, srcip){
 	for( var i=0; i<grid.Rows; i++ ){
 		if( grid.getValue(i, 'xrootmtr') == rootmtr){
 			if( srcip != null && grid.getValue(i, 'srcip') ==  srcip){
-				grid.setValue(i, grid.ColIndex('readYn'), 'Y');
+				grid.setValue(i, 'readYn', 'Y');
 			}
 		}
 	}

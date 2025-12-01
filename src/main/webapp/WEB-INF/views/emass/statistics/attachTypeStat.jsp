@@ -236,7 +236,7 @@
 
         openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
         var readYn = grid.getValue(row, 'readYn');
-        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		grid.setValue(row, 'readYn', 'Y');
         grid.Select(row,0);
     }
 
@@ -248,7 +248,7 @@
         openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
 
         var readYn = grid.getValue(row, 'readYn');
-        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		grid.setValue(row, 'readYn', 'Y');
     }
 
     function prevMsg( ) {

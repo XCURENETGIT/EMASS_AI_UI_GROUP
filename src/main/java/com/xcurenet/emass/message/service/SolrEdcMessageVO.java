@@ -94,7 +94,7 @@ public class SolrEdcMessageVO {
 		float maxScore = resp.getMaxScore();
 		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
 			SolrEdcVO edcVO = solrEdcVO.getContent();
-			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
+			edcVO.setReadYn(isRead(edcVO.getChecked(), adminId) ? "Y" : "N");
 			edcVO.setConfidence((maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore) * 100) : "0"); //유사도 계산
 
 			//동적 필드 (패턴 pi..) 맵핑

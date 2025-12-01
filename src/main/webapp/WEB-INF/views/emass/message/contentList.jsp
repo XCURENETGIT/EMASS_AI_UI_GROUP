@@ -734,8 +734,17 @@
         }else{
             openMessageBodyPop( grid.id, msgid, searchKeyword(), bodySizeNum);
         }
-        var readYn = grid.getValue(row, 'readYn');
-        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+
+		/* 읽음 처리 '열람' 컬럼 Show/hide 여부 */
+		if (grid.ColIndex('readYn') == -1) {
+			var data = grid.getRowData(row);
+			data.readYn = 'Y';
+
+			grid.grid.invalidateRow(row);
+			grid.grid.render();
+		} else {
+			grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		}
 
     }
 
@@ -747,8 +756,8 @@
 
         popWin = openMessageBodyPop( grid.id, msgid, searchKeyword(), bodySizeNum);
 
-        var readYn = grid.getValue(row, 'readYn');
-        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		var readYn = grid.getValue(row, 'readYn');
+		grid.setValue(row, 'readYn', 'Y');
     }
 
     function viewer_openFocus(row, selectedGrid ){
@@ -794,8 +803,8 @@
 
         openMessageBodyPop( '', msgid, searchKeyword(), bodySizeNum);
 
-        var readYn = grid.getValue(row, 'readYn');
-        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		var readYn = grid.getValue(row, 'readYn');
+		grid.setValue(row, 'readYn', 'Y');
     }
 
     function setReadDisplayChangeRootmtr( rootmtr ){
@@ -806,7 +815,7 @@
         for( var i=0; i<grid.Rows; i++ ){
             if( grid.getValue(i, 'xrootmtr') == rootmtr){
                 if( srcip != null && grid.getValue(i, 'srcip') ==  srcip){
-                    grid.setValue(i, grid.ColIndex('readYn'), 'Y');
+					grid.setValue(i, 'readYn', 'Y');
                 }
             }
         }
