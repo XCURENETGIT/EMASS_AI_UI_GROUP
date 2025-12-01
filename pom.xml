@@ -12,7 +12,7 @@
 	<packaging>war</packaging>
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emassai</artifactId>
-	<version>1.0.198</version>
+	<version>1.0.199</version>
 	<name>emassai</name>
 	<description>EMASS AI</description>
 
@@ -26,7 +26,7 @@
 		<build.version>${project.version}-${release.version}</build.version>
 		<arch>x86_64</arch>
 
-		<buildHost>10.200.10.64</buildHost>
+		<buildHost>10.200.10.65</buildHost>
 		<buildPort>22</buildPort>
 		<buildUser>root</buildUser>
 		<buildPassword>Xcurenet1!</buildPassword>
