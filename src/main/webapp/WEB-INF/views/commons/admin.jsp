@@ -926,16 +926,20 @@
 							</div>
 							<div class="row">
 								<div class="col-35">
-									<label for="insideYn" class="fname"><s:message code="message.msg.in"/> <s:message code="analysis.freedom.ui.data"/> </label>
+									<label for="insideYn" class="fname"><s:message code="message.msg.inout"/> <s:message code="analysis.freedom.ui.data"/> </label>
 								</div>
 								<div class="col-65">
-									<label class="radio-inline c-radio">
-										<input type="radio" name="insideYn" value="Y">
-										<s:message code="common.msg.use"/>
+								<label class="radio-inline c-radio">
+										<input type="radio" name="insideYn" value="N" checked>
+										<s:message code="common.msg.all"/>
 									</label>
 									<label class="radio-inline c-radio">
-										<input type="radio" name="insideYn" value="N" checked>
-										<s:message code="common.msg.unuse"/>
+										<input type="radio" name="insideYn" value="Y">
+										<s:message code="message.msg.in"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="insideYn" value="O" checked>
+										<s:message code="message.msg.out"/>
 									</label>
 								</div>
 							</div>

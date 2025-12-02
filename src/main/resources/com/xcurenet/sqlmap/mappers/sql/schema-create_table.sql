@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS  `UI_ADMIN` (
   `APPROBATOR` char(1) DEFAULT 'N' COMMENT '동의서 승인권자',
   `INFO_FEEDBACK` char(1) DEFAULT 'N' COMMENT '정보분류/피드백',
   `COMMENT` varchar(500) DEFAULT NULL COMMENT '사용목적',
-    INSIDE CHAR(1) NULL DEFAULT 'N' COMMENT '내부 데이터',
+    INSIDE CHAR(1) NULL DEFAULT 'N' COMMENT '내부 데이터(Y : 내부, N: 전체, O: 외부)',
   `CREATE_DT` datetime DEFAULT NULL COMMENT '생성일',
   `RESIGN_DT` datetime DEFAULT NULL COMMENT '퇴직',
   `LEAVE_DT` datetime DEFAULT NULL COMMENT '휴직',
