@@ -231,7 +231,7 @@
                 <%--    ui.alertMsg('<s:message code="eikon.msg.select.date"/>');--%>
                 <%--    return;--%>
                 <%--}--%>
-
+	            setcurrentSchVal();
                 eikon.getMessengerList(1);
             });
             $("#searchStrInput").keypress(function (e) {
