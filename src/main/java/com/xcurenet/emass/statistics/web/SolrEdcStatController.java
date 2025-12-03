@@ -431,7 +431,7 @@ public class SolrEdcStatController {
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
 
-		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq,adminId);
+		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq,Common.getAdminId(request));
 		appendEmassTotal(solrCheckedStatVo, ctimeSch,xAxis,yAxis,dateType,startDate,endDate, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
@@ -1330,7 +1330,7 @@ public class SolrEdcStatController {
 		sq.setFacetSort("count");
 		sq.setParam("facet.pivot", xAxis + "," + yAxis);
 
-		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
+		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq, Common.getAdminId(request));
 		List<Map<String, Object>> result = new ArrayList<>();
 		if (!adminId.equals("*")){
 			for (int i = 0; i<solrCheckedStatVo.getPivotData().size(); i++){
@@ -1386,7 +1386,7 @@ public class SolrEdcStatController {
 		sq.setRows(limit);
 
 
-		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, null, "", null);
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
 	}
 
@@ -1612,7 +1612,7 @@ public class SolrEdcStatController {
 		String endDate = Common.nvl(request.getParameter("endDate"));
 		int limit = Common.nvz(request.getParameter("limit"));
 		String rowKey = Common.nvl(request.getParameter("rowKey"));
-		String adminId = Common.nvl(request.getParameter("adminId"));
+		String adminId = Common.getAdminId(request);
 
 
 		String busi = Common.nvl(request.getParameter("busiStr"));
@@ -1693,7 +1693,7 @@ public class SolrEdcStatController {
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
 		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
-		String adminId = Common.nvl(request.getParameter("adminId"));
+		String adminId = Common.getAdminId(request);
 		String interGroup = Common.nvl(request.getParameter("interGroup"));
 		String serviceTypes = Common.nvl(request.getParameter("serviceType"));
 		String attachTypes = Common.nvl(request.getParameter("attachType"));
