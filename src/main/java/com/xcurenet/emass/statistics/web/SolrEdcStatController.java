@@ -534,7 +534,7 @@ public class SolrEdcStatController {
 					}
 					String fromDate = DateUtil.getDateStr(xAxis, DateUtil.minDate(rowKeys));
 					String toDate = DateUtil.getDateStr(xAxis, DateUtil.maxDate(rowKeys));
-					query  += String.format("+%s:[%s TO %s]",ctimeSch , fromDate, toDate);
+					query  += String.format("+(%s:[%s TO %s]  %s:[%s TO %s])",ctimeSch , fromDate, toDate, ctimeSch , startDate, endDate);
 				}
 		}
 		log.info("수집 합계 쿼리 {}" ,query);
@@ -1598,7 +1598,7 @@ public class SolrEdcStatController {
 		sq.setStart(offset);
 		sq.setRows(limit);
 
-		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, adminId);
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
 	}
 
