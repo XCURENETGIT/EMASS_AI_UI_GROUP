@@ -845,6 +845,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		StringBuilder sb = new StringBuilder();
 		if (MDC.get("x_menuId") != null) sb.append(MDC.get("x_menuId")).append(" ");
 		sb.append("SUMMARY ").append("total : ").append(resp.getTotalHits()).append(" start : ").append(Common.nvl(sq.getStart())).append(" rows : ").append(Common.nvl(sq.getRows())).append(" ");
+		
+		long elapsedTimeMs = (System.nanoTime() - TimeUtil.startTime) / 1000000;
+		sb.append("qtime : ").append(elapsedTimeMs).append(" ");
+		
 		sb.append("query : ").append(sq.getQuery()).append(" ");
 		if (Common.isNotEmpty(sq.getFilterQueries())) sb.append(StringUtils.join(sq.getFilterQueries(), ' ')).append(" ");
 		log.info("{}", sb.toString());
