@@ -5,7 +5,9 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.aiDashboard.model.*;
 import com.xcurenet.emass.aiDashboard.service.AiDashboardService;
+import com.xcurenet.emass.message.service.SolrEdcService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -36,6 +38,9 @@ import java.util.stream.Collectors;
 public class AiDashboardServiceImpl implements AiDashboardService {
 
     @Autowired
+    private SolrEdcService solrEdcService;
+
+    @Autowired
     private ElasticsearchConfig elasticsearchConfig;
 
     private RestHighLevelClient elsClient;
@@ -47,36 +52,38 @@ public class AiDashboardServiceImpl implements AiDashboardService {
      * Ai 대시보드 전용 엘라스틱 쿼리
      */
     @Override
-    public AiDashboardStatVO getAiDashboardStats() throws IOException {
+    public AiDashboardStatVO getAiDashboardStats(String adminId) throws IOException {
         AiDashboardStatVO aiDashboardStatVO = new AiDashboardStatVO();
         if (Common.isEmpty(elsClient)) elsClient = elasticsearchConfig.elasticsearchClient();
         String todayStr = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
         String[] piFields = piPatterns.split(",");
+        SolrQuery sq = new SolrQuery();
+        solrEdcService.setAuthoritys(sq, adminId);
 
         //금일 서비스 사용량 top 10
-        SearchResponse todayAiTop10StatsResponse = getTodayTop10AiStats(elsClient,todayStr);
+        SearchResponse todayAiTop10StatsResponse = getTodayTop10AiStats(elsClient,todayStr,sq);
         List<AiSvcInfo> todayTop10AiStats = new ArrayList<>();
         setTodayTop10AiStats(todayTop10AiStats, todayAiTop10StatsResponse.getAggregations().get("ai_svc"));
 
         //일주일 서비스 사용량 top 10
-        SearchResponse weeklyAiTop10StatsResponse = getWeeklyTop10AiStats(elsClient,todayStr);
+        SearchResponse weeklyAiTop10StatsResponse = getWeeklyTop10AiStats(elsClient,todayStr,sq);
         List<AiSvcInfo> weeklyAiTop10Stats = new ArrayList<>();
         setWeeklyTop10AiStats(weeklyAiTop10Stats, weeklyAiTop10StatsResponse.getAggregations().get("ai_svc"));
 
 
-        aiDashboardStatVO.setTodayCount(getTodayAiTotalCount(elsClient,todayStr));  //전체 발신건수
-        aiDashboardStatVO.setTodayAttachCount(getTodayAttachAiTotalCount(elsClient,todayStr));  //전체 (첨부파일 포함) 발신건수
+        aiDashboardStatVO.setTodayCount(getTodayAiTotalCount(elsClient,todayStr,sq));  //전체 발신건수
+        aiDashboardStatVO.setTodayAttachCount(getTodayAttachAiTotalCount(elsClient,todayStr,sq));  //전체 (첨부파일 포함) 발신건수
 
-        aiDashboardStatVO.setTodayPiCount(getTodayPiAmountExistsCount(elsClient,todayStr));  //전체 개인정보 유출 발신건수
-        aiDashboardStatVO.setTodayPiAttachCount(getTodayAttachPiAmountExistsCount(elsClient,todayStr));  //전체 개인정보 유출 (첨부파일 포함) 발신건수
+        aiDashboardStatVO.setTodayPiCount(getTodayPiAmountExistsCount(elsClient,todayStr,sq));  //전체 개인정보 유출 발신건수
+        aiDashboardStatVO.setTodayPiAttachCount(getTodayAttachPiAmountExistsCount(elsClient,todayStr,sq));  //전체 개인정보 유출 (첨부파일 포함) 발신건수
 
-        aiDashboardStatVO.setTodayKwdCount(getTodayKwdAiTotalCount(elsClient,todayStr));  //전체 예약어 탐지 건수
-        aiDashboardStatVO.setTodayKwdAttachCount(getTodayKwdAttachAiTotalCount(elsClient,todayStr)); //전체 예약어 (첨부파일 포함) 탐지 건수
+        aiDashboardStatVO.setTodayKwdCount(getTodayKwdAiTotalCount(elsClient,todayStr,sq));  //전체 예약어 탐지 건수
+        aiDashboardStatVO.setTodayKwdAttachCount(getTodayKwdAttachAiTotalCount(elsClient,todayStr,sq)); //전체 예약어 (첨부파일 포함) 탐지 건수
 
         aiDashboardStatVO.setTodayTop10Info(todayTop10AiStats);     //금일 서비스 사용량 top 10
         aiDashboardStatVO.setWeeklyTop10Info(weeklyAiTop10Stats);   //일주일 서비스 사용량 top 10
 
-        SearchResponse todayTop10UserStatsResponse = getTodayTop10UserStats(elsClient, todayStr);
+        SearchResponse todayTop10UserStatsResponse = getTodayTop10UserStats(elsClient, todayStr,sq);
         ParsedTerms userBuckets = todayTop10UserStatsResponse.getAggregations().get("by_userid_or_srcip");
         List<AiUser> aiUsers = new ArrayList<>();
         for (Terms.Bucket userBucket : userBuckets.getBuckets()) {
@@ -97,7 +104,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
         aiDashboardStatVO.setTodayAiUsers(aiUsers);
 
         //금일 AI 모델 사용 시간대 차트
-        SearchResponse aiSvcTimeStats = getTodayAiSvcTimeStats(elsClient, todayStr);
+        SearchResponse aiSvcTimeStats = getTodayAiSvcTimeStats(elsClient, todayStr,sq);
         ParsedStringTerms by5min = aiSvcTimeStats.getAggregations().get("by_5min");
         Set<String> allSvcs = new java.util.LinkedHashSet<>();
         Map<String, Map<String, Long>> timeSvcCounts = new java.util.HashMap<>();
@@ -165,7 +172,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
 
 
 
-        SearchResponse todayTop10PiUserStatsResponse = getTodayTop10PiUserStats(elsClient, todayStr);
+        SearchResponse todayTop10PiUserStatsResponse = getTodayTop10PiUserStats(elsClient, todayStr,sq);
         ParsedTerms userPiBuckets = todayTop10PiUserStatsResponse.getAggregations().get("by_userid_or_srcip");
         List<AiUser> aiPiUsers = new ArrayList<>();
         for (Terms.Bucket piBucket : userPiBuckets.getBuckets()) {
@@ -194,7 +201,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
         aiDashboardStatVO.setTodayAiPiUsers(top10PiUsers);
 
 
-        SearchResponse todayTop10KwdUserStatsResponse = getTodayTop10KwdUserStats(elsClient, todayStr);
+        SearchResponse todayTop10KwdUserStatsResponse = getTodayTop10KwdUserStats(elsClient, todayStr,sq);
         ParsedTerms userKwdBuckets = todayTop10KwdUserStatsResponse.getAggregations().get("by_userid_or_srcip");
         List<AiUser> aiKwdUsers = new ArrayList<>();
         for (Terms.Bucket userBucket : userKwdBuckets.getBuckets()) {
@@ -312,7 +319,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
     }
 
     //금일 AI 서비스 총 count
-    public long getTodayAiTotalCount(RestHighLevelClient client,String todayStr){
+    public long getTodayAiTotalCount(RestHighLevelClient client,String todayStr, SolrQuery sq){
         try {
             QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +svc:I* AND +ctime_yyyymmdd:" + todayStr);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
@@ -322,7 +329,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                     .size(0);
             SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
             searchRequest.source(sourceBuilder);
-            SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+            SearchResponse response = search(client, searchRequest, sq);
             return response.getHits().getTotalHits().value;
         }catch (Exception e){
             log.error("getTodayAiTotalCount error : ", e.getMessage());
@@ -331,7 +338,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
     }
 
     //금일 AI 서비스 (첨부파일 포함)  총 count
-    public long getTodayAttachAiTotalCount(RestHighLevelClient client,String todayStr){
+    public long getTodayAttachAiTotalCount(RestHighLevelClient client,String todayStr, SolrQuery sq){
         try {
             QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +(attachexistcnt:[1 TO *] AND svc:I*) AND +ctime_yyyymmdd:" + todayStr);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
@@ -341,7 +348,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                     .size(0);
             SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
             searchRequest.source(sourceBuilder);
-            SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+            SearchResponse response = search(client, searchRequest, sq);
             return response.getHits().getTotalHits().value;
         }catch (Exception e){
             log.error("getTodayAiTotalCount error : ", e.getMessage());
@@ -350,7 +357,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
     }
 
     //금일 AI 서비스 개인정보 유출  총 count
-    public long getTodayPiAmountExistsCount(RestHighLevelClient client,String todayStr) throws IOException {
+    public long getTodayPiAmountExistsCount(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +svc:I* AND +ctime_yyyymmdd:" + todayStr);
         String[] fields = piPatterns.split(",");
         BoolQueryBuilder shouldQuery = QueryBuilders.boolQuery();
@@ -368,13 +375,13 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                 .fetchSource(new String[]{"pi_amount"}, null);
         SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         searchRequest.source(sourceBuilder);
-        SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse response = search(client, searchRequest, sq);
         return response.getHits().getTotalHits().value;
     }
 
 
     //금일 AI 서비스 개인정보 유출(첨부파일 포함)  총 count
-    public long getTodayAttachPiAmountExistsCount(RestHighLevelClient client,String todayStr) throws IOException {
+    public long getTodayAttachPiAmountExistsCount(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +(pi_amount.type:A +svc:I*) AND +ctime_yyyymmdd:" + todayStr);
         String[] fields = piPatterns.split(",");
         BoolQueryBuilder shouldQuery = QueryBuilders.boolQuery();
@@ -392,12 +399,12 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                 .fetchSource(new String[]{"pi_amount"}, null);
         SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         searchRequest.source(sourceBuilder);
-        SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse response = search(client, searchRequest, sq);
         return response.getHits().getTotalHits().value;
     }
 
     //금일 AI 서비스 예약어 탐지 총 count
-    public long getTodayKwdAiTotalCount(RestHighLevelClient client,String todayStr){
+    public long getTodayKwdAiTotalCount(RestHighLevelClient client,String todayStr, SolrQuery sq){
         try {
             QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +kwd:Y AND +svc:I* AND +ctime_yyyymmdd:" + todayStr);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
@@ -407,7 +414,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                     .size(0);
             SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
             searchRequest.source(sourceBuilder);
-            SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+            SearchResponse response = search(client, searchRequest, sq);
             return response.getHits().getTotalHits().value;
         }catch (Exception e){
             log.error("getTodayAiTotalCount error : ", e.getMessage());
@@ -416,7 +423,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
     }
 
     //금일 AI 서비스 예약어 탐지 (첨부파일 포함)  총 count
-    public long getTodayKwdAttachAiTotalCount(RestHighLevelClient client,String todayStr){
+    public long getTodayKwdAttachAiTotalCount(RestHighLevelClient client,String todayStr, SolrQuery sq){
         try {
             QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +kwd:Y AND +kwds_attach:* AND  +svc:I* AND +ctime_yyyymmdd:" + todayStr);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
@@ -426,7 +433,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                     .size(0);
             SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
             searchRequest.source(sourceBuilder);
-            SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+            SearchResponse response = search(client, searchRequest, sq);
             return response.getHits().getTotalHits().value;
         }catch (Exception e){
             log.error("getTodayAiTotalCount error : ", e.getMessage());
@@ -438,7 +445,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
     /**
      * 금일 AI 서비스 사용량
      */
-    public SearchResponse getTodayTop10AiStats(RestHighLevelClient client,String todayStr) throws IOException {
+    public SearchResponse getTodayTop10AiStats(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         TermsAggregationBuilder svcAgg = AggregationBuilders
                 .terms("ai_svc")
                 .field("svc")
@@ -458,13 +465,19 @@ public class AiDashboardServiceImpl implements AiDashboardService {
         SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         searchRequest.source(sourceBuilder);
 
+        return search(client, searchRequest, sq);
+    }
+
+    public SearchResponse search(RestHighLevelClient client, SearchRequest searchRequest, SolrQuery sq) throws IOException {
+        SearchSourceBuilder sourceBuilder = searchRequest.source();
+        sourceBuilder.query(QueryBuilders.queryStringQuery(String.join(" ", sq.getFilterQueries())));
         return client.search(searchRequest, RequestOptions.DEFAULT);
     }
 
     /**
      * 주간 AI 서비스 사용량
      */
-    public SearchResponse getWeeklyTop10AiStats(RestHighLevelClient client,String todayStr) throws IOException {
+    public SearchResponse getWeeklyTop10AiStats(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
         LocalDate today = LocalDate.parse(todayStr, formatter);
         String weekAgoStr = today.minusDays(6).format(formatter);
@@ -483,13 +496,13 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                 .aggregation(svcAgg);
         SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         searchRequest.source(sourceBuilder);
-        return client.search(searchRequest, RequestOptions.DEFAULT);
+        return search(client, searchRequest, sq);
     }
 
     /**
      *  금일 AI 서비스 사용 시간대별 차트
      */
-    public SearchResponse getTodayAiSvcTimeStats(RestHighLevelClient client, String todayStr) throws IOException {
+    public SearchResponse getTodayAiSvcTimeStats(RestHighLevelClient client, String todayStr, SolrQuery sq) throws IOException {
         Script script = new Script(
                 ScriptType.INLINE,
                 "painless",
@@ -523,14 +536,14 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                 .aggregation(timeAgg);
         SearchRequest searchRequest = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         searchRequest.source(sourceBuilder);
-        return client.search(searchRequest, RequestOptions.DEFAULT);
+        return search(client, searchRequest, sq);
     }
 
 
     /**
      * 금일 TOP 10 AI 서비스 사용 유저
      */
-    public SearchResponse getTodayTop10UserStats(RestHighLevelClient client,String todayStr) throws IOException {
+    public SearchResponse getTodayTop10UserStats(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         QueryStringQueryBuilder queryString = QueryBuilders.queryStringQuery("+direction_svc:O AND +svc:I* AND +ctime_yyyymmdd:" + todayStr);
         Script userScript = new Script(
                 ScriptType.INLINE,
@@ -559,14 +572,14 @@ public class AiDashboardServiceImpl implements AiDashboardService {
                 .aggregation(userAgg);
         SearchRequest request = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         request.source(sourceBuilder);
-        return client.search(request, RequestOptions.DEFAULT);
+        return search(client, request, sq);
     }
 
 
     /**
      * 금일 TOP 10 AI 서비스 (예약어 포함 발신)사용 유저
      */
-    public SearchResponse getTodayTop10KwdUserStats(RestHighLevelClient client,String todayStr) throws IOException {
+    public SearchResponse getTodayTop10KwdUserStats(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         BoolQueryBuilder query = QueryBuilders.boolQuery()
                 .must(QueryBuilders.queryStringQuery("+direction_svc:O AND +svc:I* AND +ctime_yyyymmdd:" + todayStr))
                 .must(QueryBuilders.existsQuery("kwds")); // kwds 필드가 있어야 함
@@ -601,13 +614,13 @@ public class AiDashboardServiceImpl implements AiDashboardService {
 
         SearchRequest request = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         request.source(sourceBuilder);
-        return client.search(request, RequestOptions.DEFAULT);
+        return search(client, request, sq);
     }
 
     /**
      * 금일 TOP 10 AI 서비스 (개인정보 포함 발신)사용 유저
      */
-    public SearchResponse getTodayTop10PiUserStats(RestHighLevelClient client,String todayStr) throws IOException {
+    public SearchResponse getTodayTop10PiUserStats(RestHighLevelClient client,String todayStr, SolrQuery sq) throws IOException {
         String[] fields = piPatterns.split(",");
         BoolQueryBuilder piExistsQuery = QueryBuilders.boolQuery();
         for (String field : fields) {
@@ -667,7 +680,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
         SearchRequest request = new SearchRequest(getLastAndThisMonthIndices(edcPrefixIndexName));
         request.source(sourceBuilder);
 
-        return client.search(request, RequestOptions.DEFAULT);
+        return search(client, request, sq);
     }
 
 

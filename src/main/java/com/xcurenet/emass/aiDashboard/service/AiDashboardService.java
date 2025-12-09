@@ -5,6 +5,6 @@ import com.xcurenet.emass.aiDashboard.model.AiDashboardStatVO;
 import java.io.IOException;
 
 public interface AiDashboardService {
-    AiDashboardStatVO getAiDashboardStats() throws IOException;
+    AiDashboardStatVO getAiDashboardStats(String adminId) throws IOException;
     AiDashboardStatVO redefined(AiDashboardStatVO aiDashboardStatVO) throws IOException;
 }

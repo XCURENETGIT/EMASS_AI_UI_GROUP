@@ -1086,7 +1086,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		sq.addFilterQuery(query);
 	}
 
-	private void setAuthoritys(SolrQuery sq, String adminId) {
+	@Override
+	public void setAuthoritys(SolrQuery sq, String adminId) {
 		if (Common.isNotEmpty(adminId)) {
 			String adminType = "S";
 			if (!Common.isOrEquals(adminId, "*")) {

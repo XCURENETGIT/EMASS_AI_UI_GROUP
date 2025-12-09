@@ -57,5 +57,7 @@ public interface SolrEdcService {
 
 	public void printCurrentIndexsNames();
 
+	public void setAuthoritys(SolrQuery sq, String adminId);
+
 
 }
