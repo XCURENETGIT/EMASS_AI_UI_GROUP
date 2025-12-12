@@ -2910,11 +2910,15 @@
                                     </div>
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
-                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.sender"/></div>
+                                       <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.sender"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
                                         <%if(Common.isEquals(rsUppercase, "Y")) {%>
                                         <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="senders_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
                                         <%} %>
-                                        <div class="condition_not"><label><input type="checkbox" id="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                       <br>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_not" name="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_findByKeyword" name="senders_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_findByParam" name="senders_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
+
                                         <input class="condition_input_text" type="text" id="senders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
                                     </div>
                                     <div class="condition_divider"></div>
@@ -2925,31 +2929,43 @@
                                             <label class="condition_label"><input type="radio" name="receive_option" id="receive_option_more" value="detail"> <span><s:message code="condition.info.detail"/></span></label>
                                         </div>
                                     </div>
-                                    <div class="condition_divider"></div>
+                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
-                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/></div>
+                                         <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
                                         <%if(Common.isEquals(rsUppercase, "Y")) {%>
                                         <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="receivers_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
                                         <%} %>
-                                        <div class="condition_not"><label><input type="checkbox" id="receivers_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <br>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="receivers_not" name="receivers_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="receivers_findByKeyword" name="receivers_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="receivers_findByParam" name="receivers_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                         <input class="condition_input_text" type="text" id="receivers" name="serch" placeholder="<s:message code="condition.message.receiver"/>">
                                     </div>
                                     <div class="receivers_detail" style="display: none;">
                                         <div class="condition_item">
-                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.to"/>)</div>
-                                            <div class="condition_not"><label><input type="checkbox" id="m_to_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.to"/>) <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                            <br>
+                                            <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="m_to_not" name="m_to_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="m_to_findByKeyword" name="m_to_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                            <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="m_to_findByParam" name="m_to_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                             <input class="condition_input_text" type="text" id="m_to" name="serch" placeholder="<s:message code="condition.input.to"/>">
                                         </div>
                                         <div class="condition_divider"></div>
                                         <div class="condition_item">
-                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.cc"/>)</div>
-                                            <div class="condition_not"><label><input type="checkbox" id="m_cc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.cc"/>) <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                            <br>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_cc_not" name="m_cc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_cc_findByKeyword" name="m_cc_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_cc_findByParam" name="m_cc_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                             <input class="condition_input_text" type="text" id="m_cc" name="serch" placeholder="<s:message code="condition.input.cc"/>">
                                         </div>
                                         <div class="condition_divider"></div>
                                         <div class="condition_item">
-                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.bcc"/>)</div>
-                                            <div class="condition_not"><label><input type="checkbox" id="m_bcc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.bcc"/>) <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                            <br>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_bcc_not" name="m_bcc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_bcc_findByKeyword" name="m_bcc_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_bcc_findByParam" name="m_bcc_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                             <input class="condition_input_text" type="text" id="m_bcc" name="serch" placeholder="<s:message code="condition.input.bcc"/>">
                                         </div>
                                     </div>
