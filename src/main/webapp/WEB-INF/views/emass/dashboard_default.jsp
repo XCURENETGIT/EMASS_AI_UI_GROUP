@@ -1154,7 +1154,7 @@
         $(document).on('click', '.click2', function () {
             let data = $(this).data('value');
             dashCondition.attachYn = "Y";
-            dashCondition.senders = data;
+            dashCondition.senders = '\\"' + data + '\\"';
             dashCondition.senders_upperCase = "Y";
             $('#conditionParam').val(makePeriod2(dashCondition));
             $('#getMessageInfo').submit();
