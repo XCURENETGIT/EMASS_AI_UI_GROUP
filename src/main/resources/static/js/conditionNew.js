@@ -241,22 +241,10 @@ var con = {
 
 		$('input:checkbox[id="m_to_not"]').prop("checked", false);
 		$('input:checkbox[id="m_to_not"]').prop("disabled", true);
-		$('input:checkbox[id="m_to_findByKeyword"]').prop("checked", false);
-		$('input:checkbox[id="m_to_findByKeyword"]').prop("disabled", true);
-		$('input:checkbox[id="m_to_findByParam"]').prop("checked", false);
-		$('input:checkbox[id="m_to_findByParam"]').prop("disabled", true);
 		$('input:checkbox[id="m_cc_not"]').prop("checked", false);
 		$('input:checkbox[id="m_cc_not"]').prop("disabled", true);
-		$('input:checkbox[id="m_cc_findByKeyword"]').prop("checked", false);
-		$('input:checkbox[id="m_cc_findByKeyword"]').prop("disabled", true);
-		$('input:checkbox[id="m_cc_findByParam"]').prop("checked", false);
-		$('input:checkbox[id="m_cc_findByParam"]').prop("disabled", true);
 		$('input:checkbox[id="m_bcc_not"]').prop("checked", false);
 		$('input:checkbox[id="m_bcc_not"]').prop("disabled", true);
-		$('input:checkbox[id="m_bcc_findByKeyword"]').prop("checked", false);
-		$('input:checkbox[id="m_bcc_findByKeyword"]').prop("disabled", true);
-		$('input:checkbox[id="m_bcc_findByParam"]').prop("checked", false);
-		$('input:checkbox[id="m_bcc_findByParam"]').prop("disabled", true);
 		$('input:checkbox[id="url_not"]').prop("checked", false);
 		$('input:checkbox[id="url_not"]').prop("disabled", true);
 
@@ -422,36 +410,18 @@ var con = {
 				condition.receivers_upperCase = $('input:checkbox[id="receivers_upperCase"]').is(":checked") ? 'Y' : '';
 			}
 			condition.receivers_not = $('input:checkbox[id="receivers_not"]').is(":checked") ? 'Y' : '';
-			condition.receivers_findByKeyword = $('input:checkbox[id="receivers_findByKeyword"]').is(":checked") ? 'Y' : '';
-			if ($('input:checkbox[id="receivers_findByKeyword"]').is(":checked")) {
-				condition.findByParam = ''; // 부분일치
-			} else {
-				condition.findByParam = $('input:checkbox[id="receivers_findByParam"]').is(":checked") ? 'Y' : '';
-			}
 		}else{
 			condition.receivers = '';
 			condition.receivers_not = '';
-			condition.receivers_findByKeyword = $('input:checkbox[id="receivers_findByKeyword"]').is(":checked") ? 'Y' : '';
-			if ($('input:checkbox[id="receivers_findByKeyword"]').is(":checked")) {
-				condition.findByParam = ''; // 부분일치
-			} else {
-				condition.findByParam = $('input:checkbox[id="receivers_findByParam"]').is(":checked") ? 'Y' : '';
-			}
 			if(rsUppercase == "Y") {
 				condition.receivers_upperCase = '';
 			}
 			condition.m_to = $('#m_to').val();
 			condition.m_to_not = $('input:checkbox[id="m_to_not"]').is(":checked") ? 'Y' : '';
-			condition.m_to_findByKeyword = $('input:checkbox[id="m_to_findByKeyword"]').is(":checked") ? 'Y' : '';
-			condition.m_to_findByParam = $('input:checkbox[id="m_to_findByParam"]').is(":checked") ? 'Y' : '';
 			condition.m_cc = $('#m_cc').val();
 			condition.m_cc_not = $('input:checkbox[id="m_cc_not"]').is(":checked") ? 'Y' : '';
-			condition.m_cc_findByKeyword = $('input:checkbox[id="m_cc_findByKeyword"]').is(":checked") ? 'Y' : '';
-			condition.m_cc_findByParam = $('input:checkbox[id="m_cc_findByParam"]').is(":checked") ? 'Y' : '';
 			condition.m_bcc = $('#m_bcc').val();
 			condition.m_bcc_not = $('input:checkbox[id="m_bcc_not"]').is(":checked") ? 'Y' : '';
-			condition.m_bcc_findByKeyword = $('input:checkbox[id="m_bcc_findByKeyword"]').is(":checked") ? 'Y' : '';
-			condition.m_bcc_findByParam = $('input:checkbox[id="m_bcc_findByParam"]').is(":checked") ? 'Y' : '';
 		}
 
 		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
@@ -473,12 +443,6 @@ var con = {
 			condition.senders_upperCase = $('input:checkbox[id="senders_upperCase"]').is(":checked") ? 'Y' : '';
 		}
 		condition.senders_not = $('input:checkbox[id="senders_not"]').is(":checked") ? 'Y' : '';
-		condition.senders_findByKeyword = $('input:checkbox[id="senders_findByKeyword"]').is(":checked") ? 'Y' : '';
-		if ($('input:checkbox[id="senders_findByKeyword"]').is(":checked")) {
-			condition.senders_findByParam = ''; // 부분일치
-		} else {
-			condition.senders_findByParam = $('input:checkbox[id="senders_findByParam"]').is(":checked") ? 'Y' : '';
-		}
 
 		condition.allOfus = $('#allOfus').val();
 
@@ -607,109 +571,17 @@ var con = {
 
 		checkRadioBtn( 'receiveSend', condition.receiveSend );
 		checkRadioBtn( 'receive_option', condition.receive_option );
-		if (condition.receive_option == '') {
+		if(condition.receive_option == ''){
 			$('#receive_option_all').click();
-			$('#receivers').val(condition.receivers);
-			var receivers_hasValue = condition.receivers != '' && condition.receivers != null;
-			$('input:checkbox[id="receivers_not"]').prop("disabled", !receivers_hasValue);
+			$('#receivers').val( condition.receivers );
+			$('input:checkbox[id="receivers_not"]').prop("disabled", condition.receivers == '' ? true : false);
 			$('input:checkbox[id="receivers_not"]').prop("checked", condition.receivers_not == 'Y' ? true : false);
-			$('input:checkbox[id="receivers_findByKeyword"]').prop("disabled", !receivers_hasValue);
-			$('input:checkbox[id="receivers_findByParam"]').prop("disabled", !receivers_hasValue);
-			var receivers_findByParam_checked = condition.findByParam == 'Y' ? true : false;
-			var receivers_findByKeyword_checked = condition.findByKeyword == 'Y' ? true :
-				(receivers_hasValue && condition.findByKeyword != 'Y' && condition.findByParam != 'Y' ? true : false);
-			if (receivers_findByParam_checked) {
-				receivers_findByKeyword_checked = false;
-			} else if (receivers_findByKeyword_checked) {
-				receivers_findByParam_checked = false;
-			}
-			$('input:checkbox[id="receivers_findByKeyword"]').prop("checked", receivers_findByKeyword_checked);
-			$('input:checkbox[id="receivers_findByParam"]').prop("checked", receivers_findByParam_checked);
 			if(rsUppercase == "Y") {
 				$('input:checkbox[id="receivers_upperCase"]').prop("disabled", condition.receivers == '' ? true : false);
 				$('input:checkbox[id="receivers_upperCase"]').prop("checked", condition.receivers_upperCase == 'Y' ? true : false);
 			}
 		}else{
-			// m_to, m_cc, m_bcc와 rcvTo, rcvCc, rcvBcc 중 어느 것을 사용할지 결정
-			var m_to_val = (condition.m_to != undefined && condition.m_to != null && condition.m_to != '') ? condition.m_to : (condition.rcvTo != undefined ? condition.rcvTo : '');
-			var m_cc_val = (condition.m_cc != undefined && condition.m_cc != null && condition.m_cc != '') ? condition.m_cc : (condition.rcvCc != undefined ? condition.rcvCc : '');
-			var m_bcc_val = (condition.m_bcc != undefined && condition.m_bcc != null && condition.m_bcc != '') ? condition.m_bcc : (condition.rcvBcc != undefined ? condition.rcvBcc : '');
-
-			// 체크박스 상태 값도 두 가지 필드명을 모두 확인
-			var m_to_not_val = (condition.m_to_not != undefined) ? condition.m_to_not : (condition.rcvTo_not != undefined ? condition.rcvTo_not : '');
-			var m_to_findByKeyword_val = (condition.m_to_findByKeyword != undefined) ? condition.m_to_findByKeyword : (condition.rcvTo_findByKeyword != undefined ? condition.rcvTo_findByKeyword : '');
-			var m_to_findByParam_val = (condition.m_to_findByParam != undefined) ? condition.m_to_findByParam : (condition.rcvTo_findByParam != undefined ? condition.rcvTo_findByParam : '');
-
-			var m_cc_not_val = (condition.m_cc_not != undefined) ? condition.m_cc_not : (condition.rcvCc_not != undefined ? condition.rcvCc_not : '');
-			var m_cc_findByKeyword_val = (condition.m_cc_findByKeyword != undefined) ? condition.m_cc_findByKeyword : (condition.rcvCc_findByKeyword != undefined ? condition.rcvCc_findByKeyword : '');
-			var m_cc_findByParam_val = (condition.m_cc_findByParam != undefined) ? condition.m_cc_findByParam : (condition.rcvCc_findByParam != undefined ? condition.rcvCc_findByParam : '');
-
-			var m_bcc_not_val = (condition.m_bcc_not != undefined) ? condition.m_bcc_not : (condition.rcvBcc_not != undefined ? condition.rcvBcc_not : '');
-			var m_bcc_findByKeyword_val = (condition.m_bcc_findByKeyword != undefined) ? condition.m_bcc_findByKeyword : (condition.rcvBcc_findByKeyword != undefined ? condition.rcvBcc_findByKeyword : '');
-			var m_bcc_findByParam_val = (condition.m_bcc_findByParam != undefined) ? condition.m_bcc_findByParam : (condition.rcvBcc_findByParam != undefined ? condition.rcvBcc_findByParam : '');
-
-			$('#m_to').val(m_to_val);
-			$('#m_cc').val(m_cc_val);
-			$('#m_bcc').val(m_bcc_val);
-
 			$('#receive_option_more').click();
-
-
-			setTimeout(function() {
-				var m_to_hasValue = m_to_val != '' && m_to_val != null;
-				var m_cc_hasValue = m_cc_val != '' && m_cc_val != null;
-				var m_bcc_hasValue = m_bcc_val != '' && m_bcc_val != null;
-
-				$('input:checkbox[id="m_to_not"]').prop("disabled", !m_to_hasValue);
-				$('input:checkbox[id="m_to_not"]').prop("checked", m_to_not_val == 'Y' ? true : false);
-				$('input:checkbox[id="m_to_findByKeyword"]').prop("disabled", !m_to_hasValue);
-				$('input:checkbox[id="m_to_findByParam"]').prop("disabled", !m_to_hasValue);
-				var m_to_findByParam_checked = m_to_findByParam_val == 'Y' ? true : false;
-				var m_to_findByKeyword_checked = m_to_findByKeyword_val == 'Y' ? true :
-					(m_to_hasValue && m_to_findByKeyword_val != 'Y' && m_to_findByParam_val != 'Y' ? true : false);
-				if (m_to_findByParam_checked) {
-					m_to_findByKeyword_checked = false;
-				} else if (m_to_findByKeyword_checked) {
-					m_to_findByParam_checked = false;
-				}
-				$('input:checkbox[id="m_to_findByKeyword"]').prop("checked", m_to_findByKeyword_checked);
-				$('input:checkbox[id="m_to_findByParam"]').prop("checked", m_to_findByParam_checked);
-
-
-				$('input:checkbox[id="m_cc_not"]').prop("disabled", !m_cc_hasValue);
-				$('input:checkbox[id="m_cc_not"]').prop("checked", m_cc_not_val == 'Y' ? true : false);
-				$('input:checkbox[id="m_cc_findByKeyword"]').prop("disabled", !m_cc_hasValue);
-				$('input:checkbox[id="m_cc_findByParam"]').prop("disabled", !m_cc_hasValue);
-
-				var m_cc_findByParam_checked = m_cc_findByParam_val == 'Y' ? true : false;
-				var m_cc_findByKeyword_checked = m_cc_findByKeyword_val == 'Y' ? true :
-					(m_cc_hasValue && m_cc_findByKeyword_val != 'Y' && m_cc_findByParam_val != 'Y' ? true : false);
-
-				if (m_cc_findByParam_checked) {
-					m_cc_findByKeyword_checked = false;
-				} else if (m_cc_findByKeyword_checked) {
-					m_cc_findByParam_checked = false;
-				}
-				$('input:checkbox[id="m_cc_findByKeyword"]').prop("checked", m_cc_findByKeyword_checked);
-				$('input:checkbox[id="m_cc_findByParam"]').prop("checked", m_cc_findByParam_checked);
-
-				$('input:checkbox[id="m_bcc_not"]').prop("disabled", !m_bcc_hasValue);
-				$('input:checkbox[id="m_bcc_not"]').prop("checked", m_bcc_not_val == 'Y' ? true : false);
-				$('input:checkbox[id="m_bcc_findByKeyword"]').prop("disabled", !m_bcc_hasValue);
-				$('input:checkbox[id="m_bcc_findByParam"]').prop("disabled", !m_bcc_hasValue);
-				var m_bcc_findByParam_checked = m_bcc_findByParam_val == 'Y' ? true : false;
-				var m_bcc_findByKeyword_checked = m_bcc_findByKeyword_val == 'Y' ? true :
-					(m_bcc_hasValue && m_bcc_findByKeyword_val != 'Y' && m_bcc_findByParam_val != 'Y' ? true : false);
-
-				if (m_bcc_findByParam_checked) {
-					m_bcc_findByKeyword_checked = false;
-				} else if (m_bcc_findByKeyword_checked) {
-					m_bcc_findByParam_checked = false;
-				}
-				$('input:checkbox[id="m_bcc_findByKeyword"]').prop("checked", m_bcc_findByKeyword_checked);
-				$('input:checkbox[id="m_bcc_findByParam"]').prop("checked", m_bcc_findByParam_checked);
-			}, 100);
-
 			if(condition.rcvTo == null) {
 				$('#m_to').val( condition.m_to );
 				$('input:checkbox[id="m_to_not"]').prop("disabled", condition.m_to == '' ? true : false);
@@ -740,23 +612,10 @@ var con = {
 		}
 
 		$('#senders').val( condition.senders );
-		var senders_hasValue = condition.senders != '' && condition.senders != null;
-		$('input:checkbox[id="senders_not"]').prop("disabled", !senders_hasValue);
+		$('input:checkbox[id="senders_not"]').prop("disabled", condition.senders == '' ? true : false);
 		$('input:checkbox[id="senders_not"]').prop("checked", condition.senders_not == 'Y' ? true : false);
-		$('input:checkbox[id="senders_findByKeyword"]').prop("disabled", !senders_hasValue);
-		$('input:checkbox[id="senders_findByParam"]').prop("disabled", !senders_hasValue);
-		var senders_findByParam_checked = condition.senders_findByParam == 'Y' ? true : false;
-		var senders_findByKeyword_checked = condition.senders_findByKeyword == 'Y' ? true :
-			(senders_hasValue && condition.senders_findByKeyword != 'Y' && condition.senders_findByParam != 'Y' ? true : false);
-		if (senders_findByParam_checked) {
-			senders_findByKeyword_checked = false;
-		} else if (senders_findByKeyword_checked) {
-			senders_findByParam_checked = false;
-		}
-		$('input:checkbox[id="senders_findByKeyword"]').prop("checked", senders_findByKeyword_checked);
-		$('input:checkbox[id="senders_findByParam"]').prop("checked", senders_findByParam_checked);
-		if (rsUppercase == "Y") {
-			$('input:checkbox[id="senders_upperCase"]').prop("disabled", !senders_hasValue);
+		if(rsUppercase == "Y") {
+			$('input:checkbox[id="senders_upperCase"]').prop("disabled", condition.senders == '' ? true : false);
 			$('input:checkbox[id="senders_upperCase"]').prop("checked", condition.senders_upperCase == 'Y' ? true : false);
 		}
 
