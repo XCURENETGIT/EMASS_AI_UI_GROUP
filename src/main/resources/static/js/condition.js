@@ -1363,10 +1363,49 @@ function createCondition( endId ){
 	else condition.interUserName = '';
 
 	condition.senders = $('#senders'+endId).val();
-	condition.receivers = $('#receivers'+endId).val();
-	condition.rcvTo = $('#rcvTo'+endId).val();
-	condition.rcvCc = $('#rcvCc'+endId).val();
-	condition.rcvBcc = $('#rcvBcc'+endId).val();
+
+	condition.receive_option = $('input:radio[name=receive_option'+endId+']:input:checked').val();
+	if (condition.receive_option == '' || condition.receive_option == undefined) {
+		condition.receivers = $('#receivers'+endId).val();
+		condition.rcvTo = '';
+		condition.rcvCc = '';
+		condition.rcvBcc = '';
+		condition.rcvTo_not = '';
+		condition.rcvCc_not = '';
+		condition.rcvBcc_not = '';
+		condition.rcvTo_findByKeyword = '';
+		condition.rcvCc_findByKeyword = '';
+		condition.rcvBcc_findByKeyword = '';
+		condition.rcvTo_findByParam = '';
+		condition.rcvCc_findByParam = '';
+		condition.rcvBcc_findByParam = '';
+	} else {
+		condition.receivers = '';
+		condition.rcvTo = $('#m_to'+endId).val() || $('#rcvTo'+endId).val();
+		condition.rcvCc = $('#m_cc'+endId).val() || $('#rcvCc'+endId).val();
+		condition.rcvBcc = $('#m_bcc'+endId).val() || $('#rcvBcc'+endId).val();
+		condition.rcvTo_not = $('input:checkbox[id="m_to_not'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvTo_not'+endId+'"]').is(":checked") ? 'Y' : '';
+		condition.rcvCc_not = $('input:checkbox[id="m_cc_not'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvCc_not'+endId+'"]').is(":checked") ? 'Y' : '';
+		condition.rcvBcc_not = $('input:checkbox[id="m_bcc_not'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvBcc_not'+endId+'"]').is(":checked") ? 'Y' : '';
+		condition.rcvTo_findByKeyword = $('input:checkbox[id="m_to_findByKeyword'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvTo_findByKeyword'+endId+'"]').is(":checked") ? 'Y' : '';
+		condition.rcvCc_findByKeyword = $('input:checkbox[id="m_cc_findByKeyword'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvCc_findByKeyword'+endId+'"]').is(":checked") ? 'Y' : '';
+		condition.rcvBcc_findByKeyword = $('input:checkbox[id="m_bcc_findByKeyword'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvBcc_findByKeyword'+endId+'"]').is(":checked") ? 'Y' : '';
+		if (condition.rcvTo_findByKeyword == 'Y') {
+			condition.rcvTo_findByParam = '';
+		} else {
+			condition.rcvTo_findByParam = $('input:checkbox[id="m_to_findByParam'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvTo_findByParam'+endId+'"]').is(":checked") ? 'Y' : '';
+		}
+		if (condition.rcvCc_findByKeyword == 'Y') {
+			condition.rcvCc_findByParam = '';
+		} else {
+			condition.rcvCc_findByParam = $('input:checkbox[id="m_cc_findByParam'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvCc_findByParam'+endId+'"]').is(":checked") ? 'Y' : '';
+		}
+		if (condition.rcvBcc_findByKeyword == 'Y') {
+			condition.rcvBcc_findByParam = '';
+		} else {
+			condition.rcvBcc_findByParam = $('input:checkbox[id="m_bcc_findByParam'+endId+'"]').is(":checked") || $('input:checkbox[id="rcvBcc_findByParam'+endId+'"]').is(":checked") ? 'Y' : '';
+		}
+	}
 	condition.rcvJikgub = $('#rcvJikgub'+endId).val();
 	condition.allOfus = $('#allOfus'+endId).val();
 
@@ -1510,10 +1549,63 @@ function setOnlyCondition( endId, condition ){
 	checkRadioBtn( 'ctimeWork'+endId, condition.ctimeWork );
 
 	$('#senders'+endId).val( condition.senders );
-	$('#receivers'+endId).val( condition.receivers );
-	$('#rcvTo'+endId).val( condition.rcvTo );
-	$('#rcvCc'+endId).val( condition.rcvCc );
-	$('#rcvBcc'+endId).val( condition.rcvBcc );
+
+	// receive_option에 따라 수신자 정보 설정
+	if (condition.receive_option == '' || condition.receive_option == undefined) {
+		// 일반 수신자 모드
+		$('#receivers'+endId).val( condition.receivers );
+		// 상세 수신자 필드는 초기화
+		var m_to_elem = $('#m_to'+endId);
+		var m_cc_elem = $('#m_cc'+endId);
+		var m_bcc_elem = $('#m_bcc'+endId);
+		if (m_to_elem.length > 0) {
+			m_to_elem.val('');
+		}
+		if (m_cc_elem.length > 0) {
+			m_cc_elem.val('');
+		}
+		if (m_bcc_elem.length > 0) {
+			m_bcc_elem.val('');
+		}
+		var rcvTo_elem = $('#rcvTo'+endId);
+		var rcvCc_elem = $('#rcvCc'+endId);
+		var rcvBcc_elem = $('#rcvBcc'+endId);
+		if (rcvTo_elem.length > 0) {
+			rcvTo_elem.val('');
+		}
+		if (rcvCc_elem.length > 0) {
+			rcvCc_elem.val('');
+		}
+		if (rcvBcc_elem.length > 0) {
+			rcvBcc_elem.val('');
+		}
+	} else {
+		// 상세 수신자 모드
+		$('#receivers'+endId).val('');
+		// m_to, m_cc, m_bcc 또는 rcvTo, rcvCc, rcvBcc 중 사용 가능한 것 사용
+		var m_to_val = condition.m_to || condition.rcvTo || '';
+		var m_cc_val = condition.m_cc || condition.rcvCc || '';
+		var m_bcc_val = condition.m_bcc || condition.rcvBcc || '';
+		var m_to_elem = $('#m_to'+endId);
+		var m_cc_elem = $('#m_cc'+endId);
+		var m_bcc_elem = $('#m_bcc'+endId);
+		if (m_to_elem.length > 0) {
+			m_to_elem.val(m_to_val);
+		} else {
+			$('#rcvTo'+endId).val(m_to_val);
+		}
+		if (m_cc_elem.length > 0) {
+			m_cc_elem.val(m_cc_val);
+		} else {
+			$('#rcvCc'+endId).val(m_cc_val);
+		}
+		if (m_bcc_elem.length > 0) {
+			m_bcc_elem.val(m_bcc_val);
+		} else {
+			$('#rcvBcc'+endId).val(m_bcc_val);
+		}
+	}
+
 	$('#rcvJikgub'+endId).val( condition.rcvJikgub );
 	$('#allOfus'+endId).val( condition.allOfus );
 

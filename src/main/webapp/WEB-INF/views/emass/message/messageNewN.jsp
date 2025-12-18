@@ -559,6 +559,9 @@
         .regexSearchCloseBtn .glyphicon-remove:before {
             color: white !important;
         }
+        .matchHelpDivCloseBtn .glyphicon-remove:before {
+            color: white !important;
+        }
 
 
 
@@ -581,6 +584,7 @@
 
         var filterSeq = '<%=filterSeq%>';
         var conditionParam = '<%=conditionParam%>';
+        var isAutoSearch = false; // dashboard에서 자동 검색인지 여부
         var infoFeedbackMode = '<%=infoFeedbackMode%>';
         var readyFlag = false;
         var headerScrollTabs;
@@ -614,7 +618,8 @@
             msgNocontent:'<s:message code="common.msg.nocontent"/>',
             msgParticipantinfo:'<s:message code="common.msg.participantinfo"/>',
             windowNew:'<s:message code="bodyview.window.new"/>',
-            windowTab:'<s:message code="bodyview.window.tab"/>'
+            windowTab:'<s:message code="bodyview.window.tab"/>',
+            checkboxSelectRequired:'<s:message code="common.msg.checkbox.select.required"/>'
         };
 
         var condition = {
@@ -1242,6 +1247,22 @@
                 $('#searchHelpDiv').hide();
             });
 
+            /* 정규식 검색 도움말 */
+            $('#regexpHelpBtn').click(function(e){
+                $('#regexpHelpDiv').show();
+            });
+            $('.regexpHelpDivCloseBtn').click(function(){
+                $('#regexpHelpDiv').hide();
+            });
+
+            /* 수신자, 발신자 입력옵션 도움말 */
+            $('#matchHelpBtn').click(function(e){
+                $('#matchHelpDiv').show();
+            });
+            $('.matchHelpDivCloseBtn').click(function(){
+                $('#matchHelpDiv').hide();
+            });
+
             $('.showFilterBtn').click(function(){
                 $('#periodSetupMenu').hide();
                 $('#filterHeaderDiv').show();
@@ -1334,6 +1355,19 @@
                 $('#periodSetupMenu').hide();
             });
 
+            $("#matchHelpDiv").draggable({
+                cancel: ".matchHelpDivBody, .matchHelpDivCloseArea",
+                scroll: false,
+                containment: "#mainBodyArea",
+                start: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
+                    $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
+                },
+                stop: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'', 'user-select':''});
+                    $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
+                }
+            });
             /* 조건 보관함 */
             $("#filterHeaderDiv").draggable({
                 scroll: false,
@@ -1395,6 +1429,20 @@
 
             $("#searchHelpDiv").draggable({
                 cancel: ".searchHelpDivBody, .searchHelpDivCloseArea",
+                scroll: false,
+                containment: "#mainBodyArea",
+                start: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
+                    $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
+                },
+                stop: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'', 'user-select':''});
+                    $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
+                }
+            });
+
+            $("#regexpHelpDiv").draggable({
+                cancel: ".regexpHelpDivBody, .regexpHelpDivCloseArea",
                 scroll: false,
                 containment: "#mainBodyArea",
                 start: function( event, ui ) {
@@ -1848,7 +1896,32 @@
             initHeaderTab();
             getSearchKeywordList();
             initConfAdminOption();
+            
+            // 각 그룹별로 단일 선택 설정
+            setupSingleSelectCheckbox('senders', ['senders_not', 'senders_findByKeyword', 'senders_findByParam']);
+            setupSingleSelectCheckbox('receivers', ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam']);
+            setupSingleSelectCheckbox('m_to', ['m_to_not', 'm_to_findByKeyword', 'm_to_findByParam']);
+            setupSingleSelectCheckbox('m_cc', ['m_cc_not', 'm_cc_findByKeyword', 'm_cc_findByParam']);
+            setupSingleSelectCheckbox('m_bcc', ['m_bcc_not', 'm_bcc_findByKeyword', 'm_bcc_findByParam']);
         });
+
+
+
+        // 체크박스 그룹별 단일 선택 기능
+        function setupSingleSelectCheckbox(groupName, checkboxIds) {
+            checkboxIds.forEach(function(checkboxId) {
+                $('#' + checkboxId).on('change', function() {
+                    if($(this).is(':checked') && !$(this).prop('disabled')) {
+                        // 같은 그룹의 다른 체크박스들 해제
+                        checkboxIds.forEach(function(otherId) {
+                            if(otherId !== checkboxId) {
+                                $('#' + otherId).prop('checked', false);
+                            }
+                        });
+                    }
+                });
+            });
+        }
 
         function setNowColIdx(colStr) {
             var result = "";
@@ -1905,14 +1978,17 @@
                     rtnFilterClick(filterVal, 'searchQuery');
                 }
             }else if( conditionParam != '' ){
+                isAutoSearch = true; // dashboard에서 자동 검색 플래그 설정
                 try{
                     setTimeout(function(){
                         con.setCondition(JSON.parse(conditionParam), '');
                         getIframeListObj().initGrid();
                         searchData( );
+                        isAutoSearch = false; // 검색 후 플래그 해제
                     },500);
                 }catch(e){
                     console.log('<s:message code="common.msg.data.error"/>');
+                    isAutoSearch = false; // 에러 시 플래그 해제
                     //goMainPage();
                 }
             }
@@ -1948,8 +2024,40 @@
 
         //일반 검색
         function searchData( ){
+
+            // 체크박스 검증: 입력값이 있으면 체크박스가 선택되어야 함 (자동 검색인 경우 제외)
+            if(!isAutoSearch) {
+                var checkboxGroups = [
+                    { inputId: 'senders', checkboxIds: ['senders_not', 'senders_findByKeyword', 'senders_findByParam'] },
+                    { inputId: 'receivers', checkboxIds: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam'] },
+                    { inputId: 'm_to', checkboxIds: ['m_to_not', 'm_to_findByKeyword', 'm_to_findByParam'] },
+                    { inputId: 'm_cc', checkboxIds: ['m_cc_not', 'm_cc_findByKeyword', 'm_cc_findByParam'] },
+                    { inputId: 'm_bcc', checkboxIds: ['m_bcc_not', 'm_bcc_findByKeyword', 'm_bcc_findByParam'] }
+                ];
+
+                for(var i = 0; i < checkboxGroups.length; i++) {
+                    var group = checkboxGroups[i];
+                    var inputValue = $('#' + group.inputId).val();
+                    if(inputValue && inputValue.trim() !== '') {
+                        var hasChecked = false;
+                        for(var j = 0; j < group.checkboxIds.length; j++) {
+                            var checkboxId = group.checkboxIds[j];
+                            if($('#' + checkboxId).is(':checked') && !$('#' + checkboxId).prop('disabled')) {
+                                hasChecked = true;
+                                break;
+                            }
+                        }
+                        if(!hasChecked) {
+                            ui.alertMsg(message.checkboxSelectRequired);
+                            searchFlag = false;
+                            break;
+                        }
+                    }
+                }
+            }
             //체크로직 및 분기
             getList('D');
+
         }
 
         //고급 검색식 검색
@@ -2910,11 +3018,15 @@
                                     </div>
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
-                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.sender"/></div>
+                                       <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.sender"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
                                         <%if(Common.isEquals(rsUppercase, "Y")) {%>
                                         <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="senders_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
                                         <%} %>
-                                        <div class="condition_not"><label><input type="checkbox" id="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                       <br>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_not" name="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_findByKeyword" name="senders_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_findByParam" name="senders_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
+
                                         <input class="condition_input_text" type="text" id="senders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
                                     </div>
                                     <div class="condition_divider"></div>
@@ -2925,31 +3037,43 @@
                                             <label class="condition_label"><input type="radio" name="receive_option" id="receive_option_more" value="detail"> <span><s:message code="condition.info.detail"/></span></label>
                                         </div>
                                     </div>
-                                    <div class="condition_divider"></div>
+                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
-                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/></div>
+                                         <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
                                         <%if(Common.isEquals(rsUppercase, "Y")) {%>
                                         <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="receivers_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
                                         <%} %>
-                                        <div class="condition_not"><label><input type="checkbox" id="receivers_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <br>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="receivers_not" name="receivers_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="receivers_findByKeyword" name="receivers_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="receivers_findByParam" name="receivers_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                         <input class="condition_input_text" type="text" id="receivers" name="serch" placeholder="<s:message code="condition.message.receiver"/>">
                                     </div>
                                     <div class="receivers_detail" style="display: none;">
                                         <div class="condition_item">
-                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.to"/>)</div>
-                                            <div class="condition_not"><label><input type="checkbox" id="m_to_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.to"/>) <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                            <br>
+                                            <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="m_to_not" name="m_to_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="m_to_findByKeyword" name="m_to_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                            <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="m_to_findByParam" name="m_to_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                             <input class="condition_input_text" type="text" id="m_to" name="serch" placeholder="<s:message code="condition.input.to"/>">
                                         </div>
                                         <div class="condition_divider"></div>
                                         <div class="condition_item">
-                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.cc"/>)</div>
-                                            <div class="condition_not"><label><input type="checkbox" id="m_cc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.cc"/>) <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                            <br>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_cc_not" name="m_cc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_cc_findByKeyword" name="m_cc_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_cc_findByParam" name="m_cc_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                             <input class="condition_input_text" type="text" id="m_cc" name="serch" placeholder="<s:message code="condition.input.cc"/>">
                                         </div>
                                         <div class="condition_divider"></div>
                                         <div class="condition_item">
-                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.bcc"/>)</div>
-                                            <div class="condition_not"><label><input type="checkbox" id="m_bcc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.bcc"/>) <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                            <br>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_bcc_not" name="m_bcc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_bcc_findByKeyword" name="m_bcc_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                            <div class="condition_not"  style="font-size: 12px"><label><input type="checkbox" id="m_bcc_findByParam" name="m_bcc_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
                                             <input class="condition_input_text" type="text" id="m_bcc" name="serch" placeholder="<s:message code="condition.input.bcc"/>">
                                         </div>
                                     </div>
@@ -3429,7 +3553,7 @@
             </div>
 
              <%--  검색어 도움말  --%>
-            <div id="searchHelpDiv" class="searchHelpDiv">
+            <div id="searchHelpDiv" class="searchHelpDiv" style="display:none;">
                 <div class="searchKeywordTab"> <i class="glyphicon glyphicon-question-sign"></i>&nbsp;&nbsp;<s:message code="help.msg.title"/>
                     <div class="searchHelpDivCloseBtn" style="position:absolute;top:12px; right:10px;">
                         <span class="glyphicon glyphicon-remove" style="cursor:pointer;font-size:13px;" aria-hidden="true"></span>
@@ -3476,6 +3600,71 @@
 <%--                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.question.ex"/></span><br/>--%>
 <%--                            <span style="padding-left:10px;"><s:message code="help.msg.question.explain"/></span><br/>--%>
 <%--                        </div>--%>
+                    </div>
+                </div>
+            </div>
+
+            <%--  정규식 검색 도움말  --%>
+            <div id="regexpHelpDiv" class="regexpHelpDiv" style="height: 560px; display:none;">
+                <div class="searchKeywordTab"> <i class="glyphicon glyphicon-question-sign" style="font-size:18px; top:5px;"></i>&nbsp;&nbsp;<s:message code="help.regexp.title"/>
+                    <div class="regexpHelpDivCloseBtn" style="position:absolute;top:12px; right:10px;">
+                        <span class="glyphicon glyphicon glyphicon-remove-sign" style="cursor:pointer;font-size:18px;top:1px;" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div style="width:100%;padding:10px 5px 5px 10px; line-height: 17px; margin-bottom:8px;" class="regexpHelpDivBody">
+                    <div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="common.live.regexp.search.help.desc"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.desc2"/></span><br/>
+                        </div>
+                        </br>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="common.live.regexp.search.help.category1.title"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category1.cont1"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category1.cont2"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category1.cont3"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category1.cont4"/> </span><br/>
+                        </div>
+                        </br>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="common.live.regexp.search.help.category2.title"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category2.cont1"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category2.cont2"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category2.cont3"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category2.cont4"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category2.cont5"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category2.cont6"/> </span><br/>
+                        </div>
+                        </br>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="common.live.regexp.search.help.category3.title"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category3.cont1"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category3.cont2"/> </span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category3.cont3"/> </span><br/>
+                        </div>
+                        </br>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="common.live.regexp.search.help.category4.title"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="common.live.regexp.search.help.category4.cont1"/></span><br/>
+                        </div>
+                        </br>
+                        </br>
+                    </div>
+                </div>
+            </div>
+
+            <%--  수신자, 발신자 입력옵션 도움말  --%>
+            <div id="matchHelpDiv" class="regexpHelpDiv" style="height: 250px; display:none;">
+                <div class="searchKeywordTab"> <i class="glyphicon glyphicon-question-sign" style="font-size:18px; top:5px;"></i>&nbsp;&nbsp;<s:message code="condition.matchhelp.title"/>
+                    <div class="matchHelpDivCloseBtn" style="position:absolute;top:12px; right:10px;">
+                        <span class="glyphicon glyphicon glyphicon-remove-sign" style="cursor:pointer;font-size:18px;top:1px;" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div style="width:100%;padding:10px 5px 5px 10px; line-height: 17px; margin-bottom:8px;" class="matchHelpDivBody">
+                    <div>
+                        <div style="padding-top:5px;">
+                            <s:message code="condition.matchhelp"/>
+                        </div>
                     </div>
                 </div>
             </div>
