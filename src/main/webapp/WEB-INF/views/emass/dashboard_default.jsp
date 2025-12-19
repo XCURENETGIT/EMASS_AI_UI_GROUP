@@ -143,7 +143,8 @@
         "sizeStartVal": "0",
         "sizeEndVal": "0",
         "sizeOption": "L",
-        "sizeType": ""
+        "sizeType": "",
+	    "senders_findByParam" : ""
     };
     var patternNameMap = {
 	    SN : '<s:message code="bodyview.sn"/>',
@@ -1154,7 +1155,8 @@
         $(document).on('click', '.click2', function () {
             let data = $(this).data('value');
             dashCondition.attachYn = "Y";
-            dashCondition.senders = '\\"' + data + '\\"';
+	        dashCondition.senders_findByParam = "Y";
+	        dashCondition.senders = data;
             dashCondition.senders_upperCase = "Y";
             $('#conditionParam').val(makePeriod2(dashCondition));
             $('#getMessageInfo').submit();
