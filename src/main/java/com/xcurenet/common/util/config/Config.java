@@ -295,6 +295,13 @@ public class Config {
 		return null;
 	}
 
+	public static String getService12Lv2Nm(final String svc12){
+		for (ServiceTypeVO service : serviceTypes) {
+			if (Common.nvl(service.getServiceCd()).startsWith(svc12)) return service.getServiceLv2Nm();
+		}
+		return null;
+	}
+
 	public static String getServiceDeepNm(final String svc) {
 		for (ServiceTypeVO service : serviceTypesAll) {
 			if (Common.nvl(service.getServiceCd()).startsWith(svc)) {

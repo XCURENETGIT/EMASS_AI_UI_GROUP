@@ -1,25 +1,17 @@
+<%@ page import="java.util.Arrays" %>
 <%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%
-	java.util.List<com.xcurenet.pattern.service.PatternVO> patternInfo = Config.patternInfo;
-	//개인정보 패턴
-	String privacyCdArr="";
-	String privacyNmArr="";
 	
 	//현재 사용중 생성형 AI 서비스
 	String serviceCdArr="";
 	String serviceNmArr="";
-	
-	
-	for (com.xcurenet.pattern.service.PatternVO vo : patternInfo) {
-		if (Common.isEquals(vo.getType(), "N")) {
-			if (!privacyCdArr.isEmpty()) privacyCdArr += ",";
-			privacyCdArr += vo.getCode();
-			if (!privacyNmArr.isEmpty()) privacyNmArr += ",";
-			privacyNmArr += vo.getName();
-		}
-	}
+
+	//개인 정보 패턴
+	String privacyCdArr = String.join(",", Config.activePrivatePatterns);
+
+
 	
 	java.util.List<com.xcurenet.emass.service.service.ServiceTypeVO> serviceInfo = Config.aiServices;
 	for (com.xcurenet.emass.service.service.ServiceTypeVO svcVo : serviceInfo) {
@@ -45,6 +37,11 @@
         word-break: break-word !important;
         text-align: left !important;
         overflow: visible !important;
+    }
+
+    .between :hover{
+	    cursor: pointer;
+	    text-decoration: underline;
     }
 	
     #todayCount{
@@ -329,7 +326,7 @@
 			var svcTooltip = aiDashboardMsgMaps.userSvcs + ": " + svcNames.join(', ');
 			html += ''
 				+ '<li>'
-				+ '<a href="javascript:void(0)" style="cursor: default;" class="between">'
+				+ '<a href="javascript:void(0)" style="cursor: default;" class="between todayTopUser" data-value="' + user.userId+ '">'
 				+ '<p>' + displayName + '</p>'
 				+ '<div>'
 				+ '<span class="icon-ai">'
@@ -378,7 +375,7 @@
 			var piTooltip = aiDashboardMsgMaps.userPis + ": " + piNames.join(', ');
 			html += ''
 				+ '<li>'
-				+ '<a href="javascript:void(0)" style="cursor: default;" class="between">'
+					+ '<a href="javascript:void(0)" style="cursor: default;" class="between piUser" data-value="' + user.userId+ '">'
 				+ '<p>' + displayName + '</p>'
 				+ '<div>'
 				+ '<span class="icon-ai">'
@@ -419,7 +416,6 @@
 
 			for (var j = 0; j < kwdInfos.length; j++) {
 				var kwd = kwdInfos[j];
-                console.log(kwd)
 				var kwdName = kwd.kwd || "keyword";
 				kwdNames.push(kwdName);
 				totalKwdCount += parseInt(kwd.kwdCount || "0", 10);
@@ -428,7 +424,7 @@
 			var kwdTooltip = aiDashboardMsgMaps.userkwds + ": " + kwdNames.join(', ');
 			html += ''
 				+ '<li>'
-				+ '<a href="javascript:void(0)"  style="cursor: default;" class="between">'
+				+ '<a href="javascript:void(0)"  style="cursor: default;" class="between keywordUser" data-value="' + user.userId+ '">'
 				+ '<p>' + displayName + '</p>'
 				+ '<div>'
 				+ '<span class="icon-ai">'
@@ -551,10 +547,10 @@
         "sizeStartVal": "0",
         "sizeEndVal": "0",
         "sizeOption": "L",
-        "sizeType": ""
+        "sizeType": "",
+	    "senders_findByParam" : ""
     };
     var privacyCdArr = '<%=privacyCdArr%>';
-    var privacyNmArr =  '<%=privacyNmArr%>';
     var serviceCdArr =  '<%=serviceCdArr%>';
     var serviceNmArr =  '<%=serviceNmArr%>';
     
@@ -597,9 +593,9 @@
         dashCondition.serviceType = serviceCdArr;
         dashCondition.serviceTypeNm = serviceNmArr;
         dashCondition.regexpYn = "Y";
-        dashCondition.regexpVal = privacyCdArr.replaceAll(",", "%L@1|") + '%L@1';
+	    dashCondition.regexpVal = privacyCdArr.replaceAll(",", "%L@1|") + "%L@1";
         $('#conditionParam').val(makePeriod(dashCondition));
-      $('#getMessageInfo').submit();
+       $('#getMessageInfo').submit();
     });
 
 
@@ -608,7 +604,7 @@
         dashCondition.serviceType = serviceCdArr;
         dashCondition.serviceTypeNm = serviceNmArr;
         dashCondition.regexpYn = "Y";
-        dashCondition.regexpVal = privacyCdArr.replaceAll(",", "%L@1|") + '%L@1';
+        dashCondition.regexpVal = privacyCdArr.replaceAll(",", "%L@1|") + "%L@1";
         dashCondition.attachYn = "Y";
         dashCondition.sizeType = "A";
         dashCondition.sizeOption = "L";
@@ -636,6 +632,46 @@
         $('#conditionParam').val(makePeriod(dashCondition));
         $('#getMessageInfo').submit();
     });
+
+	//금일 top 10 유저별 ai 현황
+	$(document).on('click', '.todayTopUser', function (e) {
+		e.preventDefault();
+		let data = $(this).data('value');
+		dashCondition.serviceType = serviceCdArr;
+		dashCondition.serviceTypeNm = serviceNmArr;
+		dashCondition.senders_findByParam = "Y";
+		dashCondition.senders = data;
+		dashCondition.senders_upperCase = "Y";
+		$('#conditionParam').val(makePeriod(dashCondition));
+		$('#getMessageInfo').submit();
+	});
+
+	$(document).on('click', '.piUser', function (e) {
+		e.preventDefault();
+		let data = $(this).data('value');
+		dashCondition.serviceType = serviceCdArr;
+		dashCondition.serviceTypeNm = serviceNmArr;
+		dashCondition.senders_findByParam = "Y";
+		dashCondition.senders = data;
+		dashCondition.senders_upperCase = "Y";
+		dashCondition.regexpYn = "Y";
+		dashCondition.regexpVal = privacyCdArr.replaceAll(",", "%L@1|") + "%L@1";
+		$('#conditionParam').val(makePeriod(dashCondition));
+		$('#getMessageInfo').submit();
+	});
+
+	$(document).on('click', '.keywordUser', function (e) {
+		e.preventDefault();
+		let data = $(this).data('value');
+		dashCondition.serviceType = serviceCdArr;
+		dashCondition.serviceTypeNm = serviceNmArr;
+		dashCondition.senders_findByParam = "Y";
+		dashCondition.senders = data;
+		dashCondition.senders_upperCase = "Y";
+		dashCondition.keywordYn = "Y";
+		$('#conditionParam').val(makePeriod(dashCondition));
+		$('#getMessageInfo').submit();
+	});
 
 
 </script>

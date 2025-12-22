@@ -10,6 +10,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.aiDashboard.service.AiDashboardService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,8 +31,8 @@ public class AiDashBoardController {
 
     @RequestMapping(value = "/getAiDashboardStats.xcn", method = RequestMethod.POST)
     @ResponseBody
-    public XcnResponseVO getAiDashboardStats(final HttpServletRequest request) throws IOException {
-        return new XcnResponseVO(XcnRspCode.OK,  aiDashboardService.redefined(aiDashboardService.getAiDashboardStats(Common.getAdminId(request))));
+    public XcnResponseVO getAiDashboardStats(final HttpServletRequest request) throws IOException, SolrServerException {
+        return new XcnResponseVO(XcnRspCode.OK,  aiDashboardService.getAiDashboardStats(Common.getAdminId(request)));
     }
 
 }
