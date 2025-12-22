@@ -250,6 +250,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			List<EmsRecvVO> to = new ArrayList<>();
 			List<EmsRecvVO> cc = new ArrayList<>();
 			List<EmsRecvVO> bcc = new ArrayList<>();
+			List<EmsRecvVO> orgSender = new ArrayList<>();
 
 			ConfigAdminVO configAdminVO = configAdminService.getConfAdmin(Config.USER_FORMAT, adminId);
 			if (configAdminVO == null || Common.isEmpty(configAdminVO.getVal())) {
@@ -284,6 +285,10 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					recvs.add(u);
 					bcc.add(u);
+				} else if (Common.isEquals(u.getUType(), "OF")) {
+					u.setEMail(EmsReDefined.reUserEmail(emsRecvVO));
+					u.setViewStr(EmsReDefined.reUser(u, formatval));
+					orgSender.add(u);
 				}
 			}
 			emsMessageVO.setUserList(user);
@@ -292,6 +297,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			emsMessageVO.setToList(to);
 			emsMessageVO.setCcList(cc);
 			emsMessageVO.setBccList(bcc);
+			emsMessageVO.setOrgSenderList(orgSender);
 
 //			if (Common.isNotEmpty(emsMessageVO.getIpBusicd()))
 //				emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).isEmpty() ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));

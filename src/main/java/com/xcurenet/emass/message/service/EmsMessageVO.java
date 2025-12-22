@@ -44,7 +44,6 @@ public class EmsMessageVO {
 	private String path;
 	private String query;
 	private String sender;
-	private String org_sender;
 	private String opinion;
 	private String devWriter;
 	private String devDecoder;
@@ -92,6 +91,7 @@ public class EmsMessageVO {
 	private List<EmsRecvVO> toList = new ArrayList<>();
 	private List<EmsRecvVO> ccList = new ArrayList<>();
 	private List<EmsRecvVO> bccList = new ArrayList<>();
+	private List<EmsRecvVO> orgSenderList = new ArrayList<>();
 
 	private List<EmsAttachVO> files = new ArrayList<>();
 	private List<EmsPiVO> patterns = new ArrayList<>();
@@ -142,6 +142,7 @@ public class EmsMessageVO {
 		result.addAll(toList);
 		result.addAll(ccList);
 		result.addAll(bccList);
+		result.addAll(orgSenderList);
 		return result;
 	}
 

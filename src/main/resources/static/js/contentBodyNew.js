@@ -1280,7 +1280,15 @@ function setMessage(msg) {
     $('#userIdTd').html(msg.usrId);
 
 
-    $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip, msg.org_sender));
+    $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip));
+
+    if (msg.orgSenderList.length == 0) {
+        $('#actualSenderTr').css("display", "none");
+        $('#actualSenderDiv').html('');
+    } else{
+        $('#actualSenderTr').css("display", "");
+        $('#actualSenderDiv').html(userHtml(msg.orgSenderList, 'actualSenderTr', srcip, dstip, usrip));
+    }
 
     //받는 사람
     if (msg.toList.length == 0) {
@@ -1289,39 +1297,6 @@ function setMessage(msg) {
     } else {
         $('#toTr').css("display", "");
         $('#receiveUserDiv').html(userHtml(msg.toList, 'toTr', srcip, dstip, usrip));
-    }
-
-    // 실제발신자 정보 표시 (별도 행으로 표시)
-    if (msg.org_sender && msg.org_sender.trim() !== '') {
-        try {
-            var orgSenderObj = JSON.parse(msg.org_sender);
-            var orgSenderId = orgSenderObj.id || msg.org_sender;
-            var insideValue = orgSenderObj.inside || 'N'; // inside 값이 없으면 기본값 'N'
-
-            var actualOutSideCnt = 0;
-            var actualInSideCnt = 0;
-            if (insideValue == 'N') actualOutSideCnt = 1;
-            else actualInSideCnt = 1;
-
-            $('#actualSenderTr').show();
-            $('#actualSenderDiv').html('<span class="userInfoSpan notuser" recvid="' + orgSenderId + '" recvip="" recvemail="" recvname="" recvconm="" recvbusinm="" recvsuborgnm="" recvdeptnm="" recvjikgubnm="" recvsabun="">' + orgSenderId + '</span>');
-
-            setTimeout(function () {
-                var actualSenderText = $('#actualSenderTr > th.fold_clickTh .trTitle').text().replace(/\[.*\]/, '') || '실제 발신자';
-                $('#actualSenderTr > th.fold_clickTh .trTitle').html(actualSenderText + '[' + actualOutSideCnt + '/' + actualInSideCnt + ']');
-            }, 1);
-        } catch (e) {
-            $('#actualSenderTr').show();
-            $('#actualSenderDiv').html('<span class="userInfoSpan notuser" recvid="' + msg.org_sender + '" recvip="" recvemail="" recvname="" recvconm="" recvbusinm="" recvsuborgnm="" recvdeptnm="" recvjikgubnm="" recvsabun="">' + msg.org_sender + '</span>');
-
-            // 기본값으로 외부 사용자 처리
-            setTimeout(function () {
-                var actualSenderText = $('#actualSenderTr > th.fold_clickTh .trTitle').text().replace(/\[.*\]/, '') || '실제 발신자';
-                $('#actualSenderTr > th.fold_clickTh .trTitle').html(actualSenderText + '[1/0]');
-            }, 1);
-        }
-    } else {
-        $('#actualSenderTr').hide();
     }
 
 
@@ -1463,7 +1438,7 @@ function getPattern(){
     return patternKyword;
 }
 
-function userHtml(userList, tr, srcip, dstip, usrip, orgSender) {
+function userHtml(userList, tr, srcip, dstip, usrip) {
 
     var userDivHtml = "";
 
@@ -1475,29 +1450,20 @@ function userHtml(userList, tr, srcip, dstip, usrip, orgSender) {
         else inSideCnt++;
     }
 
-    // 실제 발신자도 카운팅에 포함
-    if (orgSender && orgSender.trim() !== '') {
-        try {
-            var orgSenderObj = JSON.parse(orgSender);
-            var insideValue = orgSenderObj.inside || 'N';
-            if (insideValue == 'N') outSideCnt++;
-            else inSideCnt++;
-        } catch (e) {
-            outSideCnt++;
-        }
-    }
     var str = '';
     if (tr == 'userTr') str = contentBody.user;
     else if (tr == 'fromTr') str = contentBody.from;
     else if (tr == 'toTr') str = contentBody.to;
     else if (tr == 'ccTr') str = contentBody.cc;
     else if (tr == 'bccTr') str = contentBody.bcc;
+    else if (tr == 'actualSenderTr') str = contentBody.orgSender;
 
     $('#userTr > th.fold_clickTh .trTitle').html(contentBody.user);
     $('#fromTr > th.fold_clickTh .trTitle').html(contentBody.from);
     $('#toTr > th.fold_clickTh .trTitle').html(contentBody.to);
     $('#ccTr > th.fold_clickTh .trTitle').html(contentBody.cc);
     $('#bccTr > th.fold_clickTh .trTitle').html(contentBody.bcc);
+    $('#actualSenderTr > th.fold_clickTh .trTitle').html(contentBody.orgSender);
     setTimeout(function () {
         $('#' + tr + ' > th.fold_clickTh .trTitle').html(str + '(' + outSideCnt + '/' + inSideCnt + ')');
     }, 1);

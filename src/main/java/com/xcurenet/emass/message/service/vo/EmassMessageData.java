@@ -132,7 +132,7 @@ public class EmassMessageData {
 	private EmassUserData senderInfo;
 
 	@Field("orgSender")
-	private String orgSender;
+	private EmassUserData orgSender;
 
 	@Field("recv")
 	private EmassRecvData recvInfo;

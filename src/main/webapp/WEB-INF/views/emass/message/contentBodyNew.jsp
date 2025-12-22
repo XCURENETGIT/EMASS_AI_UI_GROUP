@@ -714,7 +714,8 @@
 			fileNameExistN:'<s:message code="java.message.fileNameExistN"/>',
 			fileNoSizeNo:'<s:message code="java.message.fileNoSizeNo"/>',
 			fileEncrypte :'<s:message code="bodyview.ef"/>',
-			fileDrm : 'DRM'+'<s:message code="common.org.file"/>'
+			fileDrm : 'DRM'+'<s:message code="common.org.file"/>',
+			orgSender: '<s:message code="condition.org_sender"/>'
 		};
 
 		function getSimilarDoc(){
@@ -1533,7 +1534,8 @@
 		windowNew:'<s:message code="bodyview.window.new"/>',
 		windowTab:'<s:message code="bodyview.window.tab"/>',
 		copyBodyMsg:'<s:message code="bodyview.copyBodyMsg"/>',
-		fileNotFound:'<s:message code="message.message.notfound.attach"/>'
+		fileNotFound:'<s:message code="message.message.notfound.attach"/>',
+		orgSender: '<s:message code="condition.org_sender"/>'
 	};
 
 	function alert(msg){

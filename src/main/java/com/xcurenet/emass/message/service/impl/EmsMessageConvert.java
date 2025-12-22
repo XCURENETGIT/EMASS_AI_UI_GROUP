@@ -58,7 +58,9 @@ public class EmsMessageConvert {
 			vo.setBodyType(Common.nvl(data.getBodyInfo().getBodyType()));
 
 		}
-		vo.setOrg_sender(data.getOrgSender());
+		if (data.getOrgSender() != null){
+			vo.setOrgSenderList(getUserInfo(data.getOrgSender(), data.getMsgId(),"OF"));
+		}
 		vo.setUsrIp(data.getUsrIp());
 		vo.setUsrId(data.getUsrId());
 		vo.setPassword(data.getPassword());

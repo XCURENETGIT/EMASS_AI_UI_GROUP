@@ -83,6 +83,7 @@ public class EmsCreateMessage {
 			String bodyStr = "";
 			StringBuilder userStr = new StringBuilder();
 			StringBuilder senderStr = new StringBuilder();
+			StringBuilder orgSenderStr = new StringBuilder();
 			StringBuilder toStr = new StringBuilder();
 			StringBuilder ccStr = new StringBuilder();
 			StringBuilder bccStr = new StringBuilder();
@@ -93,6 +94,7 @@ public class EmsCreateMessage {
 			List<EmsRecvVO> to = new ArrayList<>();
 			List<EmsRecvVO> cc = new ArrayList<>();
 			List<EmsRecvVO> bcc = new ArrayList<>();
+			List<EmsRecvVO> orgSender = new ArrayList<>();
 
 
 
@@ -100,6 +102,7 @@ public class EmsCreateMessage {
 			to = msg.getToList();
 			cc = msg.getCcList();
 			bcc = msg.getBccList();
+			orgSender = msg.getOrgSenderList();
 
 			String svcnm = Common.nvl(Config.getServiceNm(msg.getSvc()));
 			String protocolNm = Config.getProtocolNm(msg.getProtocol());
@@ -150,6 +153,9 @@ public class EmsCreateMessage {
 						u.setEMail(EmsReDefined.reUserEmail(emsRecvVO));
 						recvs.add(u);
 						bcc.add(u);
+					}else if (Common.isEquals(u.getUType(), "OF")){
+						u.setEMail(EmsReDefined.reUserEmail(emsRecvVO));
+						orgSender.add(u);
 					}
 				}
 
@@ -205,13 +211,18 @@ public class EmsCreateMessage {
 				bccStr.append("; ");
 			}
 
+			for (EmsRecvVO u : orgSender) {
+				orgSenderStr.append(makeUserHtml(u, formatval));
+				orgSenderStr.append("; ");
+			}
+
 			String[] keys = {"#emass_body_view#", "#emass_subject_keyword#", "#emass_title_srcip#", "#emass_title_date#", "#emass_title_dstip#", "#emass_title_size#",
 					"#emass_title_user#", "#emass_title_account#", "#emass_title_from#", "#emass_title_to#", "#emass_title_cc#", "#emass_title_bcc#", "#emass_title_ipBusiNm#","#emass_title_ipDeptNm#",
 					"#emass_title_fileinfo#", "#emass_attach_keyword#", "#emass_attachname_keyword#", "#emass_title_pattern#", "#emass_title_bodycontent#",
 					"#emass_body_keyword#", "#emass_subject#", "#emass_subject_kwd#", "#emass_svcnm#", "#emass_src_ip#", "#emass_ctime#", "#emass_dst_ip#",
 					"#emass_size#", "#emass_usrid#", "#emass_recvs#", "#emass_senders#", "#emass_to#", "#emass_cc#", "#emass_bcc#", "#emass_ipBusiNm#","#emass_ipDeptNm#", "#emass_host#", "#emass_attach_kwd#",
 					"#emass_fileName_kwd#", "#emass_file#", "#emass_body_kwd#", "#emass_pattern#","#emass_title_participant#","#emass_participant#","#emass_title_xrootmtr#","#emass_xrootmtr#",
-					"emass_title_ocr#", "#emass_ocr#", "#ml_confd_class#", "#ml_confd_feedback#", "#ml_confd_prob#", "#ml_confd_class_bg_color#", "#ml_confd_userid#","#emass_title_epmsg_type#","#emass_epmsg_type#"};
+					"emass_title_ocr#", "#emass_ocr#", "#ml_confd_class#", "#ml_confd_feedback#", "#ml_confd_prob#", "#ml_confd_class_bg_color#", "#ml_confd_userid#","#emass_title_epmsg_type#","#emass_epmsg_type#" , "#emass_title_org_from#", "#emass_org_senders#"};
 
 			String[] vals = {Prop.propFormat("OPERATION_MGMT.BODY_VIEW", locale), Prop.propFormat("condition.subject", locale)+" "+Prop.propFormat("bodyview.find.keyword", locale),
 					Prop.propFormat("condition.source", locale)+" IP", Prop.propFormat("condition.date", locale), Prop.propFormat("condition.destination", locale)+" IP",
@@ -224,7 +235,7 @@ public class EmsCreateMessage {
 					Common.nvl(msg.getUsrId()), userStr.toString(), senderStr.toString(), toStr.toString(), ccStr.toString(), bccStr.toString(), Common.nvl(ipBusiNm),Common.nvl(ipDeptNm), Common.nvl(msg.getHost())+Common.nvl(msg.getPath())+Common.nvl(msg.getQuery()), attachStr, fileNameStr, getFileHtml(files), bodyStr, getPatternHtml(pattern, locale),
 					Prop.propFormat("condition.participation", locale), participantStr, Prop.propFormat("condition.xrootmtr", locale), msg.getXRootMtr(),
 					Prop.propFormat("bodyview.ocr.preview", locale), getOcrHtml(files, hasOcr), getMlConfdClassStr(msg.getMl_confd_class(), locale), getMlConfdFeedbackStr(msg.getMl_confd_feedback(), locale),
-					getMlConfdProbPercent(msg.getMl_confd_prob()), getMlConfdClassBgColor(msg.getMl_confd_class()),getMlConfdUseridStr(msg.getMl_confd_userid()),Prop.propFormat("condition.epmsgType.list", locale) ,Common.nvl(msg.getEpmsgType())};
+					getMlConfdProbPercent(msg.getMl_confd_prob()), getMlConfdClassBgColor(msg.getMl_confd_class()),getMlConfdUseridStr(msg.getMl_confd_userid()),Prop.propFormat("condition.epmsgType.list", locale) ,Common.nvl(msg.getEpmsgType()) , Prop.propFormat("condition.org_sender", locale), orgSenderStr.toString() };
 
 			String tmp = "";
 			StringBuffer result = new StringBuffer();
@@ -272,6 +283,10 @@ public class EmsCreateMessage {
 //			else{
 				if(null != header_doc.getElementById("msgAccount")) header_doc.getElementById("msgAccount").remove();
 //			}
+
+			if (Common.isEmpty(orgSenderStr)){
+				header_doc.getElementById("msgOrgFrom").remove();
+			}
 
 			if (files.isEmpty()) header_doc.getElementById("msgFiles").remove();
 			else {
