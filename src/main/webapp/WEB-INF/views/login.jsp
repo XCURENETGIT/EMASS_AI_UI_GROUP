@@ -574,7 +574,7 @@
 			</div>
 			<div id="login_switch">
 				<label class="switch">
-					<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
+					<input type="checkbox" id="saveLoginId" class="checkbox_align">
 					<span class="slider round"></span>
 				</label>
 				<span class="switchText"><%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %></span>
