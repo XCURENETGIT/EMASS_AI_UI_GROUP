@@ -383,15 +383,15 @@
             if (ctimeWorkMsg != '') searchStr += setConditionValStr(ctimeWorkMsg, '<s:message code="condition.ctimework"/>');
 
             if (alarmVal.serviceType != '') searchStr += setConditionValStr(alarmVal.serviceTypeNm, '<s:message code="filterInfo.servicetype"/>');
-            if (alarmVal.senders != '') searchStr += setConditionValStr(alarmVal.senders, '<s:message code="condition.sender"/>', alarmVal.senders_not);
-            if (alarmVal.receivers != '') searchStr += setConditionValStr(alarmVal.receivers, '<s:message code="condition.recv"/>', alarmVal.receivers_not);
+			if (alarmVal.senders != '') searchStr += setConditionValStr(alarmVal.senders, '<s:message code="condition.sender"/>', alarmVal.senders_not, alarmVal.senders_findByKeyword, alarmVal.senders_findByParam);
+			if (alarmVal.receivers != '') searchStr += setConditionValStr(alarmVal.receivers, '<s:message code="condition.recv"/>', alarmVal.receivers_not, alarmVal.receivers_findByKeyword, (alarmVal.findByParam == 'Y' || alarmVal.receivers_findByParam == 'Y') ? 'Y' : '');
 
-            if (alarmVal.epmsgType != '') searchStr += setConditionValStr(alarmVal.epmsgType, '<s:message code="condition.epmsgType.list"/>');
+			if (alarmVal.epmsgType != '') searchStr += setConditionValStr(alarmVal.epmsgType, '<s:message code="condition.epmsgType.list"/>');
 
-            if (alarmVal.rcvTo != '') searchStr += setConditionValStr(alarmVal.rcvTo, '<s:message code="condition.to"/>', alarmVal.rcvTo_not);
-            if (alarmVal.rcvCc != '') searchStr += setConditionValStr(alarmVal.rcvCc, '<s:message code="condition.cc"/>', alarmVal.rcvCc_not);
-            if (alarmVal.rcvBcc != '') searchStr += setConditionValStr(alarmVal.rcvBcc, '<s:message code="condition.bcc"/>', alarmVal.rcvBcc_not);
-            if (alarmVal.rcvJikgub != '') searchStr += setConditionValStr(alarmVal.rcvJikgub, '<s:message code="condition.recv_jikgub"/>');
+			if (alarmVal.rcvTo != '') searchStr += setConditionValStr(alarmVal.rcvTo, '<s:message code="condition.to"/>', alarmVal.rcvTo_not, alarmVal.rcvTo_findByKeyword, alarmVal.rcvTo_findByParam);
+			if (alarmVal.rcvCc != '') searchStr += setConditionValStr(alarmVal.rcvCc, '<s:message code="condition.cc"/>', alarmVal.rcvCc_not, alarmVal.rcvCc_findByKeyword, alarmVal.rcvCc_findByParam);
+			if (alarmVal.rcvBcc != '') searchStr += setConditionValStr(alarmVal.rcvBcc, '<s:message code="condition.bcc"/>', alarmVal.rcvBcc_not, alarmVal.rcvBcc_findByKeyword, alarmVal.rcvBcc_findByParam);
+			if (alarmVal.rcvJikgub != '') searchStr += setConditionValStr(alarmVal.rcvJikgub, '<s:message code="condition.recv_jikgub"/>');
             if (alarmVal.allOfus != '') searchStr += setConditionValStr(alarmVal.allOfus, '<s:message code="condition.allofus"/>');
 
             if (alarmVal.busi != '') searchStr += setConditionValStr(alarmVal.busiNm, '<s:message code="common.org.busi"/>', alarmVal.busi_not);
@@ -457,14 +457,16 @@
 
         }
 
-        function setConditionValStr(val, key, notVal) {
-            if (val != null && val != '') {
-                var str = key + ' : ' + val.replaceAll('\\|', ',');
-                if (notVal == 'Y') str += ' [<s:message code="query.make.except"/>]';
-                return str + '\n';
-            }
-            return '';
-        }
+		function setConditionValStr(val, key, notVal, findByKeyword, findByParam) {
+			if (val != null && val != '') {
+				var str = key + ' : ' + val.replaceAll('\\|', ',');
+				if (notVal == 'Y') str += ' [<s:message code="query.make.except"/>]';
+				if (findByKeyword == 'Y') str += ' [<s:message code="condition.partial.match"/>]';
+				else if (findByParam == 'Y') str += ' [<s:message code="condition.exact.match"/>]';
+				return str + '\n';
+			}
+			return '';
+		}
 
         function setChartData(type, x, y) {
             if (type == 'P') setPieChartSample();

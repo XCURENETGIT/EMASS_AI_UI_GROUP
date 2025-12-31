@@ -229,34 +229,34 @@
             // });
 
 
-            $(document).on('input change keyup', '.condition_input_text', function(e) {
-                var $input = $(this);
-                var hasValue = $input.val().trim() != '';
-                var inputId = $input.attr('id');
+			$(document).on('input change keyup', '.condition_input_text', function(e) {
+				var $input = $(this);
+				var hasValue = $input.val().trim() != '';
+				var inputId = $input.attr('id');
 
-                var $parent = $input.closest('.input-group');
-                if ($parent.length === 0) {
-                    $parent = $input.parent();
-                }
+				var $parent = $input.closest('.input-group');
+				if ($parent.length === 0) {
+					$parent = $input.parent();
+				}
 
-                $parent.find('input:checkbox').prop('disabled', !hasValue);
-                if (!hasValue) {
-                    $parent.find('input:checkbox').prop('checked', false);
-                }
+				$parent.find('input:checkbox').prop('disabled', !hasValue);
+				if (!hasValue) {
+					$parent.find('input:checkbox').prop('checked', false);
+				}
 
-                if (inputId === 'senders' && rsUppercase == "Y") {
-                    $('input:checkbox[name="senders_upperCase"]').prop('disabled', !hasValue);
-                    if (!hasValue) {
-                        $('input:checkbox[name="senders_upperCase"]').prop('checked', false);
-                    }
-                }
-                if (inputId === 'receivers' && rsUppercase == "Y") {
-                    $('input:checkbox[name="receivers_upperCase"]').prop('disabled', !hasValue);
-                    if (!hasValue) {
-                        $('input:checkbox[name="receivers_upperCase"]').prop('checked', false);
-                    }
-                }
-            });
+				if (inputId === 'senders' && rsUppercase == "Y") {
+					$('input:checkbox[name="senders_upperCase"]').prop('disabled', !hasValue);
+					if (!hasValue) {
+						$('input:checkbox[name="senders_upperCase"]').prop('checked', false);
+					}
+				}
+				if (inputId === 'receivers' && rsUppercase == "Y") {
+					$('input:checkbox[name="receivers_upperCase"]').prop('disabled', !hasValue);
+					if (!hasValue) {
+						$('input:checkbox[name="receivers_upperCase"]').prop('checked', false);
+					}
+				}
+			});
 
 
             $("#regexSearchDiv").draggable({
@@ -315,99 +315,116 @@
                 initCondition();
             });
 
-            $('#conditionSaveBtn').click(function () {
-                try {
-                    // 체크박스 검증: 입력값이 있으면 체크박스가 선택되어야 함
-                    var checkboxGroups = [];
-                    
-                    // 발신자 체크박스 검증
-                    var sendersValue = $('#senders').val();
-                    if(sendersValue && sendersValue.trim() !== '') {
-                        checkboxGroups.push({
-                            inputId: 'senders',
-                            checkboxIds: ['senders_not', 'senders_findByKeyword', 'senders_findByParam']
-                        });
-                    }
-                    
-                    // 수신자 옵션 확인
-                    var receiveOption = $('input:radio[name=receive_option]:input:checked').val();
-                    
-                    if(receiveOption == '' || receiveOption == undefined) {
-                        // 수신자 전체
-                        var receiversValue = $('#receivers').val();
-                        if(receiversValue && receiversValue.trim() !== '') {
-                            checkboxGroups.push({
-                                inputId: 'receivers',
-                                checkboxIds: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam']
-                            });
-                        }
-                    } else if(receiveOption == 'detail') {
-                        // 수신자 상세 (To, CC, BCC)
-                        var rcvToValue = $('#rcvTo').val();
-                        if(rcvToValue && rcvToValue.trim() !== '') {
-                            checkboxGroups.push({
-                                inputId: 'rcvTo',
-                                checkboxIds: ['rcvTo_not', 'rcvTo_findByKeyword', 'rcvTo_findByParam']
-                            });
-                        }
-                        
-                        var rcvCcValue = $('#rcvCc').val();
-                        if(rcvCcValue && rcvCcValue.trim() !== '') {
-                            checkboxGroups.push({
-                                inputId: 'rcvCc',
-                                checkboxIds: ['rcvCc_not', 'rcvCc_findByKeyword', 'rcvCc_findByParam']
-                            });
-                        }
-                        
-                        var rcvBccValue = $('#rcvBcc').val();
-                        if(rcvBccValue && rcvBccValue.trim() !== '') {
-                            checkboxGroups.push({
-                                inputId: 'rcvBcc',
-                                checkboxIds: ['rcvBcc_not', 'rcvBcc_findByKeyword', 'rcvBcc_findByParam']
-                            });
-                        }
-                    }
-                    
-                    // 체크박스 검증 실행
-                    for(var i = 0; i < checkboxGroups.length; i++) {
-                        var group = checkboxGroups[i];
-                        var inputValue = $('#' + group.inputId).val();
-                        if(inputValue && inputValue.trim() !== '') {
-                            var hasChecked = false;
-                            for(var j = 0; j < group.checkboxIds.length; j++) {
-                                var checkboxName = group.checkboxIds[j];
-                                if($('[name=' + checkboxName + ']').is(':checked') && !$('[name=' + checkboxName + ']').prop('disabled')) {
-                                    hasChecked = true;
-                                    break;
-                                }
-                            }
-                            if(!hasChecked) {
-                                alert('<s:message code="common.msg.checkbox.select.required"/>');
-                                return;
-                            }
-                        }
-                    }
-                    
-                    var alarmVal = getCondition();
-                    var alarmCycle = opener.$('#alarmCycleGroup input:radio:checked').val();
-                    if (alarmVal.startDateSelect == 'T' && alarmVal.endDateSelect == 'Y') {
-                        alert('<s:message code="condition.period.inputCheck"/>');
-                        return;
-                    } else if ((alarmVal.startDateSelect == 'T' && alarmVal.endDateSelect == 'T') || (alarmVal.startDateSelect == 'Y' && alarmVal.endDateSelect == 'Y')) {
-                        if (alarmVal.startTimeSelect > alarmVal.endTimeSelect) {
-                            alert('<s:message code="condition.period.inputCheck"/>');
-                            return;
-                        }
-                    }
-                    opener.$('#alarmVal').val(JSON.stringify(alarmVal));
-                    opener.printAlarmValStr(alarmCycle, alarmVal);
-                    self.close();
-                } catch (e) {
-                    console.log(e);
-                    alert('<s:message code="common.msg.connect.error"/>');
-                    return;
-                }
-            });
+			$('#conditionSaveBtn').click(function () {
+				try {
+					// 체크박스 검증: 입력값이 있으면 체크박스가 선택되어야 함
+					var checkboxGroups = [];
+
+					// 발신자 체크박스 검증
+					var sendersValue = $('#senders').val();
+					if(sendersValue && sendersValue.trim() !== '') {
+						checkboxGroups.push({
+							inputId: 'senders',
+							checkboxIds: ['senders_not', 'senders_findByKeyword', 'senders_findByParam']
+						});
+					}
+
+					// 수신자 옵션 확인
+					var receiveOption = $('input:radio[name=receive_option]:input:checked').val();
+
+					if(receiveOption == '' || receiveOption == undefined) {
+						// 수신자 전체
+						var receiversValue = $('#receivers').val();
+						if(receiversValue && receiversValue.trim() !== '') {
+							checkboxGroups.push({
+								inputId: 'receivers',
+								checkboxIds: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam']
+							});
+						}
+					} else if(receiveOption == 'detail') {
+						// 수신자 상세 (To, CC, BCC)
+						var rcvToValue = $('#rcvTo').val();
+						if(rcvToValue && rcvToValue.trim() !== '') {
+							checkboxGroups.push({
+								inputId: 'rcvTo',
+								checkboxIds: ['rcvTo_not', 'rcvTo_findByKeyword', 'rcvTo_findByParam']
+							});
+						}
+
+						var rcvCcValue = $('#rcvCc').val();
+						if(rcvCcValue && rcvCcValue.trim() !== '') {
+							checkboxGroups.push({
+								inputId: 'rcvCc',
+								checkboxIds: ['rcvCc_not', 'rcvCc_findByKeyword', 'rcvCc_findByParam']
+							});
+						}
+
+						var rcvBccValue = $('#rcvBcc').val();
+						if(rcvBccValue && rcvBccValue.trim() !== '') {
+							checkboxGroups.push({
+								inputId: 'rcvBcc',
+								checkboxIds: ['rcvBcc_not', 'rcvBcc_findByKeyword', 'rcvBcc_findByParam']
+							});
+						}
+					}
+
+					// 체크박스 검증 실행
+					for(var i = 0; i < checkboxGroups.length; i++) {
+						var group = checkboxGroups[i];
+						var inputValue = $('#' + group.inputId).val();
+						if(inputValue && inputValue.trim() !== '') {
+							// 제외(_not) 체크박스가 체크되어 있는지 먼저 확인
+							var notCheckboxName = null;
+							var otherCheckboxIds = [];
+							for(var k = 0; k < group.checkboxIds.length; k++) {
+								if(group.checkboxIds[k].indexOf('_not') !== -1) {
+									notCheckboxName = group.checkboxIds[k];
+								} else {
+									otherCheckboxIds.push(group.checkboxIds[k]);
+								}
+							}
+
+							// 제외 체크박스가 체크되어 있으면 검증 통과
+							if(notCheckboxName && $('[name=' + notCheckboxName + ']').is(':checked') && !$('[name=' + notCheckboxName + ']').prop('disabled')) {
+								continue;
+							}
+
+							// 제외가 체크되지 않은 경우, 다른 체크박스(부분일치/전체일치) 확인
+							var hasChecked = false;
+							for(var j = 0; j < otherCheckboxIds.length; j++) {
+								var checkboxName = otherCheckboxIds[j];
+								if($('[name=' + checkboxName + ']').is(':checked') && !$('[name=' + checkboxName + ']').prop('disabled')) {
+									hasChecked = true;
+									break;
+								}
+							}
+							if(!hasChecked) {
+								alert('<s:message code="common.msg.checkbox.select.required"/>');
+								return;
+							}
+						}
+					}
+
+					var alarmVal = getCondition();
+					var alarmCycle = opener.$('#alarmCycleGroup input:radio:checked').val();
+					if (alarmVal.startDateSelect == 'T' && alarmVal.endDateSelect == 'Y') {
+						alert('<s:message code="condition.period.inputCheck"/>');
+						return;
+					} else if ((alarmVal.startDateSelect == 'T' && alarmVal.endDateSelect == 'T') || (alarmVal.startDateSelect == 'Y' && alarmVal.endDateSelect == 'Y')) {
+						if (alarmVal.startTimeSelect > alarmVal.endTimeSelect) {
+							alert('<s:message code="condition.period.inputCheck"/>');
+							return;
+						}
+					}
+					opener.$('#alarmVal').val(JSON.stringify(alarmVal));
+					opener.printAlarmValStr(alarmCycle, alarmVal);
+					self.close();
+				} catch (e) {
+					console.log(e);
+					alert('<s:message code="common.msg.connect.error"/>');
+					return;
+				}
+			});
 
             $('#dept').click(function () {
                 var code = $(this).attr('id');
@@ -623,19 +640,24 @@
                 condition.receive_option = '';
             } else condition.receive_option = $('input:radio[name=receive_option]:input:checked').val();
 
-            if ($('input:radio[name=receive_option]:input:checked').val() == '') {
-                condition.receivers = $('#receivers').val();
-                condition.receivers_not = $('[name=receivers_not]').is(":checked") ? 'Y' : '';
-                condition.receivers_findByKeyword = $('[name=receivers_findByKeyword]').is(":checked") ? 'Y' : '';
-                if ($('[name=receivers_findByKeyword]').is(":checked")) {
-                    condition.findByParam = ''; // 부분일치
-                } else {
-                    condition.findByParam = $('[name=receivers_findByParam]').is(":checked") ? 'Y' : '';
-                }
-                if (rsUppercase == "Y") {
-                    condition.receivers_upperCase = $('input:checkbox[name="receivers_upperCase"]').is(":checked") ? 'Y' : '';
-                }
-            } else {
+			if ($('input:radio[name=receive_option]:input:checked').val() == '') {
+				condition.receivers = $('#receivers').val();
+				condition.receivers_not = $('[name=receivers_not]').is(":checked") && !$('[name=receivers_not]').prop('disabled') ? 'Y' : '';
+				var receivers_findByKeyword_checked = $('[name=receivers_findByKeyword]').is(":checked") && !$('[name=receivers_findByKeyword]').prop('disabled');
+				var receivers_findByParam_checked = $('[name=receivers_findByParam]').is(":checked") && !$('[name=receivers_findByParam]').prop('disabled');
+
+				condition.receivers_findByKeyword = receivers_findByKeyword_checked ? 'Y' : '';
+				if (receivers_findByKeyword_checked) {
+					condition.receivers_findByParam = ''; // 부분일치
+					condition.findByParam = '';
+				} else {
+					condition.receivers_findByParam = receivers_findByParam_checked ? 'Y' : '';
+					condition.findByParam = condition.receivers_findByParam;
+				}
+				if (rsUppercase == "Y") {
+					condition.receivers_upperCase = $('input:checkbox[name="receivers_upperCase"]').is(":checked") ? 'Y' : '';
+				}
+			} else {
                 condition.rcvTo = $('#rcvTo').val();
                 condition.rcvCc = $('#rcvCc').val();
                 condition.rcvBcc = $('#rcvBcc').val();
@@ -765,26 +787,76 @@
             $('[name=receivers_findByKeyword]').prop("disabled", alarmVal.receivers == '' ? true : false);
             $('[name=receivers_findByKeyword]').prop("checked", (alarmVal.receivers_findByKeyword == 'Y') ? true : false);
             $('[name=receivers_findByParam]').prop("disabled", alarmVal.receivers == '' ? true : false);
-            $('[name=receivers_findByParam]').prop("checked", ((alarmVal.findByParam == 'Y' || alarmVal.receivers_findByParam == 'Y') && alarmVal.receivers_findByKeyword != 'Y') ? true : false);
+			var receivers_findByParam_checked = false;
+			if (alarmVal.receivers_findByParam == 'Y' || alarmVal.findByParam == 'Y') {
+				receivers_findByParam_checked = true;
+			}
+			// 부분일치가 체크되어 있으면 전체일치는 선택하지 않음
+			if (alarmVal.receivers_findByKeyword == 'Y') {
+				receivers_findByParam_checked = false;
+			}
+			$('[name=receivers_findByParam]').prop("checked", receivers_findByParam_checked);
+			if (rsUppercase == "Y") {
+				$('input:checkbox[name="receivers_upperCase"]').prop("disabled", alarmVal.receivers == '' ? true : false);
+				$('input:checkbox[name="receivers_upperCase"]').prop("checked", alarmVal.receivers_upperCase == 'Y' ? true : false);
+			}
+			// rcvTo 체크박스 설정 - 디폴트값 없음
+			$('[name=rcvTo_not]').prop("disabled", (alarmVal.rcvTo == '' || alarmVal.rcvTo == null) ? true : false);
+			$('[name=rcvTo_not]').prop("checked", alarmVal.rcvTo_not == 'Y' ? true : false);
+			var rcvTo_findByKeyword_checked = false;
+			var rcvTo_findByParam_checked = false;
+			if (alarmVal.rcvTo_findByKeyword == 'Y' || alarmVal.m_to_findByKeyword == 'Y') {
+				rcvTo_findByKeyword_checked = true;
+			} else if (alarmVal.rcvTo_findByParam == 'Y' || alarmVal.m_to_findByParam == 'Y') {
+				rcvTo_findByParam_checked = true;
+			}
+			// 제외가 체크되어 있으면 부분일치/전체일치는 선택하지 않음 (디폴트값 없음)
+			if (alarmVal.rcvTo_not == 'Y') {
+				rcvTo_findByKeyword_checked = false;
+				rcvTo_findByParam_checked = false;
+			}
+			$('[name=rcvTo_findByKeyword]').prop("disabled", (alarmVal.rcvTo == '' || alarmVal.rcvTo == null) ? true : false);
+			$('[name=rcvTo_findByKeyword]').prop("checked", rcvTo_findByKeyword_checked);
+			$('[name=rcvTo_findByParam]').prop("disabled", (alarmVal.rcvTo == '' || alarmVal.rcvTo == null) ? true : false);
+			$('[name=rcvTo_findByParam]').prop("checked", rcvTo_findByParam_checked);
 
-            if (rsUppercase == "Y") {
-                $('input:checkbox[name="receivers_upperCase"]').prop("disabled", alarmVal.receivers == '' ? true : false);
-                $('input:checkbox[name="receivers_upperCase"]').prop("checked", alarmVal.receivers_upperCase == 'Y' ? true : false);
-            }
-            $('[name=rcvTo_not]').prop("disabled", (alarmVal.rcvTo == '' || alarmVal.rcvTo == null) ? true : false);
-            $('[name=rcvTo_not]').prop("checked", alarmVal.rcvTo_not == 'Y' ? true : false);
-            $('[name=rcvTo_findByKeyword]').prop("disabled", (alarmVal.rcvTo == '' || alarmVal.rcvTo == null) ? true : false);
-            $('[name=rcvTo_findByKeyword]').prop("checked", (alarmVal.rcvTo_findByKeyword == 'Y' || alarmVal.m_to_findByKeyword == 'Y') ? true : false);
-            $('[name=rcvTo_findByParam]').prop("disabled", (alarmVal.rcvTo == '' || alarmVal.rcvTo == null) ? true : false);
-            $('[name=rcvTo_findByParam]').prop("checked", ((alarmVal.rcvTo_findByParam == 'Y' || alarmVal.m_to_findByParam == 'Y') && alarmVal.rcvTo_findByKeyword != 'Y' && alarmVal.m_to_findByKeyword != 'Y') ? true : false);
-            $('[name=rcvCc_not]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
-            $('[name=rcvCc_not]').prop("checked", alarmVal.rcvCc_not == 'Y' ? true : false);
-            $('[name=rcvCc_findByKeyword]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
-            $('[name=rcvCc_findByKeyword]').prop("checked", (alarmVal.rcvCc_findByKeyword == 'Y' || alarmVal.m_cc_findByKeyword == 'Y') ? true : false);
-            $('[name=rcvCc_findByParam]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
-            $('[name=rcvCc_findByParam]').prop("checked", ((alarmVal.rcvCc_findByParam == 'Y' || alarmVal.m_cc_findByParam == 'Y') && alarmVal.rcvCc_findByKeyword != 'Y' && alarmVal.m_cc_findByKeyword != 'Y') ? true : false);
-            $('[name=rcvBcc_not]').prop("disabled", (alarmVal.rcvBcc == '' || alarmVal.rcvBcc == null) ? true : false);
-            $('[name=rcvBcc_not]').prop("checked", alarmVal.rcvBcc_not == 'Y' ? true : false);
+			// rcvCc 체크박스 설정 - 디폴트값 없음
+			$('[name=rcvCc_not]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
+			$('[name=rcvCc_not]').prop("checked", alarmVal.rcvCc_not == 'Y' ? true : false);
+			var rcvCc_findByKeyword_checked = false;
+			var rcvCc_findByParam_checked = false;
+			if (alarmVal.rcvCc_findByKeyword == 'Y' || alarmVal.m_cc_findByKeyword == 'Y') {
+				rcvCc_findByKeyword_checked = true;
+			} else if (alarmVal.rcvCc_findByParam == 'Y' || alarmVal.m_cc_findByParam == 'Y') {
+				rcvCc_findByParam_checked = true;
+			}
+			// 제외가 체크되어 있으면 부분일치/전체일치는 선택하지 않음 (디폴트값 없음)
+			if (alarmVal.rcvCc_not == 'Y') {
+				rcvCc_findByKeyword_checked = false;
+				rcvCc_findByParam_checked = false;
+			}
+			$('[name=rcvCc_findByKeyword]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
+			$('[name=rcvCc_findByKeyword]').prop("checked", rcvCc_findByKeyword_checked);
+			$('[name=rcvCc_findByParam]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
+			$('[name=rcvCc_findByParam]').prop("checked", rcvCc_findByParam_checked);
+
+			// rcvBcc 체크박스 설정 - 디폴트값 없음
+			$('[name=rcvBcc_not]').prop("disabled", (alarmVal.rcvBcc == '' || alarmVal.rcvBcc == null) ? true : false);
+			$('[name=rcvBcc_not]').prop("checked", alarmVal.rcvBcc_not == 'Y' ? true : false);
+			var rcvBcc_findByKeyword_checked = false;
+			var rcvBcc_findByParam_checked = false;
+			if (alarmVal.rcvBcc_findByKeyword == 'Y' || alarmVal.m_bcc_findByKeyword == 'Y') {
+				rcvBcc_findByKeyword_checked = true;
+			} else if (alarmVal.rcvBcc_findByParam == 'Y' || alarmVal.m_bcc_findByParam == 'Y') {
+				rcvBcc_findByParam_checked = true;
+			}
+			// 제외가 체크되어 있으면 부분일치/전체일치는 선택하지 않음 (디폴트값 없음)
+			if (alarmVal.rcvBcc_not == 'Y') {
+				rcvBcc_findByKeyword_checked = false;
+				rcvBcc_findByParam_checked = false;
+			}
+
+
             $('[name=rcvBcc_findByKeyword]').prop("disabled", (alarmVal.rcvBcc == '' || alarmVal.rcvBcc == null) ? true : false);
             $('[name=rcvBcc_findByKeyword]').prop("checked", (alarmVal.rcvBcc_findByKeyword == 'Y' || alarmVal.m_bcc_findByKeyword == 'Y') ? true : false);
             $('[name=rcvBcc_findByParam]').prop("disabled", (alarmVal.rcvBcc == '' || alarmVal.rcvBcc == null) ? true : false);
@@ -1142,6 +1214,31 @@
             $('#allOfus').selectpicker({
                 width: width
             });
+
+
+			// 체크박스 그룹별 단일 선택 처리
+			var checkboxGroups = [
+				{ name: 'senders', checkboxes: ['senders_not', 'senders_findByKeyword', 'senders_findByParam'] },
+				{ name: 'receivers', checkboxes: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam'] },
+				{ name: 'rcvTo', checkboxes: ['rcvTo_not', 'rcvTo_findByKeyword', 'rcvTo_findByParam'] },
+				{ name: 'rcvCc', checkboxes: ['rcvCc_not', 'rcvCc_findByKeyword', 'rcvCc_findByParam'] },
+				{ name: 'rcvBcc', checkboxes: ['rcvBcc_not', 'rcvBcc_findByKeyword', 'rcvBcc_findByParam'] }
+			];
+
+			checkboxGroups.forEach(function(group) {
+				group.checkboxes.forEach(function(checkboxName) {
+					$('[name=' + checkboxName + ']').on('change', function() {
+						if ($(this).is(':checked') && !$(this).prop('disabled')) {
+							// 같은 그룹의 다른 체크박스들 해제
+							group.checkboxes.forEach(function(otherCheckboxName) {
+								if (otherCheckboxName !== checkboxName) {
+									$('[name=' + otherCheckboxName + ']').prop('checked', false);
+								}
+							});
+						}
+					});
+				});
+			});
         }
 
         function setSelectpicker() {
