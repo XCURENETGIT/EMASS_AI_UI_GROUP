@@ -142,6 +142,11 @@ public class EmsMessageDownloadBatchController {
 			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (int i = 1; i <= queryCnt; i++) {
 				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgId).getEmass(), locale);
+				if (Common.isNotEmpty(emass)) {
+					SolrEdcVO last = emass.get(emass.size() - 1);
+					ctime = last.getCtime();
+					msgId = last.getMsgid();
+				}
 				if (listFlag) xlsxWriter = createExcelZipFile(exportDir, xlsxWriter, emass, header, title, total, i, solrCnt, bodyFlag, attachFlag, exportFileExt, dataLength);
 				if (bodyFlag || attachFlag) {
 					for (SolrEdcVO edc : emass) {
@@ -165,9 +170,6 @@ public class EmsMessageDownloadBatchController {
 								attachSkip = false;
 							}
 							sucCnt++;
-							ctime  = edc.getCtime();
-							msgId = edc.getMsgid();
-
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
@@ -425,7 +427,11 @@ public class EmsMessageDownloadBatchController {
 			StringBuffer skipText = new StringBuffer();
 			for (int i = 1; i <= queryCnt; i++) {
 				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgid).getEmass(), locale);
-
+				if (Common.isNotEmpty(emass)) {
+					SolrEdcVO last = emass.get(emass.size() - 1);
+					ctime = last.getCtime();
+					msgid = last.getMsgid();
+				}
 				csvWriter = createCsvZipFile(exportDir, csvWriter, emass, header, total, i, solrCnt, dataLength);
 
 				if (bodyFlag || attachFlag) {
@@ -450,8 +456,6 @@ public class EmsMessageDownloadBatchController {
 								attachSkip = false;
 							}
 							sucCnt++;
-							ctime  = edc.getSvc();
-							msgid = edc.getMsgid();
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
@@ -610,7 +614,11 @@ public class EmsMessageDownloadBatchController {
 			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (int i = 1; i <= queryCnt; i++) {
 				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgid).getEmass(), locale);
-
+				if (Common.isNotEmpty(emass)) {
+					SolrEdcVO last = emass.get(emass.size() - 1);
+					ctime = last.getCtime();
+					msgid = last.getMsgid();
+				}
 				pdfWriter = createPdfZipFile(exportDir, pdfWriter, emass, header, total, i, solrCnt, title, dataLength);
 
 				if (bodyFlag || attachFlag) {
@@ -634,8 +642,6 @@ public class EmsMessageDownloadBatchController {
 								attachSkip = false;
 							}
 							sucCnt++;
-							ctime = edc.getCtime();
-							msgid = edc.getMsgid();
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
