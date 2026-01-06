@@ -136,6 +136,8 @@
                     $("#readAuthDiv").css('display', '');
                 } else {
                     $("#readAuthDiv").css('display', 'none');
+	                $("#readAuthText").val('');
+	                $("#readAuthHidden").val('');
                 }
             });
             $('.selBtn').click(function () {
@@ -181,6 +183,8 @@
                         $('#readAuthDiv').css('display', '');
                     } else {
                         $('#readAuthDiv').css('display', 'none');
+	                    $("#readAuthText").val('');
+	                    $("#readAuthHidden").val('');
                     }
                 }
             });
@@ -1126,6 +1130,8 @@
                 $("#readAuthDiv").css('display', '');
             } else {
                 $("#readAuthDiv").css('display', 'none');
+	            $("#readAuthText").val('');
+	            $("#readAuthHidden").val('');
             }
 
 

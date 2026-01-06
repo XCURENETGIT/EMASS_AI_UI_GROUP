@@ -951,7 +951,7 @@
                     focus: "self"
 				},
                 label: {
-                    show: true,
+                    show: false,
                     position: 'right',
                     fontSize: 12,
                     color: '#fff',
