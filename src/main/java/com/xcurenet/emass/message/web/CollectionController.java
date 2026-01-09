@@ -1461,7 +1461,7 @@ public class CollectionController {
 		sq.setParam("group.ngroups", true);
 		sq.setParam("group.field", "userkey");
 		sq.setStart(start);
-		sq.setRows(limit);
+		sq.setRows(0);
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","sabun","direction_svc");
 

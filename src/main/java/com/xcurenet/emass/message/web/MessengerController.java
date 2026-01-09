@@ -1174,7 +1174,7 @@ public class MessengerController {
 		sq.setParam("group.ngroups", true);
 		sq.setParam("group.field", "xrootmtr");
 		sq.setStart(start);
-		sq.setRows(limit);
+		sq.setRows(0);
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
