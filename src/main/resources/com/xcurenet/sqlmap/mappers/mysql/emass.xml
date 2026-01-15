@@ -477,6 +477,16 @@
 		</foreach>
 	</delete>
 
+
+	<delete id="removeDownInfoDataMessenger" parameterType="hashmap">
+		DELETE 	FROM UI_DOWNLOAD_BATCH_MESSENGER
+		WHERE 	ADMIN_ID = #{adminId}
+		AND		DOWN_SEQ IN
+		<foreach collection="downList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+
 	<select id="getSearchKeywordAuto" resultType="emsSearchKeywordVO" parameterType="hashmap">
 		SELECT  SEARCH_KEYWORD AS searchKeyword
 		FROM	UI_SEARCH_KEYWORD

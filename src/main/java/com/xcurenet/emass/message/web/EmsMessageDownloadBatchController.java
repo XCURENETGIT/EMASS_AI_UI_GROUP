@@ -877,4 +877,25 @@ public class EmsMessageDownloadBatchController {
 		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.removeDownInfoData(adminId, downList));
 	}
 
+	@RequestMapping(value = "/removeDownInfoDataMessenger.xcn")
+	@Description("EMASS 메신저 / 생성형 / 노트 서비스 내보내기 이력 삭제")
+	@ResponseBody
+	public XcnResponseVO removeDownInfoDataMessenger(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		JSONArray deleteData= Common.toJSONArray(request.getParameter("data"));
+		List<String> downList = new ArrayList<>();
+
+		if(deleteData.size() == 0) return new XcnResponseVO(XcnRspCode.OK_CUSTOM, Prop.propFormat("download.msg.delete.noexist", request));
+
+		String adminId = Common.getAdminId(request);
+		for (int i = 0; i < deleteData.size(); i++) {
+			JSONObject donwInfo = deleteData.getJSONObject(i);
+			String downSeq = donwInfo.optString("downSeq");
+			if (downSeq != null && !downSeq.isEmpty()) {
+				downList.add(downSeq);
+			}
+		}
+
+		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.removeDownInfoDataMessenger(adminId, downList));
+	}
+
 }

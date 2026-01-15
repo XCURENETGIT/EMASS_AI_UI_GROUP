@@ -38,4 +38,6 @@ public interface DownloadBatchService {
 	public int updateDownloadBatchMessenger(DownloadBatchVO downloadBatchVO);
 
 	public String chackCancelMessnger(DownloadBatchVO vo);
+
+	public int removeDownInfoDataMessenger(String adminId, List<String> downList);
 }
