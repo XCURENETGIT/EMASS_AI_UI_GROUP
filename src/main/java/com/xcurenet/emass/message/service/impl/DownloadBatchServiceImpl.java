@@ -126,6 +126,7 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.chackCancelMessnger", downloadBatchVO);
 	}
 
+
 	public int checkDownloadBatchExist(DownloadBatchVO downloadBatchVO) {
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.checkDownloadBatchExist", downloadBatchVO);
 	}
@@ -137,6 +138,17 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 		param.put("adminId", adminId);
 		param.put("downList", downList);
 		return delete("com.xcurenet.sqlmap.mappers.mysql.emass.removeDownInfoData", param);
+	}
+
+	@Override
+	public int removeDownInfoDataMessenger(String adminId, List<String> downList) {
+		if(downList.size() == 0) return 0;
+
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("adminId", adminId);
+		param.put("downList", downList);
+		return delete("com.xcurenet.sqlmap.mappers.mysql.emass.removeDownInfoDataMessenger", param);
 	}
 	
 }
