@@ -1289,7 +1289,7 @@ public class CollectionController {
 		sq.setParam("group.ngroups", true);
 		sq.setParam("group.field", "userkey");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
-		sq.setRows(Common.nvz(param.get("limit"), 100));
+		sq.setRows(Common.nvz(param.get("limit"), 0));
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "userkey", "svc1","srcip", "svc",  "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","sabun","direction_svc");
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
@@ -1456,10 +1456,21 @@ public class CollectionController {
 		if (Common.isEquals(param.get("readYn"), "N")) {
 			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId));
 		}
+
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userkey");
+		sq.setParam("group.field", "svc12");
+
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "userkey");
+		sq.setParam("facet.detail", false);
+		sq.setParam("facet.list", true);
+		sq.setParam("facet.mincount", "1");
+		sq.setParam("facet.sort", "DESC");
+
+		sq.setParam("facet.offset", String.valueOf(start));
+		sq.setParam("facet.group", String.valueOf(limit));
 		sq.setStart(0);
 		sq.setRows(0);
 		sq.setSort("ctime", ORDER.desc);
