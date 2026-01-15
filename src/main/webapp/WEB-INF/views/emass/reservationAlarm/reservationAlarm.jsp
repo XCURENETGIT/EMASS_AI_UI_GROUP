@@ -884,16 +884,17 @@
 											<div class="col-65">
 												<div class="radiotab w100">
 													<label class="w50">
-														<input type="radio" name="csvYn" value="Y" checked><span
+														<input type="radio" name="csvYnVal" value="N" checked><span
 															class="fa fa-check"><span class="text">
 														XLSX</span></span></label><label
 														class="w50">
 
-													<input type="radio" name="csvYn" value="N"><span
+													<input type="radio" name="csvYnVal" value="Y"><span
 														class="fa fa-check"><span class="text">
 													    CSV</span></span></label>
 
 												</div>
+												<input type="hidden" name="csvYn" id="csvYn">
 											</div>
 											<!--<div class="col-65">
 												<div>
@@ -1252,19 +1253,6 @@
             fnOpenWindow('<c:url value="/ems/alarmLogPop.do" />?alarmLogSeq=' + alarmLogSeq, 'alarmLogPop', 1300, 800, 'fix');
         }
     };
-</script>
-<script>
-    @
-    if $enable - transitions {
-    @keyframes
-        progress - bar - stripes
-        {
-            0 % {background-position - x
-        :
-            $progress - height;
-        }
-        }
-    }
 </script>
 </body>
 </html>
