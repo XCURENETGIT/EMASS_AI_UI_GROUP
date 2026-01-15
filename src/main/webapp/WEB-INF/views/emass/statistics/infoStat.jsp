@@ -522,8 +522,12 @@
 			else return value.comma();
 		});
 	}
+	grid2.colAdd('attachtype', '<s:message code="message.msg.pre_ext" />', 220, 'left', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		var rtnVal = arrayToString(value);
+		return rtnVal;
+	});
 	grid2.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
-	grid2.loadHeader(false);
+	grid2.loadHeader(true);
 	// grid2.loadPageSize();
 	grid2.changePageSize = function (cnt) {
 		getInfoDetailList('Y');

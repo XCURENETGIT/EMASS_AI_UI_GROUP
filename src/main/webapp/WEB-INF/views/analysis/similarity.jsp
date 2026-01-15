@@ -479,6 +479,11 @@
 			else return value.comma();
 		});
 	}
+	grid.colAdd('attachtype', '<s:message code="message.msg.pre_ext" />', 220, 'left', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		var rtnVal = arrayToString(value);
+		return rtnVal;
+	});
+
 	grid.loadHeader(true);
 	grid.initData('<s:message code="common.msg.search.click"/>');
 	grid.onContextMenu = function (row, col, e) {

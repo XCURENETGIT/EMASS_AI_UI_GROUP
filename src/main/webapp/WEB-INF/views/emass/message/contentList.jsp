@@ -1061,6 +1061,10 @@
             var rtnVal = arrayToString(value);
             return highlightSearchStr(rtnVal, "attachname");
         });
+		grid.colAdd('attachtype', '<s:message code="message.msg.pre_ext" />', 220, 'left', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			var rtnVal = arrayToString(value);
+			return rtnVal;
+		});
         grid.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
         grid.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
         grid.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 140, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
