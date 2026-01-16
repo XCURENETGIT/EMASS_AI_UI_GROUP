@@ -195,12 +195,13 @@ public class AlarmServiceImpl extends XcnAbstractDAO implements AlarmService {
 	}
 	
 	@Override
-	public int insertAlarmLog(final String alarmSeq, long totalCnt, String query) {
+	public int insertAlarmLog(final String alarmSeq, long totalCnt, String query, String searchField) {
 		int result=0;
 		Map<String, String> param = new HashMap<>();
 		param.put("alarmSeq", alarmSeq);
 		param.put("totalCnt", Long.toString(totalCnt));
 		param.put("query", query);
+		param.put("searchField", searchField);
 		TransactionManager tx = getTransactionManager();
 		try {
 			tx.start();

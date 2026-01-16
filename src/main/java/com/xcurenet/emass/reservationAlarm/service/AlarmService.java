@@ -30,7 +30,7 @@ public interface AlarmService {
 	
 	public List<AlarmVO> getNowExecuteList();
 	
-	public int insertAlarmLog(final String alarmSeq, long totalCnt, String query);
+	public int insertAlarmLog(final String alarmSeq, long totalCnt, String query, String searchField);
 	
 	public List<AlarmLogVO> getAlarmLog(final String alarmSeq);
 	

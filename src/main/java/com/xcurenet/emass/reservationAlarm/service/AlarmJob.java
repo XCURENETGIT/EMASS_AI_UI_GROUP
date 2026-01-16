@@ -224,7 +224,7 @@ public class AlarmJob {
 						msg.put("content", "[" + alarm_name + " "+Prop.propFormat("mail.excute.result", locale)+"] "+Prop.propFormat("mail.detect.count", locale, totalCnt));
 						simpMessagingTemplate.convertAndSendToUser(adminId, "/trap", msg);
 					}
-					alarmService.insertAlarmLog(alarmSeq, totalCnt, sqToString);
+					alarmService.insertAlarmLog(alarmSeq, totalCnt, sqToString, searchField);
 				}
 			}
 		} catch (Exception e) {

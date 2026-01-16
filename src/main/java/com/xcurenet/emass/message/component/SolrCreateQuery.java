@@ -1956,6 +1956,7 @@ public class SolrCreateQuery {
 			if( Common.isNotEmpty(query)) {
 				finalReadYn = "";
 				setSort(sort);
+				if(Common.isNotEmpty(searchField)) setSelectSearchFields(searchField);
 				addQuery(query);
 				setSvc1(svc1, svc1_not);
 				return this;

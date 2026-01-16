@@ -10,6 +10,8 @@ public class AlarmLogVO {
 	private String alarmSeq;
 	
 	private String executeDt;
+
+	private String searchField;
 	
 	private String rMsg;
 	

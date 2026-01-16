@@ -78,9 +78,10 @@ function getData() {
 		async		: false,
 		alarmLogSeq	: alarmLogSeq,
 		success 	: function(data, total) {
+			var searchField = data[0].searchField;
 			query = data[0].rmsg;
 			query += ' +ltime:[* TO ' + data[0].executeDt + ']';
-			filterValData = {"filterName":"","filter_seq":"","p_filter_seq":"","filterType":"Q","conditions":[{"query":query,"sort":null}]}
+			filterValData = {"filterName":"","filter_seq":"","p_filter_seq":"","filterType":"Q","conditions":[{"query":query,"sort":null,"searchField":searchField}]}
 			getList();
 		},
 		error 		: function(status, message) {

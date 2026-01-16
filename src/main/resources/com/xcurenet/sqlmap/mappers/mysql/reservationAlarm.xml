@@ -272,8 +272,8 @@
 	<!-- 예약 알람 발송 후 로그 등록 -->
 	<insert id="insertAlarmLog" parameterType="hashmap">
 		INSERT INTO UI_ALARM_LOG
-		(ALARM_LOG_SEQ, ALARM_SEQ, ETIME, RMSG, RCNT)
-		VALUES ((SELECT IFNULL(MAX(A.ALARM_LOG_SEQ)+1,1001) FROM UI_ALARM_LOG A), #{alarmSeq}, NOW(), #{query}, #{totalCnt})
+		(ALARM_LOG_SEQ, ALARM_SEQ, ETIME, RMSG, RCNT,SEARCH_FIELD)
+		VALUES ((SELECT IFNULL(MAX(A.ALARM_LOG_SEQ)+1,1001) FROM UI_ALARM_LOG A), #{alarmSeq}, NOW(), #{query}, #{totalCnt},#{searchField})
 	</insert>
 	
 	<!-- 예약 알람 1개 조회 -->
@@ -293,7 +293,8 @@
 		SELECT	ALARM_LOG_SEQ AS alarmLogSeq,
 				DATE_FORMAT(ETIME,'%Y%m%d%H%i%s') AS executeDt,
 				RMSG AS rMsg,
-				RCNT AS rCnt
+				RCNT AS rCnt,
+				SEARCH_FIELD As searchField
 		FROM	UI_ALARM_LOG
 		WHERE	ALARM_LOG_SEQ = #{alarmLogSeq}
 	</select>
