@@ -967,7 +967,8 @@
             //var str = '<option value="">- <s:message code="eikon.msg.svcType"/> -</option>';
             var str = '';
             for (var i = 0; i < data.length; i++) {
-                str += '<option value="' + data[i].code + '">' + data[i].codeName + '</option>';
+				if (data[i].code.startsWith('EME')) str += '<option value="'+data[i].code+'">'+data[i].tempNm1+'</option>';
+				else str += '<option value="'+data[i].code+'">'+data[i].codeName+'</option>';
             }
             return str;
         }

@@ -823,7 +823,7 @@ function getAppendGroupBody() {
 
 function isGroupMessenger() {
     var isGroup = false;
-    if (svc.indexOf('Q') == 0 && xRootMtr != '') {
+    if((svc.indexOf('Q') == 0 && xRootMtr != '') || svc.indexOf("EMEC") == 0 && xRootMtr != ''){
         isGroup = true;
     }
     return isGroup;

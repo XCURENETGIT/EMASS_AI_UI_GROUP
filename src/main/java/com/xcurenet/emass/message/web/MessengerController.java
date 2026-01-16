@@ -75,7 +75,7 @@ public class MessengerController {
 	@Autowired
 	private SimpMessagingTemplate template;
 
-	private static final String MESSENGER = " +svc1:( (Q) (T) ) ";
+	private static final String MESSENGER = " +(svc1:( (Q) (T) ) svc:EMEC)";
 	private static final String EMPTY_LINE = "\n";
 	private final static DateTimeFormatter yyyyMMddHHmmss2 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	private final static DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyy-MM-dd");

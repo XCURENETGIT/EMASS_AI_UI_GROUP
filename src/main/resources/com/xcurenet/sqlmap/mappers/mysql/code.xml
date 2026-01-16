@@ -848,10 +848,10 @@
 
 	<!-- 메신저 목록 -->
 	<select id="getMessengerList" resultType="codeVO" parameterType="codeVO">
-		SELECT	SUBSTRING(SERVICECD,1,3) AS code, SERVICENM_LV2 AS codeName
+		SELECT	SUBSTRING(SERVICECD,1,3) AS code, SERVICENM_LV2 AS codeName, SERVICENM_LV1 AS tempNm1
 		FROM	UI_SERVICE
 		WHERE	MSGGRPCD = 'MSG'
-		GROUP	BY SUBSTRING(SERVICECD,1,3), SERVICENM_LV2;
+		GROUP	BY SUBSTRING(SERVICECD,1,3), SERVICENM_LV2, SERVICENM_LV1;
 	</select>
 
 	<!-- 생성형AI 목록 -->
