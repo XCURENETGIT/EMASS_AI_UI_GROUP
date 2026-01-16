@@ -990,7 +990,7 @@ function makeList2(nextFlag) {
             str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
             str += '<span>' + attachnameArray[0] + '<br/>';
-            str += attachsizeArray[0] + 'KB</span>';
+            str += convertFileSize(attachsizeArray[0]) + '</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
@@ -1077,7 +1077,7 @@ function makeList(nextFlag) {
             str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
             str += '<span>' + attachnameArray[0] + '<br/>';
-            str += attachsizeArray[0] + 'KB</span>';
+            str += convertFileSize(attachsizeArray[0]) + '</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
@@ -1147,7 +1147,7 @@ function makePrevList() {
             str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
             str += '<span>' + attachnameArray[0] + '<br/>';
-            str += attachsizeArray[0] + 'KB</span>';
+            str += convertFileSize(attachsizeArray[0]) + '</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {

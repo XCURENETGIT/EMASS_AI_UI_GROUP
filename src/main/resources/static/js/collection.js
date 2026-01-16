@@ -782,7 +782,7 @@ function makeList2(nextFlag){
             str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
             str += '<span>' + attachnameArray[0] + '<br/>';
-            str += attachsizeArray[0] + 'KB</span>';
+            str += convertFileSize(attachsizeArray[0]) + '</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
@@ -861,7 +861,7 @@ function makeList(nextFlag){
             str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
             str += '<span>' + attachnameArray[0] + '<br/>';
-            str += attachsizeArray[0] + 'KB</span>';
+            str += convertFileSize(attachsizeArray[0]) + '</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
@@ -924,7 +924,7 @@ function makePrevList(){
             str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
             str += '<span>' + attachnameArray[0] + '<br/>';
-            str += attachsizeArray[0] + 'KB</span>';
+            str += convertFileSize(attachsizeArray[0]) + '</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
@@ -1598,7 +1598,7 @@ function rtnFileGroupList2 (data) {
         }
 
         if (data[i].attachsize) {
-            leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB" + "</span>";
+            leftContent += "<span class='bar'></span><span class='name'>" + convertFileSize(data[i].attachsize) + "</span>";
         } else {
             leftContent += "<span class='bar'></span><span class='name'>-</span>";
         }
@@ -1670,7 +1670,7 @@ function rtnFileGroupList (data) {
         }
 
         if (data[i].attachsize) {
-            leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB" + "</span>";
+            leftContent += "<span class='bar'></span><span class='name'>" + convertFileSize(data[i].attachsize) + "</span>";
         } else {
             leftContent += "<span class='bar'></span><span class='name'>-</span>";
         }
