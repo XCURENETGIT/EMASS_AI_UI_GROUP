@@ -253,12 +253,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	 * @param sq
 	 */
 	public void recommendQuery(QueryStringQueryBuilder queryBuilder, BoolQueryBuilder boolQuery, SolrQuery sq) {
+		if (Common.isEmpty(sq.getMoreLikeThisFields())) return;
 		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
+		int minTermFreq = Common.nvz(sq.get("minTermFreq"), 1);
+		int maxQueryTerms = Common.nvz(sq.get("maxQueryTerms"), 20);
+		int minDocFreq = Common.nvz(sq.get("minDocFreq"), 1);
 		if (!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))) { // 유사 문서 추천
-			int minTermFreq = Common.nvz(sq.get("minTermFreq"), 1);
-			int maxQueryTerms = Common.nvz(sq.get("maxQueryTerms"), 20);
-			int minDocFreq = Common.nvz(sq.get("minDocFreq"), 1);
-
 			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))})
 					.minTermFreq(minTermFreq)
 					.minDocFreq(minDocFreq)
@@ -269,9 +269,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
 		}else if (!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("text"))){
 			recommendQuery.must(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), sq.getParams("text"), null)
-					.minTermFreq(1)
-					.minDocFreq(1)
-					.maxQueryTerms(20));
+					.minTermFreq(minTermFreq)
+					.minDocFreq(minDocFreq)
+					.maxQueryTerms(maxQueryTerms));
 			queryBuilder.fields(new HashMap<>() {{
 				put("svc", 0.1f);
 			}});

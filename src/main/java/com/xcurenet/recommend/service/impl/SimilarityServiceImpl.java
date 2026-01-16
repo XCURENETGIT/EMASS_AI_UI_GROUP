@@ -20,16 +20,7 @@ public class SimilarityServiceImpl extends XcnAbstractDAO implements SimilarityS
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
 
-	public static String recommendFields = "msgid,reprocess," +
-			"date_yyyy,date_yyyymm,date_yyyymmdd," +
-			"ml_confd_class,ml_confd_feedback,ml_confd_prob," +
-			"cid,srcip,sport,dstip,dport,svc1,svc2,svc3," +
-			"ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh," +
-			"size,body_size,usrId,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm," +
-			"ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm," +
-			"allofus,attach,attached,attachname_str,direction,direction_svc,kwd,kwds,inside,work,attachname,attachname_str,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str," +
-			"pi_amount.*,_score,body" +
-			"svc12,checked,kwds_subject,sabun,attachexistcnt,svc:0.1";
+
 
 	@Override
 	public SolrEdcMessageVO getSimilarity(HttpServletRequest request) throws SolrServerException, IOException {
@@ -75,7 +66,6 @@ public class SimilarityServiceImpl extends XcnAbstractDAO implements SimilarityS
 		sq.setParam("minDocFreq", minDocFreq);
 		sq.setParam("maxDocFreq", maxDocFreq);
 
-		sq.setParam("qf",recommendFields);
 
 		return solrEdcService.getEmassMessage(sq, adminId);
 
