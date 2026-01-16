@@ -1298,7 +1298,7 @@ public class CollectionController {
 
 		try {
 			int size = 0;
-			int limit = 10;
+			int limit = 1000;
 			int page = 0;
 			int chatLimit = 1000;
 
@@ -1310,9 +1310,17 @@ public class CollectionController {
 				return;
 			}
 			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
+			String ctime2 = null;
+			String msgid2=null;
 			do {
-				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
+				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit, ctime2,msgid2);
 				List<MessengerGroupVO> rooms = messenger.getGroups(); // get Messenger Rooms
+
+				if (rooms.size() > 0){
+					ctime2 =rooms.get(rooms.size() - 1).getCtime2();
+					msgid2 =rooms.get(rooms.size() - 1).getMsgid();
+				}
+
 				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
 				for (MessengerGroupVO room : rooms) {
 					String ctime = null;
@@ -1448,7 +1456,7 @@ public class CollectionController {
 			return new File("/");
 		}
 	}
-	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit) throws Exception {
+	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit, String ctime, String msgid) throws Exception {
 		String adminId = Common.nvl(param.get("_ses_user_id"));
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), adminId);
@@ -1457,23 +1465,17 @@ public class CollectionController {
 			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId));
 		}
 
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "svc12");
 
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userkey");
-		sq.setParam("facet.detail", false);
-		sq.setParam("facet.list", true);
-		sq.setParam("facet.mincount", "1");
-		sq.setParam("facet.sort", "DESC");
+		sq.setStart(start);
+		sq.setRows(limit);
+		String searchAfter = null;
+		if (ctime!= null && msgid!=null){
+			searchAfter = ctime+","+msgid;
+		}
+		sq.setParam("searchAfter", Common.nvl(searchAfter));
+		sq.setSort(SolrQuery.SortClause.desc ("ctime"));
+		sq.addSort(SolrQuery.SortClause.desc ("msgid"));
 
-		sq.setParam("facet.offset", String.valueOf(start));
-		sq.setParam("facet.group", String.valueOf(limit));
-		sq.setStart(0);
-		sq.setRows(0);
-		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","sabun","direction_svc");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
