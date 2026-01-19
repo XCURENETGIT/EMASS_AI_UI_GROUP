@@ -1408,7 +1408,7 @@ public class MessengerController {
 				if (list != null) {
 					for (int i = list.size() - 1; i >= 0; i--) {
 						MessengerGroupVO item = list.get(i);
-						_sb.append(String.format("[%s] [%s] [%s] %s", item.getTitle(), item.getCtime(),Config.getServiceNm(item.getSvc()), item.getMessage())).append(Common.EMPTY_LINE);
+						_sb.append(String.format("[%s] [%s] [%s] %s", item.getTitle(), item.getCtime(),Config.getServiceNm(item.getSvc()), item.getBody_snippet())).append(Common.EMPTY_LINE);
 					}
 				}
 				if (Common.isEquals(type, "html")) {

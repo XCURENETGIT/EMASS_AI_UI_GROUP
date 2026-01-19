@@ -329,17 +329,13 @@ public class MessengerEdcGroupVO {
 
 	private static String getBodyDetail(SolrEdcVO edc, int cutLength, boolean original) {
 		String result = Common.EMPTY;
-		if (Common.isOrEquals(edc.getSvc1(), "I", "N")) {
-			String body = Common.nvl(edc.getBody_snippet());
-			if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
+		String body = Common.nvl(edc.getBody_snippet());
+		if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
 
-			if(edc.getAttached().equals("Y")){
-				body+="/ 첨부파일명:" + edc.getAttachname();
-			}
-			result = body;
-		}else{
-			result=	edc.getBody_snippet();
+		if(edc.getAttached().equals("Y")){
+			body+="/ " + Prop.propFormat("condition.attach_name") + ":" + edc.getAttachname();
 		}
+		result = body;
 
 		return original ? result : textParser(result);
 	}
