@@ -336,6 +336,7 @@ public class EmsReDefined {
 			}else return srcip + "->" + dstip;
 			
 		}
+		else if (Common.isEquals(svc,"EMEC")) return Common.nvl(msg.getBody_snippet()).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
 		else if (Common.isOrEquals(svc1, "U", "X") && Common.isNotEmpty(host)) return webPrefix + host + Common.nvl(path);
 		else if (Common.isOrEquals(svc1, "X")) return srcip + "->" + dstip;
 		else if (Common.isEquals(svc, "EMF-")) return "EP-[MAIL] FILE DOWNLOAD";
