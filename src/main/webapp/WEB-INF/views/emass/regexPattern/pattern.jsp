@@ -30,6 +30,7 @@
             $('#PatternPop input[type=text]').val('');
 	        $('#regexDiv').show();
 	        $('#patternType').val("C");
+			$('[name=enable][value=Y]').prop('checked', true);
             $('#PatternPop').attr('mode', 'insert');
             $('#PatternPop').modal('show');
             setTimeout(function () {
