@@ -1156,7 +1156,7 @@
             let data = $(this).data('value');
             dashCondition.attachYn = "Y";
 	        dashCondition.searchStr = '\\"' + data + '\\"';
-			dashCondition.searchField = "sender_str";
+			dashCondition.searchField = "sender_str org_sender_str";
             $('#conditionParam').val(makePeriod2(dashCondition));
             $('#getMessageInfo').submit();
         });
