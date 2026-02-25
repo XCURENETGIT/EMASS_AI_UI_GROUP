@@ -1156,7 +1156,7 @@
             let data = $(this).data('value');
             dashCondition.attachYn = "Y";
 	        dashCondition.searchStr = '\\"' + data + '\\"';
-			dashCondition.searchField = "sender_str";
+			dashCondition.searchField = "sender_str org_sender_str";
             $('#conditionParam').val(makePeriod2(dashCondition));
             $('#getMessageInfo').submit();
         });
@@ -1281,10 +1281,6 @@
 			$.each(fileObj, function (i, el) {
 				$.each(targetKey, function (pv, pve) {
 					if(pv == i) {
-						console.log(pv);
-						console.log(el);
-						console.log(i);
-						console.log(pve);
 						str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[idx] + "'><p>";
 						str += el
 						str += "<span>" + pve + "</span>";
