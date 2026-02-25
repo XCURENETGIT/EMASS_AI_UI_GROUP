@@ -1155,9 +1155,8 @@
         $(document).on('click', '.click2', function () {
             let data = $(this).data('value');
             dashCondition.attachYn = "Y";
-	        dashCondition.senders_findByParam = "Y";
-	        dashCondition.senders = data;
-            dashCondition.senders_upperCase = "Y";
+	        dashCondition.searchStr = '\\"' + data + '\\"';
+			dashCondition.searchField = "sender_str";
             $('#conditionParam').val(makePeriod2(dashCondition));
             $('#getMessageInfo').submit();
         });
