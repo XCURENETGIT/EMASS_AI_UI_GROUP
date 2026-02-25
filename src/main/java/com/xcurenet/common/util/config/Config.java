@@ -110,7 +110,7 @@ public class Config {
 	public static String[] colors = {"#7cb5ec", "#c9cbf6", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1", "#B5CA92", "#a7efff", "#B8B8BA", "#FFB2F5", "#47C83E", "#fee79f", "#8bc4bf", "#bf4444", "#7CB823", "#19D4FF", "#097500"};
 
 //	public static final String ABNL_AGGS_FIELDS = "pi_amount.pi_LAOP,pi_amount.pi_FCA,pi_amount.pi_AOH,pi_amount.pi_ID,pi_amount.pi_RS,pi_amount.pi_EC,pi_amount.pi_EF,pi_amount.pi_LTO,pi_amount.pi_LAO,pi_amount.pi_LF";
-	public static final String[] ABNL_SVC = {"ID","RS","EC","EF","LTO","LAO","LF","LAOP","FCA","AOH"};
+	public static final String[] ABNL_SVC = {"ID","RS","EC","EF","LTO","LAO","LF","LAOP","FCA","AOH","DRM"};
 
 //	public static final String[] ABNL_SVC = {
 //			"pi_amount.pi_LAOP"

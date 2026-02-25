@@ -120,7 +120,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sb.append(String.format("+ctime:[%s TO %s] ", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt()));
 		sb.append("+(");
 		for (int i = 0; i < Config.activePrivatePatterns.length; i++) {
-			if(i != 0) sb.append("| ");
+			if(i != 0) sb.append(" ");
 			sb.append(String.format("%s:[1 TO *]", "pi_amount.pi_" + Config.activePrivatePatterns[i])).append(" ");
 		}
 		sb.append(")");
@@ -164,7 +164,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sb.append(String.format("+ctime:[%s TO %s] ", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt()));
 		sb.append("+(");
 		for (int i = 0; i < Config.activeAnomalyPatterns.length; i++) {
-			if(i != 0) sb.append("| ");
+			if(i != 0) sb.append(" ");
 			sb.append(String.format("%s:[1 TO *]", "pi_amount.pi_" + Config.activeAnomalyPatterns[i])).append(" ");
 		}
 		sb.append(")");
