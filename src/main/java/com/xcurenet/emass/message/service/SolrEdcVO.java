@@ -238,6 +238,8 @@ public class SolrEdcVO {
 
     public String confidence;
 
+    public long size;
+
     //JsonIgnore JSON 리턴 X
 
 
@@ -258,8 +260,6 @@ public class SolrEdcVO {
     @JsonIgnore
     public String ml_confd_feedback_label;
 
-    @JsonIgnore
-    public long size;
 
     @JsonIgnore
     public String usr_id;
