@@ -1251,55 +1251,63 @@
 
 
 
-    function getTodayFileList(data, rowSearchkey) {
-        let array = [0, 0, 0, 0, 0, 0];
-        let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "201MB~"]
-        let arrays = ["0","11","51","101","151","201"];
-        let targetKey;
-        if (data.pivotData) {
-            // 여기에 쿼리 쓰기
+	function getTodayFileList(data, rowSearchkey) {
+		let arrays = ["0","11","51","101","151","201"];
+		let targetKey;
+		if (data.pivotData) {
+			// 여기에 쿼리 쓰기
 
-            for (var i = 0; i < data.pivotData.length; i++) {
-                if (data.pivotData[i].rowKey == rowSearchkey) {
-                    targetKey = data.pivotData[i];
-                    break;
-                }
-            }
-        }else targetKey = 0;
+			for (var i = 0; i < data.pivotData.length; i++) {
+				if (data.pivotData[i].rowKey == rowSearchkey) {
+					targetKey = data.pivotData[i];
+					break;
+				}
+			}
+		}else targetKey = 0;
 
-        for (const key in targetKey) {
+		var fileObj = {
+			'0MB_10MB': '~10MB',
+			'10MB_50MB': '~50MB',
+			'50MB_100MB': '~100MB',
+			'100MB_150MB': '~150MB',
+			'150MB_200MB': '~200MB',
+			'200MB_over': '200MB~'
+		}
+		var str = "<div class='tabcontent'>";
+		str += "<ul>";
 
-            // console.log("key: "+key);
-            if (!isNaN(parseInt(key))) {
-                const numericKey = parseFloat(key);
-                if (numericKey ==  0) {
-                    array[0] += targetKey[key];
-                } else if (numericKey == 11534336) {
-                    array[1] += targetKey[key];
-                } else if (numericKey == 52428800) {
-                    array[2] += targetKey[key];
-                } else if (numericKey == 1065025536) {
-                    array[3] += targetKey[key];
-                }  else if (numericKey == 1585446912) {
-                    array[4] += targetKey[key];
-                } else {
-                    array[5] += targetKey[key];
-                }
-            }
-        }
+		if(targetKey != null){
+			var idx = 0;
+			$.each(fileObj, function (i, el) {
+				$.each(targetKey, function (pv, pve) {
+					if(pv == i) {
+						console.log(pv);
+						console.log(el);
+						console.log(i);
+						console.log(pve);
+						str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[idx] + "'><p>";
+						str += el
+						str += "<span>" + pve + "</span>";
+						str += "</p></li>"
+					}
+				});
+				idx++;
+			});
+		}else{
+			var idx2 = 0;
+			$.each(fileObj, function (i, el) {
+				str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[idx2] + "'><p>";
+				str += el
+				str += "<span>" + 0 + "</span>";
+				str += "</p></li>"
+			});
+			idx2++;
+		}
+		str += "</ul>";
+		str += "</div>";
 
-        var str = "<div class='tabcontent'>";
-        str += "<ul>";
-        for (let i = 0; i < 6; i++) {
-            str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[i] + "'><p>";
-            str += arrayStr[i]
-            str += "<span>" + array[i].comma() + "</span>";
-            str += "</p></li>"
-        }
-        str += "</ul>";
-        str += "</div>";
-        $('#dataStatus').html(str);
-    }
+		$('#dataStatus').html(str);
+	}
 
 
 

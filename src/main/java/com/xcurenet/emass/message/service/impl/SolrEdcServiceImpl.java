@@ -555,6 +555,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		if (Common.isEquals(sq.get("gwAttached"), "Y")) return getGwAttachedAggregations(sq);
 		if (Common.isEquals(sq.get("abnlYn"), "Y")) return getAbnlAggregations(sq);
 		if (Common.isEquals(sq.get("facetCount"), "Y")) return getCountAggregations(sq);
+		if (Common.isEquals(sq.get("dashboard_attach"), "Y")) return getDashboardAttachedAggregations(sq);
 		if (null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
 		if ((null != sq.get("group") && Common.isEquals("true", sq.get("group")))) {
@@ -697,6 +698,25 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return pivotAggregations;
 	}
 
+	private List<AbstractAggregationBuilder<?>> getDashboardAttachedAggregations(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> pivotAggregations = new ArrayList<>();
+
+		String attachType = Common.nvl(sq.get("group.field"));
+		String subField =  Common.nvl(sq.get("facet.field"));
+
+		AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(Common.ANALYSIS_DASHBOARD_ATTACH_AGGS_SUFFIX)
+				.field(attachType)
+				.order(BucketOrder.count(false))
+				.minDocCount(1)
+				.shardSize(5200)
+				.size(maxCount(Common.nvz(1000)));
+		List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
+		termsAggregation.subAggregation(addRangesNew(subField, ranges));
+		pivotAggregations.add(termsAggregation);
+
+		return pivotAggregations;
+	}
+
 	private List<AbstractAggregationBuilder<?>> getPiAnalysisAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 
@@ -761,6 +781,37 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			idx++;
 		}
 
+		return rangeBuilder;
+	}
+
+	/**
+	 * Range Aggregation Query
+	 *
+	 * @param key
+	 * @param ranges
+	 * @return
+	 */
+	private RangeAggregationBuilder addRangesNew(String key, List<String> ranges) {
+		RangeAggregationBuilder rangeBuilder = AggregationBuilders.range(key).field(key);
+
+		for (int k = 0; k < ranges.size() - 1; k++) {
+			long val1 = Long.parseLong(ranges.get(k));         // Start value (in bytes)
+			long val2 = Long.parseLong(ranges.get(k + 1));     // End value (in bytes)
+
+			// Convert bytes to MB
+			long startMB = val1 / 1024 / 1024;  // Start value in MB
+			long endMB = val2 / 1024 / 1024;    // End value in MB
+
+			// Set range name in MB with "_" instead of spaces
+			String rangeName = startMB + "MB_" + endMB + "MB";  // Name with "_" as separator
+
+			// Add range with MB key
+			rangeBuilder = rangeBuilder.addRange(rangeName, val1, val2);
+		}
+
+		long lastVal = Long.parseLong(ranges.get(ranges.size() - 1));
+		long lastMB = lastVal / 1024 / 1024;  // Convert last value to MB
+		rangeBuilder = rangeBuilder.addRange(lastMB + "MB_over", lastVal, Long.MAX_VALUE);
 		return rangeBuilder;
 	}
 

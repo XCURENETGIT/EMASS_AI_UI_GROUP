@@ -119,6 +119,7 @@ public class SolrEdcMessageVO {
 		this.setFacets(elasticsearchAggregations);
 
 		if (Common.nvl(elasticsearchAggregations.aggregations().asMap().keySet().iterator().next()).indexOf(Common.ANALYSIS_GW_ATTACH_AGGS_SUFFIX) > -1) gwAttachedPivotParse(elasticsearchAggregations);
+		else if (Common.nvl(elasticsearchAggregations.aggregations().asMap().keySet().iterator().next()).indexOf(Common.ANALYSIS_DASHBOARD_ATTACH_AGGS_SUFFIX) > -1) attachedDashboardPivotParse(elasticsearchAggregations);
 	}
 
 
@@ -194,6 +195,54 @@ public class SolrEdcMessageVO {
 
 					}
 					if (pivotItem.containsKey("rowKey")) {
+						pivotResult.add(pivotItem);
+					}
+				}
+			}
+		}
+		headerList = new ArrayList<String>(pivotKeys.keySet());
+		Collections.sort(headerList);
+		this.pivotHeader = headerList;
+		headerList = new ArrayList<>();
+		this.pivotData = pivotResult;
+	}
+
+	/**
+	 * pivot Dashboard 첨부파일 전용 Parse
+	 *
+	 * @param elasticsearchAggregations
+	 */
+	private void attachedDashboardPivotParse(ElasticsearchAggregations elasticsearchAggregations) {
+		headerList = new ArrayList();
+		pivotKeys = new HashMap();
+
+		Aggregations aggregations = elasticsearchAggregations.aggregations();
+		for (Map.Entry<String, Aggregation> pivotAggs : aggregations.getAsMap().entrySet()) {
+			Aggregation agg = pivotAggs.getValue();  // 집계 객체 (terms aggregation)
+			if (agg instanceof Terms) {
+				Terms termsAgg = (Terms) agg;
+				Iterator<Terms.Bucket> iterator = (Iterator<Terms.Bucket>) termsAgg.getBuckets().iterator();
+				while (iterator.hasNext()) {
+					Terms.Bucket bucket = iterator.next();
+					pivotItem = new HashMap();
+					// 하위 집계 (Range Aggregation) 자동 처리
+					Aggregations bucketAggregations = bucket.getAggregations();
+					Iterator<Aggregation> aggIterator = bucketAggregations.iterator();
+					while (aggIterator.hasNext()) {
+						Aggregation subAgg = aggIterator.next();
+						// Range 집계일 경우 처리
+						if (subAgg instanceof Range) {
+							Range rangeAgg = (Range) subAgg;
+							// Range.Bucket 순회
+							Iterator<Range.Bucket> rangeIterator = (Iterator<Range.Bucket>) rangeAgg.getBuckets().iterator();
+							while (rangeIterator.hasNext()) {
+								Range.Bucket rangeBucket = rangeIterator.next();
+								String keyString = rangeBucket.getKeyAsString().replace("_@at@", "");
+								pivotItem.put(Common.nvl(keyString), Common.nvz(rangeBucket.getDocCount(), 0));
+								pivotKeys.put(Common.nvl(keyString), 0);
+								pivotItem.putAll(attachPivotParse(bucket.getKeyAsString(), Common.nvz(bucket.getDocCount(), 0)));
+							}
+						}
 						pivotResult.add(pivotItem);
 					}
 				}

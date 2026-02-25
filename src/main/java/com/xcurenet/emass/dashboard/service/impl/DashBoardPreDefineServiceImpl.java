@@ -54,6 +54,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 
 		sq.addFacetField("attachtype");
+		sq.setParam("dashboard_attach", "Y");
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);

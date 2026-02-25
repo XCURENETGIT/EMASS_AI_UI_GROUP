@@ -111,6 +111,7 @@ public class Common {
 
 	public final static String ANALYSIS_GW_ATTACH_AGGS_SUFFIX = "_@gwat@";
 	public final static String ANALYSIS_PIVOT_AGGS_SUFFIX = "_@at@";
+	public final static String ANALYSIS_DASHBOARD_ATTACH_AGGS_SUFFIX = "_@dsat@";
 
 	
 	// 미분류,모니터링 제외 추가기능 관련 필드
