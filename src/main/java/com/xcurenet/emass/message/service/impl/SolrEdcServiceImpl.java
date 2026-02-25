@@ -806,7 +806,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			String rangeName = startMB + "MB_" + endMB + "MB";  // Name with "_" as separator
 
 			// Add range with MB key
-			rangeBuilder = rangeBuilder.addRange(rangeName, val1, val2);
+			if (val1 == 0) {
+				rangeBuilder = rangeBuilder.addRange(rangeName, val1, val2+1);
+			} else {
+				rangeBuilder = rangeBuilder.addRange(rangeName, val1+1, val2+1);
+			}
 		}
 
 		long lastVal = Long.parseLong(ranges.get(ranges.size() - 1));

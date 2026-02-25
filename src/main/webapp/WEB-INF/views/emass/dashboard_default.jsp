@@ -1179,17 +1179,17 @@
             dashCondition.attachVal = rowKey;
             if (size == 0) {
                 dashCondition.sizeOption = "S";
-                dashCondition.sizeStartVal = ''+(10*1024 * 1024);
+                dashCondition.sizeStartVal = ''+(11*1024 * 1024);
                 dashCondition.sizeEndVal = '';
             } else if (size == 201) {
                 dashCondition.sizeOption = "L";
-                dashCondition.sizeStartVal = '' + (200*1024*1024);
+                dashCondition.sizeStartVal = '' + (201*1024*1024);
                 dashCondition.sizeEndVal = "";
             } else if (size == 11) {
-				dashCondition.sizeStartVal = '' + ((size-1)*1024*1024);
-                dashCondition.sizeEndVal = '' + ((size+39)*1024*1024);
+				dashCondition.sizeStartVal = '' + (11*1024*1024);
+                dashCondition.sizeEndVal = '' + (50*1024*1024);
             }else{
-	            dashCondition.sizeStartVal = '' + ((size-1)*1024*1024);
+	            dashCondition.sizeStartVal = '' + (size*1024*1024);
 	            dashCondition.sizeEndVal = '' + ((size+49)*1024*1024);
             }
             $('#conditionParam').val(makePeriod2(dashCondition));
@@ -1281,10 +1281,6 @@
 			$.each(fileObj, function (i, el) {
 				$.each(targetKey, function (pv, pve) {
 					if(pv == i) {
-						console.log(pv);
-						console.log(el);
-						console.log(i);
-						console.log(pve);
 						str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[idx] + "'><p>";
 						str += el
 						str += "<span>" + pve + "</span>";
