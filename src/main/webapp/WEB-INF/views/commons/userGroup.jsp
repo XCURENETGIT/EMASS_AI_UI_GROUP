@@ -33,7 +33,7 @@ $(document).ready(function(){
 			ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
 			return false;
 		}
-		if(gridItem.data.length > 9) {
+		if(gridItem.data.length > 1000) {
 			ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
 			return false;
 		}
