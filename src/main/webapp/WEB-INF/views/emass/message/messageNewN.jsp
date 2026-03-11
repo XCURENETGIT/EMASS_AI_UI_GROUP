@@ -1898,11 +1898,11 @@
             initConfAdminOption();
             
             // 각 그룹별로 단일 선택 설정
-            setupSingleSelectCheckbox('senders', ['senders_not', 'senders_findByKeyword', 'senders_findByParam']);
-            setupSingleSelectCheckbox('receivers', ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam']);
-            setupSingleSelectCheckbox('m_to', ['m_to_not', 'm_to_findByKeyword', 'm_to_findByParam']);
-            setupSingleSelectCheckbox('m_cc', ['m_cc_not', 'm_cc_findByKeyword', 'm_cc_findByParam']);
-            setupSingleSelectCheckbox('m_bcc', ['m_bcc_not', 'm_bcc_findByKeyword', 'm_bcc_findByParam']);
+            setupSingleSelectCheckbox('senders', ['senders_findByKeyword', 'senders_findByParam']);
+            setupSingleSelectCheckbox('receivers', ['receivers_findByKeyword', 'receivers_findByParam']);
+            setupSingleSelectCheckbox('m_to', ['m_to_findByKeyword', 'm_to_findByParam']);
+            setupSingleSelectCheckbox('m_cc', ['m_cc_findByKeyword', 'm_cc_findByParam']);
+            setupSingleSelectCheckbox('m_bcc', ['m_bcc_findByKeyword', 'm_bcc_findByParam']);
         });
 
 
@@ -2028,11 +2028,11 @@
             // 체크박스 검증: 입력값이 있으면 체크박스가 선택되어야 함 (자동 검색인 경우 제외)
             if(!isAutoSearch) {
                 var checkboxGroups = [
-                    { inputId: 'senders', checkboxIds: ['senders_not', 'senders_findByKeyword', 'senders_findByParam'] },
-                    { inputId: 'receivers', checkboxIds: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam'] },
-                    { inputId: 'm_to', checkboxIds: ['m_to_not', 'm_to_findByKeyword', 'm_to_findByParam'] },
-                    { inputId: 'm_cc', checkboxIds: ['m_cc_not', 'm_cc_findByKeyword', 'm_cc_findByParam'] },
-                    { inputId: 'm_bcc', checkboxIds: ['m_bcc_not', 'm_bcc_findByKeyword', 'm_bcc_findByParam'] }
+                    { inputId: 'senders', checkboxIds: ['senders_findByKeyword', 'senders_findByParam'] },
+                    { inputId: 'receivers', checkboxIds: [ 'receivers_findByKeyword', 'receivers_findByParam'] },
+                    { inputId: 'm_to', checkboxIds: ['m_to_findByKeyword', 'm_to_findByParam'] },
+                    { inputId: 'm_cc', checkboxIds: ['m_cc_findByKeyword', 'm_cc_findByParam'] },
+                    { inputId: 'm_bcc', checkboxIds: [ 'm_bcc_findByKeyword', 'm_bcc_findByParam'] }
                 ];
 
                 for(var i = 0; i < checkboxGroups.length; i++) {

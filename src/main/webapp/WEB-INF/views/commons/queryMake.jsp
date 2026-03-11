@@ -1089,17 +1089,17 @@
 							var senderArr = sender.split(" ");
 							addQueryText = queryAddMinus + "(";
 							if (senderArr.length == 1){
-								addQueryText += " sender_str:(" + senderArr[0] +"*" +")";
-								addQueryText += " sname:(" +  senderArr[0] +"*" +")";
-								addQueryText += " srcip:(" +  senderArr[0] +"*" +")";
+								addQueryText += " sender_str:(" + "*" + senderArr[0] +"*" +")";
+								addQueryText += " sname:(" + "*" + senderArr[0] +"*" +")";
+								addQueryText += " srcip:(" + "*" +  senderArr[0] +"*" +")";
 							}else{
 								for (var i = 0; i<senderArr.length; i++){
 									if (i > 0){
 										addQueryText += " OR";
 									}
-									addQueryText += " sender_str:(" + senderArr[i] +"*" +")";
-									addQueryText += " sname:(" +  senderArr[i] +"*" +")";
-									addQueryText += " srcip:(" +  senderArr[i] +"*" +")";
+									addQueryText += " sender_str:(" + "*" + senderArr[i] +"*" +")";
+									addQueryText += " sname:(" +  "*" + senderArr[i] +"*" +")";
+									addQueryText += " srcip:(" +  "*" + senderArr[i] +"*" +")";
 								}
 
 							}
@@ -1112,17 +1112,17 @@
 							var receiveArr = receive.split(" ");
 							addQueryText = queryAddMinus + "(";
 							if (receiveArr.length == 1){
-								addQueryText += " recvs:(" + receiveArr[0] +"*" +")";
-								addQueryText += " recvs_name:(" +  receiveArr[0] +"*" +")";
-								addQueryText += " dstip:(" +  receiveArr[0] +"*" +")";
+								addQueryText += " recvs:(" + "*" + receiveArr[0] +"*" +")";
+								addQueryText += " recvs_name:(" + "*" +  receiveArr[0] +"*" +")";
+								addQueryText += " dstip:(" +  "*" + receiveArr[0] +"*" +")";
 							}else{
 								for (var i = 0; i<receiveArr.length; i++){
 									if (i > 0){
 										addQueryText += " OR";
 									}
-									addQueryText += " recvs:(" + receiveArr[i] +"*" +")";
-									addQueryText += " recvs_name:(" +  receiveArr[i] +"*" +")";
-									addQueryText += " dstip:(" +  receiveArr[i] +"*" +")";
+									addQueryText += " recvs:(" + "*" + receiveArr[i] +"*" +")";
+									addQueryText += " recvs_name:(" + "*" +  receiveArr[i] +"*" +")";
+									addQueryText += " dstip:(" + "*" +  receiveArr[i] +"*" +")";
 								}
 
 							}
