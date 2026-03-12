@@ -354,17 +354,8 @@ public class EmsReDefined {
 			else return sender + "<" + usr_ip + ">";
 		} else return src_ip;
 	}
-	
-	public String reRecvInfo(String target) {
-		JSONObject obj = Common.toJSONObject(Config.userNamebyEmails.get(target));
-		
-		if(obj.isEmpty()) {
-			return target;
-		}
 
-		return obj.getString("name") + "<" + target + ">";
-	}
-	
+
 	public String reRecvs(List<String> recvs, String summary, Map<String, List<Map<String, Object>>> recvsInfo) {
 		String result = "";
 		if (Common.isNotEmpty(recvsInfo)) result = checkInoutInfo2(recvsInfo,"recvs");
@@ -375,7 +366,7 @@ public class EmsReDefined {
 			String target = recvs.get(i);
 			
 			if(!(summary.equals("Y") && i > 4)) {
-				result += reRecvInfo(target);
+				result += target;
 			} else {
 				
 				result += " " + Prop.propFormat("condition.view.type8") + " " + (recvs.size() - 5) + " " + Prop.propFormat("condition.view.type9");
@@ -396,8 +387,8 @@ public class EmsReDefined {
 			String target = recvs.get(i);
 				
 			if(!(summary.equals("Y") && i > 4)) {
-				
-				tmpStr = reRecvInfo(target);
+
+				tmpStr = target;
 				if(Common.isNotEquals(target, tmpStr)) {
 					recvs.set(i, tmpStr);
 				}
