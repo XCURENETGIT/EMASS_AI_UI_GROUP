@@ -82,7 +82,11 @@ public class SolrEdcVO {
 
     public List<String> cc;
 
+    public List<String> cname;
+
     public List<String> bcc;
+
+    public List<String> bname;
 
     public List<String> tname;
 

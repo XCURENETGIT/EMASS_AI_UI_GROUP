@@ -88,13 +88,13 @@ public class EmsReDefined {
 //				} else {
 //					edc.setRecvsStr(checkInOut(edc.getRecvs()) + String.join(",", edc.getRecvs()));
 //				}
-				edc.setRecvsStr(reRecvs(edc.getRecvs(), summaryVal, edc.getRecvs_info()));
+				edc.setRecvsStr(reRecvs(edc.getRecvs(), summaryVal, edc.getRecvs_info(), edc.getRecvs_name()));
 			} else edc.setRecvsStr("");
-			
-			if(Common.isNotEmpty(edc.getTo())) edc.setTo(reToccBcc(edc.getTo(), summaryVal));
-			if(Common.isNotEmpty(edc.getCc())) edc.setCc(reToccBcc(edc.getCc(), summaryVal));
-			if(Common.isNotEmpty(edc.getBcc())) edc.setBcc(reToccBcc(edc.getBcc(), summaryVal));
-			
+
+			if(Common.isNotEmpty(edc.getTo())) edc.setTo(reToccBcc(edc.getTo(), summaryVal, edc.getTname()));
+			if(Common.isNotEmpty(edc.getCc())) edc.setCc(reToccBcc(edc.getCc(), summaryVal, edc.getCname()));
+			if(Common.isNotEmpty(edc.getBcc())) edc.setBcc(reToccBcc(edc.getBcc(), summaryVal, edc.getBname()));
+
 			edc.setInterestUserYn(interestUserStar(edc));
 			edc.setInterestGroupColor(interestUserGroupColor(edc));
 			
@@ -356,7 +356,8 @@ public class EmsReDefined {
 	}
 
 
-	public String reRecvs(List<String> recvs, String summary, Map<String, List<Map<String, Object>>> recvsInfo) {
+
+	public String reRecvs(List<String> recvs, String summary, Map<String, List<Map<String, Object>>> recvsInfo, List<String> recvsName) {
 		String result = "";
 		if (Common.isNotEmpty(recvsInfo)) result = checkInoutInfo2(recvsInfo,"recvs");
 		else result = checkInOut(recvs);
@@ -366,7 +367,8 @@ public class EmsReDefined {
 			String target = recvs.get(i);
 			
 			if(!(summary.equals("Y") && i > 4)) {
-				result += target;
+				if (Common.isNotEmpty(recvsName) && Common.isNotEmpty(recvsName.get(i))) result += recvsName.get(i) + "<" + target + ">";
+				else result += target;
 			} else {
 				
 				result += " " + Prop.propFormat("condition.view.type8") + " " + (recvs.size() - 5) + " " + Prop.propFormat("condition.view.type9");
@@ -379,16 +381,17 @@ public class EmsReDefined {
 		
 		return result;
 	}
-	
-	public List<String> reToccBcc(List<String> recvs, String summary) {
+
+	public List<String> reToccBcc(List<String> recvs, String summary, List<String> nameList) {
 		String tmpStr = "";
 		
 		for(int i=0; i<recvs.size(); i++) {
 			String target = recvs.get(i);
 				
 			if(!(summary.equals("Y") && i > 4)) {
-
-				tmpStr = target;
+				if (Common.isNotEmpty(nameList) && Common.isNotEmpty(nameList.get(i))) {
+					tmpStr = nameList.get(i) + "<" + target + ">";
+				}else tmpStr = target;
 				if(Common.isNotEquals(target, tmpStr)) {
 					recvs.set(i, tmpStr);
 				}
