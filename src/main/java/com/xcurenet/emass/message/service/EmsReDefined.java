@@ -172,35 +172,20 @@ public class EmsReDefined {
 		}
 		return targets;
 	}
-	
-	public String checkInOut(List<String> targets) {
-		
-		List<IpRangeVO> ipRange = Config.getIpRange();
-		String inOutDelimiter = Config.getString("ui.inout.delimiter");
-		String[] inOuts = inOutDelimiter.split(",");
-		
-		return checkTargetInOut(ipRange, inOuts, targets);
-	}
 
 	public String checkInoutInfo2(Map<String, List<Map<String, Object>>> recvsInfo, String type) {
 		if(Common.isEmpty(recvsInfo)) return null;
 		int countN = 0;
 		int countY = 0;
 
-		String inOutDelimiter = Config.getString("ui.inout.delimiter");
-		String[] inOuts = inOutDelimiter.split(",");
-
 		List<Map<String, Object>> recipients = "recvs".equals(type) ? recvsInfo.values().stream().flatMap(List::stream).collect(Collectors.toList()) : recvsInfo.get(type);
 
 		if (recipients != null) {
 			for (Map<String, Object> recipient : recipients) {
 				String insideValue = (String) recipient.get("inside");
-				String id = (String) recipient.get("id");
-				boolean inflag = matchesInOuts(id, inOuts);
 
-				if (inflag) countY++;
-				else if ("N".equals(insideValue)) countN++;
-				else if ("Y".equals(insideValue)) countY++;
+				if (Common.isEquals(insideValue, "N")) countN++;
+				else if (Common.isEquals(insideValue, "Y")) countY++;
 
 			}
 		}
@@ -208,37 +193,10 @@ public class EmsReDefined {
 		return (countN == 0 && countY == 0) ? null : String.format("[%d/%d]", countN, countY);
 	}
 
-	private boolean matchesInOuts(String id, String[] inOuts) {
-		for (String inOut : inOuts) {
-			if (Common.isNotEmpty(inOut) && id.matches(".*" + inOut + ".*")) {
-				return true;
-			}
-		}
-		return false;
-	}
-	private String checkTargetInOut(List<IpRangeVO> ipRange, String[] inOuts, List<String> targets) {
+	private String checkTargetInOut(List<String> targets) {
 		if(targets ==null || targets.size() == 0 ) return "";
 		
-		int inCount = 0;
-		int outCount = 0;
-		for( String target : targets) {
-			boolean inflag = false;
-			for(String inOut : inOuts) {
-				if(Common.isNotEmpty(inOut) && target.matches(".*" + inOut + ".*")) {
-					inflag = true;
-					break;
-				}
-				
-			}
-			if(!inflag && ( ( target.split("\\.").length == 4 && NumberUtils.isNumber(target.split("\\.")[3]) ) || target.split("\\:").length > 2 )) {
-				inflag = checkIpRange(ipRange, target);
-			}
-			
-			if( !inflag) outCount++;
-			else inCount++;
-			
-		}
-		return "["+outCount+"/"+inCount+"]";
+		return "["+targets.size()+"/0]";
 	}
 	
 	private boolean checkIpRange(List<IpRangeVO> ipRange, String target) {
@@ -360,7 +318,7 @@ public class EmsReDefined {
 	public String reRecvs(List<String> recvs, String summary, Map<String, List<Map<String, Object>>> recvsInfo, List<String> recvsName) {
 		String result = "";
 		if (Common.isNotEmpty(recvsInfo)) result = checkInoutInfo2(recvsInfo,"recvs");
-		else result = checkInOut(recvs);
+		else result = checkTargetInOut(recvs);
 
 		
 		for(int i=0; i<recvs.size(); i++) {
@@ -589,6 +547,9 @@ public class EmsReDefined {
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
     public static boolean isValidEmail(String email) {
+		if (email == null || email.trim().isEmpty()) {
+			return false;
+		}
         return pattern.matcher(email).matches();
     }
 
