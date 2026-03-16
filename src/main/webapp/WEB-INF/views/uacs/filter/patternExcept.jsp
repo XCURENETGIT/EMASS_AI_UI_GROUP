@@ -316,11 +316,8 @@
 
 		str+='<option value="" selected><s:message code="common.msg.all"/></option>';
 		for (var i = 0; i < data.length; i++) {
-
-			if (data[i].code != "DRM" && data[i].code != "ID" && data[i].code != "EF" && data[i].code != "EC"&& data[i].code != "IMEI"&& data[i].code != "MCN"&& data[i].code != "LTO"&& data[i].code != "LAO"&& data[i].code != "LF"&& data[i].code != "ID"&& data[i].code != "RS"
-				&& data[i].code != "EF"&& data[i].code != "EC"
-			) {
-
+			// 개인정보 패턴만 노출
+			if (data[i].codeType !== 'A') {
 				str += '<option value="' + data[i].code + '">' + data[i].codeName + '</option>';
 			}
 		}
