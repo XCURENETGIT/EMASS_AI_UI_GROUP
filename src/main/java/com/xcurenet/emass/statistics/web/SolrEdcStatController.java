@@ -1027,7 +1027,7 @@ public class SolrEdcStatController {
 				totalItem.put(Common.nvl(header), Common.nvz(totalItem.get(header)) + Common.nvz(datas.get(header)));
 			}
 		}
-		totalItem.put("total", solrEdcVo.getNumFound());
+		totalItem.put("total", allTotal);
 		totalItem.put("NUM", Prop.propFormat("bodyview.total"));
 		resultData.add(totalItem);
 		solrEdcVo.setPivotData(resultData);
