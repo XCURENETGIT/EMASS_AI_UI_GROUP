@@ -475,7 +475,7 @@
 			<option value="svc12"><s:message code="condition.service"/></option>
 			<option value="host_str">HOST</option>
 			<option value="sender_str"><s:message code="condition.sender"/></option>
-			<option value="to"><s:message code="condition.recv"/></option>
+			<option value="recvs"><s:message code="condition.recv"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
 			<option value="suborgcd"><s:message code="common.org.general"/></option>
 			<option value="businm"><s:message code="common.org.busi"/></option>
@@ -1408,7 +1408,7 @@
                     }
                 });
 
-                if (depth == 0) {
+                if (depth == 1) {
                     $.each(data, function (i, value) {
                         if (i > maxChartCount) {
                             parent.setSubtitle(maxChartCount, data.length, parent.firstName);
@@ -1512,7 +1512,7 @@
                     that.totalCount += eval(objName);
                 });
 
-                if (depth == 0) {
+                if (depth == 1) {
                     $.each(data, function (i, value) {
                         if (i > maxChartCount) {
                             parent.setSubtitle(maxChartCount, data.length, parent.firstName);
@@ -1584,7 +1584,7 @@
                     text: this.title
                 },
                 subtitle: {
-                    text: ""
+                    text: this.subtitle
                 },
                 xAxis: {
                     categories: data.categories
