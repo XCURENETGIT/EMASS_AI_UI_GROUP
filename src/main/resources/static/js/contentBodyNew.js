@@ -2408,6 +2408,8 @@ function setHighLight(defaultText, type) {
     var hostDiv_obj = $("#hostDiv");
     var attachDiv_obj = $("#attachDiv");
     var actualSenderDiv_obj = $("#actualSenderDiv");
+    var ocr_attach_div_obj = $("#ocr_attach_div");
+
     for (var i = 0; i < defaultText.length; i++) {
         if (defaultText[i] == '') continue;
         $(body_obj).highlight(defaultText[i], 'B' + type);
@@ -2422,6 +2424,7 @@ function setHighLight(defaultText, type) {
         $(hostDiv_obj).highlight(defaultText[i], type);
         $(attachDiv_obj).highlight(defaultText[i], type);
         $(actualSenderDiv_obj).highlight(defaultText[i], type);
+        $(ocr_attach_div_obj).highlight(defaultText[i], type);
     }
 }
 
