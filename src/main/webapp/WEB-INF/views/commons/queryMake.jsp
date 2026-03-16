@@ -1308,21 +1308,21 @@
 						var user = $('#user').val();
 						if(user != "") {
 
-							var userArr = user.split(" ");
-							addQueryText = queryAddMinus + "user:(";
+							addQueryText = queryAddMinus + "(";
 
-							if (userArr.length == 1){
-								addQueryText += userArr[0]+"*";
-								addQueryText += ")";
-							}else{
-								for (var i = 0; i< userArr.length; i++){
-									if (i > 0){
-										addQueryText += " OR "
-									}
-									addQueryText += userArr[i] + "*";
+							var userArr = user.split(" ");
+							var userStr = "";
+
+							for(var i = 0; i < userArr.length; i++) {
+								if(i > 0) {
+									userStr += " "
 								}
-								addQueryText += ")";
+								userStr += userArr[i].ltrim().rtrim() + "*";
 							}
+
+							addQueryText += "user:(" + userStr + ") user_str:(" + userStr + ") userid:(" + userStr + ") name:(" + userStr + ")";
+
+							addQueryText += ")";
 
 						}
 						break;
