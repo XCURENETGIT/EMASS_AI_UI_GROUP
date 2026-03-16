@@ -925,6 +925,10 @@
 					case "ctime":
 						var startDt = $('#startdate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 						var endDt = $('#enddate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+						if (startDt > endDt) {
+							ui.alertMsg('<s:message code="blockHistoryNonBusi.msg.cannot.startendtime"/>');
+							return;
+						}
 						addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
 						break;
 					case "svc":
@@ -1089,17 +1093,17 @@
 							var senderArr = sender.split(" ");
 							addQueryText = queryAddMinus + "(";
 							if (senderArr.length == 1){
-								addQueryText += " sender_str:(" + senderArr[0] +"*" +")";
-								addQueryText += " sname:(" +  senderArr[0] +"*" +")";
-								addQueryText += " srcip:(" +  senderArr[0] +"*" +")";
+								addQueryText += " sender_str:(" + "*" + senderArr[0] +"*" +")";
+								addQueryText += " sname:(" + "*" + senderArr[0] +"*" +")";
+								addQueryText += " srcip:(" + "*" +  senderArr[0] +"*" +")";
 							}else{
 								for (var i = 0; i<senderArr.length; i++){
 									if (i > 0){
 										addQueryText += " OR";
 									}
-									addQueryText += " sender_str:(" + senderArr[i] +"*" +")";
-									addQueryText += " sname:(" +  senderArr[i] +"*" +")";
-									addQueryText += " srcip:(" +  senderArr[i] +"*" +")";
+									addQueryText += " sender_str:(" + "*" + senderArr[i] +"*" +")";
+									addQueryText += " sname:(" +  "*" + senderArr[i] +"*" +")";
+									addQueryText += " srcip:(" +  "*" + senderArr[i] +"*" +")";
 								}
 
 							}
@@ -1112,17 +1116,17 @@
 							var receiveArr = receive.split(" ");
 							addQueryText = queryAddMinus + "(";
 							if (receiveArr.length == 1){
-								addQueryText += " recvs:(" + receiveArr[0] +"*" +")";
-								addQueryText += " recvs_name:(" +  receiveArr[0] +"*" +")";
-								addQueryText += " dstip:(" +  receiveArr[0] +"*" +")";
+								addQueryText += " recvs:(" + "*" + receiveArr[0] +"*" +")";
+								addQueryText += " recvs_name:(" + "*" +  receiveArr[0] +"*" +")";
+								addQueryText += " dstip:(" +  "*" + receiveArr[0] +"*" +")";
 							}else{
 								for (var i = 0; i<receiveArr.length; i++){
 									if (i > 0){
 										addQueryText += " OR";
 									}
-									addQueryText += " recvs:(" + receiveArr[i] +"*" +")";
-									addQueryText += " recvs_name:(" +  receiveArr[i] +"*" +")";
-									addQueryText += " dstip:(" +  receiveArr[i] +"*" +")";
+									addQueryText += " recvs:(" + "*" + receiveArr[i] +"*" +")";
+									addQueryText += " recvs_name:(" + "*" +  receiveArr[i] +"*" +")";
+									addQueryText += " dstip:(" + "*" +  receiveArr[i] +"*" +")";
 								}
 
 							}
@@ -1308,21 +1312,21 @@
 						var user = $('#user').val();
 						if(user != "") {
 
-							var userArr = user.split(" ");
-							addQueryText = queryAddMinus + "user:(";
+							addQueryText = queryAddMinus + "(";
 
-							if (userArr.length == 1){
-								addQueryText += userArr[0]+"*";
-								addQueryText += ")";
-							}else{
-								for (var i = 0; i< userArr.length; i++){
-									if (i > 0){
-										addQueryText += " OR "
-									}
-									addQueryText += userArr[i] + "*";
+							var userArr = user.split(" ");
+							var userStr = "";
+
+							for(var i = 0; i < userArr.length; i++) {
+								if(i > 0) {
+									userStr += " "
 								}
-								addQueryText += ")";
+								userStr += userArr[i].ltrim().rtrim() + "*";
 							}
+
+							addQueryText += "user:(" + userStr + ") user_str:(" + userStr + ") userid:(" + userStr + ") name:(" + userStr + ")";
+
+							addQueryText += ")";
 
 						}
 						break;
@@ -1650,6 +1654,7 @@
 										</div>
 									</td>
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ctime">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ctime">OR</button></td>
 									<td></td>
 									<td>ctime</td>
 									<td></td>

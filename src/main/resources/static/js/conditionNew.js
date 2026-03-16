@@ -616,7 +616,7 @@ var con = {
 			$('input:checkbox[id="receivers_findByKeyword"]').prop("disabled", !receivers_hasValue);
 			$('input:checkbox[id="receivers_findByParam"]').prop("disabled", !receivers_hasValue);
 			var receivers_findByParam_checked = condition.findByParam == 'Y' ? true : false;
-			var receivers_findByKeyword_checked = condition.findByKeyword == 'Y' ? true :
+			var receivers_findByKeyword_checked = condition.receivers_findByKeyword == 'Y' ? true :
 				(receivers_hasValue && condition.receivers_not != 'Y' && condition.findByKeyword != 'Y' && condition.findByParam != 'Y' ? true : false);
 			if (receivers_findByParam_checked) {
 				receivers_findByKeyword_checked = false;

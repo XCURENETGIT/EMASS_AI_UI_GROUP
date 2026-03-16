@@ -1218,11 +1218,11 @@
 
 			// 체크박스 그룹별 단일 선택 처리
 			var checkboxGroups = [
-				{ name: 'senders', checkboxes: ['senders_not', 'senders_findByKeyword', 'senders_findByParam'] },
-				{ name: 'receivers', checkboxes: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam'] },
-				{ name: 'rcvTo', checkboxes: ['rcvTo_not', 'rcvTo_findByKeyword', 'rcvTo_findByParam'] },
-				{ name: 'rcvCc', checkboxes: ['rcvCc_not', 'rcvCc_findByKeyword', 'rcvCc_findByParam'] },
-				{ name: 'rcvBcc', checkboxes: ['rcvBcc_not', 'rcvBcc_findByKeyword', 'rcvBcc_findByParam'] }
+				{ name: 'senders', checkboxes: ['senders_findByKeyword', 'senders_findByParam'] },
+				{ name: 'receivers', checkboxes: ['receivers_findByKeyword', 'receivers_findByParam'] },
+				{ name: 'rcvTo', checkboxes: ['rcvTo_findByKeyword', 'rcvTo_findByParam'] },
+				{ name: 'rcvCc', checkboxes: ['rcvCc_findByKeyword', 'rcvCc_findByParam'] },
+				{ name: 'rcvBcc', checkboxes: ['rcvBcc_findByKeyword', 'rcvBcc_findByParam'] }
 			];
 
 			checkboxGroups.forEach(function(group) {

@@ -498,25 +498,31 @@
             var chk = false;
             if(searchType == "" || searchType == null) {
                 chk = true;
-            } else if (searchType == "sender_str" || searchType == "sname"  || searchType == "org_sender_str" || searchType == "org_sname"){
-                if(column == "sender") chk = true;
-            } else if (searchType == "recvs" || searchType == "recvs_name"){
-                if(column == "recvs" || column == "to" || column == "cc" || column == "bcc") chk = true;
-            } else if (searchType == "to tname"){
-                if(column == "to" || column == "column") chk = true;
-            } else if (searchType == "cc cname"){
-                if(column == "cc" || column == "column") chk = true;
-            } else if (searchType == "bcc bname"){
-                if(column == "bcc" || column == "column") chk = true;
-            } else if (searchType == "subject"){
-                if(column == "subject" ) chk = true;
-            } else if (searchType == "body"){
-                if(column == "body" ) chk = true;
-            } else if (searchType == "attachname attachname_str"){
-                if(column == "attachname" ) chk = true;
-            } else {
-                if(searchType == column) chk = true;
-            }
+            }else {
+				var types = Array.isArray(searchType) ? searchType.flatMap(function(s){ return s.split(/[\s,]+/); }) : searchType.split(/[\s,]+/);
+				for (var i = 0; i < types.length; i++) {
+					var st = types[i];
+					if (st == "sender_str" || st == "sname" || st == "org_sender_str" || st == "org_sname") {
+						if (column == "sender") chk = true;
+					} else if (st == "recvs" || st == "recvs_name") {
+						if (column == "recvs" || column == "to" || column == "cc" || column == "bcc") chk = true;
+					} else if (st == "to tname") {
+						if (column == "to" || column == "column") chk = true;
+					} else if (st == "cc cname") {
+						if (column == "cc" || column == "column") chk = true;
+					} else if (st == "bcc bname") {
+						if (column == "bcc" || column == "column") chk = true;
+					} else if (st == "subject") {
+						if (column == "subject") chk = true;
+					} else if (st == "body") {
+						if (column == "body") chk = true;
+					} else if (st == "attachname attachname_str") {
+						if (column == "attachname") chk = true;
+					} else {
+						if (st == column) chk = true;
+					}
+				}
+			}
 
 
             if(chk) {
