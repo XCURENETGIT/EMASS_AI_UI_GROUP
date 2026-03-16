@@ -55,6 +55,7 @@
 		LTO : '<s:message code="bodyview.lto"/>',
 		LAO : '<s:message code="bodyview.lao"/>',
 		LF : '<s:message code="bodyview.lf"/>',
+		DRM : '<s:message code="bodyview.drm.file"/>'
 	}
 
 	var searchFlag = false;
