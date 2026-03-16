@@ -925,6 +925,10 @@
 					case "ctime":
 						var startDt = $('#startdate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 						var endDt = $('#enddate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+						if (startDt > endDt) {
+							ui.alertMsg('<s:message code="blockHistoryNonBusi.msg.cannot.startendtime"/>');
+							return;
+						}
 						addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
 						break;
 					case "svc":
@@ -1650,6 +1654,7 @@
 										</div>
 									</td>
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ctime">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ctime">OR</button></td>
 									<td></td>
 									<td>ctime</td>
 									<td></td>
