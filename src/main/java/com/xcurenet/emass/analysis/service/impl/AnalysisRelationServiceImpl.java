@@ -67,6 +67,15 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId());
 
 		AnalysisRelationListVO list = new AnalysisRelationListVO(edc);
+		// unit=file 이고 listData(동적검색)가 있을 때: val이 listData를 포함하는 버킷만 남김
+		if ("file".equals(searchVO.getUnit()) && Common.isNotEmpty(searchVO.getListData())) {
+			String listDataLower = searchVO.getListData().toLowerCase(Locale.ROOT).trim();
+			List<AnalysisRelationListVO.Buckets> filtered = list.getBuckets().stream()
+					.filter(b -> b.getVal() != null && b.getVal().toLowerCase(Locale.ROOT).contains(listDataLower))
+					.collect(Collectors.toList());
+			list.setBuckets(filtered);
+			list.setTotalCount(filtered.size());
+		}
 		return list;
 	}
 
