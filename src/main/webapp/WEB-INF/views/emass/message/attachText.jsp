@@ -256,8 +256,18 @@
         }
 
         function attachHighLight() {
-            var searchs = searchkey.split(" ");
-            if (searchs.length > 0) setHighLight(searchs, 'S'); //검색어 하이라이트 처리
+            var searchs = searchkey.trim();
+			var searchArray = [];
+			if(searchs.indexOf("\"") == 0 && searchs.charAt(searchs.length-1) == "\"" && nvl(searchs.match(/"/g)).length == 2) {
+				searchArray[0] = searchs.substring(1, searchs.length - 1);
+			}else{
+				searchs = searchs.replaceAll('\\|',' ');
+				searchs = searchs.replaceAll("\\+", "").replaceAll("\\?", "");
+				searchs = searchs.replaceAll("\"", "");
+				searchs = searchs.replaceAll("\\(", "").replaceAll("\\)","");
+				searchArray = searchs.split(" ");
+			}
+            if (searchArray.length > 0) setHighLight(searchArray, 'S'); //검색어 하이라이트 처리
             var fileNameStr = '<%=Common.join(fileNames, ", ")%>';
             var attachStr = '<%=Common.join(attachs, ", ")%>';
             var fileNameStrs = fileNameStr.split(', ');
