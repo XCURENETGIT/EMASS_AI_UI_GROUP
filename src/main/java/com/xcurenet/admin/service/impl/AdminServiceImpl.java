@@ -107,6 +107,9 @@ public class AdminServiceImpl extends XcnAbstractDAO implements AdminService {
 			customDashboardMenuVO.setDefaultDashboard("Y");
 			customDashBoardService.saveDashBoardMenu(customDashboardMenuVO);
 			insert("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveDashBoardContentDefault", admin);
+
+			customDashboardMenuVO = getAiDashboard(admin);
+			customDashBoardService.saveDashBoardMenu(customDashboardMenuVO);
 			//insert("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveDashBoardPositionDefault", admin);
 
 			delete("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminMenu", admin);
@@ -126,6 +129,17 @@ public class AdminServiceImpl extends XcnAbstractDAO implements AdminService {
 			tx.end();
 		}
 		return result;
+	}
+
+	private CustomDashboardMenuVO getAiDashboard(AdminVO admin) {
+		CustomDashboardMenuVO vo = new CustomDashboardMenuVO();
+		vo.setAdminId(admin.getAdminId());
+		vo.setDefaultMenu("N");
+		vo.setMenuIcon("fa fa-laptop");
+		vo.setMenuName("AI Dashboard");
+		vo.setDefaultDashboard("I");
+		vo.setUseYn("Y");
+		return vo;
 	}
 
 	@Override
