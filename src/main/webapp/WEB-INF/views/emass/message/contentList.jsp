@@ -1152,7 +1152,6 @@
                 if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
                 if(popWin) viewer_openFocus(grid.Row);
             } else {
-                alert('<s:message code="message.auth.no.detailview"/>');
                 return;
             }
         };
@@ -1167,7 +1166,6 @@
                 if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
                 if(popWin) viewer_openFocus(grid.Row);
             } else {
-                alert('<s:message code="message.auth.no.detailview"/>');
                 return;
             }
         }
