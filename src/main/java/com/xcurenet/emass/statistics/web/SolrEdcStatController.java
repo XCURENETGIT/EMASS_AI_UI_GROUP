@@ -305,13 +305,14 @@ public class SolrEdcStatController {
 		if (colRowKey.length() == 3 && yAxis.equals("svc12")) {
 			yAxis = "svc";
 		}
+
 		String Yflag = "Y";
 		if (!rowKey.isEmpty()) {
 			String[] t = rowKey.split(",");
 			if (t.length > 0) {
 				String values = "";
 				for (String value : t) {
-					if (value.length() == 3 && nameStat.isEmpty()) {
+					if (Common.isNotEquals(yAxis, "attachname_str") && value.length() == 3 && nameStat.isEmpty()) {
 						Yflag = "N";
 					}
 					values += "\"" + value + "\" ";
