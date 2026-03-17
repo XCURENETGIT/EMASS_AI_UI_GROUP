@@ -49,7 +49,6 @@ var alarmLogSeq = '<%=alarmLogSeq%>';
 var infoFeedbackYn = '<%=infoFeedbackYn%>';
 var infoFeedbackConf = '<%=infoFeedbackConf%>';
 var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
-var infoFeedbackLlm = '<%=infoFeedbackLlm%>';
 var infoFeedbackMode = '<%=infoFeedbackMode%>';
 $(document).ready(function(){
 	$('#startdatepicker').datetimepicker({
@@ -286,17 +285,16 @@ function regexpInfoViewer(row, selectedGrid){
 		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			grid.colAdd('ml_confd_class', '<s:message code="condition.infotype"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (infoFeedbackMode == 'E'){
-					if (value == '3') return '<s:message code="condition.info.class4"/>';
-					else if (value == '4') return '<s:message code="condition.info.class3"/>';
+					if (value == '4') return '<s:message code="condition.info.class4"/>';
+					else if (value == '3') return '<s:message code="condition.info.class3"/>';
 					else if (value == '2') return '<s:message code="condition.info.class2"/>';
-					else if (value == '1') return'<s:message code="condition.info.class1"/>';
-					else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
+					else if (value == '1')  return '<s:message code="condition.info.class1"/>';
+					else if(value == '0')  return '<s:message code="condition.info.N"/>';
 					else return '<s:message code="common.msg.noinfo"/>';
 				}else {
-					if (value == '3') return '<s:message code="condition.info.class4"/>';
-					else if (value == '4' || value == '2') return '<s:message code="condition.info.class3"/>';
+					if (value == '4') return '<s:message code="condition.info.class4"/>';
+					else if (value == '2' || value == '3') return '<s:message code="condition.info.class2"/>';
 					else if (value == '1') return '<s:message code="condition.info.class1"/>';
-					else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
 					else return '<s:message code="common.msg.noinfo"/>';
 				}
 			});
