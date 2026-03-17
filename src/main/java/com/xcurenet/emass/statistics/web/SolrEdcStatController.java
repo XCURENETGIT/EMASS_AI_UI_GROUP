@@ -1194,6 +1194,7 @@ public class SolrEdcStatController {
 			if (!Common.isEquals(type, "pi_total")) {
 				type = "pi_amount.".concat(type);
 				query.append((" +")).append(type).append(":[ 1 TO * ]");
+				query.append(String.format(" +%s: [%s TO *]", "pi_total", piCount));
 			} else {
 				query.append(" +( ");
 				boolean first = true;
