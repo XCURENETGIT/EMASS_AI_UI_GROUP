@@ -2240,8 +2240,14 @@
                     obj.attr('title', researchMsg+'['+$('.filterIcon').attr('title')+']');
                 }
             }else if(!$('#msg_condition_saver').hasClass('condition_menu_unselected')){
-                obj.text('<s:message code="message.msg.deepsearch"/>');
-                obj.attr('title', '<s:message code="message.msg.deepsearch"/>');
+                if($('.queryIcon').hasClass('hide')){
+                    obj.text('<s:message code="message.msg.deepsearch"/>');
+                    obj.attr('title', '<s:message code="message.msg.deepsearch"/>');
+                }else{
+                    obj.text(researchMsg+'['+$('.queryIcon').attr('title')+']');
+                    obj.attr('title', researchMsg+'['+$('.queryIcon').attr('title')+']');
+                }
+
             }
         }
 

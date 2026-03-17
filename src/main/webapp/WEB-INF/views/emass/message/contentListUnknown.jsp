@@ -286,7 +286,7 @@ function getList(flag, filterVal){
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 			
 			parent.setResultCnt(tabId, total.comma());
-			parent.changeTabName(tabId, '', researchCnt);
+			parent.changeTabName(tabId, (filterValData && filterValData.name) ? filterValData.name : '', researchCnt);
 			setServiceGroupCntInfo(data.facet, total);
 			$('#searchTime').val(data.searchTime);
 			
