@@ -69,6 +69,7 @@ $(document).ready(function(){
  * 알람 메일 서식 목록 조회
  */
 var filterValData = '';
+var getListLoading = false;  // 스크롤 시 동일 페이지 중복 요청 방지
 function getData() {
 	if(searchFlag) return;
 	var query = '';
@@ -78,8 +79,10 @@ function getData() {
 		alarmLogSeq	: alarmLogSeq,
 		success 	: function(data, total) {
 			var searchField = data[0].searchField;
-			query = data[0].rmsg;
-			query += ' +ltime:[* TO ' + data[0].executeDt + ']';
+			query = data[0].rmsg || data[0].rMsg || '';
+			if (data[0].executeDt) {
+				query += ' +ctime:[* TO ' + data[0].executeDt + ']';
+			}
 			filterValData = {"filterName":"","filter_seq":"","p_filter_seq":"","filterType":"Q","conditions":[{"query":query,"sort":null,"searchField":searchField}]}
 			getList();
 		},
@@ -96,9 +99,15 @@ function getList(lastRow){
 		grid.data.length = 0;
 		grid.rtnNextPageFunc = getList;
 		grid.loadingPage = 0;
+		grid.totalNumFound = undefined;
 	} else {
 		grid.loadingPage++;
 	}
+
+	// 이미 전체 로드했으면 추가 요청 안 함
+	if (grid.totalNumFound != null && grid.data.length >= grid.totalNumFound) return;
+	if (getListLoading) return;
+	getListLoading = true;
 
     let searchAfter = null;
     if(grid.loadingPage > 0) {
@@ -114,14 +123,16 @@ function getList(lastRow){
 		limit : grid.pageSize,
 		success : function(data, total) {
 			searchedFlag = true;
-			
-			grid.appendData(data.emass);
+			// 중복 호출 방지
+			if (grid.loadingPage === 0) grid.totalNumFound = total;
+			grid.appendData((data && data.emass) ? data.emass : []);
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 		},
 		error : function(status, message) {
 			alert(message);
 		},
 		complete : function() {
+			getListLoading = false;
 			grid.off();
 			searchFlag = true;
 		}
