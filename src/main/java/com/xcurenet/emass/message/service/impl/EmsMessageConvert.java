@@ -261,6 +261,7 @@ public class EmsMessageConvert {
 			vo.setSubOrgCd(recv.getSuborgCd());
 			vo.setSubOrgNm(recv.getSuborgNm());
 			vo.setBusiCd(recv.getBusiCd());
+			vo.setBusiNm(recv.getBusiNm());
 			vo.setDeptCd(recv.getDeptCd());
 			vo.setDeptNm(recv.getDeptNm());
 			vo.setJikgubCd(recv.getJikgubCd());
