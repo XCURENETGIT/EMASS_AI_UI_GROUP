@@ -92,13 +92,18 @@ function getData() {
 }
 
 function getList(lastRow){
+	if (searchFlag) return;
+
 	if ( lastRow == undefined ) {
 		grid.data.length = 0;
 		grid.rtnNextPageFunc = getList;
 		grid.loadingPage = 0;
+		grid.total = undefined;
 	} else {
 		grid.loadingPage++;
 	}
+	if (grid.data.length >= grid.total) return;
+	searchFlag = true;
 
     let searchAfter = null;
     if(grid.loadingPage > 0) {
@@ -123,7 +128,11 @@ function getList(lastRow){
 		},
 		complete : function() {
 			grid.off();
-			searchFlag = true;
+			if (grid.data.length >= grid.total) {
+				searchFlag = true;
+			} else {
+				searchFlag = false;
+			}
 		}
 	});
 }
