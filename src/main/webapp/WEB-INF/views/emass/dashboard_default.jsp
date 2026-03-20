@@ -1177,21 +1177,46 @@
             dashCondition.attachYn = "Y";
             dashCondition.sizeType = "T";
             dashCondition.attachVal = rowKey;
-            if (size == 0) {
-                dashCondition.sizeOption = "S";
-                dashCondition.sizeStartVal = ''+(11*1024 * 1024);
-                dashCondition.sizeEndVal = '';
-            } else if (size == 201) {
-                dashCondition.sizeOption = "L";
-                dashCondition.sizeStartVal = '' + (201*1024*1024);
-                dashCondition.sizeEndVal = "";
-            } else if (size == 11) {
-				dashCondition.sizeStartVal = '' + (11*1024*1024);
-                dashCondition.sizeEndVal = '' + (50*1024*1024);
-            }else{
-	            dashCondition.sizeStartVal = '' + (size*1024*1024);
-	            dashCondition.sizeEndVal = '' + ((size+49)*1024*1024);
-            }
+
+			const rangeMap = {
+				'0MB_10MB': '~10MB',
+				'10MB_50MB': '~50MB',
+				'50MB_100MB': '~100MB',
+				'100MB_150MB': '~150MB',
+				'150MB_200MB': '~200MB',
+				'200MB_over': '200MB~'
+			};
+
+			// MB를 바이트로 변환하는 함수
+			const convertToBytes = (size) => {
+				const number = parseInt(size); // 숫자만 추출
+				return number * 1024 * 1024;  // MB를 바이트로 변환
+			};
+
+			// 2TB를 바이트로 변환 (2TB = 2 * 1024 * 1024 * 1024 * 1024)
+			const TWO_TB_IN_BYTES = 2 * 1024 * 1024 * 1024 * 1024;  // 2TB = 2,199,023,255,552 바이트
+
+			// 범위 키로부터 범위 값을 가져옴
+			const range = rangeMap[size];
+
+			if (range) {
+				let startByte, endByte;
+
+				if (size === '200MB_over') {
+					// '200MB_over'는 200MB 이상이므로 시작 범위만 처리하고 끝 범위는 2TB로 설정
+					dashCondition.sizeStartVal = convertToBytes('200'); // 200MB
+					dashCondition.sizeEndVal = TWO_TB_IN_BYTES;  // 끝 범위는 2TB
+				} else {
+					// 나머지 범위는 '_'로 나누어서 처리
+					const [startRange, endRange] = size.split('_');
+
+					// 바이트 값으로 변환
+					dashCondition.sizeStartVal = convertToBytes(startRange.replace('MB', ''));
+					dashCondition.sizeEndVal = convertToBytes(endRange.replace('MB', ''));
+				}
+			} else {
+				console.error('잘못된 범위 키');
+			}
             $('#conditionParam').val(makePeriod2(dashCondition));
              $('#getMessageInfo').submit();
 
@@ -1252,7 +1277,6 @@
 
 
 	function getTodayFileList(data, rowSearchkey) {
-		let arrays = ["0","11","51","101","151","201"];
 		let targetKey;
 		if (data.pivotData) {
 			// 여기에 쿼리 쓰기
@@ -1281,7 +1305,7 @@
 			$.each(fileObj, function (i, el) {
 				$.each(targetKey, function (pv, pve) {
 					if(pv == i) {
-						str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[idx] + "'><p>";
+						str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + pv + "'><p>";
 						str += el
 						str += "<span>" + pve + "</span>";
 						str += "</p></li>"
@@ -1292,12 +1316,12 @@
 		}else{
 			var idx2 = 0;
 			$.each(fileObj, function (i, el) {
-				str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[idx2] + "'><p>";
+				str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + i + "'><p>";
 				str += el
 				str += "<span>" + 0 + "</span>";
-				str += "</p></li>"
+				str += "</p></li>";
+				idx2++;
 			});
-			idx2++;
 		}
 		str += "</ul>";
 		str += "</div>";
