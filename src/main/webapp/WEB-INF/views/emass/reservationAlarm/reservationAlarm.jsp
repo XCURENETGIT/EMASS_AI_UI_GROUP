@@ -545,8 +545,8 @@
             }
 
             var ocrYnMsg = '';
-            if (alarmVal.ocrYn == 'Y') ocrYnMsg = '<s:message code="condition.exist"/>';
-            else if (alarmVal.ocrYn == 'N') ocrYnMsg = '<s:message code="condition.none"/>';
+            if (alarmVal.OCRYn == 'Y') ocrYnMsg = '<s:message code="condition.exist"/>';
+            else if (alarmVal.OCRYn == 'N') ocrYnMsg = '<s:message code="condition.none"/>';
             if (ocrYnMsg != '') searchStr += setConditionValStr(ocrYnMsg, '<s:message code="condition.ocr.attach"/>');
 
             var reprocessMsg = '';

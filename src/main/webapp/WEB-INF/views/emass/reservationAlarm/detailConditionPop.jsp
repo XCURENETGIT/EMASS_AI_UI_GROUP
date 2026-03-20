@@ -721,7 +721,7 @@
             condition.drmYn = $('input:radio[name=regexp_drmYnVal]:input:checked').val();
             condition.realAttYn = $('input:radio[name=realAttYnVal]:input:checked').val();
             condition.sctYn = $('input:radio[name=regexp_sctYnVal]:input:checked').val();
-            condition.ocrYn = $('input:radio[name=ocrYnVal]:input:checked').val();
+            condition.OCRYn = $('input:radio[name=ocrYnVal]:input:checked').val();
             condition.reprocessYn = $('input:radio[name=reprocessYnVal]:input:checked').val();
 
             condition.sizeStartVal = $('#sizeStartVal').val() * 1024;
@@ -917,7 +917,7 @@
             checkRadioBtn('regexp_drmYnVal', alarmVal.drmYn);
             checkRadioBtn('realAttYnVal', alarmVal.realAttYn);
             checkRadioBtn('regexp_sctYnVal', alarmVal.sctYn);
-            checkRadioBtn('ocrYnVal', alarmVal.ocrYn);
+            checkRadioBtn('ocrYnVal', alarmVal.OCRYn);
             checkRadioBtn('reprocessYnVal', alarmVal.reprocessYn);
 
             $('#sizeStartVal').val(alarmVal.sizeStartVal);
