@@ -962,7 +962,9 @@
                             $('#tblDeviceType').html('<s:message code="selectDevStatus.dev.analysis"/>');
                         } else if (data.deviceType == 'C') {
                             $('#tblDeviceType').html('<s:message code="selectDevStatus.dev.logging"/>');
-                        } else {
+                        }  else if (data.deviceType == 'O') {
+							$('#tblDeviceType').html('<s:message code="selectDevStatus.dev.packetOne"/>');
+						} else {
                             $('#tblDeviceType').html('-');
                         }
 
@@ -1108,7 +1110,9 @@
                     deviceType = '<s:message code="selectDevStatus.dev.analysis"/>';
                 } else if (data.devices[i].deviceType == 'C') {
                     deviceType = '<s:message code="selectDevStatus.dev.logging"/>';
-                }
+                } else if (data.devices[i].deviceType == 'O') {
+					deviceType = '<s:message code="selectDevStatus.dev.packetOne"/>';
+				}
 
                 options += '<option value="' + data.devices[i].deviceSeq + '">' + data.devices[i].deviceNm + '(' + (deviceType) + ')</option>';
             }
@@ -1262,6 +1266,8 @@
 							<label for="L"><input type="radio" value="L" name="deviceType" id="L"
 							                      style="margin-left: 10px;"><s:message
 									code="selectDevStatus.dev.analysis"/></label>
+							<label for="O"><input type="radio" value="O" name="deviceType" id="O"
+										  style="margin-left: 10px;"><s:message code="selectDevStatus.dev.packetOne"/></label>
 						</div>
 					</div>
 					<div class="row">

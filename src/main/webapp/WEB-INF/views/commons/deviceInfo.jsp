@@ -219,7 +219,9 @@
                     str += '				<div>[ <s:message code="selectDevStatus.dev.logging"/> ]</div>';
                 } else if( data[i].deviceType == 'L' ) {
                     str += '				<div>[ <s:message code="selectDevStatus.dev.analysis"/> ]</div>';
-                }
+                } else if( data[i].deviceType == 'O' ) {
+					str += '				<div>[ <s:message code="selectDevStatus.dev.packetOne"/> ]</div>';
+				}
                 str += '				</div>';
                 str += '			</div>';
                 str += '		</div>';
