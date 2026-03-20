@@ -1115,7 +1115,7 @@
         };
         grid.onClick = function() {
             if (!isDetailView()) {
-                alert(condition.authAlert);
+                ui.alertMsg('<s:message code="admin.auth.alert"/>');
                 return;
             }
             
