@@ -678,7 +678,7 @@
 	<select id="getCodeDeviceListAll" resultType="codeVO" parameterType="codeVO">
 		SELECT  DEVICE_SEQ AS deviceSeq, DEVICE_IP AS code, DEVICE_NM AS codeName
 		FROM	UI_DEVICE
-		WHERE	DEVICE_TYPE IN ('A', 'C')
+		WHERE	DEVICE_TYPE IN ('A', 'C' , 'O')
 		<if test='searchStr!=null and searchStr!=""'>
 			AND	( DEVICE_IP LIKE CONCAT('%', #{searchStr}, '%') OR DEVICE_NM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>

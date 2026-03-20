@@ -104,6 +104,7 @@
         if (value == 'A') return '<s:message code="selectDevStatus.dev.integrated"/>';
         else if (value == 'C') return '<s:message code="selectDevStatus.dev.logging"/>';
         else if (value == 'L') return '<s:message code="selectDevStatus.dev.analysis"/>';
+        else if (value == 'O') return '<s:message code="selectDevStatus.dev.packetOne"/>';
         else return '<s:message code="selectDevStatus.dev.database"/>'
     });
     grid.colAdd('deviceIp', '<s:message code="selectDevStatus.devip"/>', 120, 'left', false, 'nomal');
