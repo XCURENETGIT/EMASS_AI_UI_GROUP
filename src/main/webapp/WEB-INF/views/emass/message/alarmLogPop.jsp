@@ -111,7 +111,7 @@ function getList(lastRow){
     }
     grid.on();
 	ui.postJson({
-		url : 'getList.xcn',
+		url : 'getAlarmResultList.xcn',
 		data : JSON.stringify( filterValData ),
 		pageType : '',
 		offset : grid.data.length,
@@ -251,7 +251,7 @@ function regexpInfoViewer(row, selectedGrid){
 		</div>
 	</div>
 </div>
-<% if(infoFeedbackYn.equals("Y") && infoFeedbackConf) {%>sys
+<% if(infoFeedbackYn.equals("Y") && infoFeedbackConf) {%>
 <div id="contextMenu" style="display:none;position:absolute">
 	<ul>
 		<li style="background-color:#1576A1;color:#fff;font-weight: bold;cursor:default;"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/>

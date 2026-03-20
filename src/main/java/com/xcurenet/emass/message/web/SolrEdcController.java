@@ -211,6 +211,34 @@ public class SolrEdcController {
 		}
 	}
 
+
+	@RequestMapping(value = "/getAlarmResultList.xcn")
+	@Description("알람 실행 결과 조회")
+	@ResponseBody
+	public XcnResponseVO getAlarmResultList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		JSONObject param = Common.getParam(request);
+
+		JSONObject data = Common.toJSONObject(param.get("data"));
+		JSONArray conditions = Common.toJSONArray(data.get("conditions"));
+		String adminAllRead = Common.nvl(conditions.getJSONObject(0).get("adminAllRead"));
+
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		String adminId = Common.getAdminId(session);
+		SolrQuery sq = solrCreateQuery.createQuery(data, Common.getAdminId(session), Common.nvl(data.get("searchTime")));
+		sq.setStart(Common.nvz(param.get("offset"), 0));
+		sq.setRows(Common.nvz(param.get("limit"), 100));
+		sq.setParam("searchAfter", Common.nvl(param.get("searchAfter")));
+
+		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo(), adminAllRead);
+
+		if(Config.getBoolean("consent.menu.enable") && Common.isEquals(Common.nvz(param.get("offset"), 0), 0)) {
+			searchLogService.insertSearchLog(param);
+		}
+		return new XcnResponseVO(XcnRspCode.OK, solrVo, solrVo.getNumFound());
+
+	}
+
+
 	@RequestMapping(value = "/getListRecommend.xcn")
 	@Description("EDC Solr 유사문서 추천 검색")
 	@AuditOperation(Operation.SEARCH)
