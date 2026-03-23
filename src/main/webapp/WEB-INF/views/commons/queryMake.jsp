@@ -2197,7 +2197,7 @@
 							</div>
 							<div>
 								<span>■ <s:message code="message.help.example.multi_query"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;"> +ctime:20240109* +((srcip:(1.1.1.1) (1.2.3.4)) (dstip:1.1.1.1))</span><br/>
+								<span style="padding-left:10px;font-weight: bold;"> +ctime:20240109* +(srcip:((1.1.1.1) (1.2.3.4)) dstip:1.1.1.1)</span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.multi_example1"/> </span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.multi_example2"/></span><br/>
 								<span>■ <s:message code="message.help.example.etc_query"/></span><br/>
