@@ -253,11 +253,13 @@
 				userStr: userStr,
 				svc: searchSvc,
 				success: function (data, total) {
-					grid2.setData(data.facet);
-					$('#svcSearchText').text('<s:message code="filterInfo.service"/> : ' + getTruncateSearchText( serviceList.search(svc, 'groupCd', 'groupNm')));
-					$('#urlSearchHostVal').val(svc);
-					fullSvc12 = data.facetHeader.join(',');
-					$('#svcSearchVal').val(svc);
+					if (total > 0 ) {
+						grid2.setData(data.facet);
+						$('#svcSearchText').text('<s:message code="filterInfo.service"/> : ' + getTruncateSearchText(serviceList.search(svc, 'groupCd', 'groupNm')));
+						$('#urlSearchHostVal').val(svc);
+						fullSvc12 = data.facetHeader.join(',');
+						$('#svcSearchVal').val(svc);
+					}
 				},
 				error: function (status, message) {
 					ui.alertMsg(message);
@@ -289,15 +291,16 @@
 				svc : searchSvc,
 				svc12: searchSvc12,
 				success: function (data, total) {
-					var keyword = data.facet.filter(obj =>  coreKeyword.split(',').includes(obj.name));
-					if (coreKeyword == '')  keyword = data.facet.filter(obj => data.pivotHeader[0].split(',').includes(obj.name));
-					grid3.setData(keyword);
-					var serviceNm = getSvcNm(svc12);
-					$('#keywordSearchText').text('<s:message code="filterInfo.service"/> : ' + getTruncateSearchText(serviceList.search(svc, 'groupCd', 'groupNm')) + " > " + '<s:message code="condition.info.detail"/> <s:message code="filterInfo.service"/> : ' + getTruncateSearchText(serviceNm));
-					$('#keywordSearchSvcVal').val(svc);
-					$('#keywordSearchSvc12Val').val(svc12);
-					},
-				error: function (status, message) {
+					if (total > 0) {
+						var keyword = data.facet.filter(obj => coreKeyword.split(',').includes(obj.name));
+						if (coreKeyword == '') keyword = data.facet.filter(obj => data.pivotHeader[0].split(',').includes(obj.name));
+						grid3.setData(keyword);
+						var serviceNm = getSvcNm(svc12);
+						$('#keywordSearchText').text('<s:message code="filterInfo.service"/> : ' + getTruncateSearchText(serviceList.search(svc, 'groupCd', 'groupNm')) + " > " + '<s:message code="condition.info.detail"/> <s:message code="filterInfo.service"/> : ' + getTruncateSearchText(serviceNm));
+						$('#keywordSearchSvcVal').val(svc);
+						$('#keywordSearchSvc12Val').val(svc12);
+					}
+				}, error: function (status, message) {
 					ui.alertMsg(message);
 				},
 				complete: function () {

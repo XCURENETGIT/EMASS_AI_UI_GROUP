@@ -141,6 +141,7 @@ public class KeywordServiceController {
 		String deptStr = Common.nvl(request.getParameter("deptStr"));
 		String userStr = Common.nvl(request.getParameter("userStr"));
 		if (Common.isEmpty(coreKeyword))  coreKeyword = String.join(",", keywordService.getCoreKeywordAll());
+		if (Common.isEmpty(coreKeyword)) return new XcnResponseVO(XcnRspCode.OK);
 
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
@@ -182,6 +183,7 @@ public class KeywordServiceController {
 		String deptStr = Common.nvl(request.getParameter("deptStr"));
 		String userStr = Common.nvl(request.getParameter("userStr"));
 		if (Common.isEmpty(coreKeyword))  coreKeyword = String.join(",", keywordService.getCoreKeywordAll());
+		if (Common.isEmpty(coreKeyword)) return new XcnResponseVO(XcnRspCode.OK);
 
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
