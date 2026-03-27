@@ -843,12 +843,14 @@
 				offset: grid2.data.length,
 				limit: grid2.pageSize,
 				success: function (data, total) {
-					grid2.setData(data.facet);
-					paths = data.facetHeader.join('@XCNJOIN@');
-					$('#urlSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(host));
-					$('#urlSearchHostVal').val(host);
+					if (total > 0) {
+						grid2.setData(data.facet);
+						paths = data.facetHeader.join('@XCNJOIN@');
+						$('#urlSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(host));
+						$('#urlSearchHostVal').val(host);
 
-					searchedPaths = paths;
+						searchedPaths = paths;
+					}
 
 					// if (coreKeyword != '')getKeywordData(searchHosts,searchedPaths);
 				},
@@ -860,35 +862,6 @@
 				}
 			});
 		}
-
-		// 임시
-		function getUrlPaths(host) {
-			var searchHosts = ((host != '' && host != null) || host == 'undefined') ? host : hosts;
-			grid2.on();
-
-			var selectSvcTypes  = arrayToString($('#serviceType').selectpicker('val'));
-			ui.get({
-				url: 'getKeywordUrl.xcn',
-				startDate: startDate + "000000",
-				endDate: endDate + "235959",
-				coreKeyword: coreKeyword,
-				unclsfiedOnly : $('#unclsfiedOnly').val(),
-				serviceCd : selectSvcTypes,
-				hosts: searchHosts,
-				offset: grid2.data.length,
-				limit: grid2.pageSize,
-				success: function (data, total) {
-					paths = data.facetHeader.join('@XCNJOIN@');
-				},
-				error: function (status, message) {
-					ui.alertMsg(message);
-				},
-				complete: function () {
-					grid2.off();
-				}
-			});
-		}
-
 		//키워드 TOP
 		function getKeywordData(path) {
 			var host = $('#urlSearchHostVal').val();
@@ -907,16 +880,18 @@
 				hosts: searchHosts,
 				paths: searchPaths,
 				success: function (data, total) {
-					var keywords = data.facet.filter(obj => coreKeyword.split(',').includes(obj.name));
-					if (coreKeyword == '')  keywords = data.facet.filter(obj => data.pivotHeader[0].split(',').includes(obj.name));
-					grid3.setData(keywords);
-					$('#keywordSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(host) + " > " + 'PATH : ' + getTruncateSearchText(path));
-					$('#keywordSearchHostVal').val(host);
-					$('#keywordSearchUrlVal').val(path);
+					if (total > 0) {
+						var keywords = data.facet.filter(obj => coreKeyword.split(',').includes(obj.name));
+						if (coreKeyword == '') keywords = data.facet.filter(obj => data.pivotHeader[0].split(',').includes(obj.name));
+						grid3.setData(keywords);
+						$('#keywordSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(host) + " > " + 'PATH : ' + getTruncateSearchText(path));
+						$('#keywordSearchHostVal').val(host);
+						$('#keywordSearchUrlVal').val(path);
 
-					var kwds = '';
-					if (keywords != '' && keywords.length > 0) {
-						kwds = keywords.map(obj => obj.name).join(',');
+						var kwds = '';
+						if (keywords != '' && keywords.length > 0) {
+							kwds = keywords.map(obj => obj.name).join(',');
+						}
 					}
 					// if (coreKeyword != '')getDetailData(searchHosts,searchPaths,kwds);
 				},

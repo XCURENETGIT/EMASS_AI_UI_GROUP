@@ -243,6 +243,7 @@ public class KeywordHostController{
 		String serviceCd = Common.nvl(request.getParameter("serviceCd"));
 
 		if (Common.isEmpty(coreKeyword)) coreKeyword = String.join(",", keywordService.getCoreKeywordAll());
+		if (Common.isEmpty(coreKeyword)) return new XcnResponseVO(XcnRspCode.OK);
 
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
@@ -282,6 +283,7 @@ public class KeywordHostController{
 		String serviceCd = Common.nvl(request.getParameter("serviceCd"));
 
 		if (Common.isEmpty(coreKeyword)) coreKeyword = String.join(",", keywordService.getCoreKeywordAll());
+		if (Common.isEmpty(coreKeyword)) return new XcnResponseVO(XcnRspCode.OK);
 
 		SolrQuery sq = new SolrQuery();
 		StringBuilder query = new StringBuilder();
