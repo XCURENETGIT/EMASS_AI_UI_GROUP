@@ -963,6 +963,14 @@ WHERE SERVICECD = 'IBIS';
 DELETE FROM UI_SERVICE
 WHERE SERVICECD = 'ITMS';
 
+INSERT IGNORE INTO UI_ATTACH (ATTACH_TYPE, ATTACH_NAME, ATTACH_DESC) VALUES
+    ('C', '소스코드', '소스코드'),
+    ('CC', '소스코드', '소스코드'),
+    ('CPP', '소스코드', '소스코드'),
+    ('PY', '소스코드', '소스코드'),
+    ('RB', '소스코드', '소스코드'),
+    ('GO', '소스코드', '소스코드'),
+    ('SH', '소스코드', '소스코드');
 
 /* UI MENU */
 DELETE FROM UI_MENU;
