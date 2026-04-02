@@ -966,15 +966,6 @@ WHERE SERVICECD = 'IBIS';
 DELETE FROM UI_SERVICE
 WHERE SERVICECD = 'ITMS';
 
-INSERT IGNORE INTO UI_ATTACH (ATTACH_TYPE, ATTACH_NAME, ATTACH_DESC) VALUES
-    ('C', '소스코드', '소스코드'),
-    ('CC', '소스코드', '소스코드'),
-    ('CPP', '소스코드', '소스코드'),
-    ('PY', '소스코드', '소스코드'),
-    ('RB', '소스코드', '소스코드'),
-    ('GO', '소스코드', '소스코드'),
-    ('SH', '소스코드', '소스코드');
-
 /* UI MENU */
 DELETE FROM UI_MENU;
 INSERT INTO UI_MENU (`MENU_ID`, `MENU_DEFAULT_NAME`, `P_MENU_ID`, `PKG_TYPE`, `MENU_AUTH`, `MENU_LINK`, `MENU_ICON`, `MENU_ORDER`, `MENU_USEYN`, `MENU_IMG_PATH`)  VALUES
