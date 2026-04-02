@@ -306,9 +306,10 @@
                         var dataList = data[i];
                         var type = dataList.deviceType;
                         var status = dataList.deviceStatus;
-                        if(type=="C") type='<s:message code="device.msg.division.collect"/>';
-                        else if(type=="A") type='<s:message code="device.msg.all_in_one"/>';
-                        else if(type=="L") type='<s:message code="device.msg.division.analysis"/>';
+                        if(type=="C") type='<s:message code="selectDevStatus.dev.logging"/>';
+                        else if(type=="A") type='<s:message code="selectDevStatus.dev.integrated"/>';
+                        else if(type=="L") type='<s:message code="selectDevStatus.dev.analysis"/>';
+						else if (type=="O") type='<s:message code="selectDevStatus.dev.packetOne"/>';
                         else type="-";
 
                         if(status=="S") status='<s:message code="common.msg.success"/>';

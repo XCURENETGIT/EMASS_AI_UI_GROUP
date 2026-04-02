@@ -151,15 +151,6 @@
             $("#cpuLoadUsage").circliful(circlifulOption);
             $("#memInfoUsage").circliful(circlifulOption);
 
-            //장비 추가
-            $('#insertBtn').click(function () {
-                $('#deviceAddPop').attr('mode', 'insert');
-                $('#deviceAddPop').modal('show');
-                $('#deviceIp, #deviceNm, #comment, #sshId, #sshPw').val('');
-                $('input:radio[name=deviceType]:input[value=A]').prop("checked", true);
-                $('input:radio[name=deviceType]').prop("disabled", false);
-            });
-
 
             $('#sms_file').click(function () {
                 var confId = 'device.hdd.sms.' + $('#deviceSelect').selectpicker('val');
@@ -1260,9 +1251,6 @@
 						<div class="col-65">
 							<label for="C"><input type="radio" value="C" name="deviceType" id="C"><s:message
 									code="selectDevStatus.dev.logging"/></label>
-							<label for="A"><input type="radio" value="A" name="deviceType" id="A"
-							                      style="margin-left: 10px;" checked></span><s:message
-									code="selectDevStatus.dev.integrated"/></label>
 							<label for="L"><input type="radio" value="L" name="deviceType" id="L"
 							                      style="margin-left: 10px;"><s:message
 									code="selectDevStatus.dev.analysis"/></label>

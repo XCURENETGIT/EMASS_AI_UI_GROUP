@@ -366,8 +366,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<label  for="C"><input type="radio" value="C" name="deviceType" id="C" ><s:message code="selectDevStatus.dev.logging"/></label>
-							<label  for="A" ><input type="radio" value="A" name="deviceType" id="A" style="margin-left: 10px;" checked></span><s:message code="selectDevStatus.dev.integrated"/></label>
+							<label  for="C"><input type="radio" value="C" name="deviceType" id="C" checked><s:message code="selectDevStatus.dev.logging"/></label>
 							<label  for="L"><input type="radio" value="L" name="deviceType" id="L"  style="margin-left: 10px;"  ><s:message code="selectDevStatus.dev.analysis"/></label>
 							<label  for="O"><input type="radio" value="O" name="deviceType" id="O"  style="margin-left: 10px;"  ><s:message code="selectDevStatus.dev.packetOne"/></label>
 						</div>

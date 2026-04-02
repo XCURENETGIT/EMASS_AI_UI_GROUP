@@ -30,12 +30,12 @@ public class SnmpStat implements Callable<List<DeviceTrafficStatVO>> {
 
 	@Override
 	public List<DeviceTrafficStatVO> call() throws Exception {
-		if (Common.isNotEquals(device.getDeviceType(), "A")) return null;
+		if (!Common.isOrEquals(device.getDeviceType(), "C", "O")) return null;
 
 		List<DeviceTrafficStatVO> traffics = new ArrayList<>();
 		GetSnmp snmp = this.context.getBean(GetSnmp.class);
 		JSONArray tables = snmp.getIifTrafficTable(device.getDeviceIp());
-		log.info("tables: {}"+tables);
+		log.info("tables: {}", tables);
 		for (int i = 0; i < tables.size(); i++) {
 			JSONObject obj = tables.getJSONObject(i);
 			DeviceTrafficStatVO vo = new DeviceTrafficStatVO();
