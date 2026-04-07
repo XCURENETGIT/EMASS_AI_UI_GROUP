@@ -242,6 +242,13 @@
 				$parent.find('input:checkbox').prop('disabled', !hasValue);
 				if (!hasValue) {
 					$parent.find('input:checkbox').prop('checked', false);
+                    var id = $(this).attr('id');
+                    var anyChecked = $(this).parent().find('input:checkbox:checked').length > 0;
+                    if(!anyChecked){
+                        if (id == "senders" || id == "receivers" || id == "m_to" || id == "m_cc" || id == "m_bcc"){
+                            $('#' + id + '_findByParam').prop('checked', true);
+                        }
+                    }
 				}
 
 				if (inputId === 'senders' && rsUppercase == "Y") {
@@ -1786,7 +1793,7 @@
 									<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 								</label>
 								<label class="checkbox-inline c-checkbox exceptOption">
-									<input type="checkbox" name="senders_findByParam" disabled="disabled">
+									<input type="checkbox" name="senders_findByParam" disabled="disabled" checked>
 									<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 								</label>
 								<%if (Common.isEquals(rsUppercase, "Y")) {%>
@@ -1822,7 +1829,7 @@
 									<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 								</label>
 								<label class="checkbox-inline c-checkbox exceptOption">
-									<input type="checkbox" name="receivers_findByParam" disabled="disabled">
+									<input type="checkbox" name="receivers_findByParam" disabled="disabled" checked>
 									<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 								</label>
 								<%if (Common.isEquals(rsUppercase, "Y")) {%>
@@ -1851,7 +1858,7 @@
 										<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 									</label>
 									<label class="checkbox-inline c-checkbox exceptOption">
-										<input type="checkbox" name="rcvTo_findByParam" disabled="disabled">
+										<input type="checkbox" name="rcvTo_findByParam" disabled="disabled" checked>
 										<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 									</label>
 								</div>
@@ -1874,7 +1881,7 @@
 										<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 									</label>
 									<label class="checkbox-inline c-checkbox exceptOption">
-										<input type="checkbox" name="rcvCc_findByParam" disabled="disabled">
+										<input type="checkbox" name="rcvCc_findByParam" disabled="disabled" checked>
 										<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 									</label>
 								</div>
@@ -1896,7 +1903,7 @@
 										<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 									</label>
 									<label class="checkbox-inline c-checkbox exceptOption">
-										<input type="checkbox" name="rcvBcc_findByParam" disabled="disabled">
+										<input type="checkbox" name="rcvBcc_findByParam" disabled="disabled" checked>
 										<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 									</label>
 								</div>

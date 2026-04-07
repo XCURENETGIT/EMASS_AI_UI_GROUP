@@ -1112,6 +1112,13 @@
                     $(this).parent().find('input:checkbox').attr('checked', false);
                 }else{
                     $(this).parent().find('input:checkbox').prop('disabled', false);
+                    var id = $(this).attr('id');
+                    var anyChecked = $(this).parent().find('input:checkbox:checked').length > 0;
+                    if(!anyChecked){
+                        if (id == "senders" || id == "receivers" || id == "m_to" || id == "m_cc" || id == "m_bcc"){
+                            $('#' + id + '_findByParam').prop('checked', true);
+                        }
+                    }
                 }
             });
             $('input:radio:not([name=searchKeywordInputType])').click(function(){
