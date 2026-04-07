@@ -229,29 +229,29 @@
             // });
 
 
-			$(document).on('input change keyup', '.condition_input_text', function(e) {
-				var $input = $(this);
-				var hasValue = $input.val().trim() != '';
-				var inputId = $input.attr('id');
+			$(document).on('keyup', '.condition_input_text', function(e) {
+                var $input = $(this);
+                var hasValue = $input.val().trim() != '';
+                var inputId = $(this).attr('id');
+                var $parent = $input.parent(); // .input-group
 
-				var $parent = $input.closest('.input-group');
-				if ($parent.length === 0) {
-					$parent = $input.parent();
-				}
-
-				$parent.find('input:checkbox').prop('disabled', !hasValue);
-				if (!hasValue) {
-					$parent.find('input:checkbox').prop('checked', false);
-                    var id = $(this).attr('id');
-                    var anyChecked = $(this).parent().find('input:checkbox:checked').length > 0;
+                if (!hasValue) {
+                    $parent.find('input:checkbox').prop('disabled', true);
+                    $parent.find('input:checkbox').prop('checked', false); //
+                } else {
+                    $parent.find('input:checkbox').prop('disabled', false);
+                    var anyChecked = $parent.find('input:checkbox:checked').length > 0;
                     if(!anyChecked){
-                        if (id == "senders" || id == "receivers" || id == "m_to" || id == "m_cc" || id == "m_bcc"){
-                            $('#' + id + '_findByParam').prop('checked', true);
+                        if (inputId == "senders" || inputId == "receivers" || inputId == "m_to" || inputId == "m_cc" || inputId == "m_bcc"){
+                            console.log("gg");
+                            console.log("selector:", '#' + inputId + '_findByParam');
+                            $('input:checkbox[name="' + inputId + '_findByParam"]').prop('checked', true);
                         }
                     }
-				}
+                }
 
-				if (inputId === 'senders' && rsUppercase == "Y") {
+
+                if (inputId === 'senders' && rsUppercase == "Y") {
 					$('input:checkbox[name="senders_upperCase"]').prop('disabled', !hasValue);
 					if (!hasValue) {
 						$('input:checkbox[name="senders_upperCase"]').prop('checked', false);
@@ -264,6 +264,7 @@
 					}
 				}
 			});
+
 
 
             $("#regexSearchDiv").draggable({
@@ -1769,7 +1770,7 @@
                         <li class="form-inline" id="recvSendGroup">
                             <label for="" class=" col-xs-3"><s:message code="condition.receive_send"/></label>
                             <label class="radio-inline c-radio">
-                                <input type="radio" name="receiveSendVal" value="" checked>
+                                <input type="radio" name="receiveSendVal" value="">
                                 <span class="fa fa-check"></span><s:message
                                     code="common.msg.all"/></label>
                             <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span
@@ -1793,7 +1794,7 @@
 									<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 								</label>
 								<label class="checkbox-inline c-checkbox exceptOption">
-									<input type="checkbox" name="senders_findByParam" disabled="disabled" checked>
+									<input type="checkbox" name="senders_findByParam" disabled="disabled">
 									<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 								</label>
 								<%if (Common.isEquals(rsUppercase, "Y")) {%>
@@ -1807,7 +1808,7 @@
                         <li class="form-inline">
                             <label for="" class=" col-xs-3"><s:message code="condition.detail.recvs"/></label>
                             <label class="radio-inline c-radio"><input type="radio" name="receive_option"
-                                                                       id="receive_option_all" value="" checked><span
+                                                                       id="receive_option_all" value=""><span
                                     class="fa fa-check"></span><s:message code="common.msg.all"/></label>
                             <label class="radio-inline c-radio"><input type="radio" name="receive_option"
                                                                        id="receive_option_more" value="detail"><span
@@ -1829,7 +1830,7 @@
 									<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 								</label>
 								<label class="checkbox-inline c-checkbox exceptOption">
-									<input type="checkbox" name="receivers_findByParam" disabled="disabled" checked>
+									<input type="checkbox" name="receivers_findByParam" disabled="disabled">
 									<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 								</label>
 								<%if (Common.isEquals(rsUppercase, "Y")) {%>
@@ -1858,7 +1859,7 @@
 										<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 									</label>
 									<label class="checkbox-inline c-checkbox exceptOption">
-										<input type="checkbox" name="rcvTo_findByParam" disabled="disabled" checked>
+										<input type="checkbox" name="rcvTo_findByParam" disabled="disabled">
 										<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 									</label>
 								</div>
@@ -1881,7 +1882,7 @@
 										<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 									</label>
 									<label class="checkbox-inline c-checkbox exceptOption">
-										<input type="checkbox" name="rcvCc_findByParam" disabled="disabled" checked>
+										<input type="checkbox" name="rcvCc_findByParam" disabled="disabled">
 										<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 									</label>
 								</div>
@@ -1903,7 +1904,7 @@
 										<span class="fa fa-check"></span><s:message code="condition.partial.match"/>
 									</label>
 									<label class="checkbox-inline c-checkbox exceptOption">
-										<input type="checkbox" name="rcvBcc_findByParam" disabled="disabled" checked>
+										<input type="checkbox" name="rcvBcc_findByParam" disabled="disabled">
 										<span class="fa fa-check"></span><s:message code="condition.exact.match"/>
 									</label>
 								</div>
