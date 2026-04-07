@@ -1391,7 +1391,7 @@ function ipValidCheck(ip) {
 
 function idCheck( id ){
 	// id 유효성을 검증하는 정규식입니다 .
-	var reg_exp = new RegExp("^[a-zA-Z][a-zA-Z0-9]{3,11}$","g");
+	var reg_exp = /^[a-zA-Z][a-zA-Z0-9.]{3,11}$/;
 	var match = reg_exp.exec( id );
 
 	if (match == null || id.length <  5 || id.length > 12) {
