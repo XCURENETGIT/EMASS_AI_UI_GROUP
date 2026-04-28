@@ -548,12 +548,13 @@
                     ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
                     return;
                 }
-                if(insaAuto == 'A') {
-                    var rowsIsAuto = grid.getSelectedKey('isAuto');
-                    for(var i=0; i<rowsIsAuto.length; i++) {
-                        if(rowsIsAuto[i] == 'Y') {
-                            return;
-                        }
+                if (insaAuto == 'A') {
+                    var autoItem = grid.getSelectedKey('isAuto').filter(function(i) {
+                        return String(i == null ? '' : i).trim().toUpperCase() === 'Y';
+                    });
+                    if (autoItem.length > 0) {
+                        ui.alertMsg('<s:message code="userInfo.msg.confirm.delete.auto"/>');
+                        return;
                     }
                 }
                 grid.on();
@@ -686,7 +687,6 @@
                 });
             });
             getInsaConfig();
-            getData();
         });
 
         function getInsaConfig(){
@@ -726,8 +726,10 @@
                 },
                 error : function (status, message) {
                     ui.alertMsg(message);
+					insaAuto = 'N';
                 },
                 complete : function (){
+					getData();
                 }
             });
         }

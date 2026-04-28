@@ -404,13 +404,14 @@
                     $('#deleteBtn').prop('disabled', false);
                     return;
                 }
-				if(insaAuto == 'A') {
-					var rowsIsAuto = grid.getSelectedKey('isAuto');
-					for(var i=0; i<rowsIsAuto.length; i++) {
-						if(rowsIsAuto[i] == 'Y') {
-							$('#deleteBtn').prop('disabled', false);
-							return;
-						}
+				if (insaAuto == 'A') {
+					var autoItem = grid.getSelectedKey('isAuto').filter(function(i) {
+						return String(i == null ? '' : i).trim().toUpperCase() === 'Y';
+					});
+					if (autoItem.length > 0) {
+						ui.alertMsg('<s:message code="organizationInfo.cannot.delete.auto"/>');
+						$('#deleteBtn').prop('disabled', false);
+						return;
 					}
 				}
                 ui.confirmMsg('<s:message code="common.msg.confirm.deleteitem" arguments="'+rows+'" argumentSeparator="|"/>', '', '', function(rs){
@@ -464,7 +465,6 @@
                 });
             });
             getInsaConfig();
-            getData();
         });
 
         function getInsaConfig(){
@@ -487,8 +487,10 @@
                 },
                 error : function (status, message) {
                     ui.alertMsg(message);
+					insaAuto = 'N';
                 },
                 complete : function (){
+					getData();
                 }
             });
         }
