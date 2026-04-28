@@ -41,6 +41,7 @@
         var coCd_for_busi = '';
         var insa_schedule = '';
         var current_select_count = 11;
+		var insaAuto = 'N';
         var accountMainDelimeter = '<%=Config.getString("account.main.delimiter", "%")%>';
         var accountSubDelimeter = '<%=Config.getString("account.sub.delimiter", "$")%>';
         var datas = {
@@ -141,7 +142,7 @@
                         //setInsaColumnVal(data,'insa.cols');
                         var options = makeInsaOptions;
                         makeInsaSelectBox(options,data);
-                        if ($('button[name="insa\\.auto"][value="N"]').hasClass("active")) {
+						if($('button[name="insa\\.auto"][value="N"]').hasClass("active")){
                             $('#insa\\.path').prop("disabled",true);
                             $('#insa\\.sepa').prop("disabled",true);
                             $('#allWeek').prop("disabled",true);
@@ -206,9 +207,9 @@
             });
 
             $('button[name="insa.auto"]').click(function(){
+                $(this).addClass('active');
+                $('button[name="insa.auto"]').not(this).removeClass('active');
                 if($(this).val() == 'N'){
-                    $(this).addClass('active');
-                    $('button[name="insa.auto"]').not(this).removeClass('active');
                     $('#insa\\.path').prop("disabled",true);
                     $('#insa\\.sepa').prop("disabled",true);
                     $('#allWeek').prop("disabled",true);
@@ -220,8 +221,6 @@
                     $('#addSelectBox').prop("disabled",true);
                     $('#directExecuteBtn').prop("disabled",true);
                 }else{
-                    $(this).addClass('active');
-                    $('button[name="insa.auto"]').not(this).removeClass('active');
                     $('#insa\\.path').prop("disabled",false);
                     $('#insa\\.sepa').prop("disabled",false);
                     $('#allWeek').prop("disabled",false);
@@ -262,7 +261,7 @@
                 }else{
                     checkWeekFlag = false;
                 }
-                if ($('button[name="insa\\.auto"].active').val() == 'Y') {
+                if($('button[name="insa\\.auto"].active').val() == 'Y' || $('button[name="insa\\.auto"].active').val() == 'A'){
                     if( $('#insa\\.path').val() == '' ){
                         ui.alertMsg('<s:message code="userInfo.msg.enter.filepath"/>');
                         $('#insa\\.path').focus();
@@ -342,11 +341,13 @@
 	                }
                 }
             var checkedInsaText = '';
-            var checkedInsa = $('input:radio[name="insa\\.auto"]:checked').val();
+            var checkedInsa = $('button[name="insa\\.auto"].active').val();
             if(checkedInsa=='Y'){
                 checkedInsaText = '<s:message code="userInfo.autolink"/>';
-            }else{
+            }else if(checkedInsa=='N'){
                 checkedInsaText = '<s:message code="userInfo.directlink"/>';
+            } else {
+                checkedInsaText = '<s:message code="userInfo.autolink"/> + <s:message code="userInfo.directlink"/>';
             }
             var data = valueCheckInfo();
             ui.confirmMsg('<s:message code="common.msg.confirm.apply"/>', '', '', function(rs){
@@ -547,6 +548,14 @@
                     ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
                     return;
                 }
+                if(insaAuto == 'A') {
+                    var rowsIsAuto = grid.getSelectedKey('isAuto');
+                    for(var i=0; i<rowsIsAuto.length; i++) {
+                        if(rowsIsAuto[i] == 'Y') {
+                            return;
+                        }
+                    }
+                }
                 grid.on();
                 ui.confirmMsg( '<s:message code="userInfo.msg.confirm.delete"/>', '', '', function(rs){
                     if(rs){
@@ -688,18 +697,32 @@
                     if(api_insaYn == 'Y') $('#setInfoBtn').hide();
                     else $('#setInfoBtn').show();
 
-                    if((nvl(data, 'N') == 'N' || data.val == 'N') && api_insaYn != 'Y') {
+                    if (data == null || data == undefined || data == '' || data == 'null') {
+                        insaAuto = 'N';
+                    } else {
+                        insaAuto = data.val;
+                    }
+                    if((insaAuto == 'N' || insaAuto == 'A') && api_insaYn != 'Y') {
                         $('#insertBtn').show();
                         $('#deleteBtn').show();
                         $('#makeInfoBtn').show();
-                        $('#insaComment').hide();
+                        if (insaAuto == 'A') {
+                            $('#insaComment').css('width', '670px');
+                            $('#insaComment').hide();
+                        } else {
+                            $('#insaComment').hide();
+                        }
                     } else {
                         $('#insertBtn').hide();
                         $('#deleteBtn').hide();
                         $('#makeInfoBtn').hide();
+                        $('#insaComment').text('<s:message code="userInfo.msg.insa.auto"/>');
                         $('#insaComment').show();
                     }
 
+                    if (grid.data.length > 0 ) {
+                        grid.render();
+                    }
                 },
                 error : function (status, message) {
                     ui.alertMsg(message);
@@ -796,6 +819,23 @@
             $('#allWeek').click();
         }
 
+        function setInsaButtonVal(data, id) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].confId == id) {
+                    $('button[name=' + idIndicator('insa.auto') + ']').removeClass("active");
+                    if(data[i].val == "N"){
+                        $('button[name=' + idIndicator('insa.auto') + '][value=N]').addClass("active");
+                    } else if(data[i].val == "A"){
+                        $('button[name=' + idIndicator('insa.auto') + '][value=A]').addClass("active");
+                    } else {
+                        $('button[name=' + idIndicator('insa.auto') + '][value=Y]').addClass("active");
+                    }
+                    return;
+                }
+            }
+            $('button[name=' + idIndicator('insa.auto') + '][value=N]').addClass("active");
+        }
+
         function setInsaRadioVal(data, id){
             for(var i=0 ; i < data.length ; i++){
                 if(data[i].confId == id ) {
@@ -806,32 +846,6 @@
             $('input:radio[name='+idIndicator('insa.auto')+']:input[value=N]').prop("checked", true);
 
         }
-
-        function setInsaButtonVal(data, id) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].confId == id) {
-                    if(data[i].val=="N"){
-                        $('button[name=' + idIndicator('insa.auto') + '][value=N]').addClass("active");
-                        $('button[name=' + idIndicator('insa.auto') + '][value=Y]').removeClass("active");
-                    }else{
-                        $('button[name=' + idIndicator('insa.auto') + '][value=Y]').addClass("active");
-                        $('button[name=' + idIndicator('insa.auto') + '][value=N]').removeClass("active");
-                    }
-                    return;
-                }
-            }
-            $('button[name=' + idIndicator('insa.auto') + '][value=N]').addClass("active");
-        }
-
-        /*function setInsaButtonVal(data, id){
-			for(var i=0 ; i < data.length ; i++){
-				if(data[i].confId == id ) {
-					return;
-				}
-			}
-			$('input:radio[name='+idIndicator('insa.auto')+']:input[value=N]').prop("checked", true);
-
-		}*/
 
 
         function setInsa_schedule(insa_schedule){
@@ -1100,11 +1114,11 @@
         function valueCheckInfo(){
             var data=[];
             var columnArray = [];
-            if ($('button[name="insa\\.auto"][value="N"]').hasClass("active")) {
-                data.push({ confId: 'insa.auto', val: 'N' });
+            if($('button[name="insa\\.auto"][value="N"]').hasClass("active")){
+                data.push({confId:'insa.auto', val:'N'});
                 return data;
-            }else {
-                data.push({confId:'insa.auto', val:'Y'});
+            } else {
+                data.push({confId:'insa.auto', val: $('button[name="insa\\.auto"].active').val() });
                 data.push({confId:'insa.basepoint', val:$('input:radio[name="insa\\.basepoint"]:checked').val()});
                 data.push({confId:'insa.dept.basepoint', val:$('input:radio[name="insa\\.dept\\.basepoint"]:checked').val()});
                 // 파일 처리 (쉼표로 구분)
@@ -1414,9 +1428,10 @@
 		<div class="modalCon">
 			<div class="modalTop">
 				<h3><s:message code="userInfo.method.insa"/></h3>
-				<div class="optiotab w100 mat8">
-					<button class="tablinks w50" value="N" name="insa.auto"><s:message code="userInfo.directlink"/></button>
-					<button class="tablinks w50"  value="Y" name="insa.auto"><s:message code="userInfo.autolink"/></button>
+				<div class="optiotab w100 mat10">
+					<button class="tablinks w30" style="width: 33%" value="N" name="insa.auto"><s:message code="userInfo.directlink"/></button>
+					<button class="tablinks w30" style="width: 33%" value="Y" name="insa.auto"><s:message code="userInfo.autolink"/></button>
+					<button class="tablinks w30" style="width: 33%" value="A" name="insa.auto"><s:message code="userInfo.autolink"/> + <s:message code="userInfo.directlink"/></button>
 				</div>
 			</div>
 			<div class="modalbody">
@@ -1797,7 +1812,7 @@
 
 	<div class="content xcn_full">
 		<div class="contentSub">
-			<div id="userListGrid" class="slickGrid gridArea"></div>
+			<div id="userInfoListGrid" class="slickGrid gridArea"></div>
 		</div>
 	</div>
 </div>
@@ -1817,7 +1832,7 @@
 
 <script type="text/javascript">
 
-    var grid = new Xgrid('userListGrid', contextRoot);
+	var grid = new Xgrid('userInfoListGrid', contextRoot);
     grid.onCheckBox();
     grid.autoNumber();
 
@@ -1829,7 +1844,6 @@
     grid.colAdd('generalNm', '<s:message code="common.org.general"/>', 120, 'left', false, 'nomal');
     grid.colAdd('busiNm', '<s:message code="common.org.busi"/>', 120, 'left', false, 'nomal');
     grid.colAdd('deptNm', '<s:message code="common.org.dept"/>', 120, 'left', false, 'nomal');
-    grid.colAdd('jikgubNm', '<s:message code="common.org.jikgub"/>', 80, 'left', false, 'nomal');
     grid.colAdd('jikgubNm', '<s:message code="common.org.jikgub"/>', 80, 'left', false, 'nomal');
     grid.colAdd('jikinNm', '<s:message code="common.org.jikin"/>', 80, 'left', false, 'nomal');
     grid.colAdd('sabun', '<s:message code="common.msg.userid"/>', 150, 'left', false, 'nomal');

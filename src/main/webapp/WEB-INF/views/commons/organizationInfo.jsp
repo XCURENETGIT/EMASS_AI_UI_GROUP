@@ -16,6 +16,7 @@
 	<script type="text/javascript">
         var searchFlag=false;
         var coCdPDept='';
+		var insaAuto = 'N';
         $(document).ready(function(){
 
 
@@ -403,6 +404,15 @@
                     $('#deleteBtn').prop('disabled', false);
                     return;
                 }
+				if(insaAuto == 'A') {
+					var rowsIsAuto = grid.getSelectedKey('isAuto');
+					for(var i=0; i<rowsIsAuto.length; i++) {
+						if(rowsIsAuto[i] == 'Y') {
+							$('#deleteBtn').prop('disabled', false);
+							return;
+						}
+					}
+				}
                 ui.confirmMsg('<s:message code="common.msg.confirm.deleteitem" arguments="'+rows+'" argumentSeparator="|"/>', '', '', function(rs){
                     if(rs){
                         grid.on();
@@ -462,13 +472,18 @@
                 url : 'getConfById.xcn',
                 confId : 'insa.auto',
                 success : function ( data, total ) {
-                    if(nvl(data, 'N') == 'N' || data.val == 'N') {
+					if(nvl(data, 'N') == 'N' || data.val == 'N' || data.val == 'A') {
                         $('#insertBtn').show();
                         $('#deleteBtn').show();
                     } else {
                         $('#insertBtn').hide();
                         $('#deleteBtn').hide();
                     }
+					if (data == null || data == undefined || data == '' || data == 'null') {
+						insaAuto = 'N';
+					} else {
+						insaAuto = data.val;
+					}
                 },
                 error : function (status, message) {
                     ui.alertMsg(message);
@@ -704,6 +719,7 @@
 							<input type="text"class="w100"  name="coNm" id="coNmPopInput" placeholder="<s:message code="common.org.conm"/>" required maxlength="20">
 						</div>
 					</div>
+					<input type="text" class="form-control" name="isAuto" id="coIsAuto" value="N" style="display: none;">
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
@@ -758,7 +774,7 @@
 							<input type="text" class="w100" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
 						</div>
 					</div>
-
+					<input type="text" class="form-control" name="isAuto" id="coIsAuto" value="N" style="display: none;">
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
@@ -815,7 +831,7 @@
 							<input type="text" class="w100"   name="generalNm" id="generalNmPopInput" placeholder="<s:message code="common.org.generalnm"/>" required maxlength="20">
 						</div>
 					</div>
-
+					<input type="text" class="form-control" name="isAuto" id="coIsAuto" value="N" style="display: none;">
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
@@ -880,7 +896,7 @@
 							<input type="text" class="w100" name="deptNm" id="deptNmPopInput" placeholder="<s:message code="common.org.deptnm"/>" required maxlength="20">
 						</div>
 					</div>
-
+					<input type="text" class="form-control" name="isAuto" id="coIsAuto" value="N" style="display: none;">
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
@@ -926,7 +942,7 @@
 							<input type="text" class="w100"   name="jikgubNm" id="jikgubNmPopInput" placeholder="<s:message code="common.org.jikgubnm"/>" required maxlength="20">
 						</div>
 					</div>
-
+					<input type="text" class="form-control" name="isAuto" id="coIsAuto" value="N" style="display: none;">
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
@@ -973,6 +989,7 @@
 							<input type="text" class="w100"   name="jikinNm" id="jikinNmPopInput" placeholder="<s:message code="common.org.jikinnm"/>" required maxlength="20">
 						</div>
 					</div>
+					<input type="text" class="form-control" name="isAuto" id="coIsAuto" value="N" style="display: none;">
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
@@ -1049,10 +1066,17 @@
     var gridCo = new Xgrid('coListGrid', contextRoot);
     gridCo.onCheckBox();
     gridCo.autoNumber();
-    gridCo.colAdd('coCd', '<s:message code="common.org.cocd"/>', 120, 'center', false, 'link');
+	gridCo.colAdd('coCd', '<s:message code="common.org.cocd"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (insaAuto == 'N' || (insaAuto == 'A' && gridCo.getValue(row, 'isAuto') == 'N')) {
+			return '<span style="cursor: pointer;color: #00c;text-decoration: underline;">' + value + '</span>';
+		} else {
+			return value;
+		}
+	});
     gridCo.colAdd('coNm', '<s:message code="common.org.conm"/>', 200, 'left', false, 'nomal');
     gridCo.onClick = function() {
         if( $('#insertBtn').css('display') == 'none' ) return;
+		if( insaAuto == 'A' && gridCo.getValue(gridCo.Row, 'isAuto') == 'Y' ) return;
         if (gridCo.Col == gridCo.ColIndex('coCd')) {
             $('#coCdPopInput').prop("disabled", true);
             $('#coPop').attr('mode', 'modify');
@@ -1074,11 +1098,18 @@
     gridBusi.onCheckBox();
     gridBusi.autoNumber();
 
-    gridBusi.colAdd('busiCd', '<s:message code="common.org.busicd"/>', 120, 'center', false, 'link');
+	gridBusi.colAdd('busiCd', '<s:message code="common.org.busicd"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (insaAuto == 'N' || (insaAuto == 'A' && gridBusi.getValue(row, 'isAuto') == 'N')) {
+			return '<span style="cursor: pointer;color: #00c;text-decoration: underline;">' + value + '</span>';
+		} else {
+			return value;
+		}
+	});
     gridBusi.colAdd('busiNm', '<s:message code="common.org.businm"/>', 200, 'left', false, 'nomal');
     gridBusi.colAdd('coNm', '<s:message code="common.org.conm"/>', 200, 'left', false, 'nomal');
     gridBusi.onClick = function() {
         if( $('#insertBtn').css('display') == 'none' ) return;
+		if( insaAuto == 'A' && gridBusi.getValue(gridBusi.Row, 'isAuto') == 'Y' ) return;
         if (gridBusi.Col == gridBusi.ColIndex('busiCd')) {
             $('#coCdBusi_inSelect').prop("disabled", true);
             $('#busiCdPopInput').prop("disabled", true);
@@ -1102,11 +1133,18 @@
     gridGeneral.onCheckBox();
     gridGeneral.autoNumber();
 
-    gridGeneral.colAdd('generalCd', '<s:message code="common.org.generalcd"/>', 120, 'center', false, 'link');
+	gridGeneral.colAdd('generalCd', '<s:message code="common.org.generalcd"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (insaAuto == 'N' || (insaAuto == 'A' && gridGeneral.getValue(row, 'isAuto') == 'N')) {
+			return '<span style="cursor: pointer;color: #00c;text-decoration: underline;">' + value + '</span>';
+		} else {
+			return value;
+		}
+	});
     gridGeneral.colAdd('generalNm', '<s:message code="common.org.generalnm"/>', 200, 'left', false, 'nomal');
     gridGeneral.colAdd('coNm', '<s:message code="common.org.conm"/>', 200, 'left', false, 'nomal');
     gridGeneral.onClick = function() {
         if( $('#insertBtn').css('display') == 'none' ) return;
+		if( insaAuto == 'A' && gridGeneral.getValue(gridGeneral.Row, 'isAuto') == 'Y' ) return;
         if (gridGeneral.Col == gridGeneral.ColIndex('generalCd')) {
             $('#coCdGeneral_inSelect').prop("disabled", true);
             $('#generalCdPopInput').prop("disabled", true);
@@ -1129,7 +1167,13 @@
     var gridDept = new Xgrid('deptListGrid', contextRoot);
     gridDept.onCheckBox();
     gridDept.autoNumber();
-    gridDept.colAdd('deptCd', '<s:message code="common.org.deptcd"/>', 120, 'center', false, 'link');
+	gridDept.colAdd('deptCd', '<s:message code="common.org.deptcd"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (insaAuto == 'N' || (insaAuto == 'A' && gridDept.getValue(row, 'isAuto') == 'N')) {
+			return '<span style="cursor: pointer;color: #00c;text-decoration: underline;">' + value + '</span>';
+		} else {
+			return value;
+		}
+	});
     gridDept.colAdd('deptNm', '<s:message code="common.org.deptnm"/>', 200, 'left', false, 'nomal');
     gridDept.colAdd('pdeptCd', '<s:message code="common.org.pdeptcd"/>', 160, 'center', false, 'nomal');
     gridDept.colAdd('pdeptNm', '<s:message code="common.org.pdeptnm"/>', 200, 'left', false, 'nomal');
@@ -1158,10 +1202,17 @@
     var gridJikgub = new Xgrid('jikgubListGrid', contextRoot);
     gridJikgub.onCheckBox();
     gridJikgub.autoNumber();
-    gridJikgub.colAdd('jikgubCd', '<s:message code="common.org.jikgubcd"/>', 120, 'center', false, 'link');
+	gridJikgub.colAdd('jikgubCd', '<s:message code="common.org.jikgubcd"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (insaAuto == 'N' || (insaAuto == 'A' && gridJikgub.getValue(row, 'isAuto') == 'N')) {
+			return '<span style="cursor: pointer;color: #00c;text-decoration: underline;">' + value + '</span>';
+		} else {
+			return value;
+		}
+	});
     gridJikgub.colAdd('jikgubNm', '<s:message code="common.org.jikgubnm"/>', 200, 'left', false, 'nomal');
     gridJikgub.onClick = function() {
         if( $('#insertBtn').css('display') == 'none' ) return;
+		if( insaAuto == 'A' && gridJikgub.getValue(gridJikgub.Row, 'isAuto') == 'Y' ) return;
         if (gridJikgub.Col == gridJikgub.ColIndex('jikgubCd')) {
             $('#jikgubCdPopInput').prop("disabled", true);
             $('#jikgubPop').attr('mode', 'modify');
@@ -1182,10 +1233,17 @@
     var gridJikin = new Xgrid('jikinListGrid', contextRoot);
     gridJikin.onCheckBox();
     gridJikin.autoNumber();
-    gridJikin.colAdd('jikinCd', '<s:message code="common.org.jikincd"/>', 120, 'center', false, 'link');
+	gridJikin.colAdd('jikinCd', '<s:message code="common.org.jikincd"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (insaAuto == 'N' || (insaAuto == 'A' && gridJikin.getValue(row, 'isAuto') == 'N')) {
+			return '<span style="cursor: pointer;color: #00c;text-decoration: underline;">' + value + '</span>';
+		} else {
+			return value;
+		}
+	});
     gridJikin.colAdd('jikinNm', '<s:message code="common.org.jikinnm"/>', 200, 'left', false, 'nomal');
     gridJikin.onClick = function() {
         if( $('#insertBtn').css('display') == 'none' ) return;
+		if( insaAuto == 'A' && gridJikin.getValue(gridJikin.Row, 'isAuto') == 'Y' ) return;
         if (gridJikin.Col == gridJikin.ColIndex('jikinCd')) {
             $('#jikinCdPopInput').prop("disabled", true);
             $('#jikinPop').attr('mode', 'modify');

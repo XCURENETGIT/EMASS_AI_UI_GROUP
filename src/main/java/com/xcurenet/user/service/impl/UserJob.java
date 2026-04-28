@@ -71,7 +71,7 @@ public class UserJob extends UserCommon implements Job {
 			log.info("[INSA AUTO IMPORT] insa db auto import start....");
 			log.info("[INSA AUTO IMPORT] init config auto:{} path:{} delimiter:{} cols:{}", auto, path, delimiter, confCols);
 
-			if (Common.isNotEquals(auto, "Y")) return;
+			if (Common.isEquals(auto, "N") || Common.isEmpty(auto)) return;
 			if (Common.isEmpty(path)) return;
 			if (Common.isEmpty(delimiter)) return;
 			if (confCols.size() == 0) return;

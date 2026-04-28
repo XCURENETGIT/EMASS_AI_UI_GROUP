@@ -10,4 +10,5 @@ public class DeptVO {
 	private String deptNm;
 	private String pDeptCd;
 	private String pDeptNm;
+	private String isAuto;
 }

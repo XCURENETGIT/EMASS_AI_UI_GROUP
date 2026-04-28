@@ -319,11 +319,14 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		int result = 0;
 		final String userId = user.getUserId();
 		final String[] userIps = Common.trimAll(Common.nvl(user.getUserIp())).split(",");
+		final String isAuto = user.getIsAuto();
+
 		for (String userIp : userIps) {
 			if (Common.isEmpty(userIp.trim())) continue;
 			UserVO vo = new UserVO();
 			vo.setUserId(userId);
 			vo.setUserIp(userIp);
+			vo.setIsAuto(isAuto);
 			result += insert("com.xcurenet.sqlmap.mappers.mysql.user.insertUserIp", vo);
 		}
 		return result;
@@ -334,6 +337,7 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		int result = 0;
 		final String userId = user.getUserId();
 		final String[] userEmails = Common.trimAll(Common.nvl(user.getUserEmail())).split(",");
+		final String isAuto = user.getIsAuto();
 		
 		String encryptUserYN = Config.getString("private.encrypt.useYN");
 		String encryptAlgorithm = Config.getString("private.encrypt.algorithm");
@@ -345,6 +349,7 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 			UserVO vo = new UserVO();
 			vo.setUserId(userId);
 			vo.setUserEmail(userEmail);
+			vo.setIsAuto(isAuto);
 			
 			if(Common.isEquals(encryptUserYN, "Y")){
 				vo.setEncryptUseYN(encryptUserYN);

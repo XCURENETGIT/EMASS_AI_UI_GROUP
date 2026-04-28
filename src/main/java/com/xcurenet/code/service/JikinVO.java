@@ -6,4 +6,5 @@ import lombok.Data;
 public class JikinVO {
 	private String jikinCd;
 	private String jikinNm;
+	private String isAuto;
 }

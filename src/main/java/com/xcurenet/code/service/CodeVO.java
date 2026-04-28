@@ -22,4 +22,5 @@ public class CodeVO {
 	private String useYn;
 	private String ceoReadAuth;
 	private String email;
+	private String isAuto;
 }

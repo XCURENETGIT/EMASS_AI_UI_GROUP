@@ -8,4 +8,5 @@ public class BusiVO {
 	private String coNm;
 	private String busiCd;
 	private String busiNm;
+	private String isAuto;
 }

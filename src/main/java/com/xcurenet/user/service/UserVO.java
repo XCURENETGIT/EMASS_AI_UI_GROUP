@@ -31,4 +31,7 @@ public class UserVO {
 	private String account;
 	private String serviceCd;
 	private String sabun;
+	/** UI_USERS.COUNTRY (국가 코드 등) */
+	private String country;
+	private String isAuto;
 }

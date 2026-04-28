@@ -6,13 +6,13 @@
 
 	<!-- 회사 목록 조회 -->
 	<select id="getCoList" resultType="coVO" parameterType="hashMap">
-		SELECT  COCD AS coCd, CONM AS coNm
+		SELECT  COCD AS coCd, CONM AS coNm, IS_AUTO AS isAuto
 		FROM	UI_CO
 		WHERE	1=1
 		<if test='searchStr!=null and searchStr!=""'>
 			AND		( COCD LIKE CONCAT('%', #{searchStr}, '%') OR CONM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
-		ORDER	BY COCD
+		ORDER	BY IS_AUTO, COCD
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>
@@ -61,8 +61,8 @@
 
 	<!-- 회사 등록 -->
 	<insert id="insertCo" parameterType="coVO">
-		INSERT IGNORE INTO UI_CO (COCD, CONM)
-		VALUES (#{coCd}, #{coNm})
+		INSERT IGNORE INTO UI_CO (COCD, CONM, IS_AUTO)
+		VALUES (#{coCd}, #{coNm}, #{isAuto})
 	</insert>
 
 	<!-- 회사 수정 -->
@@ -79,13 +79,13 @@
 
 	<!-- 사업장 목록 조회 -->
 	<select id="getBusiList" resultType="busiVO" parameterType="hashMap">
-		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.BUSICD AS busiCd, B.BUSINM AS busiNm
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.BUSICD AS busiCd, B.BUSINM AS busiNm, B.IS_AUTO AS isAuto
 		FROM	UI_CO A, UI_BUSI B
 		WHERE	A.COCD = B.COCD
 		<if test='searchStr!=null and searchStr!=""'>
 			AND		( B.BUSICD LIKE CONCAT('%', #{searchStr}, '%') OR B.BUSINM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
-		ORDER	BY A.COCD, B.BUSICD
+		ORDER	BY B.IS_AUTO, A.COCD, B.BUSICD
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>
@@ -121,8 +121,8 @@
 
 	<!-- 사업장 등록 -->
 	<insert id="insertBusi" parameterType="busiVO">
-		INSERT IGNORE INTO UI_BUSI (BUSICD, BUSINM, COCD)
-		VALUES (#{busiCd}, #{busiNm}, #{coCd})
+		INSERT IGNORE INTO UI_BUSI (BUSICD, BUSINM, COCD, IS_AUTO)
+		VALUES (#{busiCd}, #{busiNm}, #{coCd}, #{isAuto})
 	</insert>
 
 	<!-- 사업장 수정 -->
@@ -147,13 +147,13 @@
 
 	<!-- 총괄 목록 조회 -->
 	<select id="getGeneralList" resultType="generalVO" parameterType="hashMap">
-		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.GENERALCD AS generalCd, B.GENERALNM AS generalNm
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.GENERALCD AS generalCd, B.GENERALNM AS generalNm, B.IS_AUTO AS isAuto
 		FROM	UI_CO A, UI_GENERAL B
 		WHERE	A.COCD = B.COCD
 		<if test='searchStr!=null and searchStr!=""'>
 			AND		( B.GENERALCD LIKE CONCAT('%', #{searchStr}, '%') OR B.GENERALNM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
-		ORDER	BY A.COCD, B.GENERALCD
+		ORDER	BY B.IS_AUTO, A.COCD, B.GENERALCD
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>
@@ -189,8 +189,8 @@
 
 	<!-- 총괄 등록 -->
 	<insert id="insertGeneral" parameterType="generalVO">
-		INSERT IGNORE INTO UI_GENERAL (GENERALCD, GENERALNM, COCD)
-		VALUES (#{generalCd}, #{generalNm}, #{coCd})
+		INSERT IGNORE INTO UI_GENERAL (GENERALCD, GENERALNM, COCD, IS_AUTO)
+		VALUES (#{generalCd}, #{generalNm}, #{coCd}, #{isAuto})
 	</insert>
 
 	<!-- 총괄 수정 -->
@@ -214,14 +214,14 @@
 
 	<!-- 부서 목록 조회 -->
 	<select id="getDeptList" resultType="deptVO" parameterType="hashMap">
-		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.DEPTCD AS deptCd, B.DEPTNM AS deptNm, B.PDEPTCD AS pDeptCd, C.DEPTNM AS pDeptNm
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.DEPTCD AS deptCd, B.DEPTNM AS deptNm, B.PDEPTCD AS pDeptCd, C.DEPTNM AS pDeptNm, B.IS_AUTO AS isAuto
 		FROM	UI_CO A, UI_DEPT B
 		LEFT OUTER JOIN UI_DEPT C ON B.PDEPTCD = C.DEPTCD
 		WHERE	A.COCD = B.COCD
 		<if test='searchStr!=null and searchStr!=""'>
 			AND		( B.DEPTCD LIKE CONCAT('%', #{searchStr}, '%') OR B.DEPTNM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
-		ORDER	BY A.COCD, B.DEPTCD
+		ORDER	BY B.IS_AUTO, A.COCD, B.DEPTCD
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>
@@ -259,8 +259,8 @@
 
 	<!-- 부서 등록 -->
 	<insert id="insertDept" parameterType="deptVO">
-		INSERT IGNORE INTO UI_DEPT (DEPTCD, DEPTNM, PDEPTCD, COCD)
-		VALUES (#{deptCd}, #{deptNm}, #{pDeptCd}, #{coCd})
+		INSERT IGNORE INTO UI_DEPT (DEPTCD, DEPTNM, PDEPTCD, COCD, IS_AUTO)
+		VALUES (#{deptCd}, #{deptNm}, #{pDeptCd}, #{coCd}, #{isAuto})
 	</insert>
 
 	<!-- 부서 수정 -->
@@ -285,13 +285,13 @@
 
 	<!-- 직급 목록 조회 -->
 	<select id="getJikgubList" resultType="jikgubVO" parameterType="hashMap">
-		SELECT  JIKGUBCD AS jikgubCd, JIKGUBNM AS jikgubNm
+		SELECT  JIKGUBCD AS jikgubCd, JIKGUBNM AS jikgubNm, IS_AUTO AS isAuto
 		FROM	UI_JIKGUB
 		WHERE	1=1
 		<if test='searchStr!=null and searchStr!=""'>
 			AND		( JIKGUBCD LIKE CONCAT('%', #{searchStr}, '%') OR JIKGUBNM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
-		ORDER	BY JIKGUBCD
+		ORDER	BY IS_AUTO, JIKGUBCD
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>
@@ -316,8 +316,8 @@
 
 	<!-- 직급 등록 -->
 	<insert id="insertJikgub" parameterType="jikgubVO">
-		INSERT IGNORE INTO UI_JIKGUB (JIKGUBCD, JIKGUBNM)
-		VALUES (#{jikgubCd}, #{jikgubNm})
+		INSERT IGNORE INTO UI_JIKGUB (JIKGUBCD, JIKGUBNM, IS_AUTO)
+		VALUES (#{jikgubCd}, #{jikgubNm}, #{isAuto})
 	</insert>
 
 	<!-- 직급 수정 -->
@@ -338,13 +338,13 @@
 
 	<!-- 재직 목록 조회 -->
 	<select id="getJikinList" resultType="jikinVO" parameterType="hashMap">
-		SELECT  JIKINCD AS jikinCd, JIKINNM AS jikinNm
+		SELECT  JIKINCD AS jikinCd, JIKINNM AS jikinNm, IS_AUTO AS isAuto
 		FROM	UI_JIKIN
 		WHERE	1=1
 		<if test='searchStr!=null and searchStr!=""'>
 			AND		( JIKINCD LIKE CONCAT('%', #{searchStr}, '%') OR JIKINNM LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
-		ORDER	BY JIKINCD
+		ORDER	BY IS_AUTO, JIKINCD
 		<if test='offset!=null and limit > 0'>
 			LIMIT	${offset}, ${limit}
 		</if>
@@ -369,8 +369,8 @@
 
 	<!-- 재직 등록 -->
 	<insert id="insertJikin" parameterType="jikinVO">
-		INSERT IGNORE INTO UI_JIKIN (JIKINCD, JIKINNM)
-		VALUES (#{jikinCd}, #{jikinNm})
+		INSERT IGNORE INTO UI_JIKIN (JIKINCD, JIKINNM, IS_AUTO)
+		VALUES (#{jikinCd}, #{jikinNm}, #{isAuto})
 	</insert>
 
 	<!-- 재직 수정 -->

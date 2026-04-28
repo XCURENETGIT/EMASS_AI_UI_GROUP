@@ -5,13 +5,13 @@
 
 	<!-- 인사 정보 자동 연동 -->
 	<delete id="deleteAllUsers">
-		DELETE FROM UI_USERS
+		DELETE FROM UI_USERS WHERE IS_AUTO = 'Y'
 	</delete>
 	<delete id="deleteAllUserEmails">
-		DELETE FROM UI_USER_EMAIL
+		DELETE FROM UI_USER_EMAIL WHERE IS_AUTO = 'Y'
 	</delete>
 	<delete id="deleteAllUserIps">
-		DELETE FROM UI_USER_IP
+		DELETE FROM UI_USER_IP WHERE IS_AUTO = 'Y'
 	</delete>
 
 	<delete id="deleteUserGroupByInsaAuto">
@@ -30,8 +30,8 @@
 	</delete>
 
 	<insert id="replaceUser" parameterType="userVO">
-		INSERT IGNORE INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, SABUN)
-		VALUES ( #{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{sabun} )
+		INSERT IGNORE INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD , SABUN, IS_AUTO)
+		VALUES ( #{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd} , #{sabun}, #{isAuto})
 	</insert>
 	<!-- 인사 정보 자동 연동 -->
 
@@ -226,11 +226,17 @@
 		DELETE FROM UI_CEO WHERE USER_ID = #{userId}
 	</delete>
 
+	<!-- 사용자 IS_AUTO 값 조회 -->
+	<select id="getUserIsAuto" parameterType="userVO" resultType="String">
+		SELECT IFNULL(IS_AUTO, 'N') FROM UI_USERS WHERE USER_ID = #{userId}
+	</select>
+
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO, SABUN)
-		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo}, #{sabun})
+		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO, SABUN, COUNTRY, IS_AUTO)
+		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo}, #{sabun}, #{country}, #{isAuto})
 	</insert>
+
 
 	<!-- 사용자 수정 -->
 	<update id="updateUser" parameterType="userVO">
@@ -249,21 +255,22 @@
 
 	<!-- 사용자 IP 등록 -->
 	<insert id="insertUserIp" parameterType="userVO">
-		INSERT IGNORE INTO UI_USER_IP (USER_ID, USER_IP )
-		VALUES ( #{userId}, #{userIp} )
+		INSERT IGNORE INTO UI_USER_IP (USER_ID, USER_IP, IS_AUTO)
+		VALUES ( #{userId}, #{userIp}, #{isAuto} )
 	</insert>
 
 	<!-- 사용자 EMAIL 등록 -->
 	<insert id="insertUserEmail" parameterType="userVO">
-		INSERT IGNORE INTO UI_USER_EMAIL (USER_ID, USER_EMAIL )
+		INSERT IGNORE INTO UI_USER_EMAIL (USER_ID, USER_EMAIL, IS_AUTO)
 		VALUES ( #{userId},
-				<if test='encryptUseYN == "Y"'>
-				xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{userEmail} )
-				</if>
-				<if test='encryptUseYN != "Y"'>
-				#{userEmail}
-				</if>
-				)
+		<if test='encryptUseYN == "Y"'>
+			xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{userEmail} ),
+		</if>
+		<if test='encryptUseYN != "Y"'>
+			#{userEmail},
+		</if>
+		#{isAuto}
+		)
 	</insert>
 
 	<!-- 사용자 삭제 시 사용자그룹에서도 해당 사용자 삭제 -->
@@ -322,7 +329,8 @@
 				(SELECT B.BUSINM FROM UI_BUSI B WHERE A.BUSICD = B.BUSICD) AS busiNm,
 				A.deptNm,
 				(SELECT B.JIKINNM FROM UI_JIKIN B WHERE A.JIKINCD = B.JIKINCD) AS jikinNm,
-				(SELECT B.JIKGUBNM FROM UI_JIKGUB B WHERE A.JIKGUBCD = B.JIKGUBCD) AS jikgubNm
+				(SELECT B.JIKGUBNM FROM UI_JIKGUB B WHERE A.JIKGUBCD = B.JIKGUBCD) AS jikgubNm,
+				A.IS_AUTO AS isAuto
 		FROM	(
 				SELECT  A.USER_ID, A.USER_NM, A.COCD, A.GENERALCD, A.BUSICD, A.DEPTCD, A.JIKINCD, A.JIKGUBCD, A.SABUN,
 						(SELECT  GROUP_CONCAT( DISTINCT (B.USER_IP) ORDER BY INET_ATON(B.USER_IP) SEPARATOR ', ') FROM UI_USER_IP B WHERE A.USER_ID = B.USER_ID) AS userIp,
@@ -337,7 +345,8 @@
 						 FROM UI_USER_EMAIL B
 						 WHERE A.USER_ID = B.USER_ID) AS userEmail,
 						(SELECT CASE WHEN IFNULL(MAX(B.USER_ID),'N') != 'N' THEN 'Y' ELSE 'N' END FROM UI_CEO B WHERE A.USER_ID = B.USER_ID) AS ceo,
-						(SELECT B.DEPTNM FROM UI_DEPT B WHERE A.DEPTCD = B.DEPTCD) AS deptNm
+						(SELECT B.DEPTNM FROM UI_DEPT B WHERE A.DEPTCD = B.DEPTCD) AS deptNm,
+						A.IS_AUTO
 				FROM	UI_USERS A
 				WHERE	1=1
 				<if test='authCocd != null and authCocd != 0'>
@@ -401,7 +410,7 @@
 					)
 			</if>
 		</if>
-		ORDER	BY USER_NM
+		ORDER	BY IS_AUTO, USER_NM
 		<if test='offset!=null and limit > 0'>
 		LIMIT	${offset}, ${limit}
 		</if>

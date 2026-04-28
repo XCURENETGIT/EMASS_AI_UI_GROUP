@@ -7,4 +7,5 @@ public class CoVO {
 	private String coCd;
 	private String coNm;
 	private String userId;
+	private String isAuto;
 }

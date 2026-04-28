@@ -2867,6 +2867,9 @@ public static String getDateDay(String date, String dateType) throws Exception {
 		} catch (RestClientException e) {
 			log.debug("error {}", e.getMessage());
 			return result;
+		} catch (IllegalArgumentException e) {
+			log.debug("error invalid url {}", e.getMessage());
+			return result;
 		}
 	}
 

@@ -169,6 +169,7 @@ public class UserCommon {
 				CoVO co = new CoVO();
 				co.setCoCd(user.getCoCd());
 				co.setCoNm(user.getCoNm());
+				co.setIsAuto("Y");
 				newCos.add(co);
 				coMap.put(user.getCoCd(), user.getCoNm());
 			}
@@ -229,6 +230,7 @@ public class UserCommon {
 		CoVO co = new CoVO();
 		co.setCoCd(val);
 		co.setCoNm(val);
+		co.setIsAuto("Y");
 		newCos.add(co);
 		coMap.put(val, val);
 		return val;
@@ -243,6 +245,7 @@ public class UserCommon {
 				CoVO co = new CoVO();
 				co.setCoCd(code);
 				co.setCoNm(val);
+				co.setIsAuto("Y");
 				newCos.add(co);
 				coMap.put(val, code);
 				return code;
@@ -269,6 +272,7 @@ public class UserCommon {
 				GeneralVO vo = new GeneralVO();
 				vo.setGeneralCd(code);
 				vo.setGeneralNm(val.split("\\|")[1]);
+				vo.setIsAuto("Y");
 				newGeneral.add(vo);
 				generalMap.put(val, code);
 				return code;
@@ -295,6 +299,7 @@ public class UserCommon {
 				BusiVO vo = new BusiVO();
 				vo.setBusiCd(code);
 				vo.setBusiNm(val.split("\\|")[1]);
+				vo.setIsAuto("Y");
 				newBusi.add(vo);
 				busiMap.put(val, code);
 				return code;
@@ -321,6 +326,7 @@ public class UserCommon {
 				DeptVO vo = new DeptVO();
 				vo.setDeptCd(code);
 				vo.setDeptNm(val.split("\\|")[1]);
+				vo.setIsAuto("Y");
 				newDept.add(vo);
 				deptMap.put(val, code);
 				return code;
@@ -347,6 +353,7 @@ public class UserCommon {
 				JikgubVO vo = new JikgubVO();
 				vo.setJikgubCd(code);
 				vo.setJikgubNm(val);
+				vo.setIsAuto("Y");
 				newJikgub.add(vo);
 				jikgubMap.put(val, code);
 				return code;
@@ -373,6 +380,7 @@ public class UserCommon {
 				JikinVO vo = new JikinVO();
 				vo.setJikinCd(code);
 				vo.setJikinNm(val);
+				vo.setIsAuto("Y");
 				newJikin.add(vo);
 				jikinMap.put(val, code);
 				return code;

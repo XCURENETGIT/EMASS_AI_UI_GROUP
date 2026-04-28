@@ -8,4 +8,5 @@ public class GeneralVO {
 	private String coNm;
 	private String generalCd;
 	private String generalNm;
+	private String isAuto;
 }

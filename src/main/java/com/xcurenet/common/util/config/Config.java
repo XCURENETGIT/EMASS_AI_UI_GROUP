@@ -499,7 +499,7 @@ public class Config {
 			job.setDescription("인사 연동 스케쥴러");
 
 			if (Common.isNotEmpty(job.getCronExp()) && Common.isNotEmpty(job.getJobClass())) {
-				if (Common.isEquals(getString("insa.auto"), "Y")) {
+				if (Common.isOrEquals(getString("insa.auto"), "Y", "A")) {
 					trigger.putJob(job.getJobId(), SpringContextUtil.getBean(job.getJobClass()).getClass(), job.getCronExp(), job.getDescription());
 				} else {
 					trigger.deleteJob(job.getJobId());
