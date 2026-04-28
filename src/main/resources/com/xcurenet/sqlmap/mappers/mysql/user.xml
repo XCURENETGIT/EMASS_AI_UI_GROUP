@@ -233,8 +233,8 @@
 
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO, SABUN, COUNTRY, IS_AUTO)
-		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo}, #{sabun}, #{country}, #{isAuto})
+		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO, SABUN, IS_AUTO)
+		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo}, #{sabun}, #{isAuto})
 	</insert>
 
 
