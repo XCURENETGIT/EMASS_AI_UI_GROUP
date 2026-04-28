@@ -838,11 +838,6 @@
 			} else if (alarmVal.rcvCc_findByParam == 'Y' || alarmVal.m_cc_findByParam == 'Y') {
 				rcvCc_findByParam_checked = true;
 			}
-			// 제외가 체크되어 있으면 부분일치/전체일치는 선택하지 않음 (디폴트값 없음)
-			if (alarmVal.rcvCc_not == 'Y') {
-				rcvCc_findByKeyword_checked = false;
-				rcvCc_findByParam_checked = false;
-			}
 			$('[name=rcvCc_findByKeyword]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
 			$('[name=rcvCc_findByKeyword]').prop("checked", rcvCc_findByKeyword_checked);
 			$('[name=rcvCc_findByParam]').prop("disabled", (alarmVal.rcvCc == '' || alarmVal.rcvCc == null) ? true : false);
@@ -1808,14 +1803,14 @@
                         <li class="form-inline">
                             <label for="" class=" col-xs-3"><s:message code="condition.detail.recvs"/></label>
                             <label class="radio-inline c-radio"><input type="radio" name="receive_option"
-                                                                       id="receive_option_all" value=""><span
+                                                                       id="receive_option_all" value="" checked><span
                                     class="fa fa-check"></span><s:message code="common.msg.all"/></label>
                             <label class="radio-inline c-radio"><input type="radio" name="receive_option"
                                                                        id="receive_option_more" value="detail"><span
                                     class="fa fa-check "></span><s:message code="condition.info.detail"/></label>
                             <input type="hidden" name="receiveSend" id="receiveSend">
                         </li>
-                        <li>
+                        <li class="receivers_default">
                         <label for="receivers" class=" col-xs-3"><s:message code="condition.recv"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"> </label>
                         <div class="input-group">
 								<input type="text" class="form-control input-sm condition_input_text" id="receivers"
