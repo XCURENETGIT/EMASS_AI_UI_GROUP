@@ -12,7 +12,7 @@
 	<packaging>war</packaging>
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emassai</artifactId>
-	<version>1.0.238</version>
+	<version>1.0.239</version>
 	<name>emassai</name>
 	<description>EMASS AI</description>
 
