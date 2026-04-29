@@ -198,6 +198,11 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		try {
 			tx.start();
 
+			if (Common.isEmpty(user.getIsAuto())) {
+				final String cur = selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUserIsAuto", user);
+				user.setIsAuto(Common.nvl(cur, "N"));
+			}
+
 			deleteUserEmail(user);
 			deleteUserIp(user);
 			deleteUserAccount(user);
@@ -221,6 +226,10 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		TransactionManager tx = getTransactionManager();
 		try {
 			tx.start();
+
+			if (Common.isEmpty(user.getIsAuto())) {
+				user.setIsAuto("N");
+			}
 
 			deleteUserEmail(user);
 			deleteUserIp(user);

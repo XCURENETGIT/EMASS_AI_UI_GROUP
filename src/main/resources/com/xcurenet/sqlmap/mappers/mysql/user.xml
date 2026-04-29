@@ -249,7 +249,8 @@
 				JIKINCD 	= #{jikinCd},
 				JIKGUBCD	= #{jikgubCd},
 				CEO         = #{ceo},
-				SABUN       = #{sabun}
+				SABUN       = #{sabun},
+				IS_AUTO		= #{isAuto}
 		WHERE	USER_ID 	= #{userId}
 	</update>
 

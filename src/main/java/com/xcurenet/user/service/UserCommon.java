@@ -220,7 +220,9 @@ public class UserCommon {
 		if( Common.isEmpty(user.getJikgubNm()) ) user.setJikgubCd("C00-00");
 		else if ( Common.isNotEmpty(jikgubMap.get(user.getJikgubNm())) ) user.setJikgubCd(jikgubMap.get(user.getJikgubNm()));
 		else user.setJikgubCd(getNextJikgubCd(user.getJikgubNm()));
-		
+
+		user.setIsAuto("Y");
+
 		log.debug(user.toString());
 		return user;
 	}
