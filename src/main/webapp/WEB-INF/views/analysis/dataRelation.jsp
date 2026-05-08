@@ -291,7 +291,6 @@
 				<%-- searchType --%>
 				<div>
 					<select id="unit" name="unit">
-						<option value="file"><s:message code="consent.attach"/></option>
 						<option value="mailid"><s:message code="analysis.relation.mailid"/></option>
 						<option value="messenger"><s:message code="analysis.relation.messenger"/></option>
 					</select>
