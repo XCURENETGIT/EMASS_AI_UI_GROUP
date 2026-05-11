@@ -19,6 +19,7 @@
                 $('#date').prop('disabled', false);
                 $("#holidayPop").modal('show');
                 $('#holidayPop').attr('mode', 'insert');
+				$('#startdate').data('DateTimePicker').date(moment());
                 $('#date, #comment').val('');
             });
 
@@ -231,7 +232,7 @@
     grid.onClick = function () {
         if (grid.Col == grid.ColIndex('date')) {
             $('#holidayPop').attr('mode', 'modify');
-            $('#date').val(grid.getValue(grid.Row, 'date')).prop('disabled', true);
+            $('#startdate').val(grid.getValue(grid.Row, 'date')).prop('disabled', true);
             $('#comment').val(grid.getValue(grid.Row, 'comment'));
             $("#holidayPop").modal('show');
         }

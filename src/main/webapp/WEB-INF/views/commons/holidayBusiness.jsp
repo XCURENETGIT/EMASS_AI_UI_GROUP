@@ -132,6 +132,7 @@
                 $('#date').attr('disabled', false);
                 $("#holidayPop").modal('show');
                 $('#holidayPop').attr('mode', 'insert');
+				$('#startdate').data('DateTimePicker').date(moment());
                 $('#date, #comment').val('');
             });
 
