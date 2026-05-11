@@ -1,5 +1,6 @@
 package com.xcurenet.login;
 
+import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.config.service.ConfigService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 @Service
 @RequiredArgsConstructor
@@ -53,25 +55,37 @@ public class MailService {
 	}
 
 	public int sendMail(String mail){
-/*		System.out.println(((JavaMailSenderImpl) javaMailSender).getHost()+"호스트");
-		System.out.println(((JavaMailSenderImpl) javaMailSender).getPort()+"포트");
-		System.out.println(((JavaMailSenderImpl) javaMailSender).getUsername()+"이름");
-		System.out.println(((JavaMailSenderImpl) javaMailSender).getPassword()+"비밀번호 ");*/
-
 		if (!Config.getBoolean("mail.forward.flag"))
 			return -1;
 
-		ConfigVO hostConfig = configService.getConf("mail.smtp.host");
-		ConfigVO portConfig = configService.getConf("mail.smtp.port");
-		ConfigVO usernameConfig = configService.getConf("mail.smtp.id");
-		ConfigVO passwordConfig = configService.getConf("mail.smtp.password");
+		String hostConfig = Config.getString("mail.smtp.host");
+		String portConfig = Config.getString("mail.smtp.port");
+		String usernameConfig = Config.getString("mail.smtp.id");
+		String passwordConfig = Config.getString("mail.smtp.password");
+		boolean mailSSl = Config.getBoolean("mail.ssl");
+		boolean mailAuth = Config.getBoolean("mail.auth");
 
 		// JavaMailSender의 설정을 변경
 		JavaMailSenderImpl mailSender = (JavaMailSenderImpl) javaMailSender;
-		mailSender.setHost(hostConfig.getVal());
-		mailSender.setPort(Integer.parseInt(portConfig.getVal()));
-		mailSender.setUsername(usernameConfig.getVal());
-		mailSender.setPassword(passwordConfig.getVal());
+		mailSender.setHost(hostConfig);
+		mailSender.setPort(Integer.parseInt(portConfig));
+
+		Properties props = mailSender.getJavaMailProperties();
+		if (mailSSl) {
+			mailSender.setProtocol("smtps");
+			props.put("mail.smtps.auth", "true");
+			props.put("mail.smtps.ssl.enable", "true");
+			props.put("mail.smtps.ssl.trust", hostConfig);
+			props.put("mail.smtps.starttls.enable", "true");
+		} else {
+			props.put("mail.smtp.auth", String.valueOf(mailAuth));
+			props.put("mail.smtp.starttls.enable", String.valueOf(mailSSl));
+		}
+
+		if (mailAuth) {
+			mailSender.setUsername(usernameConfig);
+			mailSender.setPassword(passwordConfig);
+		}
 
 		// 메일 보내기
 		MimeMessage message = CreateMail(mail);
