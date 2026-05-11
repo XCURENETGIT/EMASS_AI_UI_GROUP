@@ -1756,15 +1756,10 @@ public class SolrCreateQuery {
 		List<String> queryList = preProcessQuery(query);
 		for (String qry : queryList) {
 
-			if (Common.isOrEquals(qry, "+", "-","|")) {
+			if (Common.isOrEquals(qry, "AND", "OR", "NOT")) {
 				if(queryList.size() == 1){
 					querySb.append(("\"").concat(qry).concat("\""));
-				} else {
-					if (qry.equals("+")) querySb.append("AND ");
-					else if (qry.equals("-")) querySb.append("NOT ");
-					else if (qry.equals("|")) querySb.append("OR ");
-					else querySb.append(qry).append(" ");
-				}
+				} else querySb.append(qry).append(" ");
 				continue;
 			}
 			querySb.append("(");
