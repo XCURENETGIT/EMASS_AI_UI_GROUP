@@ -79,12 +79,6 @@
 		overflow: hidden;
 	}
 
-	@media screen and (max-width: 1640px) {
-		.chatList {
-			display: none; /* chatList div를 감춤 */
-		}
-	}
-
 	span.mini {
 		font-size: 13px;
 	}
