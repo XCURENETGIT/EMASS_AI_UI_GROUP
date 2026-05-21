@@ -1225,7 +1225,7 @@
 </head>
 <body class="mini-navbar" id="body">
 
-<div class="modal" id="deviceAddPop" tabindex="-1" role="dialog" aria-labelledby="addDevPopModal">
+<div class="modal" id="deviceAddPop" tabindex="-1" role="dialog" aria-labelledby="addDevPopModal" data-backdrop="static">
 	<div class="modal-content" style=" width: 796px!important;">
 		<form method="post" id="addDevPopForm">
 			<div class="modalHead">

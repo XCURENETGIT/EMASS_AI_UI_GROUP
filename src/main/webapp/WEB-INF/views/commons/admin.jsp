@@ -583,7 +583,7 @@
         }
 	</script>
 </head>
-<div class="modal" id="adminPop">
+<div class="modal" id="adminPop" data-backdrop="static">
 	<div class="modal-content" style="width: 1230px;">
 		<form method="post" id="userPopForm">
 			<div class="modalHead">
@@ -972,7 +972,7 @@
 	</div>
 </div>
 
-<div class="modal" id="statusPop">
+<div class="modal" id="statusPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="statusPopForm">
 			<div class="modalHead">
@@ -1004,7 +1004,7 @@
 </div>
 
 
-<div class="modal" id="ipMacPop" data-backdrop="static">
+<div class="modal" id="ipMacPop" data-backdrop="static" >
 	<div class="modal-content">
 		<form method="post" id="ipMacPopForm">
 			<div class="modalHead">

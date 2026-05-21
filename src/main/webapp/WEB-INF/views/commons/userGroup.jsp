@@ -284,7 +284,7 @@ function deleteUserGroupItem (){
 </script>
 </head>
 <body class="mini-navbar">
-<div class="modal" id="userGroupPop" tabindex="-1" role="dialog" aria-labelledby="userGroupPop">
+<div class="modal" id="userGroupPop" tabindex="-1" role="dialog" aria-labelledby="userGroupPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="userGroupPopForm">
 			<div class="modalHead">
@@ -330,7 +330,7 @@ function deleteUserGroupItem (){
 	</div>
 </div>
 <!-- 공통 Group 항목 선택-->
-<div class="modal" id="selectPop" aria-labelledby="selectPop">
+<div class="modal" id="selectPop" aria-labelledby="selectPop" data-backdrop="static">
 	<div class="modal-content" style="width: 1200px">
 		<div class="modalHead">
 			<h2><s:message code="common.org.choose.user"/></h2>
