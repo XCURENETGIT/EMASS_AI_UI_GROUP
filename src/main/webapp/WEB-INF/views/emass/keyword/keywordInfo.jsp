@@ -353,7 +353,7 @@
 	}
 </script>
 
-<div class="modal" id="keywordGroupPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog">
+<div class="modal" id="keywordGroupPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="keywordGroupPopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -416,7 +416,7 @@
 	</div>
 </div>
 
-<div class="modal" id="keywordPop"  tabindex="-1" role="dialog" aria-labelledby="keywordPop">
+<div class="modal" id="keywordPop"  tabindex="-1" role="dialog" aria-labelledby="keywordPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="keywordPopForm">
 			<div class="modalHead">
@@ -472,7 +472,7 @@
 </div>
 
 <div id="upload_file"></div>
-<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">

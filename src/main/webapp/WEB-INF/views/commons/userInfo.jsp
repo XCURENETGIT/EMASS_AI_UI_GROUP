@@ -1358,7 +1358,7 @@
         }
 	</script>
 </head>
-<div class="modal fade" id="schGeneralPop" tabindex="-1" role="dialog" aria-labelledby="schGeneralModal" style="z-index: 10000;">
+<div class="modal fade" id="schGeneralPop" tabindex="-1" role="dialog" aria-labelledby="schGeneralModal" data-backdrop="static" style="z-index: 10000; ">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<form method="post" id="shcGeneralPopForm">
@@ -1378,7 +1378,7 @@
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="schDeptPop" tabindex="-1" role="dialog" aria-labelledby="schDeptModal" style="z-index: 10000;">
+<div class="modal fade" id="schDeptPop" tabindex="-1" role="dialog" aria-labelledby="schDeptModal" data-backdrop="static" style="z-index: 10000;">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<form method="post" id="shcDeptPopForm">
@@ -1398,7 +1398,7 @@
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="schJikgubPop" tabindex="-1" role="dialog" aria-labelledby="schJikgubModal" style="z-index: 10000;">
+<div class="modal fade" id="schJikgubPop" tabindex="-1" role="dialog" aria-labelledby="schJikgubModal" data-backdrop="static" style="z-index: 10000;">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<form method="post" id="shcJikgubPopForm">
@@ -1419,7 +1419,7 @@
 	</div>
 </div>
 
-<div class="modal" id="setUserPop" tabindex="-1" role="dialog" aria-labelledby="setUserPop">
+<div class="modal" id="setUserPop" tabindex="-1" role="dialog" aria-labelledby="setUserPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
 			<h2><s:message code="userInfo.set.insa"/></h2>
@@ -1558,7 +1558,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="uploadUserPop" tabindex="-1" role="dialog" aria-labelledby="uploadUserPop">
+<div class="modal fade" id="uploadUserPop" tabindex="-1" role="dialog" aria-labelledby="uploadUserPop" data-backdrop="static">
 	<div class="modal-dialog" role="document" style="width: 800px;">
 		<div class="modal-content">
 			<form method="post" id="uploadUserPopForm">
@@ -1610,7 +1610,7 @@
 		</div>
 	</div>
 </div>
-<div class="modal"  id="userPop" tabindex="-1" role="dialog" aria-labelledby="userPop">
+<div class="modal"  id="userPop" tabindex="-1" role="dialog" aria-labelledby="userPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="userPopForm">
 			<div class="modalHead">

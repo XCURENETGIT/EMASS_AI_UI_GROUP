@@ -780,7 +780,7 @@ function getDeptSchedule(){
 
 
 
-<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop">
+<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="setDeptApiPopForm">
 		<div class="modalHead">

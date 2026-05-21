@@ -331,7 +331,7 @@
 </head>
 <body class="mini-navbar">
 
-<div class="modal" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal">
+<div class="modal" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="ipRangePopForm">
 			<div class="modalHead">
@@ -410,7 +410,8 @@
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="comment" id="comment"
-							       placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
+							       placeholder="<s:message code="
+							       "/>" maxlength="500">
 						</div>
 					</div>
 
@@ -509,7 +510,7 @@
 	</div>
 </div>
 <div id="upload_file"></div>
-<div class="modal" id="uploadPop" role="dialog" aria-labelledby="uplaodPop">
+<div class="modal" id="uploadPop" role="dialog" aria-labelledby="uplaodPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
