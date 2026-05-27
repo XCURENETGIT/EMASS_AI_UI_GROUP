@@ -478,7 +478,7 @@ public class Config {
 			Locale.setDefault(lo);
 
 
-			if (!Common.isEquals(lo.getLanguage(), CURRENT_LANGUAGE)) {
+			if (Common.isNotEmpty(lo.getLanguage())) {
 				if (Common.isEquals(lo.getLanguage(), "ko")) execute(sqlPath + "Update_Query_ko.sql", false);
 				else execute(sqlPath + "Update_Query_en.sql", false);
 			}
