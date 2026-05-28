@@ -3850,10 +3850,10 @@
             if(inputType == 'S') {
                 $('#searchStrInput').val(data.searchKeyword);
             } else if(inputType == 'A') {
-                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' +' + data.searchKeyword);
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' AND ' + data.searchKeyword);
                 else $('#searchStrInput').val(data.searchKeyword);
             } else {
-                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' ' + data.searchKeyword);
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' OR ' + data.searchKeyword);
                 else $('#searchStrInput').val(data.searchKeyword);
             }
         }
@@ -3871,10 +3871,10 @@
             if(inputType == 'S') {
                 $('#searchStrInput').val(data.keyword);
             } else if(inputType == 'A') {
-                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' +' + data.keyword);
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' AND ' + data.keyword);
                 else $('#searchStrInput').val(data.keyword);
             } else {
-                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' ' + data.keyword);
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' OR ' + data.keyword);
                 else $('#searchStrInput').val(data.keyword);
             }
         }
