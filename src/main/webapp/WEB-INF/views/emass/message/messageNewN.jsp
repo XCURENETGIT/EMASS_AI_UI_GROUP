@@ -776,6 +776,7 @@
             $('#searchBtn').click(function(){searchData( );}); //일반 검색 버튼 클릭
             $('#searchQueryBtn').click(function(){toggleSolrQuery();}); //고급 버튼 클릭
             $("#searchStrInput").keypress(function(e){if( e.keyCode == 13) searchData( );}); //통합 검색 엔터키
+            $("#account").keypress(function(e){if( e.keyCode == 13) searchData( );}); //접속계정 검색 엔터키
 
 
             var dateObj = new Date();
@@ -1115,7 +1116,7 @@
                     var id = $(this).attr('id');
                     var anyChecked = $(this).parent().find('input:checkbox:checked').length > 0;
                     if(!anyChecked){
-                        if (id == "senders" || id == "receivers" || id == "m_to" || id == "m_cc" || id == "m_bcc"){
+                        if (id == "senders" || id == "account" || id == "receivers" || id == "m_to" || id == "m_cc" || id == "m_bcc"){
                             $('#' + id + '_findByParam').prop('checked', true);
                         }
                     }
@@ -1906,6 +1907,7 @@
             
             // 각 그룹별로 단일 선택 설정
             setupSingleSelectCheckbox('senders', ['senders_findByKeyword', 'senders_findByParam']);
+            setupSingleSelectCheckbox('account', ['account_findByKeyword', 'account_findByParam']);
             setupSingleSelectCheckbox('receivers', ['receivers_findByKeyword', 'receivers_findByParam']);
             setupSingleSelectCheckbox('m_to', ['m_to_findByKeyword', 'm_to_findByParam']);
             setupSingleSelectCheckbox('m_cc', ['m_cc_findByKeyword', 'm_cc_findByParam']);
@@ -2036,6 +2038,7 @@
             if(!isAutoSearch) {
                 var checkboxGroups = [
                     { inputId: 'senders', checkboxIds: ['senders_not','senders_findByKeyword', 'senders_findByParam'] },
+                    { inputId: 'account', checkboxIds: ['account_not','account_findByKeyword', 'account_findByParam'] },
                     { inputId: 'receivers', checkboxIds: ['receivers_not', 'receivers_findByKeyword', 'receivers_findByParam'] },
                     { inputId: 'm_to', checkboxIds: ['m_to_not','m_to_findByKeyword', 'm_to_findByParam'] },
                     { inputId: 'm_cc', checkboxIds: ['m_cc_not','m_cc_findByKeyword', 'm_cc_findByParam'] },
@@ -3041,6 +3044,15 @@
                                         <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="senders_findByParam" name="senders_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
 
                                         <input class="condition_input_text" type="text" id="senders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="common.msg.account"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></div>
+                                        <br>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="account_not" name="account_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="account_findByKeyword" name="account_findByKeyword" disabled/><span><s:message code="condition.partial.match"/></span></label></div>
+                                        <div class="condition_not" style="font-size: 12px"><label><input type="checkbox" id="account_findByParam" name="account_findByParam" disabled/><span><s:message code="condition.exact.match"/></span></label></div>
+                                        <input class="condition_input_text" type="text" id="account" name="serch" placeholder="<s:message code="common.msg.account"/>">
                                     </div>
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">

@@ -164,6 +164,8 @@ public class SolrEdcVO {
 
     public String usrId;
 
+    public String account;
+
     public String usr_ip;
 
     public String userkey;

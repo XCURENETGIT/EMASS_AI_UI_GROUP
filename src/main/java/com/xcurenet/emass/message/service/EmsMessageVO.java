@@ -34,6 +34,7 @@ public class EmsMessageVO {
 
 	private String usrIp;
 	private String usrId;
+	private String account;
 	private String password;
 	private String user;
 	private String subject;

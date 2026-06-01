@@ -63,6 +63,7 @@ public class EmsMessageConvert {
 		}
 		vo.setUsrIp(data.getUsrIp());
 		vo.setUsrId(data.getUsrId());
+		vo.setAccount(data.getAccount());
 		vo.setPassword(data.getPassword());
 		vo.setSubject(data.getSubject());
 		vo.setXMsgKey(data.getXMsgKey());
@@ -187,8 +188,8 @@ public class EmsMessageConvert {
 			vo.setInSide(data.getUserInfo().getInside());
 			vo.setCeo(data.getUserInfo().getCeo());
 			vo.setUserList(getUserInfo(data.getUserInfo(), data.getMsgId(), "U"));
-
 		}
+		vo.setAccount(data.getAccount());
 		return vo;
 	}
 

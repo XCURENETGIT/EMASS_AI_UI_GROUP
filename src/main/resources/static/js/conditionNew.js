@@ -206,6 +206,13 @@ var con = {
 		setCodeCount('regexp', endId, '', '|');
 
 		$('#allOfus'+endId).val('');
+		$('#account' + endId).val('');
+		$('input:checkbox[id="account_not"]').prop("checked", false);
+		$('input:checkbox[id="account_not"]').prop("disabled", true);
+		$('input:checkbox[id="account_findByKeyword"]').prop("checked", false);
+		$('input:checkbox[id="account_findByKeyword"]').prop("disabled", true);
+		$('input:checkbox[id="account_findByParam"]').prop("checked", false);
+		$('input:checkbox[id="account_findByParam"]').prop("disabled", true);
 
 		$('#sizeStartVal'+endId).val('');
 		$('#sizeEndVal'+endId).val('');
@@ -482,6 +489,15 @@ var con = {
 
 		condition.allOfus = $('#allOfus').val();
 
+		condition.account = $('#account').val();
+		condition.account_not = $('input:checkbox[id="account_not"]').is(":checked") ? 'Y' : '';
+		condition.account_findByKeyword = $('input:checkbox[id="account_findByKeyword"]').is(":checked") ? 'Y' : '';
+		if ($('input:checkbox[id="account_findByKeyword"]').is(":checked")) {
+			condition.account_findByParam = '';
+		} else {
+			condition.account_findByParam = $('input:checkbox[id="account_findByParam"]').is(":checked") ? 'Y' : '';
+		}
+
 		condition.userGroupSeq = $('#userGroupSeq').val();
 		condition.userGroupSeq_not = $('input:checkbox[id="userGroupSeq_not"]').is(":checked") ? 'Y' : '';
 		if(condition.userGroupSeq != '') condition.userGroupName = $('#userGroupSeq option:selected').text();
@@ -741,6 +757,24 @@ var con = {
 		$('input:checkbox[id="userGroupSeq_not"]').prop("checked", condition.userGroupSeq_not == 'Y' ? true : false);
 
 		$('#allOfus').val( condition.allOfus );
+
+		$('#account').val(condition.account);
+		var account_hasValue = condition.account != '' && condition.account != null;
+		$('input:checkbox[id="account_not"]').prop("disabled", !account_hasValue);
+		$('input:checkbox[id="account_not"]').prop("checked", condition.account_not == 'Y' ? true : false);
+		$('input:checkbox[id="account_findByKeyword"]').prop("disabled", !account_hasValue);
+		$('input:checkbox[id="account_findByParam"]').prop("disabled", !account_hasValue);
+		var account_findByParam_checked = condition.account_findByParam == 'Y' ? true : false;
+		var account_findByKeyword_checked = condition.account_findByKeyword == 'Y' ? true :
+			(account_hasValue && condition.account_not != 'Y' && condition.account_findByKeyword != 'Y' && condition.account_findByParam != 'Y' ? true : false);
+		if (account_findByParam_checked) {
+			account_findByKeyword_checked = false;
+		} else if (account_findByKeyword_checked) {
+			account_findByParam_checked = false;
+		}
+		$('input:checkbox[id="account_findByKeyword"]').prop("checked", account_findByKeyword_checked);
+		$('input:checkbox[id="account_findByParam"]').prop("checked", account_findByParam_checked);
+
 		$('#interGroup').val(condition.interGroup);
 		$('input:checkbox[id="interGroup_not"]').prop("disabled", condition.interGroup == '' ? true : false);
 		$('input:checkbox[id="interGroup_not"]').prop("checked", condition.interGroup_not == 'Y' ? true : false);

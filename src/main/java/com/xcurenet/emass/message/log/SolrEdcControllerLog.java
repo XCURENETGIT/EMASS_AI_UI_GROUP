@@ -305,6 +305,8 @@ public class SolrEdcControllerLog {
 
 					if(Common.isNotEmpty(condition.get("senders"))) info.append(Prop.propFormat("condition.sender") + (Common.nvl(condition.get("senders_not")).equals("Y") ? "(" + Prop.propFormat("query.make.except") + ")" : "") + " : ").append(Common.nvl(condition.get("senders"))).append(ENTER);
 
+					if(Common.isNotEmpty(condition.get("account"))) info.append(Prop.propFormat("common.msg.account") + (Common.nvl(condition.get("account_not")).equals("Y") ? "(" + Prop.propFormat("query.make.except") + ")" : "") + " : ").append(Common.nvl(condition.get("account"))).append(ENTER);
+
 					if(Common.isNotEmpty(condition.get("allOfus"))){
 						info.append(Prop.propFormat("condition.allofus")+" : ");
 						if( Common.isEquals(condition.get("allOfus"), "IA")) info.append(Prop.propFormat("condition.allofus1")).append(ENTER);

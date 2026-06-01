@@ -102,6 +102,7 @@ public class SolrCreateQuery {
 	public static final String PI_TOTAL = "pi_total";
 	public static final String PI = "pi";
 	public static final String USER_ID = "userid";
+	public static final String ACCOUNT = "account";
 	public static final String SEARCH_HISTORY_USER_ID = "user.id";
 	public static final String SEARCH_HISTORY_KEYWORD_STR = "keyword_str";
 	public static final String SEARCH_HISTORY_DEPTCD = "user.deptCd";
@@ -147,7 +148,7 @@ public class SolrCreateQuery {
 			"srcip", "dstip", // 출발지 IP, 목적지 IP
 			"sender", "sender_str", "sname", "org_sender_str", "recvs", "recvs_name", "to", "cc", "bcc", "usr_id","usrId", // 보낸사람, 받는사람
 			"xrootmtr",
-			"user", "user_str", "userid", "name", "sabun" //사용자
+			"user", "user_str", "userid", "name", "sabun", "account" //사용자
 	};
 
 
@@ -686,6 +687,39 @@ public class SolrCreateQuery {
 		}
 
 		String prefix = Common.isEquals(senders_not, "Y") ? EXCEPT_QUERY : AND_QUERY;
+		return addQuery(String.format("%s(%s)", prefix, queryStr));
+	}
+
+	/**
+	 * 접속계정 쿼리
+	 */
+	public SolrCreateQuery setAccount(String account, String account_not, String account_findByParam, String account_findByKeyword) {
+		if (Common.isEmpty(account)) return this;
+
+		boolean isAndQueryByPlus = account.startsWith("+");
+		if (isAndQueryByPlus) account = account.substring(1);
+
+		account = specialChars(account);
+
+		boolean isExact = Common.isEquals(account_findByParam, "Y");
+		boolean partExact = Common.isEquals(account_findByKeyword, "Y");
+		boolean useAsta = Config.getBoolean("sender.receiver.asta");
+
+		StringBuffer queryStr = new StringBuffer();
+
+		for (String token : account.split(" ")) {
+			if (Common.isEmpty(token.trim())) continue;
+			token = token.trim();
+
+			StringBuffer singleQuery = new StringBuffer();
+			if (isExact) singleQuery.append(String.format("%s:\"%s\"", ACCOUNT, token.toLowerCase())).append(SPACE);
+			else if (useAsta && (Common.isEquals(account_not, "N") || partExact)) singleQuery.append(String.format("%s:(%s)", ACCOUNT, createOrQueryAsteriskAll(token.toLowerCase()))).append(SPACE);
+			else singleQuery.append(String.format("%s:(%s)", ACCOUNT, token.toLowerCase().concat(astaOption))).append(SPACE);
+
+			queryStr.append(isAndQueryByPlus ? String.format("%s(%s)", AND_QUERY, singleQuery) : String.format("%s(%s)", SPACE, singleQuery));
+		}
+
+		String prefix = Common.isEquals(account_not, "Y") ? EXCEPT_QUERY : AND_QUERY;
 		return addQuery(String.format("%s(%s)", prefix, queryStr));
 	}
 
@@ -1576,6 +1610,15 @@ public class SolrCreateQuery {
 
 
 			String allOfus = Common.nvl(condition.get("allOfus")); // 수신자 중 외부인
+			String account = Common.nvl(condition.get("account")); // 접속계정
+			String account_not = Common.nvl(condition.get("account_not")); // 접속계정 부정
+			String account_findByParam = Common.nvl(condition.get("account_findByParam")); // 접속계정 전체 검색
+			String account_findByKeyword = Common.nvl(condition.get("account_findByKeyword")); // 접속계정 부분일치
+			if (Common.isEquals(account_findByKeyword, "Y")) {
+				account_findByParam = "";
+			} else if (Common.isEmpty(account_findByParam) && Common.isEmpty(account_findByKeyword) && Common.isEmpty(account_not)) {
+				account_findByParam = "Y";
+			}
 			String busi = Common.nvl(condition.get("busi")); // 사업장
 			String busi_not = Common.nvl(condition.get("busi_not")); //사업장 부정
 
@@ -1703,6 +1746,7 @@ public class SolrCreateQuery {
 			setPi(regexpYn, regexpVal);
 			setWork(ctimeWork);
 			setAllofus(allOfus);
+			setAccount(account, account_not, account_findByParam, account_findByKeyword);
 			setMessageSize(sizeStartVal, sizeEndVal, sizeOption, sizeType);
 			setUserGroupSeq(userGroupSeq, userGroupSeq_not);
 			setInterestUserGroup(interGroup, interGroup_not);

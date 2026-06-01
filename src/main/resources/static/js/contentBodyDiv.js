@@ -749,7 +749,7 @@ function setMessage(msg) {
 		$('#userTr').css("display", "none");
 
 		$('#usridTr #ctimeTd').html(msg.ctime);
-		$('#usridTr #userIdTd').html(msg.usrId);
+		$('#usridTr #userIdTd').html(nvl(msg.account));
 
 	} else {
 		$('#usridTr').css("display", "none");
@@ -763,7 +763,7 @@ function setMessage(msg) {
 		$('#bodySizeTd').html(convertFileSize(msg.bodySize));
 
 		$('#userDiv').html(userHtml(msg.userList));
-		$('#userTr #userIdTd').html(msg.usrId);
+		$('#userTr #userIdTd').html(nvl(msg.account));
 	}
 
 	$('#sendUserDiv').html(userHtml(msg.senderList));

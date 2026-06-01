@@ -8,6 +8,7 @@ var queryCon = {
 		host_str:[],
 		senders:[],
 		sender_str:[],
+		account:[],
 		sname:[],
 		srcip:[],
 		recvss:[],
@@ -128,6 +129,13 @@ function settingQueryCondition(field, value) {
 				}
 			}
 			break;
+		case "account":
+			for(var i=0; i<value.length; i++) {
+				if(!queryCon.account.includes(value[i])) {
+					queryCon.account.push(value[i]);
+				}
+			}
+			break;
 		case "recvs":
 		case "recvs_name":
 		case "dstip":
@@ -214,6 +222,7 @@ function setDisplayCondtion(queryCondition) {
 	if(queryCondition.interUser.length != 0) setConUserGroup(queryCondition.interUser); 
 	$('#user').val(queryCondition.users.join('|')); // 사용자
 	$('#sender').val(queryCondition.senders.join('|')); // 발신자
+	$('#account').val(queryCondition.account.join('|')); // 접속계정
 	
 	for(var i = 0; i < queryCondition.host.length; i++) {
  		 if(queryCondition.host[i] != queryCondition.host_str[i])  {

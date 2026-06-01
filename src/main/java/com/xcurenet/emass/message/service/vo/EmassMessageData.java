@@ -77,6 +77,9 @@ public class EmassMessageData {
 	@Field("mailType")
 	private String mailType;
 
+	@Field("account")
+	private String account;
+
 	@Field("usrId")
 	private String usrId;
 

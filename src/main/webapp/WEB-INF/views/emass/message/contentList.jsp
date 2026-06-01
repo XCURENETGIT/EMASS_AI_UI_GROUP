@@ -518,6 +518,8 @@
 						if (column == "body") chk = true;
 					} else if (st == "attachname attachname_str") {
 						if (column == "attachname") chk = true;
+					} else if (st == "usr_id" || st == "usrId"){
+						if (column == "account") chk = true;
 					} else {
 						if (st == column) chk = true;
 					}
@@ -1008,8 +1010,8 @@
         grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 	        return highlightSearchStr(value, "user");
         });
-        grid.colAdd('usrId', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-	        return highlightSearchStr(value, "usrId");
+        grid.colAdd('account', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	        return highlightSearchStr(value, "account");
         });
 
         grid.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');

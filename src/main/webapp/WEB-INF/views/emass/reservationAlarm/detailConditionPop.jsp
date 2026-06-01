@@ -242,7 +242,7 @@
                     $parent.find('input:checkbox').prop('disabled', false);
                     var anyChecked = $parent.find('input:checkbox:checked').length > 0;
                     if(!anyChecked){
-                        if (inputId == "senders" || inputId == "receivers" || inputId == "m_to" || inputId == "m_cc" || inputId == "m_bcc"){
+                        if (inputId == "senders" || inputId == "account" || inputId == "receivers" || inputId == "m_to" || inputId == "m_cc" || inputId == "m_bcc"){
                             console.log("gg");
                             console.log("selector:", '#' + inputId + '_findByParam');
                             $('input:checkbox[name="' + inputId + '_findByParam"]').prop('checked', true);
@@ -334,6 +334,14 @@
 						checkboxGroups.push({
 							inputId: 'senders',
 							checkboxIds: ['senders_not', 'senders_findByKeyword', 'senders_findByParam']
+						});
+					}
+
+					var accountValue = $('#account').val();
+					if(accountValue && accountValue.trim() !== '') {
+						checkboxGroups.push({
+							inputId: 'account',
+							checkboxIds: ['account_not', 'account_findByKeyword', 'account_findByParam']
 						});
 					}
 
@@ -537,9 +545,9 @@
             $('#feedbackTypeSelect').selectpicker('val', '');
             $('#probTypeSelect').selectpicker('val', '');
 
-            $('#receivers,#senders,#rcvTo,#rcvCc,#rcvBcc,#url,#regexPattern').val('');
+            $('#receivers,#senders,#account,#rcvTo,#rcvCc,#rcvBcc,#url,#regexPattern').val('');
 
-            var arr = ['senders', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword'];
+            var arr = ['senders', 'account', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword'];
             for (var i = 0; i < arr.length; i++) {
                 $('[name=' + arr[i] + '_not]').prop('disabled', true);
                 $('[name=' + arr[i] + '_not]').prop('checked', false);
@@ -695,6 +703,15 @@
             condition.rcvJikgub = $('#rcvJikgub').val();
             condition.allOfus = $('#allOfus').val();
 
+            condition.account = $('#account').val();
+            condition.account_not = $('[name=account_not]').is(":checked") ? 'Y' : '';
+            condition.account_findByKeyword = $('[name=account_findByKeyword]').is(":checked") ? 'Y' : '';
+            if ($('[name=account_findByKeyword]').is(":checked")) {
+                condition.account_findByParam = '';
+            } else {
+                condition.account_findByParam = $('[name=account_findByParam]').is(":checked") ? 'Y' : '';
+            }
+
             condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
             condition.busiNm = $('#busiSelect').parent().find('button').attr('title');
             condition.busi_not = $('[name=busi_not]').is(":checked") ? 'Y' : '';
@@ -778,6 +795,14 @@
             $('#rcvBcc').val(alarmVal.rcvBcc);
             $('#rcvJikgub').val(alarmVal.rcvJikgub);
             $('#allOfus').selectpicker('val', alarmVal.allOfus);
+
+            $('#account').val(alarmVal.account);
+            $('[name=account_not]').prop("disabled", alarmVal.account == '' ? true : false);
+            $('[name=account_not]').prop("checked", alarmVal.account_not == 'Y' ? true : false);
+            $('[name=account_findByKeyword]').prop("disabled", alarmVal.account == '' ? true : false);
+            $('[name=account_findByKeyword]').prop("checked", (alarmVal.account_findByKeyword == 'Y') ? true : false);
+            $('[name=account_findByParam]').prop("disabled", alarmVal.account == '' ? true : false);
+            $('[name=account_findByParam]').prop("checked", (alarmVal.account_findByParam == 'Y' && alarmVal.account_findByKeyword != 'Y') ? true : false);
 
             $('[name=senders_not]').prop("disabled", alarmVal.senders == '' ? true : false);
             $('[name=senders_not]').prop("checked", alarmVal.senders_not == 'Y' ? true : false);
@@ -1222,6 +1247,7 @@
 			// 체크박스 그룹별 단일 선택 처리
 			var checkboxGroups = [
 				{ name: 'senders', checkboxes: ['senders_findByKeyword', 'senders_findByParam'] },
+				{ name: 'account', checkboxes: ['account_findByKeyword', 'account_findByParam'] },
 				{ name: 'receivers', checkboxes: ['receivers_findByKeyword', 'receivers_findByParam'] },
 				{ name: 'rcvTo', checkboxes: ['rcvTo_findByKeyword', 'rcvTo_findByParam'] },
 				{ name: 'rcvCc', checkboxes: ['rcvCc_findByKeyword', 'rcvCc_findByParam'] },
@@ -1927,6 +1953,26 @@
                                     <option value="SO">13) <s:message code="condition.allofus13"/></option>
                                     <option value="SI">14) <s:message code="condition.allofus14"/></option>
                                 </select>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="account" class=" col-xs-3"><s:message code="common.msg.account"/> <img style="cursor:help; width: 12px; margin-left: 3px; margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="condition.partial.match.help"/>"></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm condition_input_text" id="account"
+                                       placeholder="<s:message code="common.msg.account"/>" style="width: 290px;"/>
+                                <br>
+                                <label class="checkbox-inline c-checkbox exceptOption">
+                                    <input type="checkbox" name="account_not" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                </label>
+                                <label class="checkbox-inline c-checkbox exceptOption">
+                                    <input type="checkbox" name="account_findByKeyword" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="condition.partial.match"/>
+                                </label>
+                                <label class="checkbox-inline c-checkbox exceptOption">
+                                    <input type="checkbox" name="account_findByParam" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="condition.exact.match"/>
+                                </label>
                             </div>
                         </li>
                         <li>

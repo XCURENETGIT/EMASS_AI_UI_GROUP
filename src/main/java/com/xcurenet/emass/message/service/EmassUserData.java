@@ -12,6 +12,9 @@ public class EmassUserData {
 	@Field("id")
 	private String id;
 
+	@Field("account")
+	private String account;
+
 	@Field("userId")
 	private String userId;
 

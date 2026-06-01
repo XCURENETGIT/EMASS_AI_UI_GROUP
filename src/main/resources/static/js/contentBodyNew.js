@@ -1212,7 +1212,7 @@ function setMessage(msg) {
 
 
     xRootMtr = nvl(msg.xrootMtr);
-    usr_id = nvl(msg.usrId);
+    usr_id = nvl(msg.account);
     srcip = nvl(msg.srcIp);
     dstip = nvl(msg.dstIp);
     usrip = nvl(msg.usrIp);
@@ -1276,8 +1276,8 @@ function setMessage(msg) {
     $('#bodySizeTd').html(convertFileSize(msg.size));
 
     $('#userDiv').html(userHtml(msg.userList, 'userTr', srcip, dstip, usrip));
-    $('#userTr #userIdTd').html(msg.usrId);
-    $('#userIdTd').html(msg.usrId);
+    $('#userTr #userIdTd').html(nvl(msg.account));
+    $('#userIdTd').html(nvl(msg.account));
 
 
     $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip));
