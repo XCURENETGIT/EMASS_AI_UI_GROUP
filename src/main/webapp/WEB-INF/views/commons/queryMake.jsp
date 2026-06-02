@@ -175,7 +175,7 @@
 			"ip_cocd", "ip_conm", "jikgubcd", "jikgubnm", "kwd", "kwds", "kwds_attach", "kwds_attachname", "kwds_body",
 			"kwds_subject", "ltime", "msgid", "name", "opinion", "password", "path", "pi", "work", "query", "recvs_poid",
 			"sender", "siteattr", "sitecode", "size", "sname", "sport", "srcip", "subject", "suborgcd", "suborgnm", "svc",
-			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "xmsgkey", "xparentmtr",
+			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "account", "xmsgkey", "xparentmtr",
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM","pi_total",
@@ -1110,6 +1110,22 @@
 							addQueryText += ")";
 						}
 						break;
+					case "account":
+						var account = $('#account').val();
+						if(account != "") {
+							addQueryText = queryAddMinus + "account:(";
+
+							var accountArr = account.split("|");
+
+							for(var i = 0; i < accountArr.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+								addQueryText += "*" + accountArr[i].ltrim().rtrim() + "*";
+							}
+							addQueryText += ")";
+						}
+						break;
 					case "receive":
 						var receive = $('#receive').val();
 						if(receive != "") {
@@ -1872,6 +1888,17 @@
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="sender"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>sender_str, sname, srcip</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/><br>sender_str:<s:message code="condition.sender"/><br>sname:<s:message code="condition.sender_name"/><br>srcip:<s:message code="condition.source"/>IP"></span></td>
+								</tr>
+								<tr>
+									<th><s:message code="common.msg.account"/></th>
+									<td>
+										<input type="text" class="form-control input-xs border-radius-none" id="account" placeholder="<s:message code="common.msg.account"/>" style="width: 313px;">
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="account">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="account">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="account"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>account</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/><br>account:<s:message code="common.msg.account"/>"></span></td>
 								</tr>
 								<tr>
 									<th><s:message code="condition.recv"/></th>
