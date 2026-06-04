@@ -1297,12 +1297,16 @@ public class EmsMessageController {
 	}
 
 
-
 	public static void removeClassRecursively(Element element) {
-		element.removeAttr("class");  // class 속성 완전 제거
-		Elements children = element.children(); // 자식 요소들 가져오기
-		for (Element child : children) {
-			removeClassRecursively(child);  // 자식 요소에 대해 재귀 호출
+		Deque<Element> stack = new ArrayDeque<>();
+		stack.push(element);
+
+		while (!stack.isEmpty()) {
+			Element current = stack.pop();
+			current.removeAttr("class");
+			for (Element child : current.children()) {
+				stack.push(child);
+			}
 		}
 	}
 
