@@ -12,7 +12,9 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.filter.Filters;
 import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
+import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilters;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
@@ -120,6 +122,7 @@ public class SolrEdcMessageVO {
 
 		if (Common.nvl(elasticsearchAggregations.aggregations().asMap().keySet().iterator().next()).indexOf(Common.ANALYSIS_GW_ATTACH_AGGS_SUFFIX) > -1) gwAttachedPivotParse(elasticsearchAggregations);
 		else if (Common.nvl(elasticsearchAggregations.aggregations().asMap().keySet().iterator().next()).indexOf(Common.ANALYSIS_DASHBOARD_ATTACH_AGGS_SUFFIX) > -1) attachedDashboardPivotParse(elasticsearchAggregations);
+		else if (Common.nvl(elasticsearchAggregations.aggregations().asMap().keySet().iterator().next()).indexOf(Common.ANALYSIS_DASHBOARD_WORK_AGGS_SUFFIX) > -1) getDashboardWorkPivotParse(elasticsearchAggregations);
 	}
 
 
@@ -255,6 +258,48 @@ public class SolrEdcMessageVO {
 		this.pivotData = pivotResult;
 	}
 
+	private void getDashboardWorkPivotParse(ElasticsearchAggregations elasticsearchAggregations) {
+		headerList = new ArrayList<>();
+		pivotKeys = new HashMap<>();
+
+		Aggregations aggregations = elasticsearchAggregations.aggregations();
+		for (Map.Entry<String, Aggregation> entry : aggregations.getAsMap().entrySet()) {
+			pivotChkSvc = entry.getKey().replace(Common.ANALYSIS_DASHBOARD_WORK_AGGS_SUFFIX, "");
+			Aggregation agg = entry.getValue();
+
+			if (!(agg instanceof ParsedFilters)) continue;
+
+			ParsedFilters parsedFilters = (ParsedFilters) agg;
+			for (ParsedFilters.ParsedBucket filterBucket : (List<ParsedFilters.ParsedBucket>) parsedFilters.getBuckets()) {
+				String filterKey = filterBucket.getKeyAsString();
+				Aggregations subAggs = filterBucket.getAggregations();
+				if (subAggs == null) continue;
+
+				ParsedStringTerms svc12Terms = subAggs.get("by_svc12");
+				if (svc12Terms == null) continue;
+
+				for (Terms.Bucket svc12Bucket : svc12Terms.getBuckets()) {
+					pivotItem = new HashMap<>();
+					String svc12Key = svc12Bucket.getKeyAsString();
+					long count = svc12Bucket.getDocCount();
+
+					pivotItem.put(Common.nvl(svc12Key), count);
+					pivotItem.put("filterKey", filterKey);
+					pivotKeys.put(Common.nvl(svc12Key), 0);
+					pivotItem.putAll(pivotParse(svc12Key, count));
+					pivotResult.add(pivotItem);
+				}
+			}
+		}
+
+		headerList = new ArrayList<>(pivotKeys.keySet());
+		Collections.sort(headerList);
+		this.pivotHeader = headerList;
+		headerList = new ArrayList<>();
+		this.pivotData = pivotResult;
+	}
+
+
 	public void facetAggregationsParser(final String key,final Aggregations aggregations,final long docsCount){
 		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
 			Aggregation aggregation = aggregations.get(aggsKey.getKey());
@@ -335,7 +380,24 @@ public class SolrEdcMessageVO {
 			facetItem.put(key, count);
 			facetlist.add(key);
 			facetParse(key, count);
-			} else{
+			} else if (aggregation instanceof ParsedFilters) {
+				ParsedFilters parsedFilters = (ParsedFilters) aggregation;
+				List<? extends Filters.Bucket> buckets = parsedFilters.getBuckets();
+				facetTotal = buckets.size();
+				for (Filters.Bucket bucket : buckets) {
+					String bucketKey = bucket.getKeyAsString();
+					long docCount = bucket.getDocCount();
+					if (null != bucket.getAggregations() && bucket.getAggregations().asList().size() > 0) {
+						facetAggregationsParser(bucketKey, bucket.getAggregations(), docCount);
+					} else {
+						facetItem.put(bucketKey, docCount);
+						facetlist.add(bucketKey);
+						facetParse(bucketKey, docCount);
+					}
+				}
+
+			}
+			else{
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				facetTotal = buckets.size();
 				Iterator iter = buckets.iterator();
@@ -492,7 +554,24 @@ public class SolrEdcMessageVO {
 				// pivotResult에 추가
 				pivotResult.add(pivotItem);
 
-			}else{
+			} else if (aggregation instanceof ParsedFilters) {
+				ParsedFilters parsedFilters = (ParsedFilters) aggregation;
+				List<? extends Filters.Bucket> buckets = parsedFilters.getBuckets();
+				for (Filters.Bucket bucket : buckets) {
+					pivotItem = new HashMap();
+					String bucketKey = bucket.getKeyAsString();
+					long docCount = bucket.getDocCount();
+					if (null != bucket.getAggregations() && bucket.getAggregations().asList().size() > 0) {
+						pivotAggregationsParser(bucketKey, bucket.getAggregations(), docCount);
+					} else {
+						pivotItem.put(Common.nvl(bucketKey), docCount);
+						pivotKeys.put(Common.nvl(bucketKey), 0);
+						pivotItem.putAll(pivotParse(bucketKey, docCount));
+						pivotResult.add(pivotItem);
+					}
+				}
+
+			} else{
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
 				while (iter.hasNext()) {

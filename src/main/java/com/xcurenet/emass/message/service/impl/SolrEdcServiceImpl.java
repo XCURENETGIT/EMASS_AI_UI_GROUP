@@ -34,6 +34,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.aggregations.*;
+import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregator;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.IncludeExclude;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -556,6 +558,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		if (Common.isEquals(sq.get("abnlYn"), "Y")) return getAbnlAggregations(sq);
 		if (Common.isEquals(sq.get("facetCount"), "Y")) return getCountAggregations(sq);
 		if (Common.isEquals(sq.get("dashboard_attach"), "Y")) return getDashboardAttachedAggregations(sq);
+		if (Common.isEquals(sq.get("dashboard_work"), "Y")) return createWorkSvc12GroupAggsQuery(sq);
 		if (null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
 		if ((null != sq.get("group") && Common.isEquals("true", sq.get("group")))) {
@@ -714,6 +717,34 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		termsAggregation.subAggregation(addRangesNew(subField, ranges));
 		pivotAggregations.add(termsAggregation);
 
+		return pivotAggregations;
+	}
+
+	private List<AbstractAggregationBuilder<?>> createWorkSvc12GroupAggsQuery(SolrQuery sq){
+		List<AbstractAggregationBuilder<?>> pivotAggregations = new ArrayList<>();
+
+		String svc12Field = sq.get("group.field"); // svc12
+		String workField  = sq.get("facet.field"); // work
+
+		// FiltersAggregation으로 work 조건 3개를 한번에 정의
+		FiltersAggregationBuilder workFilters = AggregationBuilders.filters(
+				workField.concat(Common.ANALYSIS_DASHBOARD_WORK_AGGS_SUFFIX),
+				new FiltersAggregator.KeyedFilter("work",  QueryBuilders.termQuery(workField, "W")),
+				new FiltersAggregator.KeyedFilter("nonWork", QueryBuilders.boolQuery()
+						.should(QueryBuilders.termQuery(workField, "R"))
+						.should(QueryBuilders.termQuery(workField, "H"))
+						.minimumShouldMatch(1)
+				),
+				new FiltersAggregator.KeyedFilter("workAll", QueryBuilders.matchAllQuery())
+		);
+		workFilters.subAggregation(
+				AggregationBuilders.terms("by_svc12")
+						.field(svc12Field)
+						.order(BucketOrder.count(false))
+						.minDocCount(1)
+		);
+
+		pivotAggregations.add(workFilters);
 		return pivotAggregations;
 	}
 

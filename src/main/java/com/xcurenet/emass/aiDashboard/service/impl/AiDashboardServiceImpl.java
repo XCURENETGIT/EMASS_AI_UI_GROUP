@@ -153,45 +153,64 @@ public class AiDashboardServiceImpl implements AiDashboardService {
 	/**
 	 * 금일 AI 서비스 사용량
 	 */
-	public List<AiSvcInfo> getTodayTop10AiStats(String todayStr, String adminId) throws IOException, SolrServerException {
-		List<AiSvcInfo> svcList = new ArrayList<>();
+	public TopGroupVO getTodayTop10AiStats(String todayStr, String adminId) throws IOException, SolrServerException {
+		TopGroupVO topGroupVO = new TopGroupVO();
 		SolrQuery sq = new SolrQuery();
 		String query = "";
 		sq.setStart(0);
 		sq.setRows(0);
-		sq.setFacet(true);
-		sq.setFacetMinCount(1);
-		sq.addFacetField("svc12");
+		sq.setParam("dashboard_work", "Y");
+		sq.setParam("group.field", "svc12");
+		sq.setParam("facet.field", "work");
 		sq.setQuery(query);
 		setIndexQuery(todayStr, sq);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, adminId);
-		if (Common.isNotEmpty(edc.getFacetData())) {
-			for (FacetVO facetVO : edc.getFacet()) {
-				AiSvcInfo svcInfo = new AiSvcInfo();
-				svcInfo.setSvcCount(String.valueOf(facetVO.getCount()));
-				svcInfo.setSvc(facetVO.getName2());
-				svcInfo.setSvcName(Config.getService12Lv2Nm(facetVO.getName2()));
-				svcList.add(svcInfo);
+		if (Common.isNotEmpty(edc.getPivotData())) {
+			List<AiSvcInfo> allList = new ArrayList<>();
+			List<AiSvcInfo> workList = new ArrayList<>();
+			List<AiSvcInfo> nonWorkList = new ArrayList<>();
+
+			for (Map<String, Object> row : edc.getPivotData()) {
+				String filterKey = Common.nvl(row.get("filterKey"));
+				String svc = Common.nvl(row.get("rowKey"));
+				String svcNm = Config.getService12Lv2Nm(svc);
+				String count = Common.nvl(row.get("total"));
+
+				AiSvcInfo info = new AiSvcInfo();
+				info.setSvc(svc);
+				info.setSvcName(svcNm);
+				info.setSvcCount(count);
+
+				switch (filterKey) {
+					case "workAll": allList.add(info); break;
+					case "work": workList.add(info); break;
+					case "nonWork": nonWorkList.add(info); break;
+				}
 			}
+
+			topGroupVO.setAll(allList);
+			topGroupVO.setWork(workList);
+			topGroupVO.setNonWork(nonWorkList);
 		}
-		return svcList;
+
+		return topGroupVO;
 	}
 
 	/**
 	 * 주간 AI 서비스 사용량
 	 */
-	public List<AiSvcInfo> getWeeklyTop10AiStats(String todayStr, String adminId) throws IOException, SolrServerException {
+	public TopGroupVO getWeeklyTop10AiStats(String todayStr, String adminId) throws IOException, SolrServerException {
+		TopGroupVO topGroupVO = new TopGroupVO();
 		DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
 		LocalDate today = LocalDate.parse(todayStr, formatter);
 		String weekAgoStr = today.minusDays(6).format(formatter);
-		List<AiSvcInfo> svcList = new ArrayList<>();
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime_yyyymmdd:[%s TO %S] +direction_svc:O +svc:I*", weekAgoStr, todayStr);
 		sq.setStart(0);
 		sq.setRows(0);
-		sq.setFacet(true);
-		sq.setFacetMinCount(1);
-		sq.addFacetField("svc12");
+		sq.setParam("dashboard_work", "Y");
+		sq.setParam("group.field", "svc12");
+		sq.setParam("facet.field", "work");
 		sq.setQuery(query);
 		String indics;
 		if (todayStr.substring(0, 6).equals(weekAgoStr.substring(0, 6))) indics = "edc_w_" + todayStr.substring(0, 6);
@@ -199,16 +218,35 @@ public class AiDashboardServiceImpl implements AiDashboardService {
 
 		sq.setParam("indics", indics);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, adminId);
-		if (Common.isNotEmpty(edc.getFacetData())) {
-			for (FacetVO facetVO : edc.getFacet()) {
-				AiSvcInfo svcInfo = new AiSvcInfo();
-				svcInfo.setSvcCount(String.valueOf(facetVO.getCount()));
-				svcInfo.setSvc(facetVO.getName2());
-				svcInfo.setSvcName(Config.getService12Lv2Nm(facetVO.getName2()));
-				svcList.add(svcInfo);
+		if (Common.isNotEmpty(edc.getPivotData())) {
+			List<AiSvcInfo> allList = new ArrayList<>();
+			List<AiSvcInfo> workList = new ArrayList<>();
+			List<AiSvcInfo> nonWorkList = new ArrayList<>();
+
+			for (Map<String, Object> row : edc.getPivotData()) {
+				String filterKey = Common.nvl(row.get("filterKey"));
+				String svc = Common.nvl(row.get("rowKey"));
+				String svcNm = Config.getService12Lv2Nm(svc);
+				String count = Common.nvl(row.get("total"));
+
+				AiSvcInfo info = new AiSvcInfo();
+				info.setSvc(svc);
+				info.setSvcName(svcNm);
+				info.setSvcCount(count);
+
+				switch (filterKey) {
+					case "workAll": allList.add(info); break;
+					case "work": workList.add(info); break;
+					case "nonWork": nonWorkList.add(info); break;
+				}
 			}
+
+			topGroupVO.setAll(allList);
+			topGroupVO.setWork(workList);
+			topGroupVO.setNonWork(nonWorkList);
 		}
-		return svcList;
+
+		return topGroupVO;
 	}
 
 	/**

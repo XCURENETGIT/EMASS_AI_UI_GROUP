@@ -22,10 +22,10 @@ public class AiDashboardStatVO {
     private long todayKwdAttachCount;
 
     //금일 서비스 사용량 top 10
-    private List<AiSvcInfo> todayTop10Info;
+    private TopGroupVO todayTop10Info;
 
-    //일주일 서비스 사용량 top 10
-    private List<AiSvcInfo> weeklyTop10Info;
+    // 주간 서비스 사용량 top 10
+    private TopGroupVO weeklyTop10Info;
 
     // AI 시간대별 사용 현황
     List<AiTimeStat> aiTimeStats;

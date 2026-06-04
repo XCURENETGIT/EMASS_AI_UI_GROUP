@@ -252,6 +252,45 @@
 	$(function () {
 		aiTop10SvcChart = echarts.init(document.getElementById("aiTop10Svc"), "dark");
 		aiTimeChart = echarts.init(document.getElementById("aiTime"), "dark");
+
+
+		// AI 서비스 사용량 비교 차트 좌측 막대 그래프 mouseOver 시 우측 도넛 그래프 강조 표시
+		aiTop10SvcChart.on('mouseover', { seriesType: 'bar' }, function(params) {
+			aiTop10SvcChart.dispatchAction({
+				type: 'highlight',
+				seriesIndex: 2,
+				name: params.name
+			});
+		});
+		aiTop10SvcChart.on('mouseout', { seriesType: 'bar' }, function(params) {
+			aiTop10SvcChart.dispatchAction({
+				type: 'downplay',
+				seriesIndex: 2,
+				name: params.name
+			});
+		});
+
+
+		aiTop10SvcChart.on('click', function(params) {
+			if (params.seriesType !== 'bar' && params.seriesType !== 'pie') return;
+
+			var isToday;
+			if (params.seriesType === 'bar') isToday = params.seriesName === aiDashboardMsgMaps.today;
+			else isToday = params.seriesName === aiDashboardMsgMaps.svcTodayTop10;
+
+			resetAiDashboardCondition();
+			if (!isToday) dashCondition.startMinusDay = 7;
+			if (currentTimeType == "work") dashCondition.ctimeWork = "W";
+			else if (currentTimeType == "nonWork") dashCondition.ctimeWork = "R";
+			dashCondition.authorityScope = 'AI_DASHBOARD';
+			dashCondition.serviceType = params.data.svc;
+			dashCondition.serviceTypeNm = params.name;
+
+
+			$('#conditionParam').val(makePeriod(dashCondition));
+			$('#getMessageInfo').submit();
+		});
+
 	});
 
 	function getNowTimeStr() {
@@ -467,6 +506,8 @@
 
 
 	let top10ChartData = {};
+	var currentTimeType = "all";
+	var currentActiveLabel = null;
 	var EMPTY_DATA = { names: [], values: [], pie: [], total: 0 };
 	function reloadTop10AiSvcChart(todayTop10Info, weeklyTop10Info) {
 		if (todayTop10Info.length == 0 && weeklyTop10Info.length == 0) {
@@ -479,23 +520,36 @@
 		};
 		var todayLabel = aiDashboardMsgMaps.today;
 		var weeklyLabel = aiDashboardMsgMaps.weekly;
-		aiTop10SvcChart.setOption(getAiDataOption(top10ChartData.today, top10ChartData.weekly, todayLabel), {notMerge: true});
+		currentActiveLabel = todayLabel;
+		currentTimeType = "all";
+
+		aiTop10SvcChart.setOption(getAiDataOption(top10ChartData.today, top10ChartData.weekly, todayLabel, "all"), { notMerge: true });
+
 		aiTop10SvcChart.off('legendselectchanged');
 		aiTop10SvcChart.on('legendselectchanged', function (params) {
+			var name = params.name;
 			var selected = params.selected;
-			var activeLabel = null;
-			if (selected[todayLabel]) activeLabel = todayLabel;
-			else if (selected[weeklyLabel]) activeLabel = weeklyLabel;
-			if (!activeLabel) {
-				aiTop10SvcChart.clear();
+
+			if (name === aiDashboardMsgMaps.all || name === aiDashboardMsgMaps.work || name === aiDashboardMsgMaps.nonWork) {
+				var typeMap = {};
+				typeMap[aiDashboardMsgMaps.all] = "all";
+				typeMap[aiDashboardMsgMaps.work] = "work";
+				typeMap[aiDashboardMsgMaps.nonWork] = "nonWork";
+				currentTimeType = typeMap[name];
+				aiTop10SvcChart.setOption(getAiDataOption(top10ChartData.today, top10ChartData.weekly, currentActiveLabel, currentTimeType), { notMerge: true });
 				return;
 			}
-			var option = getAiDataOption(top10ChartData.today, top10ChartData.weekly, activeLabel);
-			aiTop10SvcChart.setOption(option, { notMerge: true });
+
+
+			if (selected[todayLabel]) currentActiveLabel = todayLabel;
+			else if (selected[weeklyLabel]) currentActiveLabel = weeklyLabel;
+			if (!currentActiveLabel) { aiTop10SvcChart.clear(); return; }
+			aiTop10SvcChart.setOption(getAiDataOption(top10ChartData.today, top10ChartData.weekly, currentActiveLabel, currentTimeType), { notMerge: true });
 		});
 
 		aiTop10SvcChart.resize();
 	}
+
 
 
 
@@ -523,6 +577,7 @@
         "startTimeSelect": "00",
         "endDateSelect": "T",
         "endTimeSelect": "23",
+		"startMinusDay": "0",
         "senders": "",
         "receivers": "",
         "allOfus": "",
@@ -553,10 +608,35 @@
     var privacyCdArr = '<%=privacyCdArr%>';
     var serviceCdArr =  '<%=serviceCdArr%>';
     var serviceNmArr =  '<%=serviceNmArr%>';
+
+
+	/** 통합 메시지 조회 시 대시보드 집계 조건과 일치시키기: 선택적 조건 초기화(이전 클릭 값 제거) */
+	function resetAiDashboardCondition() {
+		dashCondition.senders = "";
+		dashCondition.senders_findByParam = "";
+		dashCondition.senders_upperCase = "";
+		dashCondition.accessUserid = "";
+		dashCondition.accessUserid_not = "";
+		dashCondition.accessUserid_findByParam = "";
+		dashCondition.accessUserid_findByKeyword = "";
+		dashCondition.keywordYn = "";
+		dashCondition.keywordVal = "";
+		dashCondition.keywordStr = "";
+		dashCondition.regexpYn = "";
+		dashCondition.regexpVal = "";
+		dashCondition.regexpStr = "";
+		dashCondition.attachYn = "";
+		dashCondition.attachVal = "";
+		dashCondition.attachStr = "";
+		dashCondition.sizeType = "";
+		dashCondition.sizeOption = "L";
+		dashCondition.ctimeWork = "";
+		dashCondition.startMinusDay = 0;
+	}
     
     function makePeriod(dashCondition) {
         var endTimeSelect = dashCondition.endTimeSelect;
-        var startMinusDay = 0;
+        var startMinusDay = dashCondition.startMinusDay;
         var startMinusMouth = 0;
         var endMinusDay = 0;
         var dateObj = new Date();
@@ -721,42 +801,69 @@
 		todayPi: '<s:message code="ai.dashboard.user.pi.top10"/>',
 		todayKwd: '<s:message code="ai.dashboard.user.kwd.top10"/>',
 		today: '<s:message code="ai.dashboard.today"/>',
-		weekly: '<s:message code="ai.dashboard.weekly"/>',
-		svcUsed: '<s:message code="ai.dashboard.svc.used"/>'
+		weekly: '<s:message code="ai.dashboard.weekly2"/>',
+		svcUsed: '<s:message code="ai.dashboard.svc.used"/>',
+		all: '<s:message code="DATA_ANALYSIS.STAT_WORD_ALL"/>',
+		work: '<s:message code="common.msg.work_time"/>',
+		nonWork: '<s:message code="blockHistoryNonBusi.nonworktime"/>'
 	}
 
-	function getAiDataOption(todayData, weeklyData, activeLabel) {
+	function getAiDataOption(todayData, weeklyData, activeLabel, timeType) {
 		var todayLabel = aiDashboardMsgMaps.today;
 		var weeklyLabel = aiDashboardMsgMaps.weekly;
 		var isToday = activeLabel === todayLabel;
 
-		var activeNames = isToday ? todayData.names : weeklyData.names;
-		var activeValues = isToday ? todayData.values : weeklyData.values;
-		var pieData = isToday ? todayData.pie : weeklyData.pie;
-		var pieTotal = isToday ? todayData.total : weeklyData.total;
+		var type = timeType || "all";
+		var todaySrc = todayData[type] || todayData.all;
+		var weeklySrc = weeklyData[type] || weeklyData.all;
+
+		var activeNames = isToday ? todaySrc.names : weeklySrc.names;
+		var pieData = isToday ? todaySrc.pie : weeklySrc.pie;
+		var pieTotal = isToday ? todaySrc.total : weeklySrc.total;
 
 		return {
 			backgroundColor: "transparent",
 			tooltip: {},
-			legend: {
-				bottom: "0%",
-				left: "24%",
-				textAlign: "center",
-				selectedMode: "single",
-				data: [todayLabel, weeklyLabel],
-				selected: (function () {
-					var o = {};
-					o[todayLabel] = isToday;
-					o[weeklyLabel] = !isToday;
-					return o;
-				})()
-			},
+			legend: [
+				{
+					// 전체/업무시간/비업무시간
+					top: "0%",
+					left: "center",
+					selectedMode: "single",
+					data: [
+						{ name: aiDashboardMsgMaps.all, icon: "roundRect" },
+						{ name: aiDashboardMsgMaps.work, icon: "roundRect" },
+						{ name: aiDashboardMsgMaps.nonWork, icon: "roundRect" }
+					],
+					selected: (function() {
+						var o = {};
+						o[aiDashboardMsgMaps.all] = type === "all";
+						o[aiDashboardMsgMaps.work] = type === "work";
+						o[aiDashboardMsgMaps.nonWork] = type === "nonWork";
+						return o;
+					})()
+				},
+				{
+
+					bottom: "0%",
+					left: "24%",
+					textAlign: "center",
+					selectedMode: "single",
+					data: [todayLabel, weeklyLabel],
+					selected: (function () {
+						var o = {};
+						o[todayLabel] = isToday;
+						o[weeklyLabel] = !isToday;
+						return o;
+					})()
+				}
+			],
 			title: (function () {
 				var titles = [
 					{
 						text: aiDashboardMsgMaps.svcTop10Desc,
-						subtext: aiDashboardMsgMaps.svcTodayTop10 + ":" + todayData.total + " / " + aiDashboardMsgMaps.svcWeeklyTop10 + ":" + weeklyData.total,
-						top: "0%",
+						subtext: aiDashboardMsgMaps.svcTodayTop10 + ":" + todaySrc.total + " / " + aiDashboardMsgMaps.svcWeeklyTop10 + ":" + weeklySrc.total,
+						top: "6%",
 						left: "30%",
 						textAlign: "center",
 						textStyle: { fontSize: 14 }
@@ -766,15 +873,17 @@
 				if (isToday) {
 					titles.push({
 						text: aiDashboardMsgMaps.svcTodayPercent,
-						subtext: aiDashboardMsgMaps.svcTodayTotal + " " + todayData.total,
+						subtext: aiDashboardMsgMaps.svcTodayTotal + " " + todaySrc.total,
+						top: "6%",
 						left: "75%",
 						textAlign: "center",
 						textStyle: { fontSize: 14 }
 					});
 				} else {
 					titles.push({
-						text: aiDashboardMsgMaps.svcWeeklyTotal,
-						subtext: aiDashboardMsgMaps.svcWeeklyTotal + " " + weeklyData.total,
+						text: aiDashboardMsgMaps.svcWeeklyPercent,
+						subtext: aiDashboardMsgMaps.svcWeeklyTotal + " " + weeklySrc.total,
+						top: "6%",
 						left: "75%",
 						textAlign: "center",
 						textStyle: { fontSize: 14 }
@@ -783,47 +892,35 @@
 
 				return titles;
 			})(),
-			grid: [
-				{
-					top: "10%",
-					bottom: "10%",
-					width: "50%",
-					left: 10,
-					containLabel: true
-				}
-			],
-			xAxis: [
-				{
-					type: "value",
-					splitLine: { show: true }
-				}
-			],
-			yAxis: [
-				{
-					type: "category",
-					data: activeNames,
-					inverse: true,
-					axisLabel: {
-						interval: 0,
-						rotate: 30
-					},
-					splitLine: { show: false }
-				}
-			],
+			grid: [{ top: "18%", bottom: "10%", width: "50%", left: 10, containLabel: true }],
+			xAxis: [{ type: "value", splitLine: { show: true } }],
+			yAxis: [{ type: "category", data: activeNames, inverse: true, splitLine: { show: false } }],
 			series: [
 				{
 					name: weeklyLabel,
 					type: "bar",
-                    cursor: "default",
-					data: weeklyData.values,
+					cursor: "default",
+					data: (weeklySrc.values || []).map(function(item, i) {
+						return typeof item === 'object' ? item : {
+							value: item,
+							svc: (weeklySrc.svc || [])[i],
+							name: (weeklySrc.names || [])[i]
+						};
+					}),
 					barMaxWidth: 18,
 					itemStyle: { color: "#3478f6" }
 				},
 				{
 					name: todayLabel,
 					type: "bar",
-                    cursor: "default",
-					data: todayData.values,
+					cursor: "default",
+					data: (todaySrc.values || []).map(function(item, i) {
+						return typeof item === 'object' ? item : {
+							value: item,
+							svc: (todaySrc.svc || [])[i],
+							name: (todaySrc.names || [])[i]
+						};
+					}),
 					barMaxWidth: 18,
 					itemStyle: { color: "#60eeff" }
 				},
@@ -831,16 +928,16 @@
 					name: isToday ? aiDashboardMsgMaps.svcTodayTop10 : aiDashboardMsgMaps.svcWeeklyTop10,
 					type: "pie",
 					radius: ["40%", "70%"],
-                    avoidLabelOverlap: false,
+					avoidLabelOverlap: false,
 					top: 50,
 					bottom: "0%",
 					width: "50%",
 					left: "50%",
 					tooltip: { show: false },
-                    cursor: "default",
-                    label: {
-                        show: false,
-                        color: "#fff",
+					cursor: "default",
+					label: {
+						show: false,
+						color: "#fff",
 						position: "center",
 						formatter: function (params) {
 							var value = params.value || 0;
@@ -850,8 +947,8 @@
 						}
 					},
 					emphasis: {
-                        cursor: "default",
-                        label: {
+						cursor: "default",
+						label: {
 							show: true,
 							fontSize: 24,
 							fontWeight: "bold"
@@ -859,36 +956,45 @@
 					},
 					labelLine: { show: true },
 					data: pieData || []
-				}
+				},
+
+				{ name: aiDashboardMsgMaps.all, type: "bar", data: [], silent: true, legendHoverLink: false },
+				{ name: aiDashboardMsgMaps.work, type: "bar", data: [], silent: true, legendHoverLink: false },
+				{ name: aiDashboardMsgMaps.nonWork, type: "bar", data: [], silent: true, legendHoverLink: false }
 			]
 		};
 	}
 
 	function convertSvcData(dataList) {
-		var names = [];
-		var values = [];
-		var pie = [];
-		var total = 0;
+		if (!dataList) return { all: EMPTY_DATA, work: EMPTY_DATA, nonWork: EMPTY_DATA };
+		return {
+			all:     parseList(dataList.all     || []),
+			work:    parseList(dataList.work    || []),
+			nonWork: parseList(dataList.nonWork || [])
+		};
+	}
 
-		for (var i = 0; i < dataList.length; i++) {
-			var item = dataList[i];
-			var name = item.svcName || item.svc;
+	function parseList(list) {
+		var names  = [];
+		var values = [];
+		var svcs   = [];
+		var pie    = [];
+		var total  = 0;
+
+		for (var i = 0; i < list.length; i++) {
+			var item  = list[i];
+			var name  = item.svcName || item.svc;
+			var svc   = item.svc;
 			var count = parseInt(item.svcCount || 0, 10);
+
 			names.push(name);
 			values.push(count);
-			pie.push({
-				name: name,
-				value: count
-			});
+			svcs.push(svc);
+			pie.push({ name: name, value: count, svc: svc });
 			total += count;
 		}
 
-		return {
-			names: names,
-			values: values,
-			pie: pie,
-			total: total
-		};
+		return { names: names, values: values, svc: svcs, pie: pie, total: total };
 	}
 
 
