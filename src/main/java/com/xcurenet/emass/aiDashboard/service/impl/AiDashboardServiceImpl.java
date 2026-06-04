@@ -203,7 +203,7 @@ public class AiDashboardServiceImpl implements AiDashboardService {
 		TopGroupVO topGroupVO = new TopGroupVO();
 		DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
 		LocalDate today = LocalDate.parse(todayStr, formatter);
-		String weekAgoStr = today.minusDays(6).format(formatter);
+		String weekAgoStr = today.minusDays(7).format(formatter);
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime_yyyymmdd:[%s TO %S] +direction_svc:O +svc:I*", weekAgoStr, todayStr);
 		sq.setStart(0);
