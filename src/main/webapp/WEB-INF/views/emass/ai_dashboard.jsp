@@ -820,7 +820,7 @@
 		var activeNames = isToday ? todaySrc.names : weeklySrc.names;
 		var pieData = isToday ? todaySrc.pie : weeklySrc.pie;
 		var pieTotal = isToday ? todaySrc.total : weeklySrc.total;
-
+		var showZoom = activeNames.length > 15;
 		return {
 			backgroundColor: "transparent",
 			tooltip: {},
@@ -858,6 +858,31 @@
 					})()
 				}
 			],
+			dataZoom: showZoom ? [
+				{
+					type: "slider",
+					yAxisIndex: 0,
+					orient: "vertical",
+					width: 16,
+					left: 3,
+					top: "18%",
+					bottom: "10%",
+					start: 0,
+					end: Math.round((15 / activeNames.length) * 100),
+					brushSelect: false,
+					zoomLock: true,
+					borderColor: "transparent",
+					fillerColor: "rgba(52, 120, 246, 0.3)",
+					handleStyle: { color: "#3478f6" },
+					moveHandleStyle: { color: "#3478f6" }
+				},
+				{
+					type: "inside",
+					yAxisIndex: 0,
+					orient: "vertical",
+					zoomLock: false
+				}
+			] : [],
 			title: (function () {
 				var titles = [
 					{
@@ -894,7 +919,7 @@
 			})(),
 			grid: [{ top: "18%", bottom: "10%", width: "50%", left: 10, containLabel: true }],
 			xAxis: [{ type: "value", splitLine: { show: true } }],
-			yAxis: [{ type: "category", data: activeNames, inverse: true, splitLine: { show: false } }],
+			yAxis: [{ type: "category", data: activeNames, inverse: true, splitLine: { show: false }, axisLabel: {fontSize: 10} }],
 			series: [
 				{
 					name: weeklyLabel,
@@ -908,6 +933,7 @@
 						};
 					}),
 					barMaxWidth: 18,
+					barMinHeight : 8,
 					itemStyle: { color: "#3478f6" }
 				},
 				{
@@ -922,6 +948,7 @@
 						};
 					}),
 					barMaxWidth: 18,
+					barMinHeight : 8,
 					itemStyle: { color: "#60eeff" }
 				},
 				{

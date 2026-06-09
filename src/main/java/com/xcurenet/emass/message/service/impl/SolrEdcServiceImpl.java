@@ -742,6 +742,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 						.field(svc12Field)
 						.order(BucketOrder.count(false))
 						.minDocCount(1)
+						.size(maxCount(10000))
 		);
 
 		pivotAggregations.add(workFilters);
