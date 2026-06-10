@@ -874,7 +874,9 @@
 					borderColor: "transparent",
 					fillerColor: "rgba(52, 120, 246, 0.3)",
 					handleStyle: { color: "#3478f6" },
-					moveHandleStyle: { color: "#3478f6" }
+					moveHandleStyle: { color: "#3478f6" },
+					showDetail: false,
+					showDataShadow: false,
 				},
 				{
 					type: "inside",
