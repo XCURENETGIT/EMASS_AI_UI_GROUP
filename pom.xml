@@ -350,14 +350,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>java-saml-core</groupId>
-			<artifactId>java-saml-core</artifactId>
-			<version>2.3.0</version>
-			<scope>system</scope>
-			<systemPath>${webcontent.dir}\java-saml-core-2.3.0.jar</systemPath>
-		</dependency>
-
-		<dependency>
 			<groupId>kr.cipher.aria</groupId>
 			<artifactId>kr.cipher.aria</artifactId>
 			<version>1.0.0</version>
