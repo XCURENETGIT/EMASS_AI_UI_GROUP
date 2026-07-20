@@ -19,6 +19,8 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
+		<!-- RPM /users/rpm 보관 스위치(기본 skip): CI(build-rpm.yml)에서 -Drpm.publish.skip=false 로 활성화 -->
+		<rpm.publish.skip>true</rpm.publish.skip>
 
 		<java.version>11</java.version>
 
@@ -36,7 +38,7 @@
 		<!--suppress UnresolvedMavenProperty -->
 		<rpm-name>${project.artifactId}-${project.version}-${release.version}-${date}.el8.${arch}.rpm</rpm-name>
 
-		<webcontent.dir>${project.basedir}\src\main\webapp\WEB-INF\lib</webcontent.dir>
+		<webcontent.dir>${project.basedir}/src/main/webapp/WEB-INF/lib</webcontent.dir>
 	</properties>
 
 
@@ -182,7 +184,7 @@
 			<artifactId>crypto</artifactId>
 			<version>1.1.0-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\crypto-1.1.0-20170117.045627-6.jar</systemPath>
+			<systemPath>${webcontent.dir}/crypto-1.1.0-20170117.045627-6.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -211,7 +213,7 @@
 			<artifactId>java-saml-core</artifactId>
 			<version>2.3.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\java-saml-core-2.3.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/java-saml-core-2.3.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -336,7 +338,7 @@
 			<artifactId>mibble-mibs</artifactId>
 			<version>2.9.3</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\mibble-mibs-2.9.3.jar</systemPath>
+			<systemPath>${webcontent.dir}/mibble-mibs-2.9.3.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -344,15 +346,7 @@
 			<artifactId>mibble-parser</artifactId>
 			<version>2.9.3</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\mibble-parser-2.9.3.jar</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>java-saml-core</groupId>
-			<artifactId>java-saml-core</artifactId>
-			<version>2.3.0</version>
-			<scope>system</scope>
-			<systemPath>${webcontent.dir}\java-saml-core-2.3.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/mibble-parser-2.9.3.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -360,7 +354,7 @@
 			<artifactId>kr.cipher.aria</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\kr.cipher.aria-1.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/kr.cipher.aria-1.0.jar</systemPath>
 		</dependency>
 
 
@@ -369,49 +363,49 @@
 			<artifactId>INICommon</artifactId>
 			<version>1.1.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\INICommon_v1.1.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/INICommon_v1.1.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>INICrypto</groupId>
 			<artifactId>INICrypto</artifactId>
 			<version>4.0.2</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\INICrypto_v4.0.2_signed.jar</systemPath>
+			<systemPath>${webcontent.dir}/INICrypto_v4.0.2_signed.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>INILog4J</groupId>
 			<artifactId>INILog4J</artifactId>
 			<version>1.0.1</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\INILog4J_v1.0.1.jar</systemPath>
+			<systemPath>${webcontent.dir}/INILog4J_v1.0.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>SafeDBClient</groupId>
 			<artifactId>SafeDBClient</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\SafeDBClient.jar</systemPath>
+			<systemPath>${webcontent.dir}/SafeDBClient.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>SafeDBCrypto</groupId>
 			<artifactId>SafeDBCrypto</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\SafeDBCrypto.jar</systemPath>
+			<systemPath>${webcontent.dir}/SafeDBCrypto.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>mlclient</groupId>
 			<artifactId>mlclient</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\mlclient-1.0.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/mlclient-1.0.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.xcurenet</groupId>
 			<artifactId>xcn-auth</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\xcn-auth-1.0.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/xcn-auth-1.0.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -589,7 +583,8 @@
 						<phase>validate</phase>
 						<configuration>
 							<name>date</name>
-							<pattern>yyMMdd</pattern>
+							<pattern>yyMMddHHmmss</pattern>
+							<timeZone>Asia/Seoul</timeZone>
 						</configuration>
 					</execution>
 				</executions>
@@ -663,7 +658,6 @@
 								<mkdir dir="${project.basedir}\target\RPMS\"/>
 								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="mv ${binary-dir}/RPMS/${arch}/${project.artifactId}-${project.version}-${release.version}.${arch}.rpm ${binary-dir}/RPMS/${arch}/${rpm-name}" trust="yes" verbose="false"/>
 
-
 								<echo message="Step 7. RPM file download"></echo>
 								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="cd ${binary-dir}/RPMS/${arch}/ &amp;&amp; md5sum ${rpm-name} > ${rpm-name}.md5" trust="yes" verbose="false"/>
 								<scp file="${buildUser}:${buildPassword}@${buildHost}:${binary-dir}/RPMS/${arch}/${rpm-name}" todir="./target/RPMS/" trust="yes" verbose="false"/>
@@ -681,6 +675,21 @@
 
 								<echo message=""/>
 								<echo message="Success Build"/>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>publish-rpm</id>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<!-- rpm.publish.skip=false (CI) 일 때만 실행: 바로 앞 execution 에서 만든 RPM 을 /users/rpm 으로 복사 -->
+							<skip>${rpm.publish.skip}</skip>
+							<target>
+								<echo message="RPM publish to /users/rpm"/>
+								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="mkdir -p /users/rpm; cp ${binary-dir}/RPMS/${arch}/${rpm-name} /users/rpm/" trust="yes" verbose="false"/>
 							</target>
 						</configuration>
 					</execution>

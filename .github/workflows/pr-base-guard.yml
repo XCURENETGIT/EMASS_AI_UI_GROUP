@@ -1,0 +1,50 @@
+name: PR Base Guard
+
+# 단일 레포 / 브랜치별 제품 분기 보호:
+#   master        = emassai       (접두어 없는 feat/*, fix/* ...)
+#   emass_2ndDev  = emassai_plus  (plus/ 접두어)
+# feature 브랜치 접두어와 PR base 가 어긋나면 병합을 차단한다.
+# 두 브랜치에 동일하게 커밋한다.
+
+on:
+  pull_request:
+    # edited: base 브랜치를 바꾸면 재검증되도록 반드시 포함
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  base-guard:
+    name: base-guard
+    runs-on: [self-hosted, xcurenet-lab-deploy]
+    timeout-minutes: 5
+    steps:
+      - name: 브랜치-베이스 정합성 검증
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          echo "head=${HEAD_REF}  base=${BASE_REF}"
+
+          # 장기 유지 브랜치 간 동기화 PR(master <-> emass_2ndDev)은 검증 제외
+          if [ "${HEAD_REF}" = "master" ] || [ "${HEAD_REF}" = "emass_2ndDev" ]; then
+            echo "장기 브랜치 간 PR → 검증 생략"
+            exit 0
+          fi
+
+          # 규칙: plus/ 로 시작하면 emass_2ndDev, 그 외는 master
+          case "${HEAD_REF}" in
+            plus/*) EXPECTED="emass_2ndDev" ;;
+            *)      EXPECTED="master" ;;
+          esac
+
+          if [ "${BASE_REF}" != "${EXPECTED}" ]; then
+            echo "::error::브랜치 '${HEAD_REF}' 는 '${EXPECTED}' 로 병합되어야 합니다. (현재 base=${BASE_REF})"
+            echo "::error::PR 상단의 base 브랜치를 '${EXPECTED}' 로 변경한 뒤 다시 시도하십시오."
+            echo "::error:: - plus/* 브랜치 → base=emass_2ndDev (emassai_plus)"
+            echo "::error:: - 그 외 브랜치 → base=master (emassai)"
+            exit 1
+          fi
+          echo "정합성 OK → base=${BASE_REF}"
