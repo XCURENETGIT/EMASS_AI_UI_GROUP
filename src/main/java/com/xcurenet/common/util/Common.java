@@ -2779,10 +2779,13 @@ public class Common {
 	}
 	public static String getMaskingPiKeyword(String keyword, String maskStr){
 		String str = StringUtils.trim(keyword);
-		int visibleLength = keyword.length() / 2;
+		if (str == null || str.isEmpty() || maskStr == null) {
+			return str;
+		}
+		int visibleLength = str.length() / 2;
 
 		StringBuilder result = new StringBuilder();
-		result.append(str.substring(0, visibleLength));
+		result.append(str, 0, visibleLength);
 		for (int i = 0; i < str.length() - visibleLength; i++){
 			result.append(maskStr);
 		}
