@@ -1,0 +1,40 @@
+name: PR Build
+
+# master(emassai) / emass_2ndDev(emassai_plus) 공통 PR 게이트.
+# .github 는 브랜치에 종속되므로 이 파일을 두 브랜치에 동일하게 커밋한다.
+# 현재 두 브랜치 모두 실제 테스트 클래스가 없으므로,
+# 컴파일 + 패키징(WAR) 으로 "빌드 가능 여부" 만 검증한다.
+
+on:
+  pull_request:
+    branches: [master, emass_2ndDev]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: pr-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: build-test
+    if: github.event.pull_request.draft == false
+    # 폐쇄망/내부 미러 및 systemPath 의존성 때문에 self-hosted 러너 사용
+    runs-on: [self-hosted, xcurenet-lab-deploy]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build (WAR)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # antrun(원격 RPM 빌드)은 install 단계에 바인딩되어 있어 package 에서는 실행되지 않는다.
+          # 안전하게 skip 을 명시하고, 테스트는 없으므로 skip.
+          mvn -B -ntp clean package \
+              -Dmaven.test.skip=true \
+              -Dmaven.antrun.skip=true

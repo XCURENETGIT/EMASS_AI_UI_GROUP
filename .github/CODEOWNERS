@@ -1,0 +1,9 @@
+# 모든 변경은 team 승인이 필요합니다.
+* @XCURENETGIT/team
+
+# CI/CD 와 패키징 변경도 team 승인이 필요합니다.
+/.github/ @XCURENETGIT/team
+
+# 운영 설정 파일 추가 보호 (필요 시 주석 해제)
+# /src/main/resources/application*.yml @XCURENETGIT/team
+# /src/main/resources/application*.properties @XCURENETGIT/team

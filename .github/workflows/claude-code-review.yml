@@ -1,0 +1,89 @@
+name: Claude Code Review
+
+# master(emassai) / emass_2ndDev(emassai_plus) 공통 PR 리뷰 게이트.
+# 두 브랜치에 동일하게 커밋한다.
+
+on:
+  pull_request:
+    branches: [master, emass_2ndDev]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+# 리뷰 전용 워크플로입니다. 저장소 수정 권한을 부여하지 않습니다.
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  claude-review:
+    name: claude-review
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Review pull request with Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          # Claude Max 구독 계정에서 claude setup-token 으로 발급한 OAuth 토큰
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: |
+            저장소: ${{ github.repository }}
+            PR 번호: ${{ github.event.pull_request.number }}
+            베이스 브랜치: ${{ github.event.pull_request.base.ref }}
+            헤드 브랜치: ${{ github.event.pull_request.head.ref }}
+
+            당신은 EMASS AI UI(단일 레포·브랜치별 제품: master=emassai, emass_2ndDev=emassai_plus)의
+            자동화 코드 리뷰어입니다. 저장소 루트에 CLAUDE.md 또는 REVIEW.md 가 있으면 먼저 읽으십시오.
+
+            이 Pull Request 에서 변경된 코드만 검토하되,
+            동작을 검증하는 데 필요한 경우 주변 코드도 함께 참조하십시오.
+
+            이 프로젝트는 Spring Boot 2.7 / MVC + JSP·Tiles / MyBatis(MariaDB) /
+            MongoDB·Elasticsearch·Solr 조회 / SAML·JWT 인증 / 파일·PDF 내보내기 기반의
+            관리자 UI 입니다. 다음 우선순위로 검토하십시오.
+
+            필수 검토 우선순위:
+            1. 인증·인가 (SAML/JWT, 세션, 권한 체크 누락, 접근 통제 우회)
+            2. 입력 검증 및 웹 취약점 (XSS, CSRF, 오픈 리다이렉트)
+            3. MyBatis 매퍼 SQL 인젝션 및 쿼리 정확성
+            4. 파일 업로드·다운로드 경로 안전성(경로 조작), 임시 파일 정리
+            5. Elasticsearch/MongoDB/Solr 쿼리·페이징·정렬 정확성
+            6. Null 처리, 예외 처리, 자원 해제
+            7. 로그에 비밀번호, 토큰, 개인정보, 원문 데이터 포함 여부
+            8. 다국어(i18n) 리소스 및 인코딩 처리
+            9. 설정 호환성, 배포 영향, 롤백 위험
+            10. 변경된 동작 또는 중요한 경계 조건에 대한 테스트/검증 누락
+
+            규칙:
+            - 이 작업은 리뷰 전용입니다. 파일 수정, 커밋, 푸시, PR 생성을 하지 마십시오.
+            - 유지보수 위험이 없는 단순 스타일 의견은 보고하지 마십시오.
+            - BLOCKING 판단은 실제 코드와 파일/라인을 근거로 제시하십시오.
+            - 특정 발견 사항은 인라인 댓글로 작성하십시오.
+            - 최종 요약은 PR 상단 댓글 하나로 작성하십시오.
+            - 발견 사항은 BLOCKING, MAJOR, MINOR, PRE_EXISTING 으로 분류하십시오.
+            - BLOCKING 은 잘못된 동작, 데이터 유실, 보안 노출, 인증 우회,
+              복구 불가능한 배포, 또는 중대한 운영 회귀를 유발할 수 있는 변경입니다.
+            - 모든 리뷰 결과와 댓글은 반드시 한국어로 작성하십시오.
+            - 요약 마지막에 반드시 다음 문구를 포함하십시오: "병합 전 사람 리뷰가 필요합니다."
+
+            `gh pr view` 와 `gh pr diff` 를 사용하여 PR 을 검토하십시오.
+            `gh pr comment` 를 사용하여 최종 요약을 게시하십시오.
+            검증된 라인별 발견 사항에는 `mcp__github_inline_comment__create_inline_comment` 를
+            `confirmed: true` 로 사용하십시오.
+            리뷰 결과를 액션 메시지로만 반환하지 말고 반드시 GitHub 댓글로 게시하십시오.
+
+          claude_args: |
+            --max-turns 30
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
