@@ -38,7 +38,7 @@
 		<!--suppress UnresolvedMavenProperty -->
 		<rpm-name>${project.artifactId}-${project.version}-${release.version}-${date}.el8.${arch}.rpm</rpm-name>
 
-		<webcontent.dir>${project.basedir}\src\main\webapp\WEB-INF\lib</webcontent.dir>
+		<webcontent.dir>${project.basedir}/src/main/webapp/WEB-INF/lib</webcontent.dir>
 	</properties>
 
 
@@ -184,7 +184,7 @@
 			<artifactId>crypto</artifactId>
 			<version>1.1.0-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\crypto-1.1.0-20170117.045627-6.jar</systemPath>
+			<systemPath>${webcontent.dir}/crypto-1.1.0-20170117.045627-6.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -213,7 +213,7 @@
 			<artifactId>java-saml-core</artifactId>
 			<version>2.3.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\java-saml-core-2.3.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/java-saml-core-2.3.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -338,7 +338,7 @@
 			<artifactId>mibble-mibs</artifactId>
 			<version>2.9.3</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\mibble-mibs-2.9.3.jar</systemPath>
+			<systemPath>${webcontent.dir}/mibble-mibs-2.9.3.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -346,7 +346,7 @@
 			<artifactId>mibble-parser</artifactId>
 			<version>2.9.3</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\mibble-parser-2.9.3.jar</systemPath>
+			<systemPath>${webcontent.dir}/mibble-parser-2.9.3.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -362,7 +362,7 @@
 			<artifactId>kr.cipher.aria</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\kr.cipher.aria-1.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/kr.cipher.aria-1.0.jar</systemPath>
 		</dependency>
 
 
@@ -371,49 +371,49 @@
 			<artifactId>INICommon</artifactId>
 			<version>1.1.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\INICommon_v1.1.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/INICommon_v1.1.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>INICrypto</groupId>
 			<artifactId>INICrypto</artifactId>
 			<version>4.0.2</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\INICrypto_v4.0.2_signed.jar</systemPath>
+			<systemPath>${webcontent.dir}/INICrypto_v4.0.2_signed.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>INILog4J</groupId>
 			<artifactId>INILog4J</artifactId>
 			<version>1.0.1</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\INILog4J_v1.0.1.jar</systemPath>
+			<systemPath>${webcontent.dir}/INILog4J_v1.0.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>SafeDBClient</groupId>
 			<artifactId>SafeDBClient</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\SafeDBClient.jar</systemPath>
+			<systemPath>${webcontent.dir}/SafeDBClient.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>SafeDBCrypto</groupId>
 			<artifactId>SafeDBCrypto</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\SafeDBCrypto.jar</systemPath>
+			<systemPath>${webcontent.dir}/SafeDBCrypto.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>mlclient</groupId>
 			<artifactId>mlclient</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\mlclient-1.0.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/mlclient-1.0.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.xcurenet</groupId>
 			<artifactId>xcn-auth</artifactId>
 			<version>1.0.0</version>
 			<scope>system</scope>
-			<systemPath>${webcontent.dir}\xcn-auth-1.0.0.jar</systemPath>
+			<systemPath>${webcontent.dir}/xcn-auth-1.0.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
