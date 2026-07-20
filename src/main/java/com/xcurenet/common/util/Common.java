@@ -2779,8 +2779,12 @@ public class Common {
 	}
 	public static String getMaskingPiKeyword(String keyword, String maskStr){
 		String str = StringUtils.trim(keyword);
-		if (str == null || str.isEmpty() || maskStr == null) {
+		if (str == null || str.isEmpty()) {
 			return str;
+		}
+		// 마스킹 문자 미지정 시 원문(PII) 노출 대신 기본 마스킹 문자로 폴백
+		if (maskStr == null || maskStr.isEmpty()) {
+			maskStr = "*";
 		}
 		int visibleLength = str.length() / 2;
 
