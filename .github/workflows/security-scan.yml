@@ -3,10 +3,14 @@ name: Security Scan
 # 의존성 보안 취약점 스캔 (Trivy)
 # - pom.xml 의존성 + src/main/webapp/WEB-INF/lib 의 커밋된 jar 실물을 스캔
 # - CRITICAL 발견 시 실패 (게이트)
-# - 취약점 DB 다운로드가 필요하므로 GitHub-hosted 러너에서 실행 (내부망 불필요)
+#
+# self-hosted 이관 (2026-07-21, 비용 절감):
+# - trivy-action(3월 공급망 침해 이력) 의존 제거, 러너 사전 설치 바이너리 직접 실행
+# - DB 는 mirror.gcr.io / ghcr.io 에서 다운로드 (러너 아웃바운드 확인 완료)
+# - 러너 전제: /usr/local/bin/trivy 설치
 #
 # 도입 단계:
-#   1단계(현재): Ruleset 필수 체크에 미등록 → 실패해도 병합 가능 (리포트 용도)
+#   1단계(현재): Ruleset 필수 체크 미등록 → 실패해도 병합 가능 (리포트 용도)
 #   2단계: 트리아지 후 수용 위험을 .trivyignore 에 근거와 함께 등록,
 #          Ruleset required_status_checks 에 "security-scan" 추가하여 게이트 승격
 #
@@ -29,42 +33,44 @@ jobs:
   security-scan:
     name: security-scan
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, xcurenet-lab-deploy]
     timeout-minutes: 15
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: trivy 확인
+        shell: bash
+        run: |
+          command -v trivy >/dev/null || { echo "::error::러너에 trivy 가 없습니다. /usr/local/bin/trivy 설치 후 재시도하십시오."; exit 1; }
+          trivy --version | head -1
+
       - name: Trivy 취약점 스캔 (CRITICAL 게이트)
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          scanners: vuln
-          severity: CRITICAL
-          exit-code: '1'          # CRITICAL 발견 시 실패
-          ignore-unfixed: true    # 패치가 존재하지 않는 취약점은 제외 (조치 불가 항목 소음 방지)
-          trivyignores: .trivyignore
+        shell: bash
+        run: |
+          set -euo pipefail
+          # 패치 존재(fixed) 항목만, .trivyignore 의 수용 위험 제외, CRITICAL 발견 시 실패
+          trivy fs . \
+            --scanners vuln \
+            --severity CRITICAL \
+            --ignore-unfixed \
+            --ignorefile .trivyignore \
+            --exit-code 1
 
       - name: 참고용 전체 리포트 (HIGH 포함, 실패 없음)
         if: always()
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          scanners: vuln
-          severity: CRITICAL,HIGH
-          exit-code: '0'          # 리포트만, 게이트 아님
-          ignore-unfixed: true
-          trivyignores: .trivyignore
-          format: table
-          output: trivy-report.txt
-
-      - name: 리포트 요약
-        if: always()
         shell: bash
         run: |
+          set -euo pipefail
+          trivy fs . \
+            --scanners vuln \
+            --severity CRITICAL,HIGH \
+            --ignore-unfixed \
+            --ignorefile .trivyignore \
+            --exit-code 0 \
+            --format table \
+            --output trivy-report.txt || true
           {
             echo "## 보안 스캔 리포트 (CRITICAL/HIGH, 패치 존재 항목만)"
             echo ""
@@ -74,3 +80,4 @@ jobs:
             echo ""
             echo "- 게이트 기준: CRITICAL (수용 위험은 .trivyignore 에 근거와 함께 등록)"
           } >> "$GITHUB_STEP_SUMMARY"
+          rm -f trivy-report.txt
