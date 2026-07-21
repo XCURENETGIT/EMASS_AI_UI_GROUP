@@ -1,0 +1,8 @@
+# 보안 스캔(Trivy) 수용 위험 목록
+# 형식: CVE ID 한 줄씩. 반드시 수용 근거를 주석으로 함께 기록한다.
+#
+# 예시 (EDC_AI 트리아지 사례 형식):
+# CVE-2019-10202
+#   ↑ Jackson 1.x 역직렬화. 공격 전제조건(enableDefaultTyping/@JsonTypeInfo) 미충족,
+#     readValue 는 Map.class 로만 사용. 장기 조치: Jackson 2.x BOM 이관.
+#     검토: 2026-07-XX, 검토자: OOO

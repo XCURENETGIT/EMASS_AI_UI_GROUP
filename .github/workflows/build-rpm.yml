@@ -35,6 +35,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Java 버전 확인
+        shell: bash
+        run: |
+          # self-hosted 러너는 서버 기본 Java 를 그대로 사용하므로,
+          # 서버 Java 교체 시 조용한 버전 불일치를 막기 위해 기대 버전(11)을 검증한다.
+          JAVA_MAJOR=$(java -version 2>&1 | head -1 | sed -E 's/.*"([0-9]+)[."].*/\1/')
+          if [ "${JAVA_MAJOR}" != "11" ]; then
+            echo "::error::러너 Java 가 11이 아닙니다 (현재: ${JAVA_MAJOR}). 빌드 서버의 기본 Java 를 확인하십시오."
+            exit 1
+          fi
+          echo "Java ${JAVA_MAJOR} OK"
+
       - name: Secret 확인
         shell: bash
         run: |

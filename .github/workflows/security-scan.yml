@@ -1,0 +1,76 @@
+name: Security Scan
+
+# 의존성 보안 취약점 스캔 (Trivy)
+# - pom.xml 의존성 + src/main/webapp/WEB-INF/lib 의 커밋된 jar 실물을 스캔
+# - CRITICAL 발견 시 실패 (게이트)
+# - 취약점 DB 다운로드가 필요하므로 GitHub-hosted 러너에서 실행 (내부망 불필요)
+#
+# 도입 단계:
+#   1단계(현재): Ruleset 필수 체크에 미등록 → 실패해도 병합 가능 (리포트 용도)
+#   2단계: 트리아지 후 수용 위험을 .trivyignore 에 근거와 함께 등록,
+#          Ruleset required_status_checks 에 "security-scan" 추가하여 게이트 승격
+#
+# 이 파일은 master / emass_2ndDev 양 브랜치에 동일하게 커밋한다.
+
+on:
+  pull_request:
+    branches: [master, emass_2ndDev]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: security-scan-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  security-scan:
+    name: security-scan
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trivy 취약점 스캔 (CRITICAL 게이트)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: CRITICAL
+          exit-code: '1'          # CRITICAL 발견 시 실패
+          ignore-unfixed: true    # 패치가 존재하지 않는 취약점은 제외 (조치 불가 항목 소음 방지)
+          trivyignores: .trivyignore
+
+      - name: 참고용 전체 리포트 (HIGH 포함, 실패 없음)
+        if: always()
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          exit-code: '0'          # 리포트만, 게이트 아님
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+          format: table
+          output: trivy-report.txt
+
+      - name: 리포트 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 보안 스캔 리포트 (CRITICAL/HIGH, 패치 존재 항목만)"
+            echo ""
+            echo '```'
+            cat trivy-report.txt 2>/dev/null || echo "리포트 없음"
+            echo '```'
+            echo ""
+            echo "- 게이트 기준: CRITICAL (수용 위험은 .trivyignore 에 근거와 함께 등록)"
+          } >> "$GITHUB_STEP_SUMMARY"
