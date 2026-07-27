@@ -5,35 +5,41 @@
 
 	<!-- ID 필터 목록 조회 -->
 	<select id="getIdFilterList" resultType="idFilterVO" parameterType="hashMap">
-		SELECT 	DISTINCT
+		SELECT
 		A.ID_LOG_SEQ AS idLogSeq,
 		A.USER_ID AS userId,
 		A.USE_YN AS useYn,
-		LEFT(B.SERVICECD, 1) AS groupCd,
-		LEFT(B.SERVICECD, 3) AS serviceCd,
-		B.SERVICENM_LV1 AS groupNm,
-		B.SERVICENM_LV2 AS serviceNm,
+		GROUP_CONCAT(DISTINCT LEFT(B.SERVICECD, 1) ORDER BY B.SERVICECD SEPARATOR ',') AS groupCd,
+		GROUP_CONCAT(DISTINCT LEFT(B.SERVICECD, 3) ORDER BY B.SERVICECD SEPARATOR ',') AS serviceCd,
+		GROUP_CONCAT(DISTINCT B.SERVICENM_LV1 ORDER BY B.SERVICECD SEPARATOR ',') AS groupNm,
+		GROUP_CONCAT(DISTINCT B.SERVICENM_LV2 ORDER BY B.SERVICECD SEPARATOR ',') AS serviceNm,
 		DATE_FORMAT(A.CREATE_DT,'%Y-%m-%d %T') AS createDt,
 		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.CREATE_USER LIMIT 1) AS createId,
-		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt,
+		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T') AS updateDt,
 		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.UPDATE_ID LIMIT 1) AS updateId
-		FROM	UI_ID_NOLOG A, UI_SERVICE B
-		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		FROM   UI_ID_NOLOG A
+		LEFT JOIN UI_SERVICE B ON FIND_IN_SET(LEFT(B.SERVICECD, 3), A.SERVICECD)
+		WHERE  1=1
 		<if test='searchStr!=null and searchStr!=""'>
-			AND		A.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
+			AND    A.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
 		</if>
 		<if test='serviceCd!=null and serviceCd!=""'>
-			AND		A.SERVICECD	= #{serviceCd}
+			AND    FIND_IN_SET(#{serviceCd}, A.SERVICECD)
 		</if>
-		ORDER	BY A.ID_LOG_SEQ DESC
+		GROUP BY A.ID_LOG_SEQ, A.USER_ID, A.USE_YN, A.CREATE_DT, A.CREATE_USER, A.UPDATE_DT, A.UPDATE_ID
+		ORDER BY A.ID_LOG_SEQ DESC
 	</select>
 
-	<!-- ID 필터 이미 등록 되어있는지 조회 -->
-	<select id="isIdExist" resultType="int" parameterType="idFilterVO">
+	<!-- ID 필터 이미 등록 되어있는지 조회 (선택한 서비스 중 하나라도 이미 등록되어 있으면 중복으로 판단) -->
+	<select id="isIdExist" resultType="int" parameterType="hashMap">
 		SELECT	COUNT(*) AS CNT
 		FROM	UI_ID_NOLOG
-		WHERE	SERVICECD	= #{serviceCd}
-		AND		USER_ID		= #{userId}
+		WHERE	USER_ID		= #{userId}
+		AND		(
+			<foreach collection="serviceCdList" item="svc" separator=" OR ">
+				FIND_IN_SET(#{svc}, SERVICECD)
+			</foreach>
+		)
 		<if test='idLogSeq!=null and idLogSeq!=""'>
 			AND		ID_LOG_SEQ != #{idLogSeq}
 		</if>

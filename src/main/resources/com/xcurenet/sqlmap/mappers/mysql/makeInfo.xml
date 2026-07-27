@@ -157,10 +157,10 @@
 	
 	<!-- 미로깅 ID -->
 	<select id="getInfoNoLogId" resultType="hashmap" parameterType="hashmap">
-		SELECT  B.SERVICECD, A.USER_ID AS USERID
-		FROM	UI_ID_NOLOG A, UI_SERVICE B
-		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
-		AND		A.USE_YN = 'Y'
+		SELECT  DISTINCT B.SERVICECD, A.USER_ID AS USERID
+		FROM    UI_ID_NOLOG A, UI_SERVICE B
+		WHERE   FIND_IN_SET(LEFT(B.SERVICECD, 3), A.SERVICECD)
+		AND     A.USE_YN = 'Y'
 	</select>
 	
 	<!-- 필터링 정책  DOMAIN -->

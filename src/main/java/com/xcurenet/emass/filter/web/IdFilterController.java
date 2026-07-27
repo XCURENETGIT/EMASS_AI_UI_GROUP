@@ -55,8 +55,11 @@ public class IdFilterController {
 	@AuditOperation(Operation.INSERT)
 	@ResponseBody
 	public XcnResponseVO insertIdFilter(final HttpServletRequest request, IdFilterVO filter) throws Exception {
+		if (idFilterService.isServiceCdCountExceeded(filter.getServiceCd())) {
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("id.select.service", request));
+		}
 		if (idFilterService.isIdExist(filter)) {
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.id", request, filter.getUserId()));
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert", request, filter.getUserId()));
 		} else {
 			int rs = idFilterService.insertIdFilter(filter);
 			makeInfoService.addInfoIdNoLog();
@@ -69,8 +72,11 @@ public class IdFilterController {
 	@AuditOperation(Operation.UPDATE)
 	@ResponseBody
 	public XcnResponseVO updateIdFilter(final HttpServletRequest request, IdFilterVO filter) throws Exception {
+		if (idFilterService.isServiceCdCountExceeded(filter.getServiceCd())) {
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("id.select.service", request));
+		}
 		if (idFilterService.isIdExist(filter)) {
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.id", request, filter.getUserId()));
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert", request, filter.getUserId()));
 		} else {
 			int rs = idFilterService.updateIdFilter(filter);
 			makeInfoService.addInfoIdNoLog();
