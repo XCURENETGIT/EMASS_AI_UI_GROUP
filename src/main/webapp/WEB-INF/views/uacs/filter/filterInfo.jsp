@@ -27,6 +27,10 @@
 		font-size: 12px;
 		padding-left: 15px;
 	}
+
+	.bs-container .dropdown-menu {
+		z-index: 100000 !important;
+	}
 </style>
 <script type="text/javascript">
     var searchFlag = false;
@@ -81,7 +85,47 @@
         $('#serviceType').change(function () {
             getData();
         });
-        $('#idServiceCd, #domainServiceCd, #subjectServiceCd, #sizeServiceCd, #attachServiceCd').html(getserviceType());
+        $('#domainServiceCd, #subjectServiceCd, #sizeServiceCd, #attachServiceCd').html(getserviceType(false));
+        $('#idServiceCd').html(getserviceType(true));
+        $('#idServiceCd').selectpicker({
+            container: 'body',
+            size: '15',
+            width: '260px',
+            searchLabel: true,
+            collapseExtend: true,
+            noneSelectedText: '-<s:message code="filterInfo.select.service"/>-',
+            noneResultsText: '<s:message code="common.msg.noresult"/> ',
+            selectAllText: '<s:message code="common.msg.select_all"/>',
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+            liveSearchPlaceholder: '<s:message code="condition.search.service"/>'
+        });
+        $('#idServiceCd').selectpicker('refresh');
+
+        $('#idPop').on('shown.bs.modal', function () {
+            $('#idServiceCd').selectpicker('refresh');
+        });
+
+        var idServiceCdWasOpen = false;
+        $(document).on('mousedown', '[data-id="idServiceCd"]', function () {
+            idServiceCdWasOpen = $('body > .bs-container').length > 0;
+        });
+        $(document).on('click', function (e) {
+            var $target = $(e.target);
+            var clickedToggle = $target.closest('[data-id="idServiceCd"]').length > 0;
+            var clickedMenu = $target.closest('.bs-container').length > 0;
+
+            if (clickedToggle && idServiceCdWasOpen) {
+                setTimeout(function () {
+                    $('body > .bs-container').detach();
+                    $('#idServiceCd').closest('.bootstrap-select').removeClass('open');
+                }, 0);
+                return;
+            }
+            if (!clickedToggle && !clickedMenu) {
+                $('body > .bs-container').detach();
+                $('#idServiceCd').closest('.bootstrap-select').removeClass('open');
+            }
+        });
 
         $('#sizeCondition').change(function () {
             var sizeCondition = $(this).val();
@@ -138,7 +182,9 @@
             $('#sizeServiceCd').prop('disabled', false);
             $('.savePopBtn').prop('disabled', false);
             mode = 'insert';
-            $('#idServiceCd, #domainServiceCd, #subjectServiceCd, #sizeServiceCd, #attachServiceCd').val('');
+            $('#idServiceCd').selectpicker('val', []);
+            $('#idServiceCd').selectpicker('refresh');
+            $('#domainServiceCd, #subjectServiceCd, #sizeServiceCd, #attachServiceCd').val('');
             $('#userId, #domain, #noLogurl, #subject, #lowSize, #highSize').val('');
             $('#sizeCondition').val('B').trigger("change");
 
@@ -175,7 +221,10 @@
             if (currentTab == 'idTab') {
                 url = mode == 'insert' ? 'insertIdFilter.xcn' : 'updateIdFilter.xcn';
                 popFormId = 'idPopForm';
-                $('[name=serviceNm]').val($('#idServiceCd option:selected').text());
+                $('#idServiceCdHidden').val(arrayToString($('#idServiceCd').selectpicker('val')));
+                $('[name=serviceNm]').val(
+                    $('#idServiceCd option:selected').map(function () { return $(this).text(); }).get().join(',')
+                );
             } else if (currentTab == 'ipTab') {
                 url = mode == 'insert' ? 'insertIpFilter.xcn' : 'updateIpFilter.xcn';
                 popFormId = 'ipPopForm';
@@ -297,13 +346,17 @@
 
         if (currentTab == 'idTab') {
             if ($('#userId').val() == '') {
-                alert('<s:message code="filterInfo.msg.enter.id"/>');
+                alert('<s:message code="condition.message.sender"/>');
                 return false;
             }
-            if ($('#idServiceCd').val() == '') {
-                alert('<s:message code="filterInfo.msg.select.service"/>');
-                return false;
-            }
+			if(!$('#idServiceCd').val() || $('#idServiceCd').val().length === 0){
+				alert('<s:message code="filterInfo.msg.select.service"/>');
+				return false;
+			}
+			if($('#idServiceCd').val().filter(function(v){ return v !== ''; }).length > 20){
+				alert('<s:message code="id.select.service"/>');
+				return false;
+			}
         } else if (currentTab == 'ipTab') {
             var ipVer = $('input:radio[name="ipVer"]:checked').val();
             if (!$('#userIpAll').is(':checked')) {
@@ -501,7 +554,7 @@
         if (currentTab == 'idTab') {
             gridObj = gridId;
             url = 'getIdFilterList.xcn';
-            ph = '<s:message code="filterInfo.msg.enter.id"/>';
+            ph = '<s:message code="condition.message.sender"/>';
         } else if (currentTab == 'ipTab') {
             $('#serviceType').val('').prop('disabled', true);
             gridObj = gridIp;
@@ -577,15 +630,21 @@
         });
     }
 
-    function getserviceType() {
+    // idOnly=true인 경우 ID 미로깅 필터 전용으로 M/W 그룹, EMM 서비스만 남김
+    function getserviceType(idOnly) {
         var result = '';
         ui.get({
             url: 'getServiceList.xcn',
             asyncFlag: false,
             searchStr: '',
             success: function (data, total) {
-                result += '<option value="">-<s:message code="filterInfo.servicetype"/>-</option>';
+                if (!idOnly) {
+                    result += '<option value="">-<s:message code="filterInfo.servicetype"/>-</option>';
+                }
                 for (var i = 0; i < data.length; i++) {
+                    if (idOnly && !(data[i].groupCd === "M" || data[i].groupCd === "W" || data[i].serviceCd.startsWith("EMM"))) {
+                        continue;
+                    }
                     result += '<option value="' + data[i].serviceCd + '">[' + data[i].groupNm + '] ' + data[i].serviceNm + '</option>';
                 }
             },
@@ -596,6 +655,17 @@
             }
         });
         return result;
+    }
+
+    function arrayToString(array) {
+        if (array == null || array == undefined) return "";
+        else return array.toString();
+    }
+
+    function stringToArray(string) {
+        if (string == null || string == undefined || string == '') return '';
+        else if (typeof string != 'string') return string;
+        else return string.split(',');
     }
 
     function getIdOptions() {
@@ -660,11 +730,11 @@
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
-							<label for="userId" class="fname">ID</label>
+							<label for="userId" class="fname"><s:message code="condition.sender"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" class="w100" name="userId" id="userId" placeholder="ID">
+							<input type="text" class="w100" name="userId" id="userId" placeholder="<s:message code="condition.sender"/>">
 							<input type="hidden" class="w100" id="idLogSeq" name="idLogSeq">
 							<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
 							<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
@@ -676,9 +746,10 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<select id="idServiceCd" name="serviceCd" class="w100">
-								<option value="">-<s:message code="filterInfo.select.service"/>-</option>
-							</select>
+							<select class="selectpicker" id="idServiceCd"
+							        title="-<s:message code="filterInfo.select.service"/>-"
+							        data-style="btn-default" multiple data-actions-box="true" data-live-search="true"></select>
+							<input type="hidden" id="idServiceCdHidden" name="serviceCd"/>
 							<input class="w100" type="hidden" name="serviceNm"/>
 							<input class="w100" type="hidden" name="tab"/>
 							<input class="w100" type="hidden" name="tabId"/>
@@ -1253,7 +1324,7 @@
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				<button type="button" class="form_btn06" accesskey="R" id="devStatusBtn" style="display: none;"><s:message code="filterInfo.ruleapply"/></button>
 				<span class="red fs12 fb600 mat8" style="display: none" id="devStatusStr"><s:message code="filterInfo.msg.ipnologging"/></span>
-				<p class="red fs12 fb600 mat8" id="noticeMsg"><s:message code="filterInfo.msg.nologging"/></pclass>
+				<p class="red fs12 fb600 mat8" id="noticeMsg"><s:message code="filterInfo.msg.nologging"/></p>
 		</div>
 	</div>
 	<div class="content xcn_full">
@@ -1313,7 +1384,8 @@
             mode = 'modify';
             $("#idPop").modal('show');
             $('#userId').val(gridId.getValue(gridId.Row, 'userId'));
-            $('#idServiceCd').val(gridId.getValue(gridId.Row, 'serviceCd'));
+            $('#idServiceCd').selectpicker('val', stringToArray(gridId.getValue(gridId.Row, 'serviceCd')));
+            $('#idServiceCd').selectpicker('refresh');
             $('#idLogSeq').val(gridId.getValue(gridId.Row, 'idLogSeq'));
         }
     };

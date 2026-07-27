@@ -56,7 +56,7 @@ public class IdFilterController {
 	@ResponseBody
 	public XcnResponseVO insertIdFilter(final HttpServletRequest request, IdFilterVO filter) throws Exception {
 		if (idFilterService.isIdExist(filter)) {
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.id", request, filter.getUserId()));
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert", request, filter.getUserId()));
 		} else {
 			int rs = idFilterService.insertIdFilter(filter);
 			makeInfoService.addInfoIdNoLog();
@@ -70,7 +70,7 @@ public class IdFilterController {
 	@ResponseBody
 	public XcnResponseVO updateIdFilter(final HttpServletRequest request, IdFilterVO filter) throws Exception {
 		if (idFilterService.isIdExist(filter)) {
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.id", request, filter.getUserId()));
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert", request, filter.getUserId()));
 		} else {
 			int rs = idFilterService.updateIdFilter(filter);
 			makeInfoService.addInfoIdNoLog();
