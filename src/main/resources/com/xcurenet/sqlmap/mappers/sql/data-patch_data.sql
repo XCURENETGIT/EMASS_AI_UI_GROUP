@@ -255,8 +255,10 @@ CREATE TABLE IF NOT EXISTS UI_CHRONY(
 
 
 /* 서비스 */
--- DELETE FROM UI_SERVICE;
-INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`) VALUES
+DROP TABLE IF EXISTS UI_SERVICE_TMP;
+CREATE TABLE UI_SERVICE_TMP AS SELECT SERVICECD, USE_YN FROM UI_SERVICE;
+DELETE FROM UI_SERVICE;
+INSERT INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`) VALUES
 ('MP3-', '메일', 'POP3', '-', 'I', 1, 'Y', ''),
 ('MSM-', '메일', 'SMTP', '-', 'O', 2, 'Y', ''),
 ('MIM-', '메일', 'IMAP', '-', 'I', 3, 'Y', ''),
@@ -727,7 +729,7 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('LODS', '번역기', 'onlinedoctranslator', '발신', 'O', 468, 'Y', ''),
 ('IGBS', '생성형 AI', '구글 Gemini', '발신', 'O', 469, 'Y', ''),
 ('IGBR', '생성형 AI', '구글 Gemini', '수신', 'I', 470, 'Y', ''),
-('IBIS', '생성형 AI', ' Microsoft Copilot', '발신', 'O', 471, 'Y', ''),
+('IBIS', '생성형 AI', 'Microsoft Copilot', '발신', 'O', 471, 'Y', ''),
 ('IWTS', '생성형 AI', 'Wrtn', '발신', 'O', 472, 'Y', ''),
 ('IGPS', '생성형 AI', 'ChatGPT', '발신', 'O', 473, 'Y', ''),
 ('IGPR', '생성형 AI', 'ChatGPT', '수신', 'I', 474, 'Y', ''),
@@ -1034,16 +1036,13 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('KAAR', '웹서비스(분류)', '웹 수신', '수신', 'I', 775, 'Y', ''),
 ('KAAS', '웹서비스(분류)', '웹 발신', '발신', 'O', 776, 'Y', '');
 
+UPDATE UI_SERVICE A
+SET USE_YN = (SELECT IFNULL(MAX(B.USE_YN), 'Y') FROM UI_SERVICE_TMP B WHERE A.SERVICECD = B.SERVICECD);
+DROP TABLE IF EXISTS UI_SERVICE_TMP;
+
 UPDATE UI_SERVICE
 SET USE_YN = 'Y'
 WHERE USE_YN = '';
-
-UPDATE UI_SERVICE
-SET SERVICENM_LV2 = 'Microsoft Copilot'
-WHERE SERVICECD = 'IBIS';
-
-DELETE FROM UI_SERVICE
-WHERE SERVICECD = 'ITMS';
 
 /* UI MENU */
 DELETE FROM UI_MENU;
