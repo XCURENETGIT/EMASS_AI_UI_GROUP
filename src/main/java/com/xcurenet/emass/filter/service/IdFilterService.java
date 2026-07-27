@@ -8,6 +8,8 @@ public interface IdFilterService {
 
 	public boolean isIdExist(IdFilterVO filter);
 
+	public boolean isServiceCdCountExceeded(String serviceCd);
+
 	public int insertIdFilter(IdFilterVO filter);
 
 	public int updateIdFilter(IdFilterVO filter);

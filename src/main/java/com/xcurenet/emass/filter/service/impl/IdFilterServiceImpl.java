@@ -36,6 +36,15 @@ public class IdFilterServiceImpl extends XcnAbstractDAO implements IdFilterServi
 	}
 
 	@Override
+	public boolean isServiceCdCountExceeded(String serviceCd) {
+		if (serviceCd == null || serviceCd.trim().isEmpty()) {
+			return false;
+		}
+		long count = Arrays.stream(serviceCd.split(",")).filter(cd -> !cd.trim().isEmpty()).count();
+		return count > 20;
+	}
+
+	@Override
 	public int insertIdFilter(IdFilterVO filter) {
 		return insert("com.xcurenet.sqlmap.mappers.mysql.filter.insertIdFilter", filter);
 	}
