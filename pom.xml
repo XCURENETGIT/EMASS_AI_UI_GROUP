@@ -688,8 +688,9 @@
 							<!-- rpm.publish.skip=false (CI) 일 때만 실행: 바로 앞 execution 에서 만든 RPM 을 /users/rpm 으로 복사 -->
 							<skip>${rpm.publish.skip}</skip>
 							<target>
-								<echo message="RPM publish to /users/rpm"/>
-								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="mkdir -p /users/rpm; cp ${binary-dir}/RPMS/${arch}/${rpm-name} /users/rpm/" trust="yes" verbose="false"/>
+								<echo message="RPM publish to /users/rpm (최근 20개 유지)"/>
+								<!-- cp 실패가 정리 명령에 가려지지 않도록 && 체인 / 삭제는 제품 접두사(artifactId-)로만 범위 한정 -->
+								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="mkdir -p /users/rpm &amp;&amp; cp ${binary-dir}/RPMS/${arch}/${rpm-name} /users/rpm/ &amp;&amp; ls -t /users/rpm/${project.artifactId}-*.rpm 2>/dev/null | tail -n +21 | xargs -r rm -f" trust="yes" verbose="false"/>
 							</target>
 						</configuration>
 					</execution>

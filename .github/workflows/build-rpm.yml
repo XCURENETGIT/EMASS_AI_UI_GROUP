@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write   # 버전 태그 push 용 (기존 read → write)
 
 jobs:
   build-rpm:
@@ -96,6 +96,22 @@ jobs:
           echo "rpm_name=$(basename "${RPM_FILE}")" >> "$GITHUB_OUTPUT"
           ls -lh "${RPM_FILE}"
 
+      - name: 버전 태그 생성 (커밋-RPM 버전 매핑 기록)
+        shell: bash
+        run: |
+          # 배포된 RPM 버전을 커밋에 영구 기록하여
+          # "몇 버전에 문제가 있었는지"를 git log 로 추적 가능하게 한다.
+          # 제품이 2개(master→emassai, emass_2ndDev→emassai_plus)이므로
+          # 태그에 artifact 명을 접두어로 포함해 구분한다.
+          # 조회: git tag -l 'emassai-v*' / git tag -l 'emassai_plus-v*'
+          TAG="${{ steps.meta.outputs.artifact }}-v${{ steps.meta.outputs.version }}-$(TZ=Asia/Seoul date +%Y%m%d%H%M)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "RPM: ${{ steps.rpm.outputs.rpm_name }} (branch: ${{ github.ref_name }})" || {
+            echo "::warning::태그가 이미 존재합니다: ${TAG}"; exit 0; }
+          git push origin "${TAG}" || echo "::warning::태그 push 실패 (빌드는 정상)"
+          echo "태그 생성: ${TAG}"
+
       - name: 빌드 결과 요약
         if: always()
         shell: bash
@@ -111,4 +127,5 @@ jobs:
             echo "| 빌드서버 | ${{ steps.meta.outputs.build_host }} |"
             echo "| RPM | ${{ steps.rpm.outputs.rpm_name || '생성 실패' }} |"
             echo "| 보관 위치 | ${{ steps.meta.outputs.build_host }}:/users/rpm/ |"
+            echo "| Git 태그 | ${{ steps.meta.outputs.artifact }}-v${{ steps.meta.outputs.version }}-* (태그 스텝 참조) |"
           } >> "$GITHUB_STEP_SUMMARY"
