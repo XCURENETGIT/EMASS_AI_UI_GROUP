@@ -165,7 +165,8 @@
             $('#searchStr').val('');
             currentTab = $(this).attr('id');
             $('[name=tabId]').val(currentTab);
-            $('#serviceType').html(getserviceType());
+			if (currentTab === "idTab") $('#serviceType').html( getserviceType(true) );
+			else $('#serviceType').html( getserviceType(false) );
             getTabInfo();
             getData();
         });
@@ -594,7 +595,7 @@
 
     function tabIdToText(currentTab) {
         var str = '';
-        if (currentTab == 'idTab') str = 'ID';
+        if (currentTab == 'idTab') str = '<s:message code="condition.sender"/>';
         else if (currentTab == 'ipTab') str = 'Ip';
         else if (currentTab == 'domainTab') str = 'Domain';
         else if (currentTab == 'urlTab') str = 'URL';
@@ -1331,7 +1332,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<ul class="nav nav-tabs codeTab" id="codeTab">
-					<li class="active" style=" text-align: center;"><a data-toggle="tab" href="#idList" id="idTab">ID</a></li>
+					<li class="active" style=" text-align: center;"><a data-toggle="tab" href="#idList" id="idTab"><s:message code="condition.sender"/></a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#ipList" id="ipTab">IP</a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#domainList" id="domainTab">Domain</a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#urlList" id="urlTab">URL</a></li>
@@ -1369,7 +1370,7 @@
     var gridId = new Xgrid('idListGrid', contextRoot);
     gridId.onCheckBox();
     gridId.autoNumber();
-    gridId.colAdd('userId', 'ID', 150, 'left', false, 'link');
+    gridId.colAdd('userId', '<s:message code="condition.sender"/>', 150, 'left', false, 'link');
     gridId.colAdd('groupNm', '<s:message code="filterInfo.serviceSeparate"/>', 150, 'center', false, 'nomal');
     gridId.colAdd('serviceNm', '<s:message code="filterInfo.service"/>', 150, 'center', false, 'nomal');
     gridId.colAdd('serviceCd', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'nomal');
@@ -1377,7 +1378,7 @@
     gridId.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
     gridId.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
     gridId.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
-    gridId.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-ID');
+    gridId.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-<s:message code="condition.sender"/>');
     gridId.onClick = function () {
         if (gridId.Col == gridId.ColIndex('userId')) {
             $('savePopBtn').prop('disabled', false);
