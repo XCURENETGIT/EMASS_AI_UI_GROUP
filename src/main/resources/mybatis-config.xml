@@ -126,6 +126,8 @@
 		<typeAlias alias="PacInfo" type="com.xcurenet.agent.PacInfo"/>
 		<typeAlias alias="StatusInfo" type="com.xcurenet.agent.StatusInfo"/>
 		<typeAlias alias="AgentServiceInfo" type="com.xcurenet.agent.AgentServiceInfo"/>
+
+		<typeAlias alias="adminMfaVO" type="com.xcurenet.admin.service.AdminMfaVO" />
 	</typeAliases>
 
 	<mappers>

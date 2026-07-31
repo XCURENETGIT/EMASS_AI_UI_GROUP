@@ -5,8 +5,10 @@
 	String certType = Config.getString("cert.type");
 	String sso_type = Config.getString("sso_type");
 	String googleOtp = Config.getString("google.otp.used");
+	String countryTelUsed = Config.getString("country.tel.used");
 %>
 <head>
+	<script type="text/javascript" src="<c:url value="/js/libphonenumber-js.min.js"/>"></script>
 	<style type="text/css">
 		.radio-inline {
 			padding-left: 0px;
@@ -28,6 +30,7 @@
         var certType = '<%=certType%>';
         var sso_type = '<%=sso_type%>';
         var googleOtp = '<%=googleOtp%>';
+		var countryTelUsed = '<%=countryTelUsed%>';
         $(document).ready(function () {
 
 
@@ -39,6 +42,11 @@
                 $('[name=infoFeedbackYn]').prop('disabled', true);
                 $('#infoFeedbackComment').show();
             }
+
+			if(countryTelUsed == 'true'){
+				getInternationalTelCode();
+				$('#telCodeDiv').show();
+			}
 
             $('#startDatePicker').datetimepicker({
                 format: 'YYYY-MM-DD',
@@ -89,7 +97,7 @@
             });
 
             $('#insertBtn').click(function () {
-                $('otpRowDiv').css('display', 'none');
+                $('.otpRowDiv').css('display', 'none');
                 $("#adminPop").modal('show');
                 $('#adminPop').attr('mode', 'insert');
                 $('#adminPop input[type=text], #adminPop input[type=password]').val('').prop('disabled', false);
@@ -139,6 +147,7 @@
 	                $("#readAuthText").val('');
 	                $("#readAuthHidden").val('');
                 }
+				$('#countryTelCd').val('');
             });
             $('.selBtn').click(function () {
                 var id = $(this).attr('id');
@@ -414,11 +423,16 @@
 		$('#adminHp').focus( );
 		return;
 	} */
-            if (!checkPh(adminHp)) {
-                ui.alertMsg(adminHp + ' <s:message code="admin.msg.wrong.hp"/>');
-                $('#adminHp').focus();
-                return;
-            }
+			var countryTelCd = '';
+			if(countryTelUsed == 'true'){
+				countryTelCd = $('#countryTelCd').val();
+			}
+			if (!checkPh(adminHp, countryTelCd)) {
+				ui.alertMsg(adminHp + ' <s:message code="admin.msg.wrong.hp"/>', function() {
+					$('#adminHp').focus();
+				});
+				return;
+			}
 
             var message = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
             //var hiddenAdminType = $('#adminType option:selected').text()
@@ -475,11 +489,25 @@
             });
         }
 
-        function checkPh(phone) {
-            if (/^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/.test(phone) || phone == '')
-                return true;
-            return false;
-        }
+		function checkPh(phone, countryTelCd) {
+			if(phone == ''){
+				return true;
+			}
+
+			if(countryTelCd == '' || countryTelCd == "+82"){
+				if (/^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/.test(phone) || phone == '')
+					return true;
+				return false;
+			} else {
+				var phoneNumber = libphonenumber.parsePhoneNumberFromString(countryTelCd + phone);
+
+				if(phoneNumber){
+					return phoneNumber.isValid();
+				} else {
+					return false;
+				}
+			}
+		}
 
         function getAdminCodeList(codeType) {
             ui.get({
@@ -581,6 +609,20 @@
                 }
             });
         }
+		function getInternationalTelCode() {
+			ui.get({
+				url: 'getInternationalTelCode.xcn',
+				asyncFlag: false,
+				success: function (data) {
+					for (var i = 0; i < data.length; i++) {
+						$('#countryTelCd').append($('<option>', {value:data[i], text:data[i]}))
+					}
+				},
+				error: function (status, message) {
+					ui.alertMsg(message);
+				}
+			});
+		}
 	</script>
 </head>
 <div class="modal" id="adminPop" data-backdrop="static">
@@ -754,18 +796,35 @@
 
 							<div class="otpRowDiv" style="display: none">
 							<%--OTP재설정--%>
-							<br>
-							<span style="font-size: 25px;"><s:message code="common.msg.otpReset"/></span>
-							<br><br>
-							<div class="row">
-								<div class="col-35">
-									<label for="accessIp" class="fname"><s:message code="common.msg.otpReset"/></label>
-								</div>
-								<div class="col-65">
-									<button type="button" class="form_btn01_02" accesskey="I" id="otpResetBtn"><s:message code="common.msg.otpReset"/></button>
+								<br>
+								<span style="font-size: 25px;"><s:message code="common.msg.otpReset"/></span>
+									<br><br>
+								<div class="row">
+									<div class="col-35">
+										<label for="accessIp" class="fname"><s:message code="common.msg.otpReset"/></label>
+									</div>
+									<div class="col-65">
+										<button type="button" class="form_btn01_02" accesskey="I" id="otpResetBtn"><s:message code="common.msg.otpReset"/></button>
+									</div>
 								</div>
 							</div>
-						</div>
+
+							<%--국제번호--%>
+                            <div id="telCodeDiv" style="display: none;">
+                                <br>
+	                            <span style="font-size: 25px;"><s:message code="common.code.internatiolTel"/></span>
+	                            <br><br>
+	                            <div class="row">
+	                                <div class="col-35">
+										<label for="accessIp" class="fname"><s:message code="common.code.internatiolTel"/></label>
+									</div>
+		                            <div class="col-65">
+	                                    <select class="form-control input-sm" id="countryTelCd" name="countryTelCd">
+	                                    </select>
+		                            </div>
+                                </div>
+                            </div>
+
 						</div>
 						<div class="col-50 mal16">
 							<span style="font-size: 25px;"><s:message code="admin.search.auth"/></span>
@@ -1153,6 +1212,9 @@
             $('[name=useYn][value=' + data.useYn + ']').prop('checked', true);
             $('[name=workStatus]').prop('checked', false);
             $('[name=workStatus][value=' + data.workStatus + ']').prop('checked', true);
+			if(data.countryTelCd != null && data.countryTelCd != ''){
+				$('#countryTelCd').val(data.countryTelCd);
+			} else $('#countryTelCd').val('');
             getAdminCodeList('co');
             getAdminCodeList('busi');
             //getAdminCodeList('dept'); 부서권한

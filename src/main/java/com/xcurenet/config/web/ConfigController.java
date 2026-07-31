@@ -1,6 +1,7 @@
 package com.xcurenet.config.web;
 
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -148,5 +149,12 @@ public class ConfigController {
 		} else {
 			return "/emass/index";
 		}
+	}
+
+	@RequestMapping(value = "/getInternationalTelCode.xcn")
+	@Description("국제전화 국가번호 조회")
+	@ResponseBody
+	public XcnResponseVO getInternationalTelCode(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, Common.toJSONArray(Config.getString("country.tel.code")).stream().collect(Collectors.toList()));
 	}
 }

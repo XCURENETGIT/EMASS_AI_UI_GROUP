@@ -108,7 +108,8 @@
 					WHERE	A.ADMIN_ID = B.ADMIN_ID
 					GROUP	BY B.ADMIN_ID
 				) AS accessIp,
-				LOGIN_TYPE AS loginType
+				LOGIN_TYPE AS loginType,
+				COUNTRY_TEL_CD AS countryTelCd
 		FROM	UI_ADMIN A
 		WHERE	ADMIN_ID = BINARY(#{adminId})
 	</select>
@@ -162,7 +163,8 @@
 					WHERE	A.ADMIN_ID = B.ADMIN_ID
 					GROUP	BY B.ADMIN_ID
 				) AS accessIp,
-				LOGIN_TYPE AS loginType
+				LOGIN_TYPE AS loginType,
+				COUNTRY_TEL_CD AS countryTelCd
 		FROM	UI_ADMIN A
 		WHERE	1=1
 		<if test='firstAdminYn=="N" and adminType=="S"'>
@@ -184,7 +186,7 @@
 	<!--  운용자 등록 -->
 	<insert id="insertAdmin" parameterType="adminVO">
 		INSERT INTO UI_ADMIN
-		(ADMIN_ID, ADMIN_NAME, ADMIN_PW, ADMIN_EMAIL, ADMIN_HP, PW_CHG_DT, LAST_LOGIN_DT, LAST_LOGIN_IP, STATUS, WORK_STATUS, FIRSTADMIN_YN, ADMIN_TYPE, USE_YN, ACCESS_FAIL_CNT, ACCESS_FAIL_DT, APPROBATOR, INFO_FEEDBACK, COMMENT, CREATE_DT, LOGIN_TYPE, INSIDE)
+		(ADMIN_ID, ADMIN_NAME, ADMIN_PW, ADMIN_EMAIL, ADMIN_HP, PW_CHG_DT, LAST_LOGIN_DT, LAST_LOGIN_IP, STATUS, WORK_STATUS, FIRSTADMIN_YN, ADMIN_TYPE, USE_YN, ACCESS_FAIL_CNT, ACCESS_FAIL_DT, APPROBATOR, INFO_FEEDBACK, COMMENT, CREATE_DT, LOGIN_TYPE, INSIDE, COUNTRY_TEL_CD)
 		VALUES (#{adminId}, #{adminName}, #{adminPw}, 
 		<if test='encryptUseYN == "Y"'>
 		if(#{adminEmail} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{adminEmail})),
@@ -192,7 +194,7 @@
 		<if test='encryptUseYN != "Y"'>
 		#{adminEmail}, 
 		</if>
-		#{adminHp}, NULL, NULL, NULL, 'S', #{workStatus}, 'N', #{adminType}, #{useYn}, 0, NULL, #{approbator}, #{infoFeedbackYn}, #{comment}, NOW(), #{loginType}, #{insideYn} )
+		#{adminHp}, NULL, NULL, NULL, 'S', #{workStatus}, 'N', #{adminType}, #{useYn}, 0, NULL, #{approbator}, #{infoFeedbackYn}, #{comment}, NOW(), #{loginType}, #{insideYn}, #{countryTelCd} )
 	</insert>
 	
 	<select id="getAdminDashBoardConfCnt" resultType="int" parameterType="adminVO">
@@ -374,7 +376,8 @@
 				ACCESS_FAIL_DT = NULL,
 				APPROBATOR	= #{approbator},
 				INFO_FEEDBACK	= #{infoFeedbackYn},
-				COMMENT		= #{comment}
+				COMMENT		= #{comment},
+				COUNTRY_TEL_CD = #{countryTelCd}
 		WHERE	ADMIN_ID	= #{adminId}
 	</update>
 	
@@ -566,5 +569,28 @@
 		AND		A.USE_YN = 'Y'
 		AND		IFNULL(A.ADMIN_EMAIL,'') != ''
 	</select>
+
+	<insert id="insertAdminMfa" parameterType="adminMfaVO">
+		INSERT INTO UI_ADMIN_MFA (REQ_ID, ADMIN_ID, VALID_END_TIME ) VALUES(#{reqId}, #{adminId}, #{validEndTime})
+	</insert>
+	<select id="getAdminMfa" resultType="adminMfaVO" parameterType="adminMfaVO">
+		SELECT  REQ_ID AS reqId, ADMIN_ID AS adminId, VALID_END_TIME AS validEndTime
+		FROM    UI_ADMIN_MFA
+		WHERE   ADMIN_ID = #{adminId}
+		AND     REQ_ID = #{reqId}
+		AND     VALID_END_TIME > NOW()
+	</select>
+	<delete id="deleteAdminMfa" parameterType="adminMfaVO">
+		DELETE FROM UI_ADMIN_MFA where ADMIN_ID = #{adminId}
+	</delete>
+
+	<delete id="deleteAdminMfaByReqId" parameterType="adminMfaVO">
+		DELETE FROM UI_ADMIN_MFA where ADMIN_ID = #{adminId} AND REQ_ID = #{reqId}
+	</delete>
+
+	<delete id="clearAdminMfa">
+		DELETE FROM UI_ADMIN_MFA where VALID_END_TIME <![CDATA[ < ]]> NOW()
+	</delete>
+
 
 </mapper>

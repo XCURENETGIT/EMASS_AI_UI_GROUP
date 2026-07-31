@@ -70,6 +70,12 @@
     <definition name="/loginAuth" extends="noLayout">
         <put-attribute name="body"  value="/WEB-INF/views/loginAuth.jsp" />
     </definition>
+    <definition name="/loginMfa" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/LoginMfa.jsp" />
+    </definition>
+    <definition name="/loginMfaFail" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/LoginMfaFail.jsp" />
+    </definition>
 
     <!-- error 관련 layout 적용 제외 -->
     <definition name="/error/*" extends="noLayout">

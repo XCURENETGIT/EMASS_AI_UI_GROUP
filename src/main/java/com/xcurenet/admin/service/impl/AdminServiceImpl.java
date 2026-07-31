@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.xcurenet.admin.service.AdminMfaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -393,6 +394,31 @@ public class AdminServiceImpl extends XcnAbstractDAO implements AdminService {
 		Map<String, Object> param = new HashMap<>();
 		param.put("adminId", adminId);
 		insert("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminGenerate", param);
+	}
+
+	@Override
+	public int insertAdminMfa(AdminMfaVO adminMfaVO) {
+		return insert("com.xcurenet.sqlmap.mappers.mysql.admin.insertAdminMfa", adminMfaVO);
+	}
+
+	@Override
+	public AdminMfaVO getAdminMfa(AdminMfaVO adminMfaVO) {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.admin.getAdminMfa", adminMfaVO);
+	}
+
+	@Override
+	public void deleteAdminMfa(AdminMfaVO adminMfaVO) {
+		insert("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminMfa", adminMfaVO);
+	}
+
+	@Override
+	public void deleteAdminMfaByReqId(AdminMfaVO adminMfaVO) {
+		insert("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminMfaByReqId", adminMfaVO);
+	}
+
+	@Override
+	public void clearAdminMfa() {
+		insert("com.xcurenet.sqlmap.mappers.mysql.admin.clearAdminMfa", null);
 	}
 
 }

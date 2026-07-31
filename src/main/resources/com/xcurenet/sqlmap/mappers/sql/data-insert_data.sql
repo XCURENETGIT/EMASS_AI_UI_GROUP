@@ -78,6 +78,18 @@ IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES('private.patte
 
 INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('info.feedback.llm', 'true', 'true', NOW());
 
+
+/* samsung mfa 기능 추가*/
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('samsung.mfa.used', 'false', 'false', NOW());
+
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('samsung.mfa.consumerKey', '', '', NOW());
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('samsung.mfa.secretKey', '', '', NOW());
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('samsung.mfa.api', 'https://scloud.singleid.samsung.net/secdx/common-api/api/mfa/request', null, NOW());
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('country.tel.code', '["+1","+7","+20","+27","+36","+44","+51","+52","+54","+55","+56","+57","+60","+61","+62","+63","+65","+66","+81","+82","+84","+86","+90","+91","+92","+95","+212","+213","+234","+254","+502","+506","+507","+591","+593","+856","+962","+966","+971","+972"]', null, NOW());
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('country.tel.used', 'false', 'false', NOW());
+INSERT IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('samsung.mfa.type', 'A', 'A', NOW());
+
+
 INSERT
 IGNORE INTO UI_ADMIN
 (ADMIN_ID, ADMIN_NAME, ADMIN_PW, ADMIN_EMAIL, ADMIN_HP, PW_CHG_DT, LAST_LOGIN_DT, LAST_LOGIN_IP, STATUS, FIRSTADMIN_YN, ADMIN_TYPE, USE_YN, ACCESS_FAIL_CNT, ACCESS_FAIL_DT, APPROBATOR, INFO_FEEDBACK, COMMENT, CREATE_DT)
