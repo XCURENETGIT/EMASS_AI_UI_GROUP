@@ -7,6 +7,7 @@
 	<meta charset="utf-8">
 	<%
 		String loginMsg = Config.getString("system.login.msg");
+		String mfaType = Config.getString("samsung.mfa.type");
 		response.setHeader("Cache-Control", "no-store");
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
@@ -56,6 +57,7 @@
 	</style>
 	<script type="text/javascript">
 		var loginMsg = '';
+		var mfaType = '<%=mfaType%>';
 		loginMsg += '\n';
 		loginMsg += '\n';
 		loginMsg += '         *****  {0}  *****';
@@ -171,18 +173,16 @@
 										$("#googleOTPqr").attr("src", data.qrCodeURL);
 										$('#otpMessage').html('<s:message code="login.google.otp.first.login"/>');
 										firstOTP = true;
-										console.log("firstOtp");
 									} else {
 										$('#otpQRrow').css("display", "none");
 										$('#secretKeyRow').css("display", "none");
 										$('#reloadBtn').css("display", "none");
 										$('#otpMessage').html('<s:message code="login.google.otp.message1"/>');
 										firstOTP = false;
-										console.log("zzz");
 									}
 									otpTimeOut();
 								}else if(data.samsungMfaUsed != null || data.samsungMfaUsed != undefined){
-									if(data.phoneNumberEmpty){
+									if(data.phoneNumberEmpty && mfaType == "A"){
 										ui.alertMsg('<s:message code="login.samsung.mfa.empty.phone"/>');
 										return;
 									}
