@@ -9,13 +9,10 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
@@ -26,11 +23,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xcurenet.admin.service.AdminMfaVO;
 import com.xcurenet.common.ntp.service.ChronyService;
 import com.xcurenet.common.ntp.service.ChronyVO;
 import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
 import com.xcurenet.login.MailService;
+import com.xcurenet.login.service.SingleIdMfaJwtToken;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.io.Decoders;
 import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
 import org.apache.commons.codec.binary.Base32;
@@ -38,7 +40,9 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -80,6 +84,8 @@ public class LoginController {
 	private static String RSA_WEB_KEY = "_RSA_WEB_Key_";
 
 	private static String RSA_INSTANCE = "RSA";
+
+	private static String MFA_PENDING_ADMIN_ID = "_MFA_PENDING_ADMIN_ID_";
 
 	@Resource(name = "adminService")
 	public AdminService adminService;
@@ -464,15 +470,158 @@ public class LoginController {
 				return new XcnResponseVO(XcnRspCode.OK, re);
 			}
 		}
+		/**
+		 * 삼성 MFA 인증
+		 */
+		if (Common.isEquals(Config.getString("samsung.mfa.used"), "true")) {
+			JSONObject re = new JSONObject();
+
+			session.setAttribute(MFA_PENDING_ADMIN_ID, admin.getAdminId());
+			re.put("samsungMfaUsed", true);
+			re.put("phoneNumberEmpty", Common.isEmpty(admin.getAdminHp()) || Common.isEmpty(admin.getCountryTelCd()));
+			return new XcnResponseVO(XcnRspCode.OK, re);
+		}
 
 		return setLoginEnv(request, session, admin, audit);
 
 	}
 
+	@RequestMapping(value = "/loginMfaProcess.xcn")
+	@Description("SSO 로그인 처리 프로세스")
+	@ResponseBody
+	public XcnResponseVO loginMfaProcess(final LoginVO login, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
+
+
+		String mfaUrl = Config.getString("samsung.mfa.api");
+		String secretKey = Config.getString("samsung.mfa.secretKey");
+		String consumerKey = Config.getString("samsung.mfa.consumerKey");
+		String mfaType = Config.getString("samsung.mfa.type");
+
+		byte[] decodedSecretKey = Decoders.BASE64.decode(secretKey);
+
+		String returnUrl = getCurrentUrl(request) + "/loginMfaResult.xcn";
+
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
+		String loginId = decryptRsa(privateKey, login.getUserId());
+
+		Object pendingAdminId = session.getAttribute(MFA_PENDING_ADMIN_ID);
+		if (pendingAdminId == null || !pendingAdminId.equals(loginId)) {
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("login.fail"));
+		}
+
+		AdminVO adminVo = adminService.getAdmin(loginId);
+		String requestId = UUID.randomUUID().toString();
+		if(Common.isEquals(mfaType,"A")){
+			if (Common.isEmpty(adminVo.getAdminHp()) || Common.isEmpty(adminVo.getCountryTelCd())) {
+				return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("login.samsung.mfa.empty.phone"));
+			}
+		}
+
+		// 요청 1회성 검증을 위해 MFA 유형과 무관하게 항상 요청 정보를 기록한다.
+		AdminMfaVO adminMfaVO = new AdminMfaVO();
+		adminMfaVO.setAdminId(loginId);
+		adminMfaVO.setReqId(requestId);
+		adminMfaVO.setValidEndTime(Date.from(LocalDateTime.now().plus(5, ChronoUnit.MINUTES).atZone(ZoneId.systemDefault()).toInstant()));
+
+		adminService.deleteAdminMfa(adminMfaVO);
+
+		adminService.insertAdminMfa(adminMfaVO);
+
+		//공통 Util 호출하여 토큰 서명, 암호화에 사용할 Key를 구성합니다.
+		SingleIdMfaJwtToken.CompositeKey compositeKey = new SingleIdMfaJwtToken.CompositeKey(decodedSecretKey);
+		String jwtRequest;
+		try {
+			jwtRequest = SingleIdMfaJwtToken.createJwtToken(loginId, consumerKey, requestId, "", adminVo.getCountryTelCd() + "-" + adminVo.getAdminHp()
+					, 300000L, compositeKey, returnUrl, mfaType); //숫자는 인증 요청 토큰 만료 시간 (milliseconds 단위)
+		} catch (Exception e) {
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(e.getMessage());
+		}
+
+		if(Common.isEmpty(jwtRequest)) {
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("login.samsung.mfa.failed.token"));
+		}
+
+		JSONObject re = new JSONObject();
+		re.put("mfaUrl", mfaUrl);
+		re.put("jwtTokenRequest", jwtRequest);
+		return new XcnResponseVO(XcnRspCode.OK, re);
+	}
+
+
+	@RequestMapping(value = "/loginMfaResult.xcn", method = RequestMethod.POST)
+	@Description("SSO 로그인 처리 프로세스")
+	public String loginMfaResult(final HttpServletRequest request, final HttpServletResponse response, final HttpSession session, Model model) throws Exception {
+		String secretKey = Config.getString("samsung.mfa.secretKey");
+		byte[] decodedSecretKey = Decoders.BASE64.decode(secretKey);
+
+		//공통 Util 호출하여 토큰 검증에 사용할 Key를 구성합니다.
+		SingleIdMfaJwtToken.CompositeKey compositeKey = new SingleIdMfaJwtToken.CompositeKey(decodedSecretKey);
+
+		//SingleID에서 보낸 토큰의 만료 시간 오차범위 설정.
+		long clockSkewSeconds = 300L;
+
+		Claims claims = SingleIdMfaJwtToken.verifySingleIDToken(request.getParameter("jwtTokenResponse"), compositeKey, clockSkewSeconds);
+		String userId = claims.get("uid", String.class); // 사용자 아이디
+		String requestId = claims.get("req", String.class); // consumer key
+		String result = claims.get("ret", String.class); // 결과 값 0: 실패, 1: 성공
+		String message = claims.get("msg", String.class); // 실패 메시지
+		ObjectMapper mapper = new ObjectMapper();
+
+		// 비밀번호 검증 단계에서 표시해 둔 대기 상태는 이 콜백에서 소비하고 정리한다.
+		session.removeAttribute(MFA_PENDING_ADMIN_ID);
+
+		if ("1".equals(result)) {
+			// MFA 유형과 무관하게 요청이 실제로 발급되었고 아직 유효한지, 이미 소비되지 않았는지 항상 검증한다.
+			AdminMfaVO adminMfaVO = new AdminMfaVO();
+			adminMfaVO.setAdminId(userId);
+			adminMfaVO.setReqId(requestId);
+			adminMfaVO = adminService.getAdminMfa(adminMfaVO);
+
+			if (adminMfaVO == null) {
+				model.addAttribute("result", new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(Prop.propFormat("login.samsung.mfa.expired")));
+				return "/loginMfaFail";
+			}
+			// 소비한 요청(REQ_ID)만 제거해, 같은 관리자의 다른 대기 중 요청에 영향을 주지 않는다.
+			adminService.deleteAdminMfaByReqId(adminMfaVO);
+
+			AdminVO admin = adminService.getAdmin(userId);
+			AuditVO audit = new AuditVO();
+			audit.setAdminIp(request.getRemoteAddr());
+			audit.setPMenuId("SYSTEM");
+			audit.setMenuId("CONNECTION");
+			audit.setOperation("LOGIN");
+			audit.setAdminId(userId);
+
+			if (admin == null) {
+				String msg = Prop.propFormat("login.fail") + "(" + userId + ")";
+				audit.setInformation(msg);
+				auditService.insertAudit(audit);
+				model.addAttribute("result", new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(Prop.propFormat("login.fail")));
+				return "/loginMfaFail";
+			}
+
+			audit.setAdminName(admin.getAdminName());
+
+			// 사용자 로그인
+			model.addAttribute("result", setLoginEnv(request, session, admin, audit));
+			return "/loginMfa";
+		} else {
+			AdminMfaVO adminMfaVO = new AdminMfaVO();
+			adminMfaVO.setAdminId(userId);
+			adminMfaVO.setReqId(requestId);
+			adminService.deleteAdminMfaByReqId(adminMfaVO);
+
+			model.addAttribute("result", new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(Prop.propFormat("login.samsung.mfa.failed")));
+			return "/loginMfaFail";
+		}
+	}
+
+
+
 	private XcnResponseVO setLoginEnv(final HttpServletRequest request, final HttpSession session, AdminVO admin, AuditVO audit) {
 
 		String type = Config.getString("session.duplication.type");
-		///SessionManagement sessionManagement = new SessionManagement();
+
 		boolean isExist = false;
 
 		try {
@@ -518,7 +667,7 @@ public class LoginController {
 		obj.put("adminName", admin.getAdminName());
 		obj.put("pwchgDt", admin.getPwchgDt());
 		obj.put("firstAdminYn", admin.getFirstAdminYn());
-
+		obj.put("adminId", admin.getAdminId());
 		String loginMsg = "";
 		loginMsg += "\n";
 		loginMsg += "\n";
@@ -840,6 +989,24 @@ public class LoginController {
 		truncateHash %= 1000000;
 
 		return (int) truncateHash;
+	}
+
+	private String getCurrentUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();             // http 또는 https
+		String serverName = request.getServerName();     // 호스트명
+		int serverPort = request.getServerPort();        // 포트 번호
+		String contextPath = request.getContextPath();   // 컨텍스트 경로
+
+		// 기본 URL 생성
+		StringBuilder url = new StringBuilder();
+		url.append(scheme).append("://").append(serverName);
+
+		// 포트 번호가 80 (HTTP) 또는 443 (HTTPS)이 아닐 경우 포트 추가
+		if (serverPort != 80 && serverPort != 443) {
+			url.append(":").append(serverPort);
+		}
+		url.append(contextPath);
+		return url.toString();
 	}
 
 }

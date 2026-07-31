@@ -61,4 +61,14 @@ public interface AdminService {
 	public void insertAdminGenerate(String adminId, String adminGenerate);
 	
 	public void deleteAdminGenerate(String adminId);
+
+	public int insertAdminMfa(AdminMfaVO adminMfaVO);
+
+	AdminMfaVO getAdminMfa(AdminMfaVO adminMfaVO);
+
+	void deleteAdminMfa(AdminMfaVO adminMfaVO);
+
+	void deleteAdminMfaByReqId(AdminMfaVO adminMfaVO);
+
+	void clearAdminMfa();
 }

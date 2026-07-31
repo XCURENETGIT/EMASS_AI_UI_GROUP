@@ -117,7 +117,8 @@
 					firstOTP: firstOTP,
 					success: function (data, total) {
 						$("#googleOTPPop").modal("hide");
-						successLogin(data, userIdInput, userPwInput);
+						var rtn = successLogin(data, userIdInput, userPwInput);
+						if(rtn) pageReloadAfterLogin(data);
 					},
 					error: function (status, message, data) {
 						$('#pinCode').val('');
@@ -180,8 +181,35 @@
 										console.log("zzz");
 									}
 									otpTimeOut();
+								}else if(data.samsungMfaUsed != null || data.samsungMfaUsed != undefined){
+									if(data.phoneNumberEmpty){
+										ui.alertMsg('<s:message code="login.samsung.mfa.empty.phone"/>');
+										return;
+									}
+
+									if($('#saveLoginId').is(':checked')) {
+										var userId = $('#userIdInput').val();
+										setCookie('Cookie_userId', userId, 30);
+									} else {
+										setCookie('Cookie_userId', '', -1);
+									}
+
+									// 삼성 MFA
+									$("#samsungMfaPop").modal("show");
+									setTimeout(function(){
+										ui.get({
+											url: 'loginMfaProcess.xcn',
+											userId: rsa.encrypt(userIdInput),
+											success: function (data, total) {
+												document.location.href = data.mfaUrl + "?jwtTokenRequest=" + data.jwtTokenRequest;
+											}, error: function (status, message, data) {
+												ui.alertMsg(message);
+											}
+										});
+									}, 2000);
 								} else {
-									successLogin(data, userIdInput, userPwInput);
+									var rtn = successLogin(data, userIdInput, userPwInput);
+									if(rtn) pageReloadAfterLogin(data);
 								}
 							},
 							error: function (status, message, data) {
@@ -261,13 +289,11 @@
 
 		function successLogin(data, userId, userPw) {
 			var adminName = nvl(data.adminName, '-');
-			var msg = '';
 			if ((data.pwchgDt == '' || data.pwchgDt == null) || ((data.pwchgDt == '' || data.pwchgDt == null) && data.firstAdminYn == 'Y')) {
 				$('#first_adminId').val(userId);
 				$('#first_cur_adminPw').val(sha256_digest(userPw));
-				msg = '<s:message code="login.first.access"/>';
 				loginCheck(data.firstAdminYn);
-				return;
+				return false;
 			} else {
 				if ($('#saveLoginId').is(':checked')) {
 					var userId = $('#userIdInput').val();
@@ -275,9 +301,12 @@
 				} else {
 					setCookie('Cookie_userId', '', -1);
 				}
-				msg = $('#message').val() + data.welcomeInfo;
 			}
+			return true;
+		}
 
+		function pageReloadAfterLogin(data){
+			var	msg = $('#message').val() + data.welcomeInfo;
 			ui.alertMsg(msg, function () {
 				if (data.menuKey != undefined && data.menuKey != '') {
 					document.location.href = '<c:url value="/ems/dashboard.do?menuKey="/>' + data.menuKey;
@@ -286,6 +315,7 @@
 				}
 			}, 3000);
 		}
+
 
 		var otpInterval;
 		var otpDelay;
@@ -504,6 +534,21 @@
 				<button type="button" class="pop_btn02" accesskey="R" id="reloadBtn"><s:message code="login.google.otp.reload"/></button>
 				<button type="button" class="pop_btn02" accesskey="S" id="secretSaveBtn"><s:message code="login.google.otp.login"/></button>
 				<button type="button" class="pop_btn01 otpClose" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="samsungMfaPop" aria-labelledby="samsungMfaPop" tabindex="-1" role="dialog" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modalHead">
+			<h2 class="modal-title"><s:message code="login.samsung.mfa.title"/></h2>
+		</div>
+		<div class="modalCon">
+			<div class="modalbody">
+				<div class="form-inline" style="display: flex; font-size: 17px; flex-direction: column; align-items: center;">
+					<span><s:message code="login.samsung.mfa.message1"/></span><span><s:message code="login.samsung.mfa.message2"/></span>
+				</div>
 			</div>
 		</div>
 	</div>

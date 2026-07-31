@@ -111,6 +111,9 @@ public class AdminVO {
 	private String encryptSize;
 	private String encryptKey;
 
+	// 국제 번호
+	private String countryTelCd;
+
 	private List<ConfigAdminVO> adminConfList;
 
 	/* 이상 행위 필드 */
