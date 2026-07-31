@@ -560,7 +560,15 @@ public class LoginController {
 		//SingleID에서 보낸 토큰의 만료 시간 오차범위 설정.
 		long clockSkewSeconds = 300L;
 
-		Claims claims = SingleIdMfaJwtToken.verifySingleIDToken(request.getParameter("jwtTokenResponse"), compositeKey, clockSkewSeconds);
+		Claims claims;
+		try {
+			claims = SingleIdMfaJwtToken.verifySingleIDToken(request.getParameter("jwtTokenResponse"), compositeKey, clockSkewSeconds);
+		} catch (Exception e) {
+			log.info("[MFA] invalid jwtTokenResponse : {}", e.getMessage());
+			model.addAttribute("result", new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(Prop.propFormat("login.samsung.mfa.failed")));
+			return "/loginMfaFail";
+		}
+
 		String userId = claims.get("uid", String.class); // 사용자 아이디
 		String requestId = claims.get("req", String.class); // consumer key
 		String result = claims.get("ret", String.class); // 결과 값 0: 실패, 1: 성공

@@ -8,6 +8,7 @@
 	String countryTelUsed = Config.getString("country.tel.used");
 %>
 <head>
+	<script type="text/javascript" src="<c:url value="/js/libphonenumber-js.min.js"/>"></script>
 	<style type="text/css">
 		.radio-inline {
 			padding-left: 0px;
