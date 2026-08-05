@@ -814,7 +814,7 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
 ('ICVR', '생성형 AI', 'Canva AI', '수신', 'I', 689, 'Y', ''),
 ('IMYS', '생성형 AI', 'Mintlify', '발신', 'O', 690, 'Y', ''),
 ('IMYR', '생성형 AI', 'Mintlify', '수신', 'I', 691, 'Y', ''),
-('IOLS', '생성형 AI', 'sysadmin', '발신', 'O', 692, 'Y', ''),
+('IOLS', '생성형 AI', 'Ollama.ai', '발신', 'O', 692, 'Y', ''),
 ('IOLR', '생성형 AI', 'Ollama.ai', '수신', 'I', 693, 'Y', ''),
 ('IIAR', '생성형 AI', 'iASK AI', '수신', 'I', 694, 'Y', ''),
 ('PDOS', '프로젝트', 'dooray', '발신', 'O', 695, 'Y', ''),
