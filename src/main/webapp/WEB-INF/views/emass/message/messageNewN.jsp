@@ -3179,6 +3179,17 @@
                                     <s:message code="condition.etc"/><i class="fa fa-minus-square"></i>
                                 </div>
                                 <div class="condition_option">
+
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="common.generative.planType"/></div>
+                                        <select name="searchArea" class="condition_select" id="accountPlanType">
+                                            <option value=""><s:message code="common.generative.planTypeAll"/></option>
+                                            <option value="ENTERPRISE"><s:message code="common.planType.enterPrice"/></option>
+                                            <option value="PERSONAL"><s:message code="common.planType.personal"/></option>
+                                        </select>
+                                    </div>
+                                    <div class="condition_divider"></div>
+
                                     <div class="condition_item">
                                         <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> URL
                                             <img style="cursor:help; width: 16px;margin-bottom: 3px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="http:// <s:message code="query.make.except"/>">

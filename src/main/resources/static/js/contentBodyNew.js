@@ -1210,6 +1210,25 @@ function setMessage(msg) {
         $('#detectPanel').hide();
     }
 
+    var accountPlanType = msg.accountPlanType;
+    var accountPlan = msg.accountPlan;
+
+    var accountPlanTypeStr = "";
+    if (accountPlanType === "ENTERPRISE") {
+        accountPlanTypeStr = contentBody.enterPrise;
+    } else if (accountPlanType === "PERSONAL") {
+        accountPlanTypeStr = contentBody.personal;
+    }
+
+    var hasAccountPlanInfo = nvl(accountPlan) !== "" && nvl(accountPlanType) !== "";
+
+    if (svc.startsWith("I") && hasAccountPlanInfo) {
+        $('#accountPlanTypeTr').css("display", "");
+        $('#accountPlanTypeDiv').html(accountPlanTypeStr);
+        $('#accountPlanDiv').html(accountPlan);
+    } else {
+        $('#accountPlanTypeTr').css("display", "none");
+    }
 
     xRootMtr = nvl(msg.xrootMtr);
     usr_id = nvl(msg.account);

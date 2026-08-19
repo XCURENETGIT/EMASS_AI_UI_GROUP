@@ -715,7 +715,9 @@
 			fileNoSizeNo:'<s:message code="java.message.fileNoSizeNo"/>',
 			fileEncrypte :'<s:message code="bodyview.ef"/>',
 			fileDrm : 'DRM'+'<s:message code="common.org.file"/>',
-			orgSender: '<s:message code="condition.org_sender"/>'
+			orgSender: '<s:message code="condition.org_sender"/>',
+			enterPrise : '<s:message code="common.planType.enterPrice"/>',
+			personal : '<s:message code="common.planType.personal"/>'
 		};
 
 		function getSimilarDoc(){
@@ -1011,6 +1013,18 @@
 											<th class="topline"><s:message code="message.actual.dept"/></th>
 											<td>
 												<div id="ipDeptNmDiv">
+												</div>
+											</td>
+										</tr>
+										<tr id="accountPlanTypeTr" style="display: none;">
+											<th><s:message code="common.account.planType"/></th>
+											<td>
+												<div id="accountPlanTypeDiv">
+												</div>
+											</td>
+											<th class="topline"><s:message code="common.account.plan"/></th>
+											<td>
+												<div id="accountPlanDiv">
 												</div>
 											</td>
 										</tr>

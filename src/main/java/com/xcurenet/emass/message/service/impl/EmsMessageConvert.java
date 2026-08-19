@@ -69,6 +69,10 @@ public class EmsMessageConvert {
 		vo.setXMsgKey(data.getXMsgKey());
 		vo.setXRootMtr(data.getXRootMtr());
 		vo.setXParentMtr(data.getXParentMtr());
+
+		vo.setAccountPlan(data.getAccountPlan());
+		vo.setAccountPlanType(data.getAccountPlanType());
+
 		if(data.getHttpInfo() != null ) {
 			vo.setHost(data.getHttpInfo().getHost());
 			vo.setPath(data.getHttpInfo().getPath());

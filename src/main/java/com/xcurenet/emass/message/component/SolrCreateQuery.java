@@ -116,6 +116,7 @@ public class SolrCreateQuery {
 	public static final String ATTACH_CNT = "attachcnt";
 	public static final String SCT = "pi_amount.pi_sct";
 	public static final String ALLOFUS = "allOfUs";
+	public static final String ACCOUNT_PLAN_TYPE = "account_plan_type";
 	public static final String LTIME = "ltime";
 	public static final String ATTACH_SPACE = "attachspace";
 	public static final String OCR_ATTACH_CNT = "ocr_attach_cnt";
@@ -1330,6 +1331,11 @@ public class SolrCreateQuery {
 		return addQuery(String.format("%s%s:%s", AND_QUERY, ALLOFUS, createOrQuery(allofus.replaceAll("\\|", " "), " ")));
 	}
 
+	public SolrCreateQuery setAccountPlanType(String accountPlanType) {
+		if (Common.isEmpty(accountPlanType)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, ACCOUNT_PLAN_TYPE, createOrQuery(accountPlanType.replaceAll("\\|", " "), " ")));
+	}
+
 	/**
 	 * 사이즈 쿼리
 	 *
@@ -1610,6 +1616,7 @@ public class SolrCreateQuery {
 
 
 			String allOfus = Common.nvl(condition.get("allOfus")); // 수신자 중 외부인
+			String accountPlanType = Common.nvl(condition.get("accountPlanType"));
 			String account = Common.nvl(condition.get("account")); // 접속계정
 			String account_not = Common.nvl(condition.get("account_not")); // 접속계정 부정
 			String account_findByParam = Common.nvl(condition.get("account_findByParam")); // 접속계정 전체 검색
@@ -1746,6 +1753,7 @@ public class SolrCreateQuery {
 			setPi(regexpYn, regexpVal);
 			setWork(ctimeWork);
 			setAllofus(allOfus);
+			setAccountPlanType(accountPlanType);
 			setAccount(account, account_not, account_findByParam, account_findByKeyword);
 			setMessageSize(sizeStartVal, sizeEndVal, sizeOption, sizeType);
 			setUserGroupSeq(userGroupSeq, userGroupSeq_not);

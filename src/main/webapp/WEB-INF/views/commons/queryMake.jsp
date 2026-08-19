@@ -181,7 +181,7 @@
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM","pi_total",
 			"pi_amount.pi_total", "pi_amount.pi_ID", "pi_amount.pi_EF", "pi_amount.pi_PN", "pi_amount.pi_FN", "pi_amount.pi_DN", "pi_amount.pi_SN", "pi_amount.pi_CN", "pi_amount.pi_EC",
 			"pi_amount.pi_IMEI","pi_amount.pi_MCN","pi_amount.pi_CPN","pi_amount.pi_BRN","pi_amount.pi_SSN","pi_amount.pi_CRN","pi_amount.pi_AN","pi_amount.pi_MN","epmsg_type","reprocess",
-			"ml_confd_class", "ml_confd_feedback", "ml_confd_prob", "sabun"
+			"ml_confd_class", "ml_confd_feedback", "ml_confd_prob", "sabun","account_plan_type"
 		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
@@ -308,6 +308,13 @@
 				size: 15,
 				style:'btn-xs btn-default',
 				noneSelectedText:'<s:message code="condition.allofus.all"/>'
+			});
+
+			$('#accountPlanType').selectpicker({
+				container:'body',
+				size: 15,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="common.generative.planTypeAll"/>'
 			});
 
 
@@ -1194,6 +1201,14 @@
 							addQueryText += ")";
 						}
 						break;
+
+					case "accountPlanType":
+						var accountPlanType = $('#accountPlanType').val();
+
+						if(accountPlanType != "") {
+							addQueryText = queryAddMinus + "account_plan_type:(" + $('#accountPlanType').val() + ")";
+						}
+						break;
 					case "attach":
                         addQueryText+=queryAddMinus+"(";
 						if($('#attachYn:checked').length > 0) {
@@ -1653,7 +1668,7 @@
 									<col style="width: 46px;">
 									<col style="width: 46px;">
 									<col style="width: 36px;">
-									<col style="width: 200px;">
+									<col style="width: 195px;">
 									<col style="width: 15px;">
 								</colgroup>
 								<tr class="not-dashed">
@@ -2163,6 +2178,22 @@
 									<td style="text-align: center;"></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="attachstrexcept"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>attachname_str</td>
+									<td></td>
+								</tr>
+
+								<tr>
+									<th><s:message code="common.generative.planType"/></th>
+									<td>
+										<select class="selectpicker small border-radius-none" data-style="btn-default" id="accountPlanType" style="width:100%;">
+											<option value=""><s:message code="common.generative.planTypeAll"/></option>
+                                            <option value="ENTERPRISE"><s:message code="common.planType.enterPrice"/></option>
+                                            <option value="PERSONAL"><s:message code="common.planType.personal"/></option>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="accountPlanType">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="accountPlanType">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="accountPlanType"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ACCOUNT_PLAN_TYPE</td>
 									<td></td>
 								</tr>
 

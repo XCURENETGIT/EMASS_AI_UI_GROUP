@@ -104,6 +104,13 @@ public class EmsCreateMessage {
 			bcc = msg.getBccList();
 			orgSender = msg.getOrgSenderList();
 
+			String accountPlanType = msg.getAccountPlanType();
+			String accountPlanTypeStr = "";
+			if (Common.isEquals(accountPlanType,  "ENTERPRISE")) accountPlanTypeStr =  Prop.propFormat("common.planType.enterPrice", locale);
+			else if (Common.isEquals(accountPlanType,  "PERSONAL")) accountPlanTypeStr =  Prop.propFormat("common.planType.personal", locale);
+			String accountPlan = msg.getAccountPlan();
+
+
 			String svcnm = Common.nvl(Config.getServiceNm(msg.getSvc()));
 			String protocolNm = Config.getProtocolNm(msg.getProtocol());
 			if( Common.isNotEmpty(protocolNm)) svcnm += " [" + protocolNm+"]";
@@ -222,7 +229,8 @@ public class EmsCreateMessage {
 					"#emass_body_keyword#", "#emass_subject#", "#emass_subject_kwd#", "#emass_svcnm#", "#emass_src_ip#", "#emass_ctime#", "#emass_dst_ip#",
 					"#emass_size#", "#emass_usrid#", "#emass_recvs#", "#emass_senders#", "#emass_to#", "#emass_cc#", "#emass_bcc#", "#emass_ipBusiNm#","#emass_ipDeptNm#", "#emass_host#", "#emass_attach_kwd#",
 					"#emass_fileName_kwd#", "#emass_file#", "#emass_body_kwd#", "#emass_pattern#","#emass_title_participant#","#emass_participant#","#emass_title_xrootmtr#","#emass_xrootmtr#",
-					"emass_title_ocr#", "#emass_ocr#", "#ml_confd_class#", "#ml_confd_feedback#", "#ml_confd_prob#", "#ml_confd_class_bg_color#", "#ml_confd_userid#","#emass_title_epmsg_type#","#emass_epmsg_type#" , "#emass_title_org_from#", "#emass_org_senders#"};
+					"emass_title_ocr#", "#emass_ocr#", "#ml_confd_class#", "#ml_confd_feedback#", "#ml_confd_prob#", "#ml_confd_class_bg_color#", "#ml_confd_userid#","#emass_title_epmsg_type#","#emass_epmsg_type#" , "#emass_title_org_from#", "#emass_org_senders#",
+					"#emass_title_accountPlanType#", "#emass_accountPlanType#","#emass_title_accountPlan#", "#emass_accountPlan#"};
 
 			String[] vals = {Prop.propFormat("OPERATION_MGMT.BODY_VIEW", locale), Prop.propFormat("condition.subject", locale)+" "+Prop.propFormat("bodyview.find.keyword", locale),
 					Prop.propFormat("condition.source", locale)+" IP", Prop.propFormat("condition.date", locale), Prop.propFormat("condition.destination", locale)+" IP",
@@ -235,7 +243,8 @@ public class EmsCreateMessage {
 					Common.nvl(msg.getAccount()), userStr.toString(), senderStr.toString(), toStr.toString(), ccStr.toString(), bccStr.toString(), Common.nvl(ipBusiNm),Common.nvl(ipDeptNm), Common.nvl(msg.getHost())+Common.nvl(msg.getPath())+Common.nvl(msg.getQuery()), attachStr, fileNameStr, getFileHtml(files), bodyStr, getPatternHtml(pattern, locale),
 					Prop.propFormat("condition.participation", locale), participantStr, Prop.propFormat("condition.xrootmtr", locale), msg.getXRootMtr(),
 					Prop.propFormat("bodyview.ocr.preview", locale), getOcrHtml(files, hasOcr), getMlConfdClassStr(msg.getMl_confd_class(), locale), getMlConfdFeedbackStr(msg.getMl_confd_feedback(), locale),
-					getMlConfdProbPercent(msg.getMl_confd_prob()), getMlConfdClassBgColor(msg.getMl_confd_class()),getMlConfdUseridStr(msg.getMl_confd_userid()),Prop.propFormat("condition.epmsgType.list", locale) ,Common.nvl(msg.getEpmsgType()) , Prop.propFormat("condition.org_sender", locale), orgSenderStr.toString() };
+					getMlConfdProbPercent(msg.getMl_confd_prob()), getMlConfdClassBgColor(msg.getMl_confd_class()),getMlConfdUseridStr(msg.getMl_confd_userid()),Prop.propFormat("condition.epmsgType.list", locale) ,Common.nvl(msg.getEpmsgType()) , Prop.propFormat("condition.org_sender", locale), orgSenderStr.toString(),
+					Prop.propFormat("common.account.planType", locale), accountPlanTypeStr, Prop.propFormat("common.account.plan", locale), accountPlan};
 
 			String tmp = "";
 			StringBuffer result = new StringBuffer();
@@ -283,6 +292,9 @@ public class EmsCreateMessage {
 //			else{
 				if(null != header_doc.getElementById("msgAccount")) header_doc.getElementById("msgAccount").remove();
 //			}
+
+			if (!Common.nvl(msg.getSvc()).startsWith("I") || Common.isEmpty(accountPlanType) || Common.isEmpty(accountPlan)) header_doc.getElementById("msgAccountPlanNm").remove();
+
 
 			if (Common.isEmpty(orgSenderStr)){
 				header_doc.getElementById("msgOrgFrom").remove();
