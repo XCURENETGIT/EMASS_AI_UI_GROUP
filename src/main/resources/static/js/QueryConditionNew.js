@@ -19,6 +19,7 @@ var queryCon = {
 		toCcBccs:[],
 		ocr_attach:[],
 		allofus:[],
+		accountPlanType:[],
 		attached:"",
 		kwd:"",
 		pi_total:[],
@@ -159,6 +160,9 @@ function settingQueryCondition(field, value) {
 		case "ocr_attach":
 			queryCon.ocr_attach.push(value.join(','));
 			break;
+		case "account_plan_type":
+			queryCon.accountPlanType.push(value.join(' '));
+			break;
 		case "allofus":
 			queryCon.allofus.push(value.join(' '));
 			break;
@@ -209,6 +213,7 @@ function setDisplayCondtion(queryCondition) {
 	$('#infoTypeSelect').selectpicker('val', stringToArray(queryCondition.ml_confd_class, '"')); // 정보분류	
 	$('#serviceTypeSelect').selectpicker('val', stringToArray(queryCondition.svc.join(','), ',')); //서비스
 	$('#allOfus').selectpicker('val', queryCondition.allofus);	// 수신자 구분
+	$('#accountPlanType').selectpicker('val', queryCondition.accountPlanType);
 	$('#recvs_poid').selectpicker('val', stringToArray(queryCondition.recvs_poid.join('|'), '|')); // 직급
 	$('#probTypeSelect').selectpicker('val', stringToArray(queryCondition.ml_confd_prob)); // 정보분류
 	$('#epmsgTypeSelect').selectpicker('val', stringToArray(queryCondition.epmsg_type, '|'));	//대외비

@@ -44,6 +44,8 @@ var defaultCondition = {
 	"interGroup": "",
 	"interGroupName": "",
 
+	"accountPlanType": "",
+
 	//조직
 	"busi": "",
 	"busiStr": "",
@@ -206,6 +208,7 @@ var con = {
 		setCodeCount('regexp', endId, '', '|');
 
 		$('#allOfus'+endId).val('');
+		$('#accountPlanType'+endId).val('');
 		$('#account' + endId).val('');
 		$('input:checkbox[id="account_not"]').prop("checked", false);
 		$('input:checkbox[id="account_not"]').prop("disabled", true);
@@ -488,6 +491,7 @@ var con = {
 		}
 
 		condition.allOfus = $('#allOfus').val();
+		condition.accountPlanType = $('#accountPlanType').val();
 
 		condition.account = $('#account').val();
 		condition.account_not = $('input:checkbox[id="account_not"]').is(":checked") ? 'Y' : '';
@@ -757,6 +761,7 @@ var con = {
 		$('input:checkbox[id="userGroupSeq_not"]').prop("checked", condition.userGroupSeq_not == 'Y' ? true : false);
 
 		$('#allOfus').val( condition.allOfus );
+		$('#accountPlanType').val( condition.accountPlanType );
 
 		$('#account').val(condition.account);
 		var account_hasValue = condition.account != '' && condition.account != null;

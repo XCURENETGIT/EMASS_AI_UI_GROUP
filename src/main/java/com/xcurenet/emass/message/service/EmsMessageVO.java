@@ -104,6 +104,9 @@ public class EmsMessageVO {
 	private EmassKeywordData keywordInfo;
 	private String header;
 
+	private String accountPlan;
+	private String accountPlanType;
+
 	
 	/*오리지널 제목 존재 여부*/
 	private boolean subjectIsEmpty;

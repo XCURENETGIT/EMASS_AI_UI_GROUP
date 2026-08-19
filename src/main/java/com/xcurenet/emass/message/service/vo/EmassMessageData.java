@@ -143,4 +143,10 @@ public class EmassMessageData {
 
 	@Field("checked")
 	private List<EmassCheckedData> checkedInfo;
+
+	@Field("accountPlan")
+	private String accountPlan;
+
+	@Field("accountPlanType")
+	private String accountPlanType;
 }

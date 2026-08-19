@@ -581,7 +581,14 @@
 			if (alarmVal.rcvBcc != '') searchStr += setConditionValStr(alarmVal.rcvBcc, '<s:message code="condition.bcc"/>', alarmVal.rcvBcc_not, alarmVal.rcvBcc_findByKeyword, alarmVal.rcvBcc_findByParam);
 			if (alarmVal.rcvJikgub != '') searchStr += setConditionValStr(alarmVal.rcvJikgub, '<s:message code="condition.recv_jikgub"/>');
             if (alarmVal.allOfus != '') searchStr += setConditionValStr(alarmVal.allOfus, '<s:message code="condition.allofus"/>');
-            if(alarmVal.account!='') searchStr += setConditionValStr( alarmVal.account, '<s:message code="common.msg.account"/>', alarmVal.account_not, alarmVal.account_findByKeyword, alarmVal.account_findByParam);
+
+			var accountPlanTypeStr = "";
+			if (alarmVal.accountPlanType == "PERSONAL") accountPlanTypeStr = '<s:message code="common.planType.personal"/>';
+			else if (alarmVal.accountPlanType == "ENTERPRISE") accountPlanTypeStr = '<s:message code="common.planType.enterPrice"/>';
+			if(alarmVal.accountPlanType!='') searchStr += setConditionValStr( accountPlanTypeStr, '<s:message code="common.generative.planType"/>');
+
+
+			if(alarmVal.account!='') searchStr += setConditionValStr( alarmVal.account, '<s:message code="common.msg.account"/>', alarmVal.account_not, alarmVal.account_findByKeyword, alarmVal.account_findByParam);
 
             if (alarmVal.busi != '') searchStr += setConditionValStr(alarmVal.busiNm, '<s:message code="common.org.busi"/>', alarmVal.busi_not);
             if (alarmVal.dept != '') searchStr += setConditionValStr(alarmVal.deptNm, '<s:message code="common.org.dept"/>', alarmVal.dept_not);

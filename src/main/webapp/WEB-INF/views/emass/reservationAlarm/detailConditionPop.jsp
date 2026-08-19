@@ -702,6 +702,7 @@
 
             condition.rcvJikgub = $('#rcvJikgub').val();
             condition.allOfus = $('#allOfus').val();
+            condition.accountPlanType = $('#accountPlanType').val();
 
             condition.account = $('#account').val();
             condition.account_not = $('[name=account_not]').is(":checked") ? 'Y' : '';
@@ -795,6 +796,7 @@
             $('#rcvBcc').val(alarmVal.rcvBcc);
             $('#rcvJikgub').val(alarmVal.rcvJikgub);
             $('#allOfus').selectpicker('val', alarmVal.allOfus);
+            $('#accountPlanType').selectpicker('val', alarmVal.accountPlanType);
 
             $('#account').val(alarmVal.account);
             $('[name=account_not]').prop("disabled", alarmVal.account == '' ? true : false);
@@ -1240,6 +1242,10 @@
             }
 
             $('#allOfus').selectpicker({
+                width: width
+            });
+
+            $('#accountPlanType').selectpicker({
                 width: width
             });
 
@@ -2197,6 +2203,17 @@
 							</span>
                             <input type="hidden" id="regexpStr" class="selectedTitle">
                             <input type="hidden" id="regexpVal">
+                        </li>
+
+                        <li>
+                            <label for="accountPlanType" class=" col-xs-3"><s:message code="common.generative.planType"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select class="selectpicker col-xs" id="accountPlanType" style="width:100%;" data-style="btn-default btn-sm">
+                                    <option value=""><s:message code="common.generative.planTypeAll"/></option>
+                                            <option value="ENTERPRISE"><s:message code="common.planType.enterPrice"/></option>
+                                            <option value="PERSONAL"><s:message code="common.planType.personal"/></option>
+                                </select>
+                            </div>
                         </li>
 
 <%--                        <!-- 정규식 패턴 -->--%>
