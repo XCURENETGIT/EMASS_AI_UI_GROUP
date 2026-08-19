@@ -293,7 +293,7 @@ public class EmsCreateMessage {
 				if(null != header_doc.getElementById("msgAccount")) header_doc.getElementById("msgAccount").remove();
 //			}
 
-			if (!msg.getSvc().startsWith("I") || Common.isEmpty(accountPlanType) || Common.isEmpty(accountPlan)) header_doc.getElementById("msgAccountPlanNm").remove();
+			if (!Common.nvl(msg.getSvc()).startsWith("I") || Common.isEmpty(accountPlanType) || Common.isEmpty(accountPlan)) header_doc.getElementById("msgAccountPlanNm").remove();
 
 
 			if (Common.isEmpty(orgSenderStr)){
