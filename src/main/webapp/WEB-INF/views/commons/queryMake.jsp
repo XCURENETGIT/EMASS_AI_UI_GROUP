@@ -169,7 +169,7 @@
 		var recvsJikgub = '<%=recvsJikgub%>';
 		var fieldArr = ["date_hh", "date_yyyy", "date_yyyymm", "date_yyyymmdd", "allOfUs",
 			"attach", "attachcnt", "attached", "attachname", "attachhash", "attachsize","attachSizeSum", "attachtype", "attachexistcnt",
-			"bcc", "bname", "body", "body_size", "body_snippet", "busicd", "businm", "cc", "ceo", "cid", "cname",
+			"bcc", "bname", "body", "body_size", "body_snippet", "busicd", "businm","cocd", "conm", "cc", "ceo", "cid", "cname",
 			"cocd", "conm", "ctime", "ctime_yyyy", "ctime_yyyymm", "ctime_yyyymmdd", "ctime_yyyymmddhh", "ctime_hh",
 			"deptcd", "deptnm", "direction", "direction_svc", "dport", "dstip", "host", "inside", "ip_busicd", "ip_businm",
 			"ip_cocd", "ip_conm", "jikgubcd", "jikgubnm", "kwd", "kwds", "kwds_attach", "kwds_attachname", "kwds_body",
@@ -1031,6 +1031,26 @@
 							}
 						}
 						break;
+					case "co":
+						var coNm = $('#co').val();
+						if(coNm != "") {
+							var coNmNmArr = coNm.split(" ");
+							addQueryText = queryAddMinus + "conm:(";
+
+							if (coNmNmArr.length == 1){
+								addQueryText += coNmNmArr[0]+"*";
+								addQueryText += ")";
+							}else{
+								for (var i = 0; i< coNmNmArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR "
+									}
+									addQueryText += coNmNmArr[i] + "*";
+								}
+								addQueryText += ")";
+							}
+						}
+						break;
 					case "dept":
 						var deptNm = $('#dept').val();
 						if(deptNm != "") {
@@ -1850,6 +1870,17 @@
 
 
 								<tr>
+									<th><s:message code="common.org.conm"/></th>
+									<td>
+										<input type="text" class="form-control input-xs border-radius-none" id="co" placeholder="<s:message code="common.org.conm"/>" style="width: 313px;">
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="co">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="co">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="co"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>conm</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
+								</tr>
+									<tr>
 									<th><s:message code="common.org.businm"/></th>
 									<td>
 										<input type="text" class="form-control input-xs border-radius-none" id="busi" placeholder="<s:message code="common.org.businm"/>" style="width: 313px;">

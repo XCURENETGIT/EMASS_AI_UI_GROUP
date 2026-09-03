@@ -71,6 +71,8 @@ public class SolrCreateQuery {
 	public static final String BUSICD = "busicd";
 	public static final String IP_BUSICD = "ip_busicd";
 	public static final String DEPTCD = "deptcd";
+	public static final String COCD = "cocd";
+	public static final String IP_COCD = "ip_cocd";
 	public static final String JIKGUBCD = "jikgubcd";
 	public static final String IP_DEPTCD = "ip_deptcd";
 	public static final String USERKEY = "userkey";
@@ -558,6 +560,50 @@ public class SolrCreateQuery {
 			if(Common.isNotEmpty(busicd_strs.toString())) query.append(String.format("%s:(%s) %s:(%s) ", BUSICD, busicd_strs.toString(), IP_BUSICD, busicd_strs.toString()));
 		}
 		if(Common.isEquals(busi_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, query.toString()));
+		else return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
+	}
+
+	public SolrCreateQuery setCocd(String cocd, String co_not){
+		if (Common.isEmpty(cocd)) return this;
+
+		String queryType = Config.getString("query.type", "A"); // 인사정보기준 + IP 기준 회사 정보
+		StringBuffer query = new StringBuffer();
+		String coList[] = cocd.split(",");
+		StringBuilder coString = new StringBuilder();
+
+		if( Common.isEquals(queryType, "B")) { //인사정보 기준 회사 정보
+			for (int i = 0; i < coList.length; i++) {
+				if(Common.isEquals(coList[i], "C00-00")){
+					query.append(String.format("(%s%s:%s) ", AND_QUERY, COCD, coList[i]));
+				}else{
+					coString.append("("+coList[i]).append(")");
+				}
+			}
+			if(Common.isNotEmpty(coString.toString())) query.append(String.format("%s:(%s) ", COCD, coString.toString()));
+
+		} else if( Common.isEquals(queryType, "C")) { // IP 기준 회사 정보
+			query.append("+");
+			for (int i = 0; i < coList.length; i++) {
+				if(Common.isEquals(coList[i], "C00-00")){
+					query.append(String.format("(%s%s:%s) ", AND_QUERY, IP_COCD, coList[i]));
+				}else{
+					coString.append(coList[i]).append(SPACE);
+				}
+			}
+			if(Common.isNotEmpty(coString.toString())) query.append(String.format("%s:(%s) ", IP_COCD, coString.toString()));
+
+		} else { // queryType = A 또는 그외 기본값
+			for (int i = 0; i < coList.length; i++) {
+				if(Common.isEquals(coList[i], "C00-00")){
+					query.append(String.format("(%s%s:%s %s%s:%s) ", AND_QUERY, COCD, coList[i], AND_QUERY, IP_COCD, coList[i]));
+				}else{
+					coString.append("(").append(coList[i]).append(")").append(SPACE);
+				}
+			}
+
+			if(Common.isNotEmpty(coString.toString())) query.append(String.format("%s:(%s) %s:(%s) ", COCD, coString.toString(), IP_COCD, coString.toString()));
+		}
+		if(Common.isEquals(co_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, query.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
 	}
 
@@ -1629,6 +1675,9 @@ public class SolrCreateQuery {
 			String busi = Common.nvl(condition.get("busi")); // 사업장
 			String busi_not = Common.nvl(condition.get("busi_not")); //사업장 부정
 
+			String co = Common.nvl(condition.get("co")); // 회사
+			String co_not = Common.nvl(condition.get("co_not")); //회사 부정
+
 			String dept = Common.nvl(condition.get("dept")).replaceAll("\\|", ","); // 부서
 			String dept_not = Common.nvl(condition.get("dept_not")); //부서 부정
 
@@ -1741,6 +1790,7 @@ public class SolrCreateQuery {
 			setSkProb(skProbs);
 			setDirection(receiveSend);
 			setBusicd(busi, busi_not);
+			setCocd(co, co_not);
 			setDeptcd(dept, dept_not);
 			setJikgub(jikgub, jikgub_not);
 			setEpmsgType(epmsg_type);

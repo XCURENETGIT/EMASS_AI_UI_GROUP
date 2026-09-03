@@ -488,6 +488,18 @@
                     $('[name=busi_not]').prop('disabled', false);
                 }
             });
+            $('#coSelect').selectpicker({
+                size: 'auto',
+                searchLabel: true
+            }).on("changed.bs.select", function (e) {
+                var value = $(this).selectpicker('val');
+                if (value == null) {
+                    $('[name=co_not]').prop('disabled', true);
+                    $('[name=co_not]').prop('checked', false);
+                } else {
+                    $('[name=co_not]').prop('disabled', false);
+                }
+            });
             $('#userGroupSeq').selectpicker({
                 size: 'auto',
                 searchLabel: true
@@ -547,7 +559,7 @@
 
             $('#receivers,#senders,#account,#rcvTo,#rcvCc,#rcvBcc,#url,#regexPattern').val('');
 
-            var arr = ['senders', 'account', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword'];
+            var arr = ['senders', 'account', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword','co'];
             for (var i = 0; i < arr.length; i++) {
                 $('[name=' + arr[i] + '_not]').prop('disabled', true);
                 $('[name=' + arr[i] + '_not]').prop('checked', false);
@@ -567,6 +579,7 @@
             $('#allOfus').selectpicker('val', '');
 
             $('#busiSelect').selectpicker('val', []);
+            $('#coSelect').selectpicker('val', []);
             //$('#deptSelect').selectpicker('val', [] );
             $('#deptStr, #deptVal').val('');
             $('#deptSelectedArea').hide();
@@ -716,6 +729,10 @@
             condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
             condition.busiNm = $('#busiSelect').parent().find('button').attr('title');
             condition.busi_not = $('[name=busi_not]').is(":checked") ? 'Y' : '';
+
+            condition.co = arrayToString($('#coSelect').selectpicker('val'));
+            condition.coNm = $('#coSelect').parent().find('button').attr('title');
+            condition.co_not = $('[name=co_not]').is(":checked") ? 'Y' : '';
 
             condition.dept = $('#deptVal').val();
             condition.deptNm = $('#deptStr').val();
@@ -902,6 +919,9 @@
             $('[name=busi_not]').prop("disabled", alarmVal.busi == '' ? true : false);
             $('[name=busi_not]').prop("checked", alarmVal.busi_not == 'Y' ? true : false);
 
+            $('[name=co_not]').prop("disabled", alarmVal.co == '' ? true : false);
+            $('[name=co_not]').prop("checked", alarmVal.co_not == 'Y' ? true : false);
+
             $('[name=dept_not]').prop("disabled", alarmVal.dept == '' ? true : false);
             $('[name=dept_not]').prop("checked", alarmVal.dept_not == 'Y' ? true : false);
 
@@ -971,6 +991,8 @@
                 $('#probTypeSelect').selectpicker("refresh");
                 $('#busiSelect').selectpicker('val', stringToArray(alarmVal.busi));
                 $('#busiSelect').selectpicker("refresh");
+                $('#coSelect').selectpicker('val', stringToArray(alarmVal.co));
+                $('#coSelect').selectpicker("refresh");
                 $('#searchField').selectpicker('val', stringToArray(alarmVal.searchField));
                 $('#searchField').selectpicker("refresh");
                 //$('#deptSelect').selectpicker('val', stringToArray(alarmVal.dept) );
@@ -1223,6 +1245,16 @@
                 deselectAllText: '<s:message code="common.msg.unselect_all"/>'
             });
 
+            $('#coSelect').selectpicker({
+                size: 15,
+                width: width,
+                searchLabel: true,
+                noneSelectedText: '<s:message code="common.org.co.all"/>',
+                noneResultsText: '<s:message code="common.msg.noresult"/> ',
+                selectAllText: '<s:message code="common.msg.select_all"/>',
+                deselectAllText: '<s:message code="common.msg.unselect_all"/>'
+            });
+
             getCount('dept');
             getCount('attach');
             getCount('keyword');
@@ -1278,6 +1310,7 @@
 
         function setSelectpicker() {
             getCodeList('busi');
+            getCodeList('co');
             getServiceTypeList();
         }
 
@@ -2033,6 +2066,20 @@
                                 </label>
 
                         </li>
+
+                         <li>
+                            <label for="coSelect" class=" col-xs-3"><s:message code="common.org.co"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select id="coSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+                                        data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+                            </div>
+                                <label class="checkbox-inline c-checkbox exceptOption2">
+                                    <input type="checkbox" name="co_not" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                </label>
+
+                        </li>
+
                         <li>
                             <label for="url" class=" col-xs-3">URL</label>
                             http://

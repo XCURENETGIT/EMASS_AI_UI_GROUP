@@ -51,6 +51,8 @@ var defaultCondition = {
 	"busiStr": "",
 	"dept": "",
 	"deptStr": "",
+	"co": "",
+	"coStr": "",
 
 	//기타
 	"readYn": "",
@@ -190,6 +192,7 @@ var con = {
 		// $('#initEpmsg'+endId).selectpicker('val', []);
 
 		$('#busi'+endId).selectpicker('val', [] );
+		$('#co'+endId).selectpicker('val', [] );
 		$('#deptStr'+endId).val('');
 		$('#deptVal'+endId).val('');
 		setCodeCount('dept', endId, '', ',');
@@ -234,6 +237,8 @@ var con = {
 		$('input:checkbox[id="keywordYn_not"]').prop("disabled", true);
 		$('input:checkbox[id="busi_not"]').prop("checked", false);
 		$('input:checkbox[id="busi_not"]').prop("disabled", true);
+		$('input:checkbox[id="co_not"]').prop("checked", false);
+		$('input:checkbox[id="co_not"]').prop("disabled", true);
 		$('input:checkbox[id="recv_jikgub_not"]').prop("checked", false);
 		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", true);
 		$('input:checkbox[id="dept_not"]').prop("checked", false);
@@ -520,6 +525,12 @@ var con = {
 		if(condition.busi != '') condition.busiStr = $('#busi').parent().find('.filter-option').text();
 		else condition.busiStr = '';
 
+		condition.co = arrayToString($('#co').selectpicker('val'));
+		condition.co_not = $('input:checkbox[id="co_not"]').is(":checked") ? 'Y' : '';
+
+		if(condition.co != '') condition.coStr = $('#co').parent().find('.filter-option').text();
+		else condition.coStr = '';
+
 		condition.dept = $('#deptVal').val();
 		condition.dept_not = $('input:checkbox[id="dept_not"]').is(":checked") ? 'Y' : '';
 
@@ -794,6 +805,10 @@ var con = {
 		$('input:checkbox[id="busi_not"]').prop("disabled", condition.busi == '' ? true : false);
 		$('input:checkbox[id="busi_not"]').prop("checked", condition.busi_not == 'Y' ? true : false);
 
+		$('#co').selectpicker('val', stringToArray(condition.co) );
+		$('input:checkbox[id="co_not"]').prop("disabled", condition.co == '' ? true : false);
+		$('input:checkbox[id="co_not"]').prop("checked", condition.co_not == 'Y' ? true : false);
+
 		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", condition.rcvJikgub == '' ? true : false);
 		$('input:checkbox[id="recv_jikgub_not"]').prop("checked", condition.recv_jikgub_not == 'Y' ? true : false);
 		if(condition.dept != "") {
@@ -962,6 +977,24 @@ function initCondition(endId){
 			}
 		});
 
+		$('#co').selectpicker({
+			size: 'auto',
+			width:'260px',
+			searchLabel:true,
+			noneSelectedText:condition.coAll,
+			noneResultsText:condition.msgNoresult+' ',
+			selectAllText:condition.msgSelect_all,
+			deselectAllText:condition.msgUnselect_all
+		}).on("changed.bs.select", function (e) {
+			var value = $(this).selectpicker('val');
+			if(value == null ){
+				$('#co_not').prop('disabled', true);
+				$('#co_not').prop('checked',false);
+			}else{
+				$('#co_not').prop('disabled', false);
+			}
+		});
+
 		$(document).on('click', '.filterAddBtn', function(){
 			var code = $(this).attr('id').substring(0, $(this).attr('id').length-3);
 			openCodeWindow(code, $('#'+code+'Val').val(), $('#'+code+'Str').val());
@@ -1012,6 +1045,7 @@ function initCondition(endId){
 function initConditionData(){
 	getServiceTypeList( ); //서비스타입
 	getCodeList('busi');   //사업장
+	getCodeList('co');   //회사
 	initUserGroupList();   //사용자그룹
 	initInterestUser();    //관심사용자
 	// initEpmsg();			//대외비 목록
@@ -1236,31 +1270,6 @@ function getInterestUserOptions(data, endId){
 	}
 	$("#interGroup"+endId).html(result);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function getSvc1Nm(svc1){
 	var result = condition.msgNoinfo;
