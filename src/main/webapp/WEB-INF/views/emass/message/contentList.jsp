@@ -1019,6 +1019,7 @@
         grid.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
         grid.colAdd('ip_deptnm', '<s:message code="message.actual.dept"/>', 120, 'center', false, 'nomal');
 		grid.colAdd('conm', '<s:message code="common.org.co"/>', 120, 'center', true, 'nomal');
+		grid.colAdd('suborgnm', '<s:message code="common.org.general"/>', 120, 'center', true, 'nomal');
         grid.colAdd('jikgubnm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
         grid.colAdd('sender', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
             return highlightSearchStr(value, "sender");

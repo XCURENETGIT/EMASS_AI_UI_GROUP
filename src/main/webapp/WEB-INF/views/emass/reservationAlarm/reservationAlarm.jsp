@@ -593,6 +593,7 @@
             if (alarmVal.busi != '') searchStr += setConditionValStr(alarmVal.busiNm, '<s:message code="common.org.busi"/>', alarmVal.busi_not);
             if (alarmVal.dept != '') searchStr += setConditionValStr(alarmVal.deptNm, '<s:message code="common.org.dept"/>', alarmVal.dept_not);
 			if (alarmVal.co != '') searchStr += setConditionValStr(alarmVal.coNm, '<s:message code="common.org.co"/>', alarmVal.co_not);
+			if (alarmVal.general != '') searchStr += setConditionValStr(alarmVal.generalNm, '<s:message code="common.org.general"/>', alarmVal.general_not);
 			if (alarmVal.userGroupSeq != '') searchStr += setConditionValStr(alarmVal.userGroupName, '<s:message code="userGroup.navi.title2"/>', alarmVal.userGroupSeq_not);
             if (alarmVal.interGroup != '') searchStr += setConditionValStr(alarmVal.interGroupNm, '<s:message code="interest.user"/>', alarmVal.interGroup_not);
             if (alarmVal.url != '') searchStr += setConditionValStr(alarmVal.url, 'URL', alarmVal.url_not);

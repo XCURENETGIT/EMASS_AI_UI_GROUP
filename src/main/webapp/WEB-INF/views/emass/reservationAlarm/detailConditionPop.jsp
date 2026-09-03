@@ -500,6 +500,19 @@
                     $('[name=co_not]').prop('disabled', false);
                 }
             });
+
+            $('#generalSelect').selectpicker({
+                size: 'auto',
+                searchLabel: true
+            }).on("changed.bs.select", function (e) {
+                var value = $(this).selectpicker('val');
+                if (value == null) {
+                    $('[name=general_not]').prop('disabled', true);
+                    $('[name=general_not]').prop('checked', false);
+                } else {
+                    $('[name=general_not]').prop('disabled', false);
+                }
+            });
             $('#userGroupSeq').selectpicker({
                 size: 'auto',
                 searchLabel: true
@@ -559,7 +572,7 @@
 
             $('#receivers,#senders,#account,#rcvTo,#rcvCc,#rcvBcc,#url,#regexPattern').val('');
 
-            var arr = ['senders', 'account', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword','co'];
+            var arr = ['senders', 'account', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword','co','general'];
             for (var i = 0; i < arr.length; i++) {
                 $('[name=' + arr[i] + '_not]').prop('disabled', true);
                 $('[name=' + arr[i] + '_not]').prop('checked', false);
@@ -580,6 +593,7 @@
 
             $('#busiSelect').selectpicker('val', []);
             $('#coSelect').selectpicker('val', []);
+            $('#generalSelect').selectpicker('val', []);
             //$('#deptSelect').selectpicker('val', [] );
             $('#deptStr, #deptVal').val('');
             $('#deptSelectedArea').hide();
@@ -733,6 +747,10 @@
             condition.co = arrayToString($('#coSelect').selectpicker('val'));
             condition.coNm = $('#coSelect').parent().find('button').attr('title');
             condition.co_not = $('[name=co_not]').is(":checked") ? 'Y' : '';
+
+            condition.general = arrayToString($('#generalSelect').selectpicker('val'));
+            condition.generalNm = $('#generalSelect').parent().find('button').attr('title');
+            condition.general_not = $('[name=general_not]').is(":checked") ? 'Y' : '';
 
             condition.dept = $('#deptVal').val();
             condition.deptNm = $('#deptStr').val();
@@ -991,6 +1009,8 @@
                 $('#probTypeSelect').selectpicker("refresh");
                 $('#busiSelect').selectpicker('val', stringToArray(alarmVal.busi));
                 $('#busiSelect').selectpicker("refresh");
+                $('#generalSelect').selectpicker('val', stringToArray(alarmVal.general));
+                $('#generalSelect').selectpicker("refresh");
                 $('#coSelect').selectpicker('val', stringToArray(alarmVal.co));
                 $('#coSelect').selectpicker("refresh");
                 $('#searchField').selectpicker('val', stringToArray(alarmVal.searchField));
@@ -1245,6 +1265,16 @@
                 deselectAllText: '<s:message code="common.msg.unselect_all"/>'
             });
 
+            $('#generalSelect').selectpicker({
+                size: 15,
+                width: width,
+                searchLabel: true,
+                noneSelectedText: '<s:message code="common.org.general.all"/>',
+                noneResultsText: '<s:message code="common.msg.noresult"/> ',
+                selectAllText: '<s:message code="common.msg.select_all"/>',
+                deselectAllText: '<s:message code="common.msg.unselect_all"/>'
+            });
+
             $('#coSelect').selectpicker({
                 size: 15,
                 width: width,
@@ -1311,6 +1341,7 @@
         function setSelectpicker() {
             getCodeList('busi');
             getCodeList('co');
+            getCodeList('general');
             getServiceTypeList();
         }
 
@@ -2075,6 +2106,19 @@
                             </div>
                                 <label class="checkbox-inline c-checkbox exceptOption2">
                                     <input type="checkbox" name="co_not" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                </label>
+
+                        </li>
+
+                         <li>
+                            <label for="generalSelect" class=" col-xs-3"><s:message code="common.org.general"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select id="generalSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+                                        data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+                            </div>
+                                <label class="checkbox-inline c-checkbox exceptOption2">
+                                    <input type="checkbox" name="general_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
 

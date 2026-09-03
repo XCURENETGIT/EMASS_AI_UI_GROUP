@@ -72,6 +72,7 @@ public class SolrCreateQuery {
 	public static final String IP_BUSICD = "ip_busicd";
 	public static final String DEPTCD = "deptcd";
 	public static final String COCD = "cocd";
+	public static final String SUBORG = "suborg";
 	public static final String IP_COCD = "ip_cocd";
 	public static final String JIKGUBCD = "jikgubcd";
 	public static final String IP_DEPTCD = "ip_deptcd";
@@ -561,6 +562,28 @@ public class SolrCreateQuery {
 		}
 		if(Common.isEquals(busi_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, query.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
+	}
+
+	public SolrCreateQuery setGeneral(String general, String general_not){
+		if (Common.isEmpty(general)) return this;
+
+		StringBuffer query = new StringBuffer();
+		String generalList[] = general.split(",");
+		StringBuilder generalString = new StringBuilder();
+
+		for (int i = 0; i < generalList.length; i++) {
+			if(Common.isEquals(generalList[i], "C00-00")){
+				query.append(String.format("(%s%s:%s ) ", AND_QUERY, SUBORG, generalList[i]));
+			}else{
+				generalString.append("(").append(generalList[i]).append(")").append(SPACE);
+			}
+		}
+
+		if(Common.isNotEmpty(generalString.toString())) query.append(String.format("%s:(%s)  ", SUBORG, generalString.toString()));
+
+		if(Common.isEquals(general_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, query.toString()));
+		else return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
+
 	}
 
 	public SolrCreateQuery setCocd(String cocd, String co_not){
@@ -1678,6 +1701,9 @@ public class SolrCreateQuery {
 			String co = Common.nvl(condition.get("co")); // 회사
 			String co_not = Common.nvl(condition.get("co_not")); //회사 부정
 
+			String general = Common.nvl(condition.get("general")); // 총괄
+			String general_not = Common.nvl(condition.get("general_not")); //총괄 부정
+
 			String dept = Common.nvl(condition.get("dept")).replaceAll("\\|", ","); // 부서
 			String dept_not = Common.nvl(condition.get("dept_not")); //부서 부정
 
@@ -1791,6 +1817,7 @@ public class SolrCreateQuery {
 			setDirection(receiveSend);
 			setBusicd(busi, busi_not);
 			setCocd(co, co_not);
+			setGeneral(general, general_not);
 			setDeptcd(dept, dept_not);
 			setJikgub(jikgub, jikgub_not);
 			setEpmsgType(epmsg_type);

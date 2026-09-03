@@ -1051,6 +1051,26 @@
 							}
 						}
 						break;
+					case "general":
+						var generalNm = $('#general').val();
+						if(generalNm != "") {
+							var generalNmArr = generalNm.split(" ");
+							addQueryText = queryAddMinus + "suborgnm:(";
+
+							if (generalNmArr.length == 1){
+								addQueryText += generalNmArr[0]+"*";
+								addQueryText += ")";
+							}else{
+								for (var i = 0; i< generalNmArr.length; i++){
+									if (i > 0){
+										addQueryText += " OR "
+									}
+									addQueryText += generalNmArr[i] + "*";
+								}
+								addQueryText += ")";
+							}
+						}
+						break;
 					case "dept":
 						var deptNm = $('#dept').val();
 						if(deptNm != "") {
@@ -1889,6 +1909,18 @@
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="busi">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="busi"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>businm</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
+								</tr>
+
+								<tr>
+									<th><s:message code="common.org.general"/></th>
+									<td>
+										<input type="text" class="form-control input-xs border-radius-none" id="general" placeholder="<s:message code="common.org.general"/>" style="width: 313px;">
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="general">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="general">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="general"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>suborgnm</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
 								</tr>
 								<tr>

@@ -636,6 +636,7 @@
             serviceAll:'<s:message code="condition.service.all"/>',
             orgBusiAll:'<s:message code="common.org.busi.all"/>',
             coAll:'<s:message code="common.org.co.all"/>',
+            suborAll:'<s:message code="common.org.general.all"/>',
             orgDeptAll:'<s:message code="common.org.dept.all"/>',
             msgSelect_all:'<s:message code="common.msg.select_all"/>',
             msgUnselect_all:'<s:message code="common.msg.unselect_all"/>',
@@ -3163,6 +3164,14 @@
                                         <div class="condition_not"><label><input type="checkbox" id="co_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
                                         <select id="co" title="<s:message code="common.org.co.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true"></select>
                                         <input type="hidden" id="coStr" />
+                                    </div>
+                                    <div class="condition_divider"></div>
+
+                                      <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="common.org.general"/></div>
+                                        <div class="condition_not"><label><input type="checkbox" id="general_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
+                                        <select id="general" title="<s:message code="common.org.general.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true"></select>
+                                        <input type="hidden" id="generalStr" />
                                     </div>
                                     <div class="condition_divider"></div>
 
