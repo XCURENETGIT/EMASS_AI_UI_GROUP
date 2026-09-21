@@ -87,6 +87,13 @@
                 $('#deleteBtn').css('display', 'none');
 	            $('#useBtn').css('display', '');
 	            $('#unuseBtn').css('display', '');
+            } else if (currentTab == 'epmsgTypeTab') {
+                $('#searchStrInput').attr('placeholder', '<s:message code="codeInfo.msg.enter.epmsg.type"/>');
+                $('#useYnDiv').css('display', '');
+                $('#insertBtn').css('display', '');
+                $('#deleteBtn').css('display', '');
+                $('#useBtn').css('display', 'none');
+                $('#unuseBtn').css('display', 'none');
             } else {
                 $('#useYnDiv').css('display', 'none');
                 $('#insertBtn').css('display', '');
@@ -139,6 +146,53 @@
             });
         });
 
+        $('.epmsgTypePopBtn').click(function () {
+            $('.epmsgTypePopBtn').prop('disabled', true);
+            var code = $.trim($('#epmsgTypeCode').val());
+            var name = $.trim($('#epmsgTypeName').val());
+            var field = $.trim($('#epmsgTypeField').val());
+            if (code == '') {
+                ui.alertMsg('<s:message code="codeInfo.epmsg.type.code.enter"/>');
+                $('.epmsgTypePopBtn').prop('disabled', false);
+                return;
+            }
+            if (name == '') {
+                ui.alertMsg('<s:message code="codeInfo.epmsg.type.name.enter"/>');
+                $('.epmsgTypePopBtn').prop('disabled', false);
+                return;
+            }
+            if (field == '') {
+                ui.alertMsg('<s:message code="codeInfo.epmsg.type.field.enter"/>');
+                $('.epmsgTypePopBtn').prop('disabled', false);
+                return;
+            }
+            var mode = $('#epmsgTypePop').attr('mode');
+            var message = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
+            ui.confirmMsg(message, '', '', function (rs) {
+                if (rs) {
+                    gridType.on();
+                    ui.post({
+                        url: mode == 'insert' ? 'insertEpmsgType.xcn' : 'updateEpmsgType.xcn',
+                        data: $('#epmsgTypePopForm').serializeAll(),
+                        success: function (data, total) {
+                            ui.alertMsg('<s:message code="common.msg.saved"/>');
+                            $('#epmsgTypePop').modal('hide');
+                            getData();
+                        },
+                        error: function (status, message) {
+                            ui.alertMsg(message);
+                        },
+                        complete: function () {
+                            gridType.off();
+                            $('.epmsgTypePopBtn').prop('disabled', false);
+                        }
+                    });
+                } else {
+                    $('.epmsgTypePopBtn').prop('disabled', false);
+                }
+            });
+        });
+
         $('.servicePopBtn').click(function () {
             $('.servicePopBtn').prop('disabled', true);
             var message = '<s:message code="common.msg.confirm.modify"/>';
@@ -170,6 +224,10 @@
             });
         });
         $('#insertBtn').click(function () {
+            if (getCurrentTab() == 'epmsgTypeTab') {
+                openEpmsgTypePop('insert');
+                return;
+            }
             var options = getAttachOptions();
             var str = '<select class="form-control input-sm" id="attachName" name="attachName">';
             str += options;
@@ -189,7 +247,9 @@
         $('#deleteBtn').click(function () {
             $('#deleteBtn').prop('disabled', true);
 
-            var rows = gridAttach.getSelectedRows();
+            var isEpmsg = getCurrentTab() == 'epmsgTypeTab';
+            var deleteGrid = isEpmsg ? gridType : gridAttach;
+            var rows = deleteGrid.getSelectedRows();
             if (rows.length == 0) {
                 ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
                 $('#deleteBtn').prop('disabled', false);
@@ -198,9 +258,9 @@
 
             ui.confirmMsg('<s:message code="filterInfo.msg.confirm.deleteitem"/>', '', '', function (rs) {
                 if (rs) {
-                    gridAttach.on();
+                    deleteGrid.on();
                     ui.get({
-                        url: 'deleteAttachType.xcn',
+                        url: isEpmsg ? 'deleteEpmsgType.xcn' : 'deleteAttachType.xcn',
                         deleteData: JSON.stringify(rows),
                         success: function (data, total) {
                             ui.alertMsg('<s:message code="common.msg.deleted"/>');
@@ -211,7 +271,7 @@
                         },
                         complete: function () {
                             $('#deleteBtn').prop('disabled', false);
-                            gridAttach.off();
+                            deleteGrid.off();
                         }
                     });
 
@@ -273,10 +333,27 @@
         return result;
     }
 
+    function openEpmsgTypePop(mode, data) {
+        var isInsert = mode == 'insert';
+        data = data || {};
+        var color = /^#[0-9a-fA-F]{6}$/.test(data.epmsgTypeColor) ? data.epmsgTypeColor : '#5376A3';
+        $('#epmsgTypePop').attr('mode', mode);
+        $('#epmsgTypeCode').prop('readonly', !isInsert).val(isInsert ? '' : data.epmsgTypeCode);
+        $('#epmsgTypeField').prop('readonly', !isInsert).val(isInsert ? '' : data.epmsgTypeField);
+        $('#epmsgTypeName').val(isInsert ? '' : data.epmsgTypeName);
+        $('#epmsgTypeColor').val(isInsert ? '#5376A3' : color);
+        $('#epmsgTypePopForm [name=useYn][value=' + (isInsert || data.useYn != 'N' ? 'Y' : 'N') + ']').prop('checked', true);
+        $('#epmsgTypePop').modal();
+        setTimeout(function () {
+            $(isInsert ? '#epmsgTypeCode' : '#epmsgTypeName').focus();
+        }, 500);
+    }
+
     function getCurrentSearchUrl() {
         var tab = getCurrentTab();
         if (tab == 'attachTab') return 'getAttachTypeList.xcn';
         else if (tab == 'serviceTab') return 'getServiceListByAll.xcn';
+		else if(tab=='epmsgTypeTab') return 'getEpmsgTypeList.xcn';
         else if (tab == 'patternTab') return '/';
         else return null;
     }
@@ -286,6 +363,7 @@
         if (tab == 'attachTab') return gridAttach;
         else if (tab == 'serviceTab') return gridService;
         else if (tab == 'patternTab') return gridPattern;
+		else if(tab=='epmsgTypeTab') return gridType;
         else return null;
     }
 </script>
@@ -351,6 +429,83 @@
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 					<button type="button" class="pop_btn02 servicePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal" id="epmsgTypePop" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="epmsgTypePopForm">
+			<div class="modalHead">
+				<h2><s:message code="codeInfo.epmsgpop.title"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3><s:message code="codeInfo.epmsgpop.title"/></h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						<s:message code="common.required.msg"/>
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="epmsgTypeCode" class="fname"><s:message code="codeInfo.epmsg.type.code"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="epmsgTypeCode" id="epmsgTypeCode" placeholder="<s:message code="codeInfo.epmsg.type.code"/>" maxlength="50">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="epmsgTypeName" class="fname"><s:message code="codeInfo.epmsg.type.name"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="epmsgTypeName" id="epmsgTypeName" placeholder="<s:message code="codeInfo.epmsg.type.name"/>" maxlength="100">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="epmsgTypeColor" class="fname"><s:message code="codeInfo.epmsg.type.color"/></label>
+						</div>
+						<div class="col-65">
+							<input type="color" name="epmsgTypeColor" id="epmsgTypeColor" value="#5376A3">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="epmsgTypeField" class="fname"><s:message code="codeInfo.epmsg.type.field"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="epmsgTypeField" id="epmsgTypeField" placeholder="<s:message code="codeInfo.epmsg.type.field"/>" maxlength="300">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label class="fname"><s:message code="common.msg.useyn"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div class="radio">
+								<input type="radio" name="useYn" value="Y" checked>
+								<span><s:message code="common.msg.use"/></span>
+							</div>
+							<div class="radio">
+								<input type="radio" name="useYn" value="N">
+								<span><s:message code="common.msg.unuse"/></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02 epmsgTypePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -436,6 +591,7 @@
 				<ul class="nav-tabs">
 					<li class="active" style=" text-align: center"><a data-toggle="tab" href="#serviceList" id="serviceTab" class="coTabClass"><s:message code="condition.service"/></a></li>
 					<li style="text-align: center"><a data-toggle="tab" href="#attachList" id="attachTab"><s:message code="codeInfo.filetype"/></a></li>
+					<li style="text-align: center"><a data-toggle="tab" href="#epmsgTypeList" id="epmsgTypeTab"><s:message code="condition.epmsgType.list"/></a></li>
 				</ul>
 			</div>
 			<div id="attachList" class="tab-content" style="height:100%;">
@@ -443,6 +599,9 @@
 			</div>
 			<div id="serviceList" class="tab-content active" style="height:100%;">
 				<div id="serviceListGrid" class="slickGrid gridArea"></div>
+			</div>
+			<div id="epmsgTypeList" class="tab-content" style="height:100%;">
+				<div id="epmsgTypeListGrid" class="slickGrid gridArea"></div>
 			</div>
 			<div id="patternList" class="tab-content" style="height:100%;">
 				<div id="patternListGrid" class="slickGrid gridArea"></div>
@@ -509,4 +668,25 @@
     gridService.loadExportMenu('<s:message code="OPERATION_MGMT.CODE_INFO"/>');
     gridService.loadHeader(true);
     gridService.initData('<s:message code="common.msg.search.click"/>');
+
+    var gridType = new Xgrid('epmsgTypeListGrid', contextRoot);
+    gridType.autoNumber();
+    gridType.onCheckBox();
+    gridType.colAdd('epmsgTypeCode', '<s:message code="codeInfo.epmsg.type.code"/>', 180, 'left', false, 'link');
+    gridType.colAdd('epmsgTypeName', '<s:message code="codeInfo.epmsg.type.name"/>', 200, 'left', false, 'nomal');
+
+    gridType.colAdd('epmsgTypeField', '<s:message code="codeInfo.epmsg.type.field"/>', 150, 'center', false, 'nomal');
+    gridType.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 100, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+        if (value == 'Y') return '<s:message code="common.msg.use"/>';
+        else if (value == 'N') return '<s:message code="common.msg.unuse"/>';
+        return '-';
+    });
+    gridType.onClick = function () {
+        if (gridType.Col == gridType.ColIndex('epmsgTypeCode')) {
+            openEpmsgTypePop('modify', gridType.getRowData(gridType.Row));
+        }
+    };
+    gridType.loadExportMenu('<s:message code="OPERATION_MGMT.CODE_INFO"/>');
+    gridType.loadHeader(true);
+    gridType.initData('<s:message code="common.msg.search.click"/>');
 </script>

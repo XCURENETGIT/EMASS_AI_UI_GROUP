@@ -1576,19 +1576,15 @@ INSERT
 IGNORE INTO UI_CUSTOM_DASHBOARD_POSITION_DEFAULT(POSITION_SEQ,DASH_X,DASH_Y,DASH_WIDTH,DASH_HEIGHT,DASH_MIN_WIDTH,DASH_MIN_HEIGHT,DASH_MAX_WIDTH,DASH_MAX_HEIGHT) VALUES (10,0,2,3,2,2,2,3,2);
 
 
-/* UI_EPMSG_TYPE  knox 메일 종류 코드*/
-INSERT
-IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('confidential', '대외비', 'orange');
-INSERT
-IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('confidential_rcpt', '대외비', 'orange');
-INSERT
-IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('confidential_strict', '극비', 'red');
-INSERT
-IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('official', '공문', 'green');
-INSERT
-IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('personal', '일반', 'black');
-INSERT
-IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('prohibit_forward', '재전송금지', 'blue');
+INSERT INTO UI_EPMSG_TYPE (`EPMSG_TYPE_CODE`, `EPMSG_TYPE_NAME`, `EPMSG_TYPE_COLOR`, `EPMSG_TYPE_FIELD`, `USE_YN`) VALUES
+   ('personal', '일반', '#323237', 'epmsg_type', 'Y'),
+   ('confidential', '대외비', '#F2C433', 'epmsg_type', 'Y'),
+   ('confidential_rcpt', '대외비_수신자', '#F2C433', 'epmsg_type', 'Y'),
+   ('confidential_strict', '극비', '#99082C', 'epmsg_type', 'Y'),
+   ('prohibit_forward', '재전송금지', '#7BA4C2', 'epmsg_type', 'Y'),
+   ('official', '공문', '#85AC70', 'epmsg_type', 'Y'),
+   ('large', '대용량첨부', '#EC905E', 'xmsgattr', 'Y'),
+   ('EAU-', '자동전달', '#A68CE2', 'svc', 'Y');
 
 
 INSERT

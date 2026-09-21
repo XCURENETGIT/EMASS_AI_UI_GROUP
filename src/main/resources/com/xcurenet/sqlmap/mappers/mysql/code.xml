@@ -881,4 +881,48 @@
 		FROM	UI_ADMIN_MENU
 		WHERE	ADMIN_ID = #{adminId}
 	</select>
+
+	<!-- KNOX 메일 종류 목록 조회 -->
+	<select id="getEpmsgTypeList" resultType="epmsgTypeVO" parameterType="hashMap">
+		SELECT	EPMSG_TYPE_CODE AS epmsgTypeCode, EPMSG_TYPE_NAME AS epmsgTypeName, EPMSG_TYPE_COLOR AS epmsgTypeColor,
+				EPMSG_TYPE_FIELD AS epmsgTypeField, USE_YN AS useYn
+		FROM	UI_EPMSG_TYPE
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+			AND		( EPMSG_TYPE_CODE LIKE CONCAT('%', #{searchStr}, '%') OR EPMSG_TYPE_NAME LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='searchUseYn!=null and searchUseYn!=""'>
+			AND		USE_YN = #{searchUseYn}
+		</if>
+		ORDER	BY EPMSG_TYPE_CODE
+	</select>
+
+	<!-- KNOX 메일 종류 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isEpmsgTypeExist" resultType="int" parameterType="epmsgTypeVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_EPMSG_TYPE
+		WHERE	EPMSG_TYPE_CODE = #{epmsgTypeCode}
+	</select>
+
+	<!-- KNOX 메일 종류 등록 -->
+	<insert id="insertEpmsgType" parameterType="epmsgTypeVO">
+		INSERT INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR, EPMSG_TYPE_FIELD, USE_YN)
+		VALUES (#{epmsgTypeCode}, #{epmsgTypeName}, #{epmsgTypeColor}, #{epmsgTypeField}, #{useYn})
+	</insert>
+
+	<!-- KNOX 메일 종류 수정 -->
+	<update id="updateEpmsgType" parameterType="epmsgTypeVO">
+		UPDATE	UI_EPMSG_TYPE
+		SET		EPMSG_TYPE_NAME = #{epmsgTypeName},
+				EPMSG_TYPE_COLOR = #{epmsgTypeColor},
+				EPMSG_TYPE_FIELD = #{epmsgTypeField},
+				USE_YN = #{useYn}
+		WHERE	EPMSG_TYPE_CODE = #{epmsgTypeCode}
+	</update>
+
+	<!-- KNOX 메일 종류 삭제 -->
+	<delete id="deleteEpmsgType" parameterType="epmsgTypeVO">
+		DELETE	FROM UI_EPMSG_TYPE WHERE EPMSG_TYPE_CODE = #{epmsgTypeCode}
+	</delete>
+
 </mapper>
