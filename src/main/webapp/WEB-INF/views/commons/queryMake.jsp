@@ -216,7 +216,7 @@
 			} else {
 				$('#recvs_poidTr').hide();
 			}
-			// initEpmsg();
+			initEpmsg();
 			initSetDisplay();
 
 			if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
@@ -229,13 +229,6 @@
 
 			}
 			else $('#infoTypeTr, #feedbackTypeTr, #probTypeTr, #sctTr').hide();
-
-			if(epmsgType == "" ){
-				$('#epmsgTypeTr').hide();
-			}else{
-				$('#epmsgTypeTr').show();
-			}
-
 
 			var dateObj = new Date();
 			$('#startdate').datetimepicker({
@@ -333,18 +326,17 @@
 			});
 
 
-			<%--$('#epmsg_type').selectpicker({--%>
-			<%--	container:'body',--%>
-			<%--	size: 'auto',--%>
-			<%--	size: 15,--%>
-			<%--	width:'260px',--%>
-			<%--	searchLabel:true,--%>
-			<%--	style:'btn-xs btn-default',--%>
-			<%--	noneSelectedText:'<s:message code="condition.epmsgType.all"/>',--%>
-			<%--	noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',--%>
-			<%--	selectAllText:'<s:message code="common.msg.select_all"/>',--%>
-			<%--	deselectAllText:'<s:message code="common.msg.unselect_all"/>',--%>
-			<%--});--%>
+			$('#epmsg_type').selectpicker({
+				container:'body',
+				size: 15,
+				width:'260px',
+				searchLabel:true,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.epmsgType.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
+			});
 
 
 			$('#allOfus').selectpicker({
@@ -633,15 +625,29 @@
 
 
 		/* KNOX */
-		// function initEpmsg(){
-		// 	var epmsg_type = epmsgType.split(',');
-		// 	var result='';
-		// 	for(var i=0 ; i<epmsg_type.length; i++){
-		// 		result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
-		// 	}
-		// 	$("#epmsg_type").html(result);
-		// //	$('#epmsg_type').selectpicker('refresh');
-		// }
+		function initEpmsg(){
+			ui.get({
+				url : 'getUsedEpmsgTypeList.xcn',
+				asyncFlag : false,
+				success : function(data, total) {
+					var result = '';
+					for(var i=0 ; i<data.length; i++){
+						var code = $('<div>').text(data[i].epmsgTypeCode).html();
+						var name = $('<div>').text(data[i].epmsgTypeName).html();
+						var field = $('<div>').text(data[i].epmsgTypeField).html();
+						result += '<option value="' + code + '" data-field="' + field + '">' + name + '</option>';
+					}
+					$("#epmsg_type").html(result);
+					// selectpicker 초기화 전이면 초기화 시점에 옵션이 반영되므로 refresh 는 초기화 이후에만 호출
+					if ($('#epmsg_type').data('selectpicker')) $('#epmsg_type').selectpicker('refresh');
+					if(data.length > 0) $('#epmsgTypeTr').show();
+					else $('#epmsgTypeTr').hide();
+				},
+				error : function(status, message) {
+					$('#epmsgTypeTr').hide();
+				}
+			});
+		}
 
 
 
@@ -1445,21 +1451,31 @@
 						addQueryText = queryAddMinus;
 						addQueryText += "attachname_str:noname";
 						break;
-					// case "epmsg_type":
-					// 	var epmsg_type = $('#epmsg_type').selectpicker('val');
-					//
-					// 	if(epmsg_type){
-					// 		addQueryText = queryAddMinus + "epmsg_type:(";
-					//
-					// 		for(var i = 0; i < epmsg_type.length; i++) {
-					// 			if(i > 0) {
-					// 				addQueryText += " "
-					// 			}
-					// 			addQueryText += '' + epmsg_type[i] + '*';
-					// 		}
-					// 		addQueryText += ")";
-					// 	}
-					// 	break;
+					case "epmsg_type":
+						// KNOX 메일 종류는 필드(epmsg_type / xmsgattr / svc)가 달라 필드별로 묶어서 생성
+						var epmsgFields = {};
+						var epmsgFieldCnt = 0;
+						$('#epmsg_type option:selected').each(function() {
+							var field = $(this).attr('data-field');
+							if(field != 'xmsgattr' && field != 'svc') field = 'epmsg_type';
+							if(!epmsgFields[field]) {
+								epmsgFields[field] = [];
+								epmsgFieldCnt++;
+							}
+							// 자동전달(svc)은 서비스 코드 앞부분만 일치하면 되므로 * 사용
+							epmsgFields[field].push(field == 'svc' ? $(this).val() + '*' : $(this).val());
+						});
+
+						if(epmsgFieldCnt > 0) {
+							var epmsgQueryText = '';
+							for(var field in epmsgFields) {
+								if(epmsgQueryText != '') epmsgQueryText += ' ';
+								epmsgQueryText += field + ':(' + epmsgFields[field].join(' ') + ')';
+							}
+							if(epmsgFieldCnt > 1) addQueryText = queryAddMinus + '(' + epmsgQueryText + ')';
+							else addQueryText = queryAddMinus + epmsgQueryText;
+						}
+						break;
 					case "reprocess":
 						if(queryAddMinus == '+') addQueryText = "+reprocess:1";
 						else addQueryText = "+reprocess:0";
@@ -1747,17 +1763,17 @@
 									<td></td>
 								</tr>
 								<%-- KNOX 메일 종류 --%>
-<%--								<tr>--%>
-<%--									<th><s:message code="condition.epmsgType.list"/></th>--%>
-<%--									<td>--%>
-<%--										<select id="epmsg_type" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>--%>
-<%--									</td>--%>
-<%--									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="epmsg_type">AND</button></td>--%>
-<%--									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="epmsg_type">OR</button></td>--%>
-<%--									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="epmsg_type"><i class="glyphicon glyphicon-minus"></i></button></td>--%>
-<%--									<td>epmsg_type</td>--%>
-<%--									<td></td>--%>
-<%--								</tr>--%>
+								<tr id="epmsgTypeTr" style="display: none;">
+									<th><s:message code="condition.epmsgType.list"/></th>
+									<td>
+										<select id="epmsg_type" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="epmsg_type">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="epmsg_type">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="epmsg_type"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>epmsg_type</td>
+									<td></td>
+								</tr>
 								<tr>
 									<th><s:message code="condition.receive_send"/></th>
 									<td>

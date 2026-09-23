@@ -78,6 +78,7 @@ public class SolrCreateQuery {
 	public static final String IP_DEPTCD = "ip_deptcd";
 	public static final String USERKEY = "userkey";
 	public static final String EPMSG_TYPE = "epmsg_type";
+	public static final String X_MSG_ATTRIBUTE = "xmsgattr";
 	public static final String[] SENDER = {"sender_str", "sname", "org_sender_str", "org_sname", "srcip"};
 	public static final String[] SENDER_UPPER = {"sender_str", "org_sender_str"};
 	public static final String[] SENDER_NOTUPPER = {"sender", "sname", "org_sender", "org_sname", "srcip"};
@@ -691,10 +692,22 @@ public class SolrCreateQuery {
 	/**
 	 * 대외비 쿼리
 	 */
-	public SolrCreateQuery setEpmsgType(String epmsg_type) {
-		if (Common.isEmpty(epmsg_type)) return this;
-		return addQuery(String.format("%s%s:%s", AND_QUERY, EPMSG_TYPE, createOrQuery(epmsg_type,",")));
-
+	public SolrCreateQuery setEpmsgType(String epmsg_type, String xmsgattr, String resent_from) {
+		// KNOX 메일 종류는 필드(epmsg_type / xmsgattr / svc)가 달라 필드별로 OR 로 묶어서 검색
+		StringBuilder query = new StringBuilder();
+		if (Common.isNotEmpty(epmsg_type)) {
+			query.append(String.format("%s:%s", EPMSG_TYPE, createOrQuery(epmsg_type, ",")));
+		}
+		if (Common.isNotEmpty(xmsgattr)) {
+			if (query.length() > 0) query.append(SPACE);
+			query.append(String.format("%s:%s", X_MSG_ATTRIBUTE, createOrQuery(xmsgattr, ",")));
+		}
+		if (Common.isNotEmpty(resent_from)) {
+			if (query.length() > 0) query.append(SPACE);
+			query.append(String.format("%s:%s", SERVICE, createOrQueryAppend(resent_from, SPECIAL_CHAR)));
+		}
+		if (query.length() == 0) return this;
+		return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
 	}
 
 
@@ -1765,6 +1778,8 @@ public class SolrCreateQuery {
 			String svc1_not = Common.nvl(condition.get("svc1_not")); //서비스 제외 그룹
 
 			String epmsg_type =Common.nvl(condition.get("epmsgType")); //대외비
+			String xmsgattr = Common.nvl(condition.get("xmsgattr")); //대용량첨부
+			String resent_from = Common.nvl(condition.get("resentFrom")); //자동전달
 
 			String regexPattern = Common.nvl(condition.get("regexPattern")); //정규패턴식 검색
 
@@ -1820,7 +1835,7 @@ public class SolrCreateQuery {
 			setGeneral(general, general_not);
 			setDeptcd(dept, dept_not);
 			setJikgub(jikgub, jikgub_not);
-			setEpmsgType(epmsg_type);
+			setEpmsgType(epmsg_type, xmsgattr, resent_from);
 			setSender(senders, senders_not, senders_upperCase, senders_findByParam, senders_findByKeyword);
 			setReciver(receive_option, receivers, receivers_not, receivers_upperCase, m_to, m_to_not, m_cc, m_cc_not, m_bcc, m_bcc_not, findByParam,receivers_findByKeyword, m_to_findByParam, m_to_findByKeyword ,m_cc_findByParam,m_cc_findByKeyword, m_bcc_findByParam, m_bcc_findByKeyword);
 			setRcvJikgub(rcvJikgub,recv_jikgub_not);

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
+<%@ include file="/WEB-INF/fragments/epmsgScript.jsp" %>
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <%
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
@@ -1504,7 +1505,8 @@
         if (alarmVal.keywordVal != '') searchStr += setConditionValStr(alarmVal.keywordStr, '<s:message code="condition.keyword"/>', alarmVal.keywordYn_not);
 
         var epmsg = '';
-        if (alarmVal.epmsgType != '') searchStr += setConditionValStr(alarmVal.epmsgType, '<s:message code="condition.epmsgType.list"/>');
+        var epmsgTypeNameStr = getEpmsgTypeNameStr(alarmVal.epmsgType, alarmVal.xmsgattr, alarmVal.resentFrom);
+        if (epmsgTypeNameStr != '') searchStr += setConditionValStr(epmsgTypeNameStr, '<s:message code="condition.epmsgType.list"/>');
 
         var regexpYnMsg = '';
         if (alarmVal.regexpYn == 'Y') regexpYnMsg = '<s:message code="condition.exist"/>';

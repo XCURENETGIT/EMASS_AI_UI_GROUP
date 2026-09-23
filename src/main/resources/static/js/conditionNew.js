@@ -14,8 +14,9 @@ var defaultCondition = {
 	"serviceType": "",
 
 	// 대외비
-	// "epmsg_type": "",
-	// "initEpmsgName": "",
+	"epmsgType": "",
+	"xmsgattr": "",
+	"resentFrom": "",
 
 	//시간
 	"easyDate": "",
@@ -191,7 +192,7 @@ var con = {
 		$('#senders'+endId).val('');
 		$('#rcvJikgub'+endId).selectpicker('val', []);
 
-		// $('#initEpmsg'+endId).selectpicker('val', []);
+		$('#initEpmsg'+endId).selectpicker('val', []);
 
 		$('#busi'+endId).selectpicker('val', [] );
 		$('#co'+endId).selectpicker('val', [] );
@@ -522,7 +523,17 @@ var con = {
 		if(condition.interGroup != '') condition.interGroupName = $('#interGroup option:selected').text();
 		else condition.interGroupName = '';
 
-		// condition.epmsgType = arrayToString($('#initEpmsg').selectpicker('val'));
+		// KNOX 메일 종류 : 선택값을 필드(epmsg_type / xmsgattr / svc)별로 나눠서 조건 설정
+		var epmsgType = [], xmsgattr = [], resentFrom = [];
+		$('#initEpmsg option:selected').each(function () {
+			var field = $(this).attr('data-field');
+			if (field == 'xmsgattr') xmsgattr.push($(this).val());
+			else if (field == 'svc') resentFrom.push($(this).val());
+			else epmsgType.push($(this).val());
+		});
+		condition.epmsgType = arrayToString(epmsgType);
+		condition.xmsgattr = arrayToString(xmsgattr);
+		condition.resentFrom = arrayToString(resentFrom);
 
 		condition.busi = arrayToString($('#busi').selectpicker('val'));
 		condition.busi_not = $('input:checkbox[id="busi_not"]').is(":checked") ? 'Y' : '';
@@ -776,7 +787,7 @@ var con = {
 
 		$('input:checkbox[id="adminAllRead"]').prop("checked", condition.adminAllRead == 'Y' ? true : false);
 
-		// $('#initEpmsg').selectpicker('val', stringToArray(condition.epmsgType) );
+		$('#initEpmsg').selectpicker('val', [].concat(stringToArray(condition.epmsgType), stringToArray(condition.xmsgattr), stringToArray(condition.resentFrom)));
 
 		$('#userGroupSeq').val(condition.userGroupSeq);
 		$('input:checkbox[id="userGroupSeq_not"]').prop("disabled", condition.userGroupSeq == '' ? true : false);
@@ -945,17 +956,15 @@ function initCondition(endId){
 			deselectAllText:condition.msgUnselect_all,
 			liveSearchPlaceholder:condition.searchService
 		});
-		// $('#initEpmsg').selectpicker({
-		// 	size: 'auto',
-		// 	width:'260px',
-		// 	searchLabel:true,
-		// 	noneSelectedText:condition.epmsgTypeAll,
-		// 	noneResultsText:condition.msgNoresult+' ',
-		// 	selectAllText:condition.msgSelect_all,
-		// 	deselectAllText:condition.msgUnselect_all
-		// }).on("changed.bs.select", function (e) {
-		// 	var value = $(this).selectpicker('val');
-		// });
+		$('#initEpmsg').selectpicker({
+			size: 'auto',
+			width:'260px',
+			searchLabel:true,
+			noneSelectedText:condition.epmsgTypeAll,
+			noneResultsText:condition.msgNoresult+' ',
+			selectAllText:condition.msgSelect_all,
+			deselectAllText:condition.msgUnselect_all
+		});
 		$('#rcvJikgub').selectpicker({
 			size: 'auto',
 			width:'260px',
@@ -1082,7 +1091,7 @@ function initConditionData(){
 	getCodeList('co');   //회사
 	initUserGroupList();   //사용자그룹
 	initInterestUser();    //관심사용자
-	// initEpmsg();			//대외비 목록
+	initEpmsg();			//KNOX 메일 종류 목록
 }
 var serviceGroups=[];
 var serviceTypes=[];
@@ -1110,16 +1119,30 @@ function getJikgubList() {
 /**
  * 대외비 리스트 조회해서 조건에 적용
  */
-// function initEpmsg(){
-// 	var epmsg_type = epmsgType.split(',');
-// 	var result='';
-// 	for(var i=0 ; i<epmsg_type.length; i++){
-// 		result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
-// 	}
-// 	$("#initEpmsg").html(result);
-// 	$('#initEpmsg').selectpicker('refresh');
-//
-// }
+function initEpmsg(){
+	if ($('#initEpmsg').length == 0) return;
+	ui.get({
+		url 		: 'getUsedEpmsgTypeList.xcn',
+		asyncFlag	: false,
+		success 	: function(data, total) {
+			var result = '';
+			for (var i = 0; i < data.length; i++) {
+				var code = $('<div>').text(data[i].epmsgTypeCode).html();
+				var name = $('<div>').text(data[i].epmsgTypeName).html();
+				var field = $('<div>').text(data[i].epmsgTypeField).html();
+				result += '<option value="' + code + '" data-field="' + field + '">' + name + '</option>';
+			}
+			$('#initEpmsg').html(result);
+			// selectpicker 초기화 전이면 초기화 시점에 옵션이 반영되므로 refresh 는 초기화 이후에만 호출
+			if ($('#initEpmsg').data('selectpicker')) $('#initEpmsg').selectpicker('refresh');
+			if (data.length > 0) $('#epmsgList').show();
+			else $('#epmsgList').hide();
+		},
+		error 		: function(status, message) {
+			$('#epmsgList').hide();
+		}
+	});
+}
 
 /**
  * 서비스타입 리스트를 불러와서 조건에 적용

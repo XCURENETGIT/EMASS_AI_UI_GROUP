@@ -174,12 +174,6 @@
             }
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
 
-            // if (epmsgType == "") {
-            //     $('#epmsgList').hide();
-            // } else {
-            //     $('#epmsgList').show();
-            // }
-
             $(document).on('click', '.filterAddBtn', function () {
                 var code = $(this).attr('id').substring(0, $(this).attr('id').length - 3);
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
@@ -566,6 +560,7 @@
             checkRadioBtn('reprocessYnVal', '');
 
             $('#serviceTypeSelect').selectpicker('val', '');
+            $('#epmsgTypeSelect').selectpicker('val', '');
             $('#infoTypeSelect').selectpicker('val', '');
             $('#feedbackTypeSelect').selectpicker('val', '');
             $('#probTypeSelect').selectpicker('val', '');
@@ -640,6 +635,19 @@
             condition.serviceFieldNm = $('#searchField').parent().find('button').attr('title');
             condition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
             condition.serviceTypeNm = $('#serviceTypeSelect').parent().find('button').attr('title');
+
+            // KNOX 메일 종류 : 선택값을 필드(epmsg_type / xmsgattr / svc)별로 나눠서 조건 설정
+            var epmsgType = [], xmsgattr = [], resentFrom = [];
+            $('#epmsgTypeSelect option:selected').each(function () {
+                var field = $(this).attr('data-field');
+                if (field == 'xmsgattr') xmsgattr.push($(this).val());
+                else if (field == 'svc') resentFrom.push($(this).val());
+                else epmsgType.push($(this).val());
+            });
+            condition.epmsgType = arrayToString(epmsgType);
+            condition.xmsgattr = arrayToString(xmsgattr);
+            condition.resentFrom = arrayToString(resentFrom);
+            condition.epmsgTypeNm = $('#epmsgTypeSelect').parent().find('button').attr('title');
 
             condition.infoType = arrayToString($('#infoTypeSelect').selectpicker('val'));
             condition.infoTypeNm = $('#infoTypeSelect').parent().find('button').attr('title');
@@ -1001,6 +1009,8 @@
             setTimeout(function () {
                 $('#serviceTypeSelect').selectpicker('val', stringToArray(alarmVal.serviceType));
                 $('#serviceTypeSelect').selectpicker("refresh");
+                $('#epmsgTypeSelect').selectpicker('val', [].concat(stringToArray(alarmVal.epmsgType), stringToArray(alarmVal.xmsgattr), stringToArray(alarmVal.resentFrom)));
+                $('#epmsgTypeSelect').selectpicker("refresh");
                 $('#infoTypeSelect').selectpicker('val', stringToArray(alarmVal.infoType));
                 $('#infoTypeSelect').selectpicker("refresh");
                 $('#feedbackTypeSelect').selectpicker('val', stringToArray(alarmVal.feedbackType));
@@ -1221,6 +1231,16 @@
                 deselectAllText: '<s:message code="common.msg.unselect_all"/>'
             });
 
+            $('#epmsgTypeSelect').selectpicker({
+                size: 15,
+                width: width,
+                searchLabel: true,
+                noneSelectedText: '<s:message code="condition.epmsgType.all"/>',
+                noneResultsText: '<s:message code="common.msg.noresult"/> ',
+                selectAllText: '<s:message code="common.msg.select_all"/>',
+                deselectAllText: '<s:message code="common.msg.unselect_all"/>'
+            });
+
             $('#infoTypeSelect').selectpicker({
                 size: 15,
                 width: width,
@@ -1343,6 +1363,32 @@
             getCodeList('co');
             getCodeList('general');
             getServiceTypeList();
+            getEpmsgTypeOptions();
+        }
+
+        /* KNOX 메일 종류 : 코드 관리에 등록된 사용중인 종류만 조회 */
+        function getEpmsgTypeOptions() {
+            ui.get({
+                url: 'getUsedEpmsgTypeList.xcn',
+                asyncFlag: false,
+                success: function (data, total) {
+                    var result = '';
+                    for (var i = 0; i < data.length; i++) {
+                        var code = $('<div>').text(data[i].epmsgTypeCode).html();
+                        var name = $('<div>').text(data[i].epmsgTypeName).html();
+                        var field = $('<div>').text(data[i].epmsgTypeField).html();
+                        result += '<option value="' + code + '" data-field="' + field + '">' + name + '</option>';
+                    }
+                    $('#epmsgTypeSelect').html(result);
+                    // selectpicker 초기화 전이면 초기화 시점에 옵션이 반영되므로 refresh 는 초기화 이후에만 호출
+                    if ($('#epmsgTypeSelect').data('selectpicker')) $('#epmsgTypeSelect').selectpicker('refresh');
+                    if (data.length > 0) $('#epmsgList').show();
+                    else $('#epmsgList').hide();
+                },
+                error: function (status, message) {
+                    $('#epmsgList').hide();
+                }
+            });
         }
 
         var serviceGroups = [];
@@ -1707,13 +1753,13 @@
                                     data-actions-box="true"></select>
                         </li>
 
-                        <%--                    <li id="epmsgList">--%>
-                        <%--                        <label for="epmsgTypeSelect" class="col-xs-3"><s:message--%>
-                        <%--                                code="condition.epmsgType.list"/></label>--%>
-                        <%--                        <select id="epmsgTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"--%>
-                        <%--                                multiple data-show-subtext="true" data-live-search="true"--%>
-                        <%--                                data-actions-box="true"></select>--%>
-                        <%--                    </li>--%>
+                        <li id="epmsgList" style="display: none;">
+                            <label for="epmsgTypeSelect" class="col-xs-3"><s:message
+                                    code="condition.epmsgType.list"/></label>
+                            <select id="epmsgTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
+                                    multiple data-show-subtext="true" data-live-search="true"
+                                    data-actions-box="true"></select>
+                        </li>
 
                         <li>
                             <label for="day_msg" class="col-xs-3"><s:message

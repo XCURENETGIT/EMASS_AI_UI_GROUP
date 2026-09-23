@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
+<%@ include file="/WEB-INF/fragments/epmsgScript.jsp" %>
 <%
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
@@ -574,7 +575,8 @@
 			if(alarmVal.receivers!='') searchStr += setConditionValStr( alarmVal.receivers, '<s:message code="condition.recv"/>', alarmVal.receivers_not, alarmVal.receivers_findByKeyword, (alarmVal.findByParam == 'Y' || alarmVal.receivers_findByParam == 'Y') ? 'Y' : '');
 
 
-			if (alarmVal.epmsgType != '') searchStr += setConditionValStr(alarmVal.epmsgType, '<s:message code="condition.epmsgType.list"/>');
+			var epmsgTypeNameStr = getEpmsgTypeNameStr(alarmVal.epmsgType, alarmVal.xmsgattr, alarmVal.resentFrom);
+			if (epmsgTypeNameStr != '') searchStr += setConditionValStr(epmsgTypeNameStr, '<s:message code="condition.epmsgType.list"/>');
 
 			if (alarmVal.rcvTo != '') searchStr += setConditionValStr(alarmVal.rcvTo, '<s:message code="condition.to"/>', alarmVal.rcvTo_not, alarmVal.rcvTo_findByKeyword, alarmVal.rcvTo_findByParam);
 			if (alarmVal.rcvCc != '') searchStr += setConditionValStr(alarmVal.rcvCc, '<s:message code="condition.cc"/>', alarmVal.rcvCc_not, alarmVal.rcvCc_findByKeyword, alarmVal.rcvCc_findByParam);

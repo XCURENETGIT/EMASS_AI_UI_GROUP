@@ -897,6 +897,15 @@
 		ORDER	BY EPMSG_TYPE_CODE
 	</select>
 
+	<!-- 사용중인 KNOX 메일 종류 목록 조회 (메시지 검색 조건용) -->
+	<select id="getUsedEpmsgTypeList" resultType="epmsgTypeVO">
+		SELECT	EPMSG_TYPE_CODE AS epmsgTypeCode, EPMSG_TYPE_NAME AS epmsgTypeName, EPMSG_TYPE_COLOR AS epmsgTypeColor,
+				EPMSG_TYPE_FIELD AS epmsgTypeField, USE_YN AS useYn
+		FROM	UI_EPMSG_TYPE
+		WHERE	USE_YN = 'Y'
+		ORDER	BY EPMSG_TYPE_NAME
+	</select>
+
 	<!-- KNOX 메일 종류 코드가 이미 등록 되어있는지 조회 -->
 	<select id="isEpmsgTypeExist" resultType="int" parameterType="epmsgTypeVO">
 		SELECT	COUNT(*) AS CNT
